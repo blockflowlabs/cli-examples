@@ -6,22 +6,32 @@ import BigNumber from "bignumber.js";
  */
 export const ApprovalHandler = (db: any, event: any) => {
   // To init a variable in database instance
-  if (!db["owner"]) db["onwer"] = {};
-  if (!db["spender"]) db["spender"] = {};
+  if (!db[event.owner]) db[event.owner] = {};
+  if (!db[event.spender]) db[event.spender] = {};
+
+  // Initialise the owner -> spender mapping
+  if (!db[event.owner][event.spender])
+    db[event.owner][event.spender] = new BigNumber(0).toString();
+
+  // Initialise the spender -> owner mapping
+  if (!db[event.spender][event.owner])
+    db[event.spender][event.owner] = new BigNumber(0).toString();
+
   // To get variable in database instance
-  let owner = db["owner"];
-  let spender = db["spender"];
-  let zeroAddress = new BigNumber(0).toString();
-  // To update a variable in database instance
-  db["owner"] = event.owner;
-  db["spender"] = event.spender;
+  let owner = db[event.owner];
+  let spender = db[event.spender];
+
   // Implement your event handler logic for Approval here
-  if (owner !== zeroAddress && spender !== zeroAddress) {
-    let ownerAllowance = new BigNumber(owner.allowance || 0);
-    let value = new BigNumber(event.value || 0);
-    ownerAllowance = ownerAllowance.plus(value);
-    owner.allowance = ownerAllowance.toString();
+  const zeroAddress = "0x0000000000000000000000000000000000000000";
+  if (event.owner !== zeroAddress && event.spender !== zeroAddress) {
+    let value = new BigNumber(event.value || 0).toString();
+    owner[event.spender] = value; //  How much allowance owner has given to a particular spender
+    spender[event.owner] = value; // How much allowance spender has by particular owner
   }
+
+  // To update a variable in database instance
+  db[event.owner] = owner;
+  db[event.spender] = spender;
 };
 
 /**
@@ -46,7 +56,7 @@ export const LogNoteHandler = (db: any, event: any) => {
  */
 export const TransferHandler = (db: any, event: any) => {
   // To init a variable in database instance
-  if (!db["totalSupply"]) db["totalSupply"] = "0"; //fetch from contract
+  if (!db["totalSupply"]) db["totalSupply"] = "0";
   if (!db["balances"]) db["balances"] = {};
 
   // To get variable in database instance
