@@ -46,38 +46,38 @@ export const LogNoteHandler = (db: any, event: any) => {
  */
 export const TransferHandler = (db: any, event: any) => {
   // To init a variable in database instance
-  if (!db["from"]) db["from"] = {};
-  if (!db["to"]) db["to"] = {};
+  if (!db["totalSupply"]) db["totalSupply"] = "0"; //fetch from contract
+  if (!db["balances"]) db["balances"] = {};
+
   // To get variable in database instance
-  let from = db["from"];
-  let to = db["to"];
-  const zeroAddress = new BigNumber(0).toString();
-  // To update a variable in database instance
-  db["from"] = event.from;
-  db["to"] = event.to;
+  let totalSupply = new BigNumber(db["totalSupply"] || 0);
+  let balances = db["balances"];
+
   // Implement your event handler logic for Transfer here
-  if (from.balance >= event.value) {
-    if (to === zeroAddress) {
-      //_burn(from, event.value);
-      let fromBalance = new BigNumber(from.balance || 0);
-      let value = new BigNumber(event.value || 0);
-      fromBalance = fromBalance.minus(value);
-      from.balance = fromBalance.toString();
-    } else if (from === zeroAddress) {
-      //_mint(to, event.value);
-      let toBalance = new BigNumber(to.balance || 0);
-      let value = new BigNumber(event.value || 0);
-      toBalance = toBalance.plus(value);
-      to.balance = toBalance.toString();
-    } else {
-      //_transfer(from, to, event.value);
-      let fromBalance = new BigNumber(from.balance || 0);
-      let toBalance = new BigNumber(to.balance || 0);
-      let value = new BigNumber(event.value || 0);
-      fromBalance = fromBalance.minus(value);
-      toBalance = toBalance.plus(value);
-      from.balance = fromBalance.toString();
-      to.balance = toBalance.toString();
-    }
+  const zeroAddress = "0x0000000000000000000000000000000000000000";
+  if (event.from === zeroAddress) {
+    let toBalance = new BigNumber(balances[event.to] || 0);
+    let value = new BigNumber(event.value || 0);
+    toBalance = toBalance.plus(value);
+    totalSupply = totalSupply.plus(value);
+    balances[event.to] = toBalance.toString();
+  } else if (event.to === zeroAddress) {
+    let fromBalance = new BigNumber(balances[event.from] || 0);
+    let value = new BigNumber(event.value || 0);
+    fromBalance = fromBalance.minus(value);
+    totalSupply = totalSupply.minus(value);
+    balances[event.from] = fromBalance.toString();
+  } else {
+    let fromBalance = new BigNumber(balances[event.from] || 0);
+    let toBalance = new BigNumber(balances[event.to] || 0);
+    let value = new BigNumber(event.value || 0);
+    fromBalance = fromBalance.minus(value);
+    toBalance = toBalance.plus(value);
+    balances[event.from] = fromBalance.toString();
+    balances[event.to] = toBalance.toString();
   }
+
+  // To update a variable in database instance
+  db["totalSupply"] = totalSupply.toString();
+  db["balances"] = balances;
 };
