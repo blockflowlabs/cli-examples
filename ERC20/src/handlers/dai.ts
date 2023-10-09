@@ -35,21 +35,6 @@ export const ApprovalHandler = (db: any, event: any) => {
 };
 
 /**
- * @dev Event::LogNote(bytes4 sig, address usr, bytes32 arg1, bytes32 arg2, bytes data)
- * @param instance database [key, value]
- * @param event trigger object with keys [sig ,usr ,arg1 ,arg2 ,data ]
- */
-export const LogNoteHandler = (db: any, event: any) => {
-  // To init a variable in database instance
-  // if(!db['from']) db['from'] = {}
-  // To get variable in database instance
-  // let from = db['from']
-  // To update a variable in database instance
-  // db['from'] = event.from || event.arg0 || event['0']
-  // Implement your event handler logic for LogNote here
-};
-
-/**
  * @dev Event::Transfer(address src, address dst, uint256 wad)
  * @param instance database [key, value]
  * @param event trigger object with keys [src ,dst ,wad ]
