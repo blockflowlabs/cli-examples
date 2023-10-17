@@ -1,17 +1,14 @@
 name: DAI
 description: A top-secret research project to the moon
-startBlock: 18306637
+startBlock: 8957421
 userId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
 network: Ethereum
 user: John doe
 config:
-  - contract: '0x6B175474E89094C44Da98b954EedeAC495271d0F'
+  - contract: "0x6B175474E89094C44Da98b954EedeAC495271d0F"
     name: dai
     abi: src/abis/dai.json
     handler: src/handlers/dai.ts
     event:
       - Approval(address indexed,address indexed,uint256)
-      - >-
-        LogNote(bytes4 indexed,address indexed,bytes32 indexed,bytes32
-        indexed,bytes) anonymous
       - Transfer(address indexed,address indexed,uint256)
