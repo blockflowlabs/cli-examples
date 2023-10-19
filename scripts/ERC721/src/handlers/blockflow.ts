@@ -55,29 +55,27 @@ export const TransferHandler = (db: any, event: any) => {
   if (!db["ownerships"][event.from]) db["ownerships"][event.from] = [];
   if (!db["ownerships"][event.to]) db["ownerships"][event.to] = [];
   if (!db["tokens"][event.tokenId]) db["tokens"][event.tokenId] = {};
-
   if (!db["tokens"][event.tokenId]["owners"])
     db["tokens"][event.tokenId]["owners"] = [];
+
   // To get variable in database instance
-  let from = event.from;
   let to = event.to;
+  let from = event.from;
   let tokenId = event.tokenId;
   let ownerships = db["ownerships"];
   let tokens = db["tokens"];
   let owners = tokens[tokenId]["owners"];
   let fromTokens = ownerships[from];
-  let toTokens = ownerships[to];
-  // // To update a variable in database instance
-  // // db['from'] = event.from || event.arg0 || event['0']
-  // // Implement your event handler logic for Transfer here
 
+  // Implement your event handler logic for Transfer here
   if (fromTokens.includes(tokenId)) {
     fromTokens.splice(fromTokens.indexOf(tokenId), 1);
   }
   ownerships[to].push(tokenId);
-  if (!owners.includes(from)) owners.push(from);
   owners.push(to);
   tokens[tokenId]["currentOwner"] = to;
+
+  // To update a variable in database instance
   db["ownerships"] = ownerships;
   db["tokens"] = tokens;
 };
