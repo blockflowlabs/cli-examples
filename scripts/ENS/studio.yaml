@@ -1,0 +1,17 @@
+name: ens
+description: A top-secret research project to the moon
+startBlock: 18412799
+userId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
+network: Ethereum
+user: John doe
+config:
+  - contract: "0x253553366Da8546fC250F225fe3d25d0C782303b"
+    name: blockflow
+    abi: src/abis/blockflow.json
+    handler: src/handlers/blockflow.ts
+    event:
+      - >-
+        NameRegistered(string,bytes32 indexed,address
+        indexed,uint256,uint256,uint256)
+      - NameRenewed(string,bytes32 indexed,uint256,uint256)
+      - OwnershipTransferred(address indexed,address indexed)

@@ -1,0 +1,110 @@
+{
+  "ownerships": {
+    "0x3469bD3f851874c9bD5505003948CA1F0E0bBF72": ["37090"],
+    "0x4458451fB0582289A07D5812E4dc0D045bDd4d3F": ["aihop"],
+    "0x81BF973106dB3F8229Ef385675Cacd9B4F3F18fB": ["98746"],
+    "0x7EE2a944c53fF74d7D686eE80E994dbD40b9dD81": ["smakman"],
+    "0x0d66a01404dE357022748dDE5D850E2D6188D73E": ["desertedwind"],
+    "0xad690c9288e2bee856167c22496BCc48c2021f6D": ["只有月亮明白我的孤单"],
+    "0x29E62B7b4dFC3C8E49b9ec3bAC387e6108C1C5f1": ["airdropme1995"],
+    "0x16ECDc922e19dFCa9922b1681dAa4F2B34A03aa3": ["scro11"],
+    "0x74DEd12AC399f6ff26f7FdF3d9Fc1AF9E4c57Ad4": ["poastercapital"],
+    "0xb63B351918E339f5A80d1BF2D51F0063d168cf4f": ["ladytipster"],
+    "0x90C6615019920aDAc4Ab3eF64F7ECf62057B0e30": ["qloop"]
+  },
+  "names": {
+    "37090": {
+      "label": "0x6cdffcadd9697e2de2b50197501ddafdc8c5f5b20888ff1284e08ba1b694be20",
+      "owner": "0x3469bD3f851874c9bD5505003948CA1F0E0bBF72",
+      "baseCost": "8959351815036709",
+      "premium": "0",
+      "expires": "1792670051"
+    },
+    "98746": {
+      "label": "0xdbabe515d85a5493a2c7c9e348bbcf98627e834505b064c2faa2ddc9a1ef7e3e",
+      "owner": "0x81BF973106dB3F8229Ef385675Cacd9B4F3F18fB",
+      "baseCost": "2980229041333979",
+      "premium": "0",
+      "expires": "1729598159"
+    },
+    "aihop": {
+      "label": "0xe1c742c91cb444df6ff778d9d7125abe51fe1610a1124d99ad517a999c669762",
+      "owner": "0x4458451fB0582289A07D5812E4dc0D045bDd4d3F",
+      "baseCost": "5960458082667958",
+      "premium": "0",
+      "expires": "1761134147"
+    },
+    "manahari": {
+      "renewalCosts": ["3039833622160658"],
+      "expires": "1731646103"
+    },
+    "smakman": {
+      "label": "0xaea1f031d5324e54751879b8ce8954f704458d2c2ed186f62b28006f763f1265",
+      "owner": "0x7EE2a944c53fF74d7D686eE80E994dbD40b9dD81",
+      "baseCost": "8940687124001937",
+      "premium": "0",
+      "expires": "1792670435"
+    },
+    "desertedwind": {
+      "label": "0xc27840f268d1ceee74e106aa5bb05dcbc53e985dfe22c20bf2dee8ba5f231313",
+      "owner": "0x0d66a01404dE357022748dDE5D850E2D6188D73E",
+      "baseCost": "2980229041333979",
+      "premium": "0",
+      "expires": "1729598519"
+    },
+    "master4speed": {
+      "renewalCosts": ["6079667244321317"],
+      "expires": "1771586705"
+    },
+    "只有月亮明白我的孤单": {
+      "label": "0xf9422ad1c8d9f6c3bcaf690219c6396afd8e57aef2da2046baa8a0c1a4377977",
+      "owner": "0xad690c9288e2bee856167c22496BCc48c2021f6D",
+      "baseCost": "5960458082667958",
+      "premium": "0",
+      "expires": "1761134567"
+    },
+    "airdropme1995": {
+      "label": "0xd1a69b0b5108365a4227f2d4fb7353039419a208737b177ef82705c259c0eb7c",
+      "owner": "0x29E62B7b4dFC3C8E49b9ec3bAC387e6108C1C5f1",
+      "baseCost": "5960458082667958",
+      "premium": "0",
+      "expires": "1761134855"
+    },
+    "scro11": {
+      "label": "0xc0119e35c7d09711542186a97cbf294d095089fdab98e0f8afcb282aa46b2069",
+      "owner": "0x16ECDc922e19dFCa9922b1681dAa4F2B34A03aa3",
+      "baseCost": "2980229041333979",
+      "premium": "0",
+      "expires": "1729598855"
+    },
+    "poastercapital": {
+      "label": "0x9b495999dd19727aa765ad740e5c869c78d9a6bddfa03fd4076a6c791cb65c00",
+      "owner": "0x74DEd12AC399f6ff26f7FdF3d9Fc1AF9E4c57Ad4",
+      "baseCost": "2980229041333979",
+      "premium": "0",
+      "expires": "1729598999"
+    },
+    "freegift": {
+      "renewalCosts": ["3039833622160658"],
+      "expires": "1732203688"
+    },
+    "ladytipster": {
+      "label": "0x8c4f647c07a8f106fb7f7e5ca436ca2e41c1cd9582c19f3b982322b3ead55d76",
+      "owner": "0xb63B351918E339f5A80d1BF2D51F0063d168cf4f",
+      "baseCost": "2980229041333979",
+      "premium": "0",
+      "expires": "1729599047"
+    },
+    "mugiwaraboy": {
+      "renewalCosts": ["6079667244321317"],
+      "expires": "1763549099"
+    },
+    "qloop": {
+      "label": "0x280471b2f084fc0313fe15b4f144ca60a3c43f05c9f97971157aad9322b0d035",
+      "owner": "0x90C6615019920aDAc4Ab3eF64F7ECf62057B0e30",
+      "baseCost": "2980229041333979",
+      "premium": "0",
+      "expires": "1729599215"
+    }
+  }
+}
