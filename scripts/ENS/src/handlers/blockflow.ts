@@ -3,7 +3,7 @@
  * @param instance database [key, value]
  * @param event trigger object with keys [name ,label ,owner ,baseCost ,premium ,expires ]
  */
-export const NameRegisteredHandler = (db: any, event: any) => {
+export const NameRegisteredHandler = (db: any, event: any, block: any) => {
   // To init a variable in database instance
   if (!db["ownerships"]) db["ownerships"] = {};
   if (!db["names"]) db["names"] = {};
@@ -36,6 +36,7 @@ export const NameRegisteredHandler = (db: any, event: any) => {
   name["baseCost"] = baseCost;
   name["premium"] = premium;
   name["expires"] = expires;
+  name["createdAt"] = block.block_timestamp;
   names[event.name] = name;
 
   // To update a variable in database instance
@@ -48,7 +49,7 @@ export const NameRegisteredHandler = (db: any, event: any) => {
  * @param instance database [key, value]
  * @param event trigger object with keys [name ,label ,cost ,expires ]
  */
-export const NameRenewedHandler = (db: any, event: any) => {
+export const NameRenewedHandler = (db: any, event: any, block: any) => {
   // To init a variable in database instance
   if (!db["names"]) db["names"] = {};
   if (!db["names"][event.name]) db["names"][event.name] = {};
@@ -56,6 +57,10 @@ export const NameRenewedHandler = (db: any, event: any) => {
   //init renewalCosts array
   if (!db["names"][event.name]["renewalCosts"])
     db["names"][event.name]["renewalCosts"] = [];
+
+  //init renewalAt array
+  if (!db["names"][event.name]["renewalAt"])
+    db["names"][event.name]["renewalAt"] = [];
 
   // To get variable in database instance
   let names = db["names"];
@@ -66,6 +71,7 @@ export const NameRenewedHandler = (db: any, event: any) => {
   // Implement your event handler logic for NameRenewed here
 
   // Updating the names object
+  name["renewalAt"] = [...name["renewalAt"], block.block_timestamp];
   name["renewalCosts"] = [...name["renewalCosts"], cost];
   name["expires"] = expires;
   names[event.name] = name;
