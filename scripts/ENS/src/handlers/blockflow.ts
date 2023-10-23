@@ -106,8 +106,10 @@ export const OwnershipTransferredHandler = (db: any, event: any) => {
   ownerships[event.newOwner] = newOwner;
 
   // Updating the names object
-  name["owner"] = event.newOwner;
-  names[event.name] = name;
+  if (name) {
+    name["owner"] = event.newOwner;
+    names[event.name] = name;
+  }
 
   // To update a variable in database instance
   db["ownerships"] = ownerships;
