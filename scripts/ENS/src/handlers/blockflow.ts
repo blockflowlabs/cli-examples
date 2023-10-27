@@ -79,39 +79,3 @@ export const NameRenewedHandler = (db: any, event: any, block: any) => {
   // To update a variable in database instance
   db["names"] = names;
 };
-
-/**
- * @dev Event::OwnershipTransferred(address previousOwner, address newOwner)
- * @param instance database [key, value]
- * @param event trigger object with keys [previousOwner ,newOwner ]
- */
-export const OwnershipTransferredHandler = (db: any, event: any) => {
-  // To init a variable in database instance
-  if (!db["ownerships"]) db["ownerships"] = {};
-  if (!db["names"]) db["names"] = {};
-
-  // To get variable in database instance
-  let ownerships = db["ownerships"];
-  let names = db["names"];
-  let name = names[event.name];
-  let previousOwner = ownerships[event.previousOwner];
-  let newOwner = ownerships[event.newOwner];
-
-  // Implement your event handler logic for OwnershipTransferred here
-
-  // Updating the ownerships to names mapping
-  previousOwner = previousOwner.filter((name: string) => name !== event.name);
-  newOwner.push(event.name);
-  ownerships[event.previousOwner] = previousOwner;
-  ownerships[event.newOwner] = newOwner;
-
-  // Updating the names object
-  if (name) {
-    name["owner"] = event.newOwner;
-    names[event.name] = name;
-  }
-
-  // To update a variable in database instance
-  db["ownerships"] = ownerships;
-  db["names"] = names;
-};
