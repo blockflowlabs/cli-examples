@@ -1,0 +1,400 @@
+{
+  "mints": [
+    {
+      "pair": "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
+      "token0": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token0Symbol": "USDC",
+      "token1Symbol": "WETH",
+      "amount0": "49995697689",
+      "amount1": "27859220101277173152"
+    }
+  ],
+  "swaps": [
+    {
+      "pair": "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
+      "token0": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token0Symbol": "USDC",
+      "token1Symbol": "WETH",
+      "amount0In": "300000000",
+      "amount1In": "0",
+      "amount0Out": "0",
+      "amount1Out": "166666478622509353"
+    },
+    {
+      "pair": "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
+      "token0": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token0Symbol": "USDC",
+      "token1Symbol": "WETH",
+      "amount0In": "50000000",
+      "amount1In": "0",
+      "amount0Out": "0",
+      "amount1Out": "27777411681578074"
+    },
+    {
+      "pair": "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
+      "token0": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token0Symbol": "USDC",
+      "token1Symbol": "WETH",
+      "amount0In": "0",
+      "amount1In": "304092469627816330",
+      "amount0Out": "544085083",
+      "amount1Out": "0"
+    },
+    {
+      "pair": "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
+      "token0": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token0Symbol": "USDC",
+      "token1Symbol": "WETH",
+      "amount0In": "113740000",
+      "amount1In": "0",
+      "amount0Out": "0",
+      "amount1Out": "63190072588436134"
+    },
+    {
+      "pair": "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
+      "token0": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token0Symbol": "USDC",
+      "token1Symbol": "WETH",
+      "amount0In": "50000000",
+      "amount1In": "0",
+      "amount0Out": "0",
+      "amount1Out": "27778141594047690"
+    },
+    {
+      "pair": "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
+      "token0": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token0Symbol": "USDC",
+      "token1Symbol": "WETH",
+      "amount0In": "0",
+      "amount1In": "20323303577678697",
+      "amount0Out": "36362324",
+      "amount1Out": "0"
+    },
+    {
+      "pair": "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
+      "token0": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token0Symbol": "USDC",
+      "token1Symbol": "WETH",
+      "amount0In": "201000000",
+      "amount1In": "0",
+      "amount0Out": "0",
+      "amount1Out": "111667446187670358"
+    },
+    {
+      "pair": "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
+      "token0": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token0Symbol": "USDC",
+      "token1Symbol": "WETH",
+      "amount0In": "0",
+      "amount1In": "520351822637144136",
+      "amount0Out": "930992000",
+      "amount1Out": "0"
+    },
+    {
+      "pair": "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
+      "token0": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token0Symbol": "USDC",
+      "token1Symbol": "WETH",
+      "amount0In": "250000000",
+      "amount1In": "0",
+      "amount0Out": "0",
+      "amount1Out": "138896626340699704"
+    },
+    {
+      "pair": "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
+      "token0": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token0Symbol": "USDC",
+      "token1Symbol": "WETH",
+      "amount0In": "100000000",
+      "amount1In": "0",
+      "amount0Out": "0",
+      "amount1Out": "55557981255914206"
+    },
+    {
+      "pair": "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
+      "token0": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token0Symbol": "USDC",
+      "token1Symbol": "WETH",
+      "amount0In": "250000000",
+      "amount1In": "0",
+      "amount0Out": "0",
+      "amount1Out": "138893282126469987"
+    },
+    {
+      "pair": "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
+      "token0": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token0Symbol": "USDC",
+      "token1Symbol": "WETH",
+      "amount0In": "0",
+      "amount1In": "278208227730126868",
+      "amount0Out": "497754675",
+      "amount1Out": "0"
+    },
+    {
+      "pair": "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
+      "token0": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token0Symbol": "USDC",
+      "token1Symbol": "WETH",
+      "amount0In": "0",
+      "amount1In": "2715408086832577021",
+      "amount0Out": "4857360547",
+      "amount1Out": "0"
+    },
+    {
+      "pair": "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
+      "token0": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token0Symbol": "USDC",
+      "token1Symbol": "WETH",
+      "amount0In": "1051715011",
+      "amount1In": "0",
+      "amount0Out": "0",
+      "amount1Out": "584494406699345833"
+    },
+    {
+      "pair": "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
+      "token0": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token0Symbol": "USDC",
+      "token1Symbol": "WETH",
+      "amount0In": "0",
+      "amount1In": "55663957429429265",
+      "amount0Out": "99562629",
+      "amount1Out": "0"
+    },
+    {
+      "pair": "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
+      "token0": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token0Symbol": "USDC",
+      "token1Symbol": "WETH",
+      "amount0In": "0",
+      "amount1In": "2196608079815615236",
+      "amount0Out": "3928389813",
+      "amount1Out": "0"
+    },
+    {
+      "pair": "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
+      "token0": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token0Symbol": "USDC",
+      "token1Symbol": "WETH",
+      "amount0In": "216608212",
+      "amount1In": "0",
+      "amount0Out": "0",
+      "amount1Out": "120409003636208690"
+    },
+    {
+      "pair": "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
+      "token0": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token0Symbol": "USDC",
+      "token1Symbol": "WETH",
+      "amount0In": "209657615",
+      "amount1In": "0",
+      "amount0Out": "0",
+      "amount1Out": "116543569854189657"
+    },
+    {
+      "pair": "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
+      "token0": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token0Symbol": "USDC",
+      "token1Symbol": "WETH",
+      "amount0In": "0",
+      "amount1In": "1991813414292987404",
+      "amount0Out": "3561321116",
+      "amount1Out": "0"
+    },
+    {
+      "pair": "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
+      "token0": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token0Symbol": "USDC",
+      "token1Symbol": "WETH",
+      "amount0In": "1883083785",
+      "amount1In": "0",
+      "amount0Out": "0",
+      "amount1Out": "1046942518818829163"
+    },
+    {
+      "pair": "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
+      "token0": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token0Symbol": "USDC",
+      "token1Symbol": "WETH",
+      "amount0In": "0",
+      "amount1In": "110723864813136163",
+      "amount0Out": "197971912",
+      "amount1Out": "0"
+    },
+    {
+      "pair": "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
+      "token0": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token0Symbol": "USDC",
+      "token1Symbol": "WETH",
+      "amount0In": "521033785",
+      "amount1In": "0",
+      "amount0Out": "0",
+      "amount1Out": "289660354302398006"
+    },
+    {
+      "pair": "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
+      "token0": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token0Symbol": "USDC",
+      "token1Symbol": "WETH",
+      "amount0In": "0",
+      "amount1In": "110713598061474478",
+      "amount0Out": "197957948",
+      "amount1Out": "0"
+    },
+    {
+      "pair": "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
+      "token0": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token0Symbol": "USDC",
+      "token1Symbol": "WETH",
+      "amount0In": "29610576",
+      "amount1In": "0",
+      "amount0Out": "0",
+      "amount1Out": "16461436193795540"
+    },
+    {
+      "pair": "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
+      "token0": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token0Symbol": "USDC",
+      "token1Symbol": "WETH",
+      "amount0In": "25000000",
+      "amount1In": "0",
+      "amount0Out": "0",
+      "amount1Out": "13898248094815198"
+    },
+    {
+      "pair": "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
+      "token0": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token0Symbol": "USDC",
+      "token1Symbol": "WETH",
+      "amount0In": "69713235",
+      "amount1In": "0",
+      "amount0Out": "0",
+      "amount1Out": "38755547214131482"
+    },
+    {
+      "pair": "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
+      "token0": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token0Symbol": "USDC",
+      "token1Symbol": "WETH",
+      "amount0In": "54512105",
+      "amount1In": "0",
+      "amount0Out": "0",
+      "amount1Out": "30304682138915760"
+    },
+    {
+      "pair": "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
+      "token0": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token0Symbol": "USDC",
+      "token1Symbol": "WETH",
+      "amount0In": "594750000",
+      "amount1In": "0",
+      "amount0Out": "0",
+      "amount1Out": "330629455269279926"
+    },
+    {
+      "pair": "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
+      "token0": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token0Symbol": "USDC",
+      "token1Symbol": "WETH",
+      "amount0In": "0",
+      "amount1In": "55347527240491026",
+      "amount0Out": "98966649",
+      "amount1Out": "0"
+    },
+    {
+      "pair": "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
+      "token0": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token0Symbol": "USDC",
+      "token1Symbol": "WETH",
+      "amount0In": "17451000",
+      "amount1In": "0",
+      "amount0Out": "0",
+      "amount1Out": "9701105221317222"
+    },
+    {
+      "pair": "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
+      "token0": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token0Symbol": "USDC",
+      "token1Symbol": "WETH",
+      "amount0In": "0",
+      "amount1In": "55360053066331659",
+      "amount0Out": "98988489",
+      "amount1Out": "0"
+    },
+    {
+      "pair": "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
+      "token0": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token0Symbol": "USDC",
+      "token1Symbol": "WETH",
+      "amount0In": "92653521",
+      "amount1In": "0",
+      "amount0Out": "0",
+      "amount1Out": "51506750088185417"
+    },
+    {
+      "pair": "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
+      "token0": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token0Symbol": "USDC",
+      "token1Symbol": "WETH",
+      "amount0In": "150000000",
+      "amount1In": "0",
+      "amount0Out": "0",
+      "amount1Out": "83385368956376595"
+    },
+    {
+      "pair": "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
+      "token0": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token0Symbol": "USDC",
+      "token1Symbol": "WETH",
+      "amount0In": "991250000",
+      "amount1In": "0",
+      "amount0Out": "0",
+      "amount1Out": "551016700900285477"
+    },
+    {
+      "pair": "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
+      "token0": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "token1": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "token0Symbol": "USDC",
+      "token1Symbol": "WETH",
+      "amount0In": "0",
+      "amount1In": "152714702282389899",
+      "amount0Out": "273086575",
+      "amount1Out": "0"
+    }
+  ]
+}
