@@ -21,6 +21,9 @@
       "amount1In": "0",
       "amount0Out": "0",
       "amount1Out": "166666478622509353"
+      "token0price"
+      token1price
+
     },
     {
       "pair": "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
