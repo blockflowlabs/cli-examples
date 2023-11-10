@@ -20,14 +20,36 @@ export const ApprovalHandler = (db: any, event: any) => {
  * @param instance database [key, value]
  * @param event trigger object with keys [sender ,amount0 ,amount1 ,to ]
  */
-export const BurnHandler = (db: any, event: any) => {
+export const BurnHandler = (db: any, event: any, block: any) => {
   // To init a variable in database instance
-  // if(!db['from']) db['from'] = {}
+  let daiEthPair = "0xa478c2975ab1ea89e8196811f51a7b7ade33eb11";
+  let daiAddress = "0x6b175474e89094c44da98b954eedeac495271d0f";
+  let ethAddress = "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2";
+
+  if (!db["pairs"]) db["pairs"] = {};
+  if (!db["tokens"]) db["tokens"] = {};
+  if (!db["transactions"]) db["transactions"] = {};
+  if (!db["transactions"]["burns"]) db["transactions"]["burns"] = [];
+
   // To get variable in database instance
-  // let from = db['from']
-  // To update a variable in database instance
-  // db['from'] = event.from || event.arg0 || event['0']
+  let transactions = db["transactions"];
+  let amount0 = event["amount0"];
+  let amount1 = event["amount1"];
+
   // Implement your event handler logic for Burn here
+  transactions["burns"].push({
+    timestamp: block.timestamp,
+    pair: daiEthPair,
+    token0: daiAddress,
+    token1: ethAddress,
+    amount0: BigNumber(amount0).dividedBy(BigNumber(10).pow(18)),
+    amount1: BigNumber(amount1).dividedBy(BigNumber(10).pow(18)),
+  });
+
+  //TODO: update token0 and token1 tradeVolume, tradeVolumeUSD, txCount, reserve0, reserve1, totalLiquidity, derivedETH
+
+  // To update a variable in database instance
+  db["transactions"] = transactions;
 };
 
 /**
@@ -35,14 +57,36 @@ export const BurnHandler = (db: any, event: any) => {
  * @param instance database [key, value]
  * @param event trigger object with keys [sender ,amount0 ,amount1 ]
  */
-export const MintHandler = (db: any, event: any) => {
+export const MintHandler = (db: any, event: any, block: any) => {
   // To init a variable in database instance
-  // if(!db['from']) db['from'] = {}
+  let daiEthPair = "0xa478c2975ab1ea89e8196811f51a7b7ade33eb11";
+  let daiAddress = "0x6b175474e89094c44da98b954eedeac495271d0f";
+  let ethAddress = "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2";
+
+  if (!db["pairs"]) db["pairs"] = {};
+  if (!db["tokens"]) db["tokens"] = {};
+  if (!db["transactions"]) db["transactions"] = {};
+  if (!db["transactions"]["mints"]) db["transactions"]["mints"] = [];
+
   // To get variable in database instance
-  // let from = db['from']
-  // To update a variable in database instance
-  // db['from'] = event.from || event.arg0 || event['0']
+  let transactions = db["transactions"];
+  let amount0 = event["amount0"];
+  let amount1 = event["amount1"];
+
   // Implement your event handler logic for Mint here
+  transactions["mints"].push({
+    timestamp: block.timestamp,
+    pair: daiEthPair,
+    token0: daiAddress,
+    token1: ethAddress,
+    amount0: BigNumber(amount0).dividedBy(BigNumber(10).pow(18)),
+    amount1: BigNumber(amount1).dividedBy(BigNumber(10).pow(18)),
+  });
+
+  //TODO: update token0 and token1 tradeVolume, tradeVolumeUSD, txCount, reserve0, reserve1, totalLiquidity, derivedETH
+
+  // To update a variable in database instance
+  db["transactions"] = transactions;
 };
 
 /**
@@ -50,14 +94,40 @@ export const MintHandler = (db: any, event: any) => {
  * @param instance database [key, value]
  * @param event trigger object with keys [sender ,amount0In ,amount1In ,amount0Out ,amount1Out ,to ]
  */
-export const SwapHandler = (db: any, event: any) => {
+export const SwapHandler = (db: any, event: any, block: any) => {
   // To init a variable in database instance
-  // if(!db['from']) db['from'] = {}
+  let daiEthPair = "0xa478c2975ab1ea89e8196811f51a7b7ade33eb11";
+  let daiAddress = "0x6b175474e89094c44da98b954eedeac495271d0f";
+  let ethAddress = "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2";
+
+  if (!db["pairs"]) db["pairs"] = {};
+  if (!db["tokens"]) db["tokens"] = {};
+  if (!db["transactions"]) db["transactions"] = {};
+  if (!db["transactions"]["swaps"]) db["transactions"]["swaps"] = [];
+
   // To get variable in database instance
-  // let from = db['from']
-  // To update a variable in database instance
-  // db['from'] = event.from || event.arg0 || event['0']
+  let transactions = db["transactions"];
+  let amount0In = event["amount0In"];
+  let amount1In = event["amount1In"];
+  let amount0Out = event["amount0Out"];
+  let amount1Out = event["amount1Out"];
+
   // Implement your event handler logic for Swap here
+  transactions["swaps"].push({
+    timestamp: block.timestamp,
+    pair: daiEthPair,
+    token0: daiAddress,
+    token1: ethAddress,
+    amount0In: BigNumber(amount0In).dividedBy(BigNumber(10).pow(18)),
+    amount1In: BigNumber(amount1In).dividedBy(BigNumber(10).pow(18)),
+    amount0Out: BigNumber(amount0Out).dividedBy(BigNumber(10).pow(18)),
+    amount1Out: BigNumber(amount1Out).dividedBy(BigNumber(10).pow(18)),
+  });
+
+  //TODO: update token0 and token1 tradeVolume, tradeVolumeUSD, txCount, reserve0, reserve1, totalLiquidity, derivedETH
+
+  // To update a variable in database instance
+  db["transactions"] = transactions;
 };
 
 /**
