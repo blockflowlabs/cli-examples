@@ -11,15 +11,18 @@ config:
     handler: src/handlers/erc20.ts
     event:
       - Transfer(address indexed,address indexed,uint256)
+      # - Approval(address indexed,address indexed,uint256)
   - contract: "0xdAC17F958D2ee523a2206206994597C13D831ec7"
     name: usdt
     abi: src/abis/erc20.json
     handler: src/handlers/erc20.ts
     event:
       - Transfer(address indexed,address indexed,uint256)
+      # - Approval(address indexed,address indexed,uint256)
   - contract: "0x6B175474E89094C44Da98b954EedeAC495271d0F"
     name: dai
     abi: src/abis/erc20.json
     handler: src/handlers/erc20.ts
     event:
       - Transfer(address indexed,address indexed,uint256)
+      # - Approval(address indexed,address indexed,uint256)
