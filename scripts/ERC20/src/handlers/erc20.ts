@@ -6,7 +6,7 @@ import BigNumber from "bignumber.js";
  */
 export const ApprovalHandler = (db: any, event: any) => {
   // args: [arg1, arg2, arg3] = [src, guy, wad]
-  
+
   // To init a variable in database instance
   if (!db["approvals"]) db["approvals"] = {};
   if (!db["approvals"][event["arg1"]]) db["approvals"][event["arg1"]] = {};

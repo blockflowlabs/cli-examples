@@ -7,8 +7,8 @@ user: John doe
 config:
   - contract: "0x6B175474E89094C44Da98b954EedeAC495271d0F"
     name: dai
-    abi: src/abis/dai.json
-    handler: src/handlers/dai.ts
+    abi: src/abis/erc20.json
+    handler: src/handlers/erc20.ts
     event:
       - Approval(address indexed,address indexed,uint256)
       - Transfer(address indexed,address indexed,uint256)
