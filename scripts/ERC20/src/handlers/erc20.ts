@@ -1,6 +1,6 @@
 import BigNumber from "bignumber.js";
 // /**
-//  * @dev Event::Approval(address src, address guy, uint256 wad)
+//  * @dev Event::Approval(address owner, address spender, uint256 value)
 //  * @param instance database [key, value]
 //  * @param context trigger object with contains [event: [owner ,spender ,value ], block, transaction]
 //  */
@@ -37,7 +37,7 @@ import BigNumber from "bignumber.js";
 // };
 
 /**
- * @dev Event::Transfer(address src, address dst, uint256 wad)
+ * @dev Event::Transfer(address from, address to, uint256 value)
  * @param instance database [key, value]
  * @param context trigger object with contains [event: [from ,to ,value ], block, transaction]
  */
