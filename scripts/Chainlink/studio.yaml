@@ -5,10 +5,33 @@ userId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
 network: Ethereum
 user: John doe
 config:
-  - contract: '0xE62B71cf983019BFf55bC83B48601ce8419650CC'
-    name: ethUsdcAggregator
-    abi: src/abis/ethUsdcAggregator.json
-    handler: src/handlers/ethUsdcAggregator.ts
+  - contract: "0xE62B71cf983019BFf55bC83B48601ce8419650CC"
+    name: EthUsdAggregator
+    abi: src/abis/aggregator.json
+    handler: src/handlers/aggregator.ts
     event:
       - AnswerUpdated(int256 indexed,uint256 indexed,uint256)
-      
+  - contract: "0xdBe1941BFbe4410D6865b9b7078e0b49af144D2d"
+    name: BtcUsdAggregator
+    abi: src/abis/aggregator.json
+    handler: src/handlers/aggregator.ts
+    event:
+      - AnswerUpdated(int256 indexed,uint256 indexed,uint256)
+  - contract: "0x478238a1c8B862498c74D0647329Aef9ea6819Ed"
+    name: DaiUsdAggregator
+    abi: src/abis/aggregator.json
+    handler: src/handlers/aggregator.ts
+    event:
+      - AnswerUpdated(int256 indexed,uint256 indexed,uint256)
+  - contract: "0xa964273552C1dBa201f5f000215F5BD5576e8f93"
+    name: UsdtUsdAggregator
+    abi: src/abis/aggregator.json
+    handler: src/handlers/aggregator.ts
+    event:
+      - AnswerUpdated(int256 indexed,uint256 indexed,uint256)
+  - contract: "0x789190466E21a8b78b8027866CBBDc151542A26C"
+    name: UsdcUsdAggregator
+    abi: src/abis/aggregator.json
+    handler: src/handlers/aggregator.ts
+    event:
+      - AnswerUpdated(int256 indexed,uint256 indexed,uint256)
