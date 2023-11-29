@@ -43,13 +43,22 @@ import BigNumber from "bignumber.js";
  */
 export const TransferHandler = (db: any, context: any) => {
 
+  const tokenAddrToSymbol = {
+    "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48": "USDC",
+    "0xdAC17F958D2ee523a2206206994597C13D831ec7": "USDT",
+    "0x6B175474E89094C44Da98b954EedeAC495271d0F": "DAI"
+  }
+
+  const tokenSymbol = tokenAddrToSymbol[context.log.log_address];
+
   // To init a variable in database instance
-  if (!db["totalSupply"]) db["totalSupply"] = "0";
-  if (!db["balances"]) db["balances"] = {};
+  if (!db[tokenSymbol]) db[tokenSymbol] = {};
+  if (!db[tokenSymbol]["totalSupply"]) db[tokenSymbol]["totalSupply"] = "0";
+  if (!db[tokenSymbol]["balances"]) db[tokenSymbol]["balances"] = {};
 
   // To get variable in database instance
-  let totalSupply = new BigNumber(db["totalSupply"]);
-  let balances = db["balances"];
+  let totalSupply = new BigNumber(db[tokenSymbol]["totalSupply"]);
+  let balances = db[tokenSymbol]["balances"];
 
   // Implement your event handler logic for Transfer here
   const zeroAddress = "0x0000000000000000000000000000000000000000";
@@ -79,6 +88,6 @@ export const TransferHandler = (db: any, context: any) => {
   }
 
   // To update a variable in database instance
-  db["totalSupply"] = totalSupply.toString();
-  db["balances"] = balances;
+  db[tokenSymbol]["totalSupply"] = totalSupply.toString();
+  db[tokenSymbol]["balances"] = balances;
 };
