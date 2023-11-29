@@ -1,3 +1,5 @@
+import BigNumber from "bignumber.js";
+
 /**
  * @dev Event::AnswerUpdated(int256 current, uint256 roundId, uint256 updatedAt)
  * @param instance database [key, value]
@@ -28,5 +30,5 @@ export const AnswerUpdatedHandler = (db: any, context: any) => {
   if (!db[tokenSymbol]) db[tokenSymbol] = "0";
 
   // To update a variable in database instance
-  db[tokenSymbol] = (parseInt(context.event.current) / (10 ** parseInt(decimals))).toString();
+  db[tokenSymbol] = new BigNumber(context.event.current).div(10 ** parseInt(decimals)).toString();
 };
