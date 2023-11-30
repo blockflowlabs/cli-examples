@@ -39,7 +39,7 @@ import BigNumber from "bignumber.js";
 /**
  * @dev Event::Transfer(address from, address to, uint256 value)
  * @param instance database [key, value]
- * @param context trigger object with contains [event: [from ,to ,value ], block, transaction]
+ * @param context trigger object with contains [event: [from ,to ,value ], log, transaction, block]
  */
 export const TransferHandler = (db: any, context: any) => {
 
