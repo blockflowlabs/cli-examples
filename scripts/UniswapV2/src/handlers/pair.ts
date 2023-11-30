@@ -116,10 +116,10 @@ export const SwapHandler = (db: any, context: any) => {
     pair,
     token0,
     token1,
-    amount0In: BigNumber(amount0In).dividedBy(BigNumber(10).pow(18)),
-    amount1In: BigNumber(amount1In).dividedBy(BigNumber(10).pow(18)),
-    amount0Out: BigNumber(amount0Out).dividedBy(BigNumber(10).pow(18)),
-    amount1Out: BigNumber(amount1Out).dividedBy(BigNumber(10).pow(18)),
+    amount0In,
+    amount1In,
+    amount0Out,
+    amount1Out,
   });
 
   //TODO: update token0 and token1 tradeVolume, tradeVolumeUSD, txCount, reserve0, reserve1, totalLiquidity, derivedETH
