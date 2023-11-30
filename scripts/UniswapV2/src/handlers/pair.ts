@@ -1,31 +1,29 @@
 import { BigNumber } from "bignumber.js";
 
-/**
- * @dev Event::Approval(address owner, address spender, uint256 value)
- * @param instance database [key, value]
- * @param event trigger object with keys [owner ,spender ,value ]
- */
-export const ApprovalHandler = (db: any, event: any) => {
-  // To init a variable in database instance
-  // if(!db['from']) db['from'] = {}
-  // To get variable in database instance
-  // let from = db['from']
-  // To update a variable in database instance
-  // db['from'] = event.from || event.arg0 || event['0']
-  // Implement your event handler logic for Approval here
-};
+const tokenToAddr = {
+  "WETH": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+  "DAI": "0x6b175474e89094c44da98b954eedeac495271d0f",
+  "USDT": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+  "USDC": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+}
+
+const pairToTokens = {
+  "0xa478c2975ab1ea89e8196811f51a7b7ade33eb11": ['DAI', 'WETH'],
+  "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc": ['USDC', 'WETH'],
+  "0x0d4a11d5eeaac28ec3f61d100daf4d40471f1852": ['WETH', 'USDT']
+}
 
 /**
  * @dev Event::Burn(address sender, uint256 amount0, uint256 amount1, address to)
- * @param instance database [key, value]
- * @param event trigger object with keys [sender ,amount0 ,amount1 ,to ]
+ * @param db database [key, value]
+ * @param context trigger object with contains [event: [sender ,amount0 ,amount1 ,to ], log, transaction, block]
  */
-export const BurnHandler = (db: any, event: any, block: any) => {
-  // To init a variable in database instance
-  let daiEthPair = "0xa478c2975ab1ea89e8196811f51a7b7ade33eb11";
-  let daiAddress = "0x6b175474e89094c44da98b954eedeac495271d0f";
-  let ethAddress = "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2";
+export const BurnHandler = (db: any, context: any) => {
+  let pair = context.log.log_address;
+  let token0 = tokenToAddr[pairToTokens[pair][0]];
+  let token1 = tokenToAddr[pairToTokens[pair][1]];
 
+  // To init a variable in database instance
   if (!db["pairs"]) db["pairs"] = {};
   if (!db["tokens"]) db["tokens"] = {};
   if (!db["transactions"]) db["transactions"] = {};
@@ -33,15 +31,15 @@ export const BurnHandler = (db: any, event: any, block: any) => {
 
   // To get variable in database instance
   let transactions = db["transactions"];
-  let amount0 = event["amount0"];
-  let amount1 = event["amount1"];
+  let amount0 = context.event["amount0"];
+  let amount1 = context.event["amount1"];
 
   // Implement your event handler logic for Burn here
   transactions["burns"].push({
-    timestamp: block.timestamp,
-    pair: daiEthPair,
-    token0: daiAddress,
-    token1: ethAddress,
+    timestamp: context.block.timestamp,
+    pair,
+    token0,
+    token1,
     amount0: BigNumber(amount0).dividedBy(BigNumber(10).pow(18)),
     amount1: BigNumber(amount1).dividedBy(BigNumber(10).pow(18)),
   });
@@ -54,15 +52,15 @@ export const BurnHandler = (db: any, event: any, block: any) => {
 
 /**
  * @dev Event::Mint(address sender, uint256 amount0, uint256 amount1)
- * @param instance database [key, value]
+ * @param db database [key, value]
  * @param event trigger object with keys [sender ,amount0 ,amount1 ]
  */
-export const MintHandler = (db: any, event: any, block: any) => {
-  // To init a variable in database instance
-  let daiEthPair = "0xa478c2975ab1ea89e8196811f51a7b7ade33eb11";
-  let daiAddress = "0x6b175474e89094c44da98b954eedeac495271d0f";
-  let ethAddress = "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2";
+export const MintHandler = (db: any, context: any) => {
+  let pair = context.log.log_address;
+  let token0 = tokenToAddr[pairToTokens[pair][0]];
+  let token1 = tokenToAddr[pairToTokens[pair][1]];
 
+  // To init a variable in database instance
   if (!db["pairs"]) db["pairs"] = {};
   if (!db["tokens"]) db["tokens"] = {};
   if (!db["transactions"]) db["transactions"] = {};
@@ -70,15 +68,15 @@ export const MintHandler = (db: any, event: any, block: any) => {
 
   // To get variable in database instance
   let transactions = db["transactions"];
-  let amount0 = event["amount0"];
-  let amount1 = event["amount1"];
+  let amount0 = context.event["amount0"];
+  let amount1 = context.event["amount1"];
 
   // Implement your event handler logic for Mint here
   transactions["mints"].push({
-    timestamp: block.timestamp,
-    pair: daiEthPair,
-    token0: daiAddress,
-    token1: ethAddress,
+    timestamp: context.block.timestamp,
+    pair,
+    token0,
+    token1,
     amount0: BigNumber(amount0).dividedBy(BigNumber(10).pow(18)),
     amount1: BigNumber(amount1).dividedBy(BigNumber(10).pow(18)),
   });
@@ -91,15 +89,15 @@ export const MintHandler = (db: any, event: any, block: any) => {
 
 /**
  * @dev Event::Swap(address sender, uint256 amount0In, uint256 amount1In, uint256 amount0Out, uint256 amount1Out, address to)
- * @param instance database [key, value]
+ * @param db database [key, value]
  * @param event trigger object with keys [sender ,amount0In ,amount1In ,amount0Out ,amount1Out ,to ]
  */
-export const SwapHandler = (db: any, event: any, block: any) => {
-  // To init a variable in database instance
-  let daiEthPair = "0xa478c2975ab1ea89e8196811f51a7b7ade33eb11";
-  let daiAddress = "0x6b175474e89094c44da98b954eedeac495271d0f";
-  let ethAddress = "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2";
+export const SwapHandler = (db: any, context: any) => {
+  let pair = context.log.log_address;
+  let token0 = tokenToAddr[pairToTokens[pair][0]];
+  let token1 = tokenToAddr[pairToTokens[pair][1]];
 
+  // To init a variable in database instance
   if (!db["pairs"]) db["pairs"] = {};
   if (!db["tokens"]) db["tokens"] = {};
   if (!db["transactions"]) db["transactions"] = {};
@@ -107,17 +105,17 @@ export const SwapHandler = (db: any, event: any, block: any) => {
 
   // To get variable in database instance
   let transactions = db["transactions"];
-  let amount0In = event["amount0In"];
-  let amount1In = event["amount1In"];
-  let amount0Out = event["amount0Out"];
-  let amount1Out = event["amount1Out"];
+  let amount0In = context.event["amount0In"];
+  let amount1In = context.event["amount1In"];
+  let amount0Out = context.event["amount0Out"];
+  let amount1Out = context.event["amount1Out"];
 
   // Implement your event handler logic for Swap here
   transactions["swaps"].push({
-    timestamp: block.timestamp,
-    pair: daiEthPair,
-    token0: daiAddress,
-    token1: ethAddress,
+    timestamp: context.block.timestamp,
+    pair,
+    token0,
+    token1,
     amount0In: BigNumber(amount0In).dividedBy(BigNumber(10).pow(18)),
     amount1In: BigNumber(amount1In).dividedBy(BigNumber(10).pow(18)),
     amount0Out: BigNumber(amount0Out).dividedBy(BigNumber(10).pow(18)),
@@ -132,7 +130,7 @@ export const SwapHandler = (db: any, event: any, block: any) => {
 
 /**
  * @dev Event::Sync(uint112 reserve0, uint112 reserve1)
- * @param instance database [key, value]
+ * @param db database [key, value]
  * @param event trigger object with keys [reserve0 ,reserve1 ]
  */
 export const SyncHandler = (db: any, event: any, block: any) => {

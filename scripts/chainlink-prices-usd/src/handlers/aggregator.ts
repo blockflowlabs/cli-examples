@@ -2,7 +2,7 @@ import BigNumber from "bignumber.js";
 
 /**
  * @dev Event::AnswerUpdated(int256 current, uint256 roundId, uint256 updatedAt)
- * @param instance database [key, value]
+ * @param db database [key, value]
  * @param context trigger object with contains [event: [current ,roundId ,updatedAt ], log, transaction, block]
  */
 export const AnswerUpdatedHandler = (db: any, context: any) => {
