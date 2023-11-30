@@ -40,8 +40,8 @@ export const BurnHandler = (db: any, context: any) => {
     pair,
     token0,
     token1,
-    amount0: BigNumber(amount0).dividedBy(BigNumber(10).pow(18)),
-    amount1: BigNumber(amount1).dividedBy(BigNumber(10).pow(18)),
+    amount0,
+    amount1,
   });
 
   //TODO: update token0 and token1 tradeVolume, tradeVolumeUSD, txCount, reserve0, reserve1, totalLiquidity, derivedETH
@@ -77,8 +77,8 @@ export const MintHandler = (db: any, context: any) => {
     pair,
     token0,
     token1,
-    amount0: BigNumber(amount0).dividedBy(BigNumber(10).pow(18)),
-    amount1: BigNumber(amount1).dividedBy(BigNumber(10).pow(18)),
+    amount0,
+    amount1,
   });
 
   //TODO: update token0 and token1 tradeVolume, tradeVolumeUSD, txCount, reserve0, reserve1, totalLiquidity, derivedETH
