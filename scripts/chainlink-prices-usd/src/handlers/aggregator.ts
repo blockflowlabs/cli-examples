@@ -3,7 +3,7 @@ import BigNumber from "bignumber.js";
 /**
  * @dev Event::AnswerUpdated(int256 current, uint256 roundId, uint256 updatedAt)
  * @param db database [key, value]
- * @param context trigger object with contains [event: [current ,roundId ,updatedAt ], log, transaction, block]
+ * @param context trigger object contains [event: [current ,roundId ,updatedAt ], log, transaction, block]
  */
 export const AnswerUpdatedHandler = (db: any, context: any) => {
   const aggregatorToTokenSymbol = {
