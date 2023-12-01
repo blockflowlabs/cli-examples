@@ -1,14 +1,28 @@
-name: DAI
+name: erc20
 description: A top-secret research project to the moon
 startBlock: 8957421
 userId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
 network: Ethereum
 user: John doe
 config:
+  - contract: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+    name: usdc
+    abi: src/abis/erc20.json
+    handler: src/handlers/erc20.ts
+    event:
+      - Transfer(address indexed,address indexed,uint256)
+      # - Approval(address indexed,address indexed,uint256)
+  - contract: "0xdAC17F958D2ee523a2206206994597C13D831ec7"
+    name: usdt
+    abi: src/abis/erc20.json
+    handler: src/handlers/erc20.ts
+    event:
+      - Transfer(address indexed,address indexed,uint256)
+      # - Approval(address indexed,address indexed,uint256)
   - contract: "0x6B175474E89094C44Da98b954EedeAC495271d0F"
     name: dai
-    abi: src/abis/dai.json
-    handler: src/handlers/dai.ts
+    abi: src/abis/erc20.json
+    handler: src/handlers/erc20.ts
     event:
-      - Approval(address indexed,address indexed,uint256)
       - Transfer(address indexed,address indexed,uint256)
+      # - Approval(address indexed,address indexed,uint256)

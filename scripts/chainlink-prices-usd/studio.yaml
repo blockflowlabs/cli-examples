@@ -1,0 +1,37 @@
+name: chainlink-prices-usd
+description: A top-secret research project to the moon
+startBlock: 18361281
+userId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
+network: Ethereum
+user: John doe
+config:
+  - contract: "0xE62B71cf983019BFf55bC83B48601ce8419650CC"
+    name: eth
+    abi: src/abis/aggregator.json
+    handler: src/handlers/aggregator.ts
+    event:
+      - AnswerUpdated(int256 indexed,uint256 indexed,uint256)
+  - contract: "0xdBe1941BFbe4410D6865b9b7078e0b49af144D2d"
+    name: btc
+    abi: src/abis/aggregator.json
+    handler: src/handlers/aggregator.ts
+    event:
+      - AnswerUpdated(int256 indexed,uint256 indexed,uint256)
+  - contract: "0x478238a1c8B862498c74D0647329Aef9ea6819Ed"
+    name: dai
+    abi: src/abis/aggregator.json
+    handler: src/handlers/aggregator.ts
+    event:
+      - AnswerUpdated(int256 indexed,uint256 indexed,uint256)
+  - contract: "0xa964273552C1dBa201f5f000215F5BD5576e8f93"
+    name: usdt
+    abi: src/abis/aggregator.json
+    handler: src/handlers/aggregator.ts
+    event:
+      - AnswerUpdated(int256 indexed,uint256 indexed,uint256)
+  - contract: "0x789190466E21a8b78b8027866CBBDc151542A26C"
+    name: usdc
+    abi: src/abis/aggregator.json
+    handler: src/handlers/aggregator.ts
+    event:
+      - AnswerUpdated(int256 indexed,uint256 indexed,uint256)
