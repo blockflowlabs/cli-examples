@@ -37,11 +37,15 @@ export const BurnHandler = (db: any, context: any) => {
   // Implement your event handler logic for Burn here
   transactions["burns"].push({
     timestamp: context.block.timestamp,
+    block: context.block.block_number,
+    transaction: context.transaction.transaction_hash,
+    sender: context.event.sender,
     pair,
     token0,
     token1,
     amount0,
     amount1,
+    to: context.event.to
   });
 
   //TODO: update token0 and token1 tradeVolume, tradeVolumeUSD, txCount, reserve0, reserve1, totalLiquidity, derivedETH
@@ -53,7 +57,7 @@ export const BurnHandler = (db: any, context: any) => {
 /**
  * @dev Event::Mint(address sender, uint256 amount0, uint256 amount1)
  * @param db database [key, value]
- * @param event trigger object with keys [sender ,amount0 ,amount1 ]
+ * @param context trigger object with contains [event: [sender ,amount0 ,amount1], log, transaction, block]
  */
 export const MintHandler = (db: any, context: any) => {
   let pair = context.log.log_address;
@@ -74,6 +78,9 @@ export const MintHandler = (db: any, context: any) => {
   // Implement your event handler logic for Mint here
   transactions["mints"].push({
     timestamp: context.block.timestamp,
+    block: context.block.block_number,
+    transaction: context.transaction.transaction_hash,
+    sender: context.event.sender,
     pair,
     token0,
     token1,
@@ -113,6 +120,9 @@ export const SwapHandler = (db: any, context: any) => {
   // Implement your event handler logic for Swap here
   transactions["swaps"].push({
     timestamp: context.block.timestamp,
+    block: context.block.block_number,
+    transaction: context.transaction.transaction_hash,
+    sender: context.event.sender,
     pair,
     token0,
     token1,
@@ -120,6 +130,7 @@ export const SwapHandler = (db: any, context: any) => {
     amount1In,
     amount0Out,
     amount1Out,
+    to: context.event.to
   });
 
   //TODO: update token0 and token1 tradeVolume, tradeVolumeUSD, txCount, reserve0, reserve1, totalLiquidity, derivedETH
