@@ -1,7 +1,7 @@
 /**
  * @dev Event::Transfer(address from, address to, uint256 tokenId)
  * @param instance database [key, value]
- * @param context trigger object with contains [event: [from ,to ,value ], log, transaction, block]
+ * @param context trigger object contains [event: [from ,to ,value ], log, transaction, block]
  */
 export const TransferHandler = (db: any, context: any) => {
   // To init a variable in database instance

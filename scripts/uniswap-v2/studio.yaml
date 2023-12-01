@@ -5,42 +5,33 @@ userId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
 network: Ethereum
 user: John doe
 config:
-  # - contract: '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f'
-  #   name: factory
-  #   abi: src/abis/factory.json
-  #   handler: src/handlers/factory.ts
-  #   event:
-  #     - PairCreated(address indexed,address indexed,address,uint256)
-  # - contract: '0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc'
-  #   name: usdcEth
-  #   abi: src/abis/usdcEth.json
-  #   handler: src/handlers/usdcEth.ts
-  #   event:
-  #     # - Approval(address indexed,address indexed,uint256)
-  #     # - Burn(address indexed,uint256,uint256,address indexed)
-  #     # - Mint(address indexed,uint256,uint256)
-  #     # - Swap(address indexed,uint256,uint256,uint256,uint256,address indexed)
-  #     # - Sync(uint112,uint112)
-  #     # - Transfer(address indexed,address indexed,uint256)
-  - contract: '0xa478c2975ab1ea89e8196811f51a7b7ade33eb11'
-    name: daiEth
-    abi: src/abis/daiEth.json
-    handler: src/handlers/daiEth.ts
+  - contract: "0xa478c2975ab1ea89e8196811f51a7b7ade33eb11"
+    name: dai_weth
+    abi: src/abis/pair.json
+    handler: src/handlers/pair.ts
     event:
-      # - Approval(address indexed,address indexed,uint256)
-      # - Burn(address indexed,uint256,uint256,address indexed)
-      # - Mint(address indexed,uint256,uint256)
-      # - Swap(address indexed,uint256,uint256,uint256,uint256,address indexed)
+      - Burn(address indexed,uint256,uint256,address indexed)
+      - Mint(address indexed,uint256,uint256)
+      - Swap(address indexed,uint256,uint256,uint256,uint256,address indexed)
       - Sync(uint112,uint112)
       # - Transfer(address indexed,address indexed,uint256)
-  # - contract: '0x0d4a11d5eeaac28ec3f61d100daf4d40471f1852'
-  #   name: ethUsdt
-  #   abi: src/abis/ethUsdt.json
-  #   handler: src/handlers/ethUsdt.ts
-  #   event:
-  #     # - Approval(address indexed,address indexed,uint256)
-  #     # - Burn(address indexed,uint256,uint256,address indexed)
-  #     # - Mint(address indexed,uint256,uint256)
-  #     # - Swap(address indexed,uint256,uint256,uint256,uint256,address indexed)
-  #     # - Sync(uint112,uint112)
-  #     # - Transfer(address indexed,address indexed,uint256)
+  - contract: "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc"
+    name: usdc_weth
+    abi: src/abis/pair.json
+    handler: src/handlers/pair.ts
+    event:
+      - Burn(address indexed,uint256,uint256,address indexed)
+      - Mint(address indexed,uint256,uint256)
+      - Swap(address indexed,uint256,uint256,uint256,uint256,address indexed)
+      - Sync(uint112,uint112)
+      # - Transfer(address indexed,address indexed,uint256)
+  - contract: "0x0d4a11d5eeaac28ec3f61d100daf4d40471f1852"
+    name: weth_usdt
+    abi: src/abis/pair.json
+    handler: src/handlers/pair.ts
+    event:
+      - Burn(address indexed,uint256,uint256,address indexed)
+      - Mint(address indexed,uint256,uint256)
+      - Swap(address indexed,uint256,uint256,uint256,uint256,address indexed)
+      - Sync(uint112,uint112)
+      # - Transfer(address indexed,address indexed,uint256)
