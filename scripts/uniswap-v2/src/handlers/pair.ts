@@ -16,7 +16,7 @@ const pairToTokens = {
 /**
  * @dev Event::Burn(address sender, uint256 amount0, uint256 amount1, address to)
  * @param db database [key, value]
- * @param context trigger object with contains [event: [sender ,amount0 ,amount1 ,to ], log, transaction, block]
+ * @param context trigger object contains [event: [sender ,amount0 ,amount1 ,to ], log, transaction, block]
  */
 export const BurnHandler = (db: any, context: any) => {
   let pair = context.log.log_address;
@@ -48,8 +48,6 @@ export const BurnHandler = (db: any, context: any) => {
     to: context.event.to
   });
 
-  //TODO: update token0 and token1 tradeVolume, tradeVolumeUSD, txCount, reserve0, reserve1, totalLiquidity, derivedETH
-
   // To update a variable in database instance
   db["transactions"] = transactions;
 };
@@ -57,7 +55,7 @@ export const BurnHandler = (db: any, context: any) => {
 /**
  * @dev Event::Mint(address sender, uint256 amount0, uint256 amount1)
  * @param db database [key, value]
- * @param context trigger object with contains [event: [sender ,amount0 ,amount1], log, transaction, block]
+ * @param context trigger object contains [event: [sender ,amount0 ,amount1], log, transaction, block]
  */
 export const MintHandler = (db: any, context: any) => {
   let pair = context.log.log_address;
@@ -88,8 +86,6 @@ export const MintHandler = (db: any, context: any) => {
     amount1,
   });
 
-  //TODO: update token0 and token1 tradeVolume, tradeVolumeUSD, txCount, reserve0, reserve1, totalLiquidity, derivedETH
-
   // To update a variable in database instance
   db["transactions"] = transactions;
 };
@@ -97,7 +93,7 @@ export const MintHandler = (db: any, context: any) => {
 /**
  * @dev Event::Swap(address sender, uint256 amount0In, uint256 amount1In, uint256 amount0Out, uint256 amount1Out, address to)
  * @param db database [key, value]
- * @param event trigger object with keys [sender ,amount0In ,amount1In ,amount0Out ,amount1Out ,to ]
+ * @param context trigger object contains [event: [sender ,amount0In ,amount1In ,amount0Out ,amount1Out ,to ], log, transaction, block]
  */
 export const SwapHandler = (db: any, context: any) => {
   let pair = context.log.log_address;
@@ -111,14 +107,13 @@ export const SwapHandler = (db: any, context: any) => {
   if (!db["transactions"]["swaps"]) db["transactions"]["swaps"] = [];
 
   // To get variable in database instance
-  let transactions = db["transactions"];
   let amount0In = context.event["amount0In"];
   let amount1In = context.event["amount1In"];
   let amount0Out = context.event["amount0Out"];
   let amount1Out = context.event["amount1Out"];
 
   // Implement your event handler logic for Swap here
-  transactions["swaps"].push({
+  db["transactions"]["swaps"].push({
     timestamp: context.block.timestamp,
     block: context.block.block_number,
     transaction: context.transaction.transaction_hash,
@@ -133,111 +128,70 @@ export const SwapHandler = (db: any, context: any) => {
     to: context.event.to
   });
 
-  //TODO: update token0 and token1 tradeVolume, tradeVolumeUSD, txCount, reserve0, reserve1, totalLiquidity, derivedETH
-
-  // To update a variable in database instance
-  db["transactions"] = transactions;
+  if (!db["pairs"][pair])
+    db["pairs"][pair] = {
+      id: pair,
+      token0: token0,
+      token1: token1,
+      reserve0: BigNumber(0).toString(),
+      reserve1: BigNumber(0).toString(),
+      // totalSupply: BigNumber(0).toString(),
+      volumeToken0: BigNumber(0).toString(),
+      volumeToken1: BigNumber(0).toString(),
+      txnCount: BigNumber(0).toString(),
+    };
+  
+  const token0Volume = new BigNumber(amount0Out).minus(amount0In).abs();
+  const token1Volume = new BigNumber(amount1Out).minus(amount1In).abs();
+  
+  db['pairs'][pair].volumeToken0 = new BigNumber(db['pairs'][pair].volumeToken0).plus(token0Volume).toString();
+  db['pairs'][pair].volumeToken1 = new BigNumber(db['pairs'][pair].volumeToken1).plus(token1Volume).toString();
+  db['pairs'][pair].txCount = new BigNumber(db['pairs'][pair].txnCount).plus(1).toString();
 };
 
 /**
  * @dev Event::Sync(uint112 reserve0, uint112 reserve1)
  * @param db database [key, value]
- * @param event trigger object with keys [reserve0 ,reserve1 ]
+ * @param context trigger object contains [event: [reserve0 ,reserve1 ], log, transaction, block]
  */
-export const SyncHandler = (db: any, event: any, block: any) => {
+export const SyncHandler = (db: any, context: any) => {
   // To init a variable in database instance
-  let daiEthPair = "0xa478c2975ab1ea89e8196811f51a7b7ade33eb11";
-  let daiAddress = "0x6b175474e89094c44da98b954eedeac495271d0f";
-  let ethAddress = "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2";
+  let pair = context.log.log_address;
+  let token0 = tokenToAddr[pairToTokens[pair][0]];
+  let token1 = tokenToAddr[pairToTokens[pair][1]];
 
   if (!db["pairs"]) db["pairs"] = {};
   if (!db["tokens"]) db["tokens"] = {};
 
-  if (!db["pairs"][daiEthPair])
-    db["pairs"][daiEthPair] = {
-      id: daiEthPair,
-      token0: daiAddress,
-      token1: ethAddress,
+  if (!db["pairs"][pair])
+    db["pairs"][pair] = {
+      id: pair,
+      token0: token0,
+      token1: token1,
       reserve0: BigNumber(0).toString(),
       reserve1: BigNumber(0).toString(),
-      totalSupply: BigNumber(0).toString(),
-      reserveETH: BigNumber(0).toString(),
-      reserveUSD: BigNumber(0).toString(),
-      trackedReserveETH: BigNumber(0).toString(),
-      token0Price: BigNumber(0).toString(),
-      token1Price: BigNumber(0).toString(),
+      // totalSupply: BigNumber(0).toString(),
       volumeToken0: BigNumber(0).toString(),
       volumeToken1: BigNumber(0).toString(),
-      volumeUSD: BigNumber(0).toString(),
       txCount: BigNumber(0).toString(),
-      createdAtBlockNumber: block.timestamp,
     };
-
-  if (!db["tokens"][daiAddress])
-    db["tokens"][daiAddress] = {
-      id: daiAddress,
-      symbol: "DAI",
-      name: "Dai Stablecoin",
-      decimals: 18,
-      tradeVolume: BigNumber(0),
-      tradeVolumeUSD: BigNumber(0),
-      txCount: BigNumber(0),
-      totalLiquidity: BigNumber(0),
-      derivedETH: BigNumber(0),
-    };
-
-  if (!db["tokens"][ethAddress])
-    db["tokens"][ethAddress] = {
-      id: ethAddress,
-      symbol: "ETH",
-      name: "Ether",
-      decimals: 18,
-      tradeVolume: BigNumber(0),
-      tradeVolumeUSD: BigNumber(0),
-      txCount: BigNumber(0),
-      totalLiquidity: BigNumber(0),
-      derivedETH: BigNumber(1),
-    };
-
-  // To get variable in database instance
-  let pairs = db["pairs"];
-  let tokens = db["tokens"];
-  let pair = pairs[daiEthPair];
-  let token0 = tokens[daiAddress];
-  let token1 = tokens[ethAddress];
-  let reserve0 = event["reserve0"];
-  let reserve1 = event["reserve1"];
-  let decimals0 = token0["decimals"] || 18;
-  let decimals1 = token1["decimals"] || 18;
 
   // Implement your event handler logic for Sync here
-  pair["reserve0"] = BigNumber(reserve0).dividedBy(
-    BigNumber(10).pow(decimals0)
-  );
-  pair["reserve1"] = BigNumber(reserve1).dividedBy(
-    BigNumber(10).pow(decimals1)
-  );
-
-  pairs[daiEthPair] = pair;
-  tokens[daiAddress] = token0;
-  tokens[ethAddress] = token1;
-
-  // To update a variable in database instance
-  db["pairs"] = pairs;
-  db["tokens"] = tokens;
+  db['pairs'][pair]["reserve0"] = context.event.reserve0
+  db['pairs'][pair]["reserve1"] = context.event.reserve1;
 };
 
-/**
- * @dev Event::Transfer(address from, address to, uint256 value)
- * @param instance database [key, value]
- * @param event trigger object with keys [from ,to ,value ]
- */
-export const TransferHandler = (db: any, event: any) => {
-  // To init a variable in database instance
-  // if(!db['from']) db['from'] = {}
-  // To get variable in database instance
-  // let from = db['from']
-  // To update a variable in database instance
-  // db['from'] = event.from || event.arg0 || event['0']
-  // Implement your event handler logic for Transfer here
-};
+// /**
+//  * @dev Event::Transfer(address from, address to, uint256 value)
+//  * @param instance database [key, value]
+//  * @param event trigger object with keys [from ,to ,value ]
+//  */
+// export const TransferHandler = (db: any, event: any) => {
+//   // To init a variable in database instance
+//   // if(!db['from']) db['from'] = {}
+//   // To get variable in database instance
+//   // let from = db['from']
+//   // To update a variable in database instance
+//   // db['from'] = event.from || event.arg0 || event['0']
+//   // Implement your event handler logic for Transfer here
+// };
