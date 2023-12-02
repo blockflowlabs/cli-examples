@@ -1,5 +1,5 @@
 import BigNumber from "bignumber.js";
-import tokenMetaData from "../utils/token-metadata";
+import metadata from "../utils/metadata";
 
 /**
  * @dev Event::Transfer(address from, address to, uint256 value)
@@ -12,7 +12,7 @@ export const TransferHandler = (db: any, context: any) => {
 
   // To init a variable in database instance
   if (!db[token]) {
-    db[token] = tokenMetaData[token];
+    db[token] = metadata[token];
     db[token]["totalSupply"] = "0";
     db[token]["balances"] = {};
   }

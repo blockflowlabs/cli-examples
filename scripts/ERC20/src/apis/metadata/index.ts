@@ -1,4 +1,4 @@
-import tokenMetaData from "../../utils/token-metadata";
+import metadata from "../../utils/metadata";
 
 /**
  * @param response your api endpoint object
@@ -16,6 +16,6 @@ export const Handler = (response: any, instance: any, queryParams: any) => {
     const tokens = queryParams['tokens'];
 
     for (const token of tokens) {
-        response[token] = tokenMetaData[token];
+        response[token] = metadata[token];
     }
 };

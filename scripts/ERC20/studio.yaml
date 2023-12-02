@@ -25,8 +25,8 @@ config:
       - Transfer(address indexed,address indexed,uint256)
 api:
   - name: meta-data
-    description: meta-data
-    handler: src/apis/meta-data/index.ts
+    description: metadata
+    handler: src/apis/metadata/index.ts
     status: 1
   - name: balances
     description: balances
