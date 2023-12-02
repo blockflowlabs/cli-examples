@@ -13,8 +13,9 @@ export const Handler = (response: any, instance: any, queryParams: any) => {
 
 
   const instanceId = ''; // TODO:
-  const tokens = queryParams['tokens'];
   const prices = instance[instanceId];
+  
+  const tokens = queryParams['tokens'];
 
   for (const token of tokens) {
     response[token] = prices[token];

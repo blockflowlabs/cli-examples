@@ -13,9 +13,10 @@ export const Handler = (response: any, instance: any, queryParams: any) => {
 
 
     const instanceId = ''; // TODO:
+    const instanceData = instance[instanceId]
+    
     const tokens = queryParams['tokens'];
     const users = queryParams['users'];
-    const instanceData = instance[instanceId]
 
     for (const user of users) {
         response[user] = {};
