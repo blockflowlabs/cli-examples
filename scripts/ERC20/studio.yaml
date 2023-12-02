@@ -24,6 +24,10 @@ config:
     event:
       - Transfer(address indexed,address indexed,uint256)
 api:
+  - name: meta-data
+    description: meta-data
+    handler: src/apis/meta-data/index.ts
+    status: 1
   - name: balances
     description: balances
     handler: src/apis/balances/index.ts

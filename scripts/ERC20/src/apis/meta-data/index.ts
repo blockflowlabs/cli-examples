@@ -1,3 +1,5 @@
+import tokenMetaData from "../../utils/token-metadata";
+
 /**
  * @param response your api endpoint object
  * @param instance the object that contains your instance id as keys, and instance db as value
@@ -11,17 +13,9 @@ export const Handler = (response: any, instance: any, queryParams: any) => {
   // response['blah'] ??= {...instance1DB}
   // Implement your api handler logic here
 
-
-    const instanceId = ''; // TODO:
-    const instanceData = instance[instanceId]
-
-    const users = queryParams['users'];
     const tokens = queryParams['tokens'];
 
-    for (const user of users) {
-        response[user] = {};
-        for (const token of tokens) {
-            response[user][token] = instanceData[token]['balances'][user]
-        }
+    for (const token of tokens) {
+        response[token] = tokenMetaData[token];
     }
 };
