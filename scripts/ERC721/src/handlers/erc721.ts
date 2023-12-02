@@ -5,31 +5,31 @@
  */
 export const TransferHandler = (db: any, context: any) => {
   // To init a variable in database instance
-  if (!db["holdings"]) db["holdings"] = {};
-  if (!db["tokens"]) db["tokens"] = {};
-  if (!db["holdings"][context.event.from]) db["holdings"][context.event.from] = [];
-  if (!db["holdings"][context.event.to]) db["holdings"][context.event.to] = [];
-  if (!db["tokens"][context.event.tokenId]) db["tokens"][context.event.tokenId] = {};
-  if (!db["tokens"][context.event.tokenId]["pastOwners"])
-    db["tokens"][context.event.tokenId]["pastOwners"] = [];
+  if (!db["balances"]) db["balances"] = {};
+  if (!db["owners"]) db["owners"] = {};
+  if (!db["balances"][context.event.from]) db["balances"][context.event.from] = [];
+  if (!db["balances"][context.event.to]) db["balances"][context.event.to] = [];
+  if (!db["owners"][context.event.tokenId]) db["owners"][context.event.tokenId] = {};
+  if (!db["owners"][context.event.tokenId]["pastOwners"])
+    db["owners"][context.event.tokenId]["pastOwners"] = [];
 
   // To get variable in database instance
   let to = context.event.to;
   let from = context.event.from;
   let tokenId = context.event.tokenId;
-  let holdings = db["holdings"];
-  let tokens = db["tokens"];
-  let fromHoldings = holdings[from];
+  let balances = db["balances"];
+  let owners = db["owners"];
+  let fromBalances = balances[from];
 
   // Implement your event handler logic for Transfer here
-  if (fromHoldings.includes(tokenId)) {
-    fromHoldings.splice(fromHoldings.indexOf(tokenId), 1);
+  if (fromBalances.includes(tokenId)) {
+    fromBalances.splice(fromBalances.indexOf(tokenId), 1);
   }
-  holdings[to].push(tokenId);
-  tokens[tokenId]["pastOwners"].push(from);
-  tokens[tokenId]["currentOwner"] = to;
+  balances[to].push(tokenId);
+  owners[tokenId]["pastOwners"].push(from);
+  owners[tokenId]["currentOwner"] = to;
 
   // To update a variable in database instance
-  db["holdings"] = holdings;
-  db["tokens"] = tokens;
+  db["balances"] = balances;
+  db["owners"] = owners;
 };
