@@ -12,11 +12,15 @@ export const Handler = (response: any, instance: any, queryParams: any) => {
   // Implement your api handler logic here
 
 
-  const instanceId = ''; // TODO:
-  const tokens = queryParams['tokens'];
-  const prices = instance[instanceId];
+    const instanceId = ''; // TODO:
+    const tokens = queryParams['tokens'];
+    const users = queryParams['users'];
+    const instanceData = instance[instanceId]
 
-  for (const token of tokens) {
-    response[token] = prices[token];
-  }
+    for (const user of users) {
+        response[user] = {};
+        for (const token of tokens) {
+            response[user][token] = instanceData[token]['balances'][user]
+        }
+    }
 };

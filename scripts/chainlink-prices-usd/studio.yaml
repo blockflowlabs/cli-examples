@@ -40,5 +40,5 @@ api:
     description: prices-usd
     handler: src/apis/prices-usd/index.ts
     instances:
-      - 2c6a2c2c-c536-48d8-af20-5d95ce794c81
+      # - 2c6a2c2c-c536-48d8-af20-5d95ce794c81 // TODO:
     status: 1
