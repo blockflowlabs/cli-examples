@@ -35,3 +35,46 @@ config:
       - Swap(address indexed,uint256,uint256,uint256,uint256,address indexed)
       - Sync(uint112,uint112)
       # - Transfer(address indexed,address indexed,uint256)
+api:
+  - name: pairs
+    description: pairs
+    handler: src/apis/pairs/index.ts
+    instances:
+      # - 2c6a2c2c-c536-48d8-af20-5d95ce794c81 // TODO:
+    status: 1
+  - name: all-swaps
+    description: all swaps
+    handler: src/apis/swaps/all-swaps/index.ts
+    instances:
+      # - 2c6a2c2c-c536-48d8-af20-5d95ce794c81 // TODO:
+    status: 1
+  - name: pair-swaps
+    description: pair swaps
+    handler: src/apis/swaps/pair-swaps/index.ts
+    instances:
+      # - 2c6a2c2c-c536-48d8-af20-5d95ce794c81 // TODO:
+    status: 1
+  - name: all-mints
+    description: all mints
+    handler: src/apis/mints/all-mints/index.ts
+    instances:
+      # - 2c6a2c2c-c536-48d8-af20-5d95ce794c81 // TODO:
+    status: 1
+  - name: mints
+    description: mints
+    handler: src/apis/mints/pair-mints/index.ts
+    instances:
+      # - 2c6a2c2c-c536-48d8-af20-5d95ce794c81 // TODO:
+    status: 1
+  - name: all-burns
+    description: all burns
+    handler: src/apis/mints/all-mints/index.ts
+    instances:
+      # - 2c6a2c2c-c536-48d8-af20-5d95ce794c81 // TODO:
+    status: 1
+  - name: pair-burns
+    description: pair burns
+    handler: src/apis/burns/pair-burns/index.ts
+    instances:
+      # - 2c6a2c2c-c536-48d8-af20-5d95ce794c81 // TODO:
+    status: 1

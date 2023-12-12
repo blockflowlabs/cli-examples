@@ -25,7 +25,6 @@ export const BurnHandler = (db: any, context: any) => {
 
   // To init a variable in database instance
   if (!db["pairs"]) db["pairs"] = {};
-  if (!db["tokens"]) db["tokens"] = {};
   if (!db["transactions"]) db["transactions"] = {};
   if (!db["transactions"]["burns"]) db["transactions"]["burns"] = [];
 
@@ -64,7 +63,6 @@ export const MintHandler = (db: any, context: any) => {
 
   // To init a variable in database instance
   if (!db["pairs"]) db["pairs"] = {};
-  if (!db["tokens"]) db["tokens"] = {};
   if (!db["transactions"]) db["transactions"] = {};
   if (!db["transactions"]["mints"]) db["transactions"]["mints"] = [];
 
@@ -102,7 +100,6 @@ export const SwapHandler = (db: any, context: any) => {
 
   // To init a variable in database instance
   if (!db["pairs"]) db["pairs"] = {};
-  if (!db["tokens"]) db["tokens"] = {};
   if (!db["transactions"]) db["transactions"] = {};
   if (!db["transactions"]["swaps"]) db["transactions"]["swaps"] = [];
 
@@ -161,7 +158,6 @@ export const SyncHandler = (db: any, context: any) => {
   let token1 = tokenToAddr[pairToTokens[pair][1]];
 
   if (!db["pairs"]) db["pairs"] = {};
-  if (!db["tokens"]) db["tokens"] = {};
 
   if (!db["pairs"][pair])
     db["pairs"][pair] = {
