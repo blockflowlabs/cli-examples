@@ -6,7 +6,7 @@ import BigNumber from "bignumber.js";
  * @param context trigger object contains [event: [current ,roundId ,updatedAt ], log, transaction, block]
  */
 export const AnswerUpdatedHandler = (db: any, context: any) => {
-  const aggregatorToTokenSymbol = {
+  const aggregatorToTokenSymbol: any = {
     "0xE62B71cf983019BFf55bC83B48601ce8419650CC": "ETH",
     "0xdBe1941BFbe4410D6865b9b7078e0b49af144D2d": "BTC",
     "0x478238a1c8B862498c74D0647329Aef9ea6819Ed": "DAI",
@@ -14,7 +14,7 @@ export const AnswerUpdatedHandler = (db: any, context: any) => {
     "0x789190466E21a8b78b8027866CBBDc151542A26C": "USDC",
   };
 
-  const aggregatorToDecimals = {
+  const aggregatorToDecimals: any = {
     "0xE62B71cf983019BFf55bC83B48601ce8419650CC": "8",
     "0xdBe1941BFbe4410D6865b9b7078e0b49af144D2d": "8",
     "0x478238a1c8B862498c74D0647329Aef9ea6819Ed": "8",
