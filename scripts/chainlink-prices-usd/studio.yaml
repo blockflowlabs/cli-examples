@@ -1,7 +1,7 @@
 name: chainlink-prices-usd
 description: A top-secret research project to the moon
 startBlock: 18361281
-userId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
+userId: d699d33d-d3f3-47c3-8d4b-2132360f64ee
 network: Ethereum
 user: John doe
 config:
@@ -35,3 +35,10 @@ config:
     handler: src/handlers/aggregator.ts
     event:
       - AnswerUpdated(int256 indexed,uint256 indexed,uint256)
+api:
+  - name: prices-usd
+    description: prices-usd
+    handler: src/apis/prices-usd/index.ts
+    instances:
+      # - 2c6a2c2c-c536-48d8-af20-5d95ce794c81 // TODO:
+    status: 1

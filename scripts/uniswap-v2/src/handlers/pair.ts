@@ -1,13 +1,13 @@
 import { BigNumber } from "bignumber.js";
 
-const tokenToAddr = {
+const tokenToAddr: any = {
   "WETH": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
   "DAI": "0x6b175474e89094c44da98b954eedeac495271d0f",
   "USDT": "0xdac17f958d2ee523a2206206994597c13d831ec7",
   "USDC": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
 }
 
-const pairToTokens = {
+const pairToTokens: any = {
   "0xa478c2975ab1ea89e8196811f51a7b7ade33eb11": ['DAI', 'WETH'],
   "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc": ['USDC', 'WETH'],
   "0x0d4a11d5eeaac28ec3f61d100daf4d40471f1852": ['WETH', 'USDT']
@@ -25,7 +25,6 @@ export const BurnHandler = (db: any, context: any) => {
 
   // To init a variable in database instance
   if (!db["pairs"]) db["pairs"] = {};
-  if (!db["tokens"]) db["tokens"] = {};
   if (!db["transactions"]) db["transactions"] = {};
   if (!db["transactions"]["burns"]) db["transactions"]["burns"] = [];
 
@@ -64,7 +63,6 @@ export const MintHandler = (db: any, context: any) => {
 
   // To init a variable in database instance
   if (!db["pairs"]) db["pairs"] = {};
-  if (!db["tokens"]) db["tokens"] = {};
   if (!db["transactions"]) db["transactions"] = {};
   if (!db["transactions"]["mints"]) db["transactions"]["mints"] = [];
 
@@ -102,7 +100,6 @@ export const SwapHandler = (db: any, context: any) => {
 
   // To init a variable in database instance
   if (!db["pairs"]) db["pairs"] = {};
-  if (!db["tokens"]) db["tokens"] = {};
   if (!db["transactions"]) db["transactions"] = {};
   if (!db["transactions"]["swaps"]) db["transactions"]["swaps"] = [];
 
@@ -161,7 +158,6 @@ export const SyncHandler = (db: any, context: any) => {
   let token1 = tokenToAddr[pairToTokens[pair][1]];
 
   if (!db["pairs"]) db["pairs"] = {};
-  if (!db["tokens"]) db["tokens"] = {};
 
   if (!db["pairs"][pair])
     db["pairs"][pair] = {

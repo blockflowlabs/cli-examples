@@ -23,3 +23,14 @@ config:
     handler: src/handlers/erc20.ts
     event:
       - Transfer(address indexed,address indexed,uint256)
+api:
+  - name: meta-data
+    description: metadata
+    handler: src/apis/metadata/index.ts
+    status: 1
+  - name: balances
+    description: balances
+    handler: src/apis/balances/index.ts
+    instances:
+      # - 2c6a2c2c-c536-48d8-af20-5d95ce794c81 // TODO:
+    status: 1

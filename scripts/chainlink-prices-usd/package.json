@@ -6,7 +6,7 @@
     "compile": "tsc -b"
   },
   "dependencies": {
-    "@blockflow-labs/cli": "^0.0.8"
+    "@blockflow-labs/cli": "^0.0.9"
   },
   "devDependencies": {
     "bignumber.js": "^9.1.1",
