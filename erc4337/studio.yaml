@@ -6,36 +6,12 @@ network: Ethereum
 user: Vaibhav Khanna
 schema:
   file: ./studio.schema.ts
-  Entities: []
 sources:
   - name: entrypoint
     abi: src/abis/entrypoint.json
     handler: src/handlers/entrypoint
     type: contract/function
-    contract: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789'
+    contract: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789"
     functions:
-      - SIG_VALIDATION_FAILED()
-      - _validateSenderAndPaymaster(bytes,address,bytes)
-      - addStake(uint32)
-      - balanceOf(address)
-      - depositTo(address)
-      - deposits(address)
-      - getDepositInfo(address)
-      - getNonce(address,uint192)
-      - getSenderAddress(bytes)
       - >-
         tuple(address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes)
-      - >-
-        tuple(address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes)
-      - >-
-        tuple(address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes)
-      - incrementNonce(uint192)
-      - tuple(address,uint256,uint256,uint256,uint256,address,uint256,uint256)
-      - nonceSequenceNumber(address,uint192)
-      - >-
-        tuple(address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes)
-      - >-
-        tuple(address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes)
-      - unlockStake()
-      - withdrawStake(address)
-      - withdrawTo(address,uint256)
