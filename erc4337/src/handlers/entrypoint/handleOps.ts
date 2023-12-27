@@ -1,4 +1,7 @@
 import { UserOp, Transaction, Block } from "../../types/schema";
+import getUserOpHash from "./helpers";
+
+const chainId = '1';
 /**
  * @dev Function::handleOps(tuple[] ops, address beneficiary)
  * @param context trigger object with contains {function: {ops ,beneficiary }, transaction, block, log}
@@ -24,11 +27,11 @@ export const handleOpsHandler = async (context: any, load: any, save: any) => {
   const entryPoint = context.transaction.transaction_to_address;
 
   for (const op of context.payload.ops) {
-    const id = ""; // TODO: Generate this
-    userOpHashes = [...userOpHashes, id];
+    const userOpHash = getUserOpHash(op, entryPoint, chainId);
+    userOpHashes = [...userOpHashes, userOpHash];
 
-    const userOp = await UserOp.load(id, load);
-    userOp.userOpHash = id;
+    const userOp = await UserOp.load(userOpHash, load);
+    userOp.userOpHash = userOpHash;
     userOp.sender = op.sender;
     userOp.nonce = op.nonce;
     userOp.initCode = op.initCode;
