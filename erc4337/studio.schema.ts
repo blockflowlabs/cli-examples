@@ -24,11 +24,11 @@ interface UserOp {
 interface Transaction {
     id: string; // keep this same as transaction hash
     transactionHash: string;
-    userOpHashes: string[];
+    userOpHashes: [string];
 }
 
 interface Block {
     id: string; // keep this same as block number
     blockNumber: string;
-    transactionHashesWithUserOps: string[]
+    transactionHashesWithUserOps: [string]
 }
