@@ -17,6 +17,7 @@ interface UserOp {
     // extra details
     transactionHash: string;
     blockNumber: string;
+    blockTimeStamp: string;
     entryPoint: string;
 }
 
@@ -29,5 +30,5 @@ interface Transaction {
 interface Block {
     id: string; // keep this same as block number
     blockNumber: string;
-    transactionHashesWithUserOps: string[];
+    transactionHashesWithUserOps: string[]
 }
