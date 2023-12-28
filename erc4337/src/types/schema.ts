@@ -2,7 +2,7 @@
 
 export class UserOp {
   static entity = "UserOp";
-  static entityId = "2c623123-e557-45eb-8454-779f3a51f4be";
+  static entityId = "bb7e8518-8ed2-4813-bc46-697c42a86d44";
   static schema = {
     id: "string",
     userOpHash: "string",
@@ -18,6 +18,9 @@ export class UserOp {
     paymasterAndData: "string",
     signature: "string",
     beneficiary: "string",
+    success: "string",
+    actualGasCost: "string",
+    actualGasUsed: "string",
     transactionHash: "string",
     blockNumber: "string",
     blockTimeStamp: "string",
@@ -44,7 +47,7 @@ export class UserOp {
 
 export class Transaction {
   static entity = "Transaction";
-  static entityId = "5bd63968-ffde-4af3-b2ea-90f663c38566";
+  static entityId = "96037943-c6b3-4a6f-ac22-fc571fde1375";
   static schema = {
     id: "string",
     transactionHash: "string",
@@ -71,7 +74,7 @@ export class Transaction {
 
 export class Block {
   static entity = "Block";
-  static entityId = "c887e9f8-c9b0-42af-9cbb-fa6b5be0c6a0";
+  static entityId = "0a79abf8-8840-4900-976c-432ef9e6f134";
   static schema = {
     id: "string",
     blockNumber: "string",

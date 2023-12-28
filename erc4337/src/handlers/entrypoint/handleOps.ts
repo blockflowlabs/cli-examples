@@ -1,7 +1,7 @@
 import { UserOp, Transaction, Block } from "../../types/schema";
 import getUserOpHash from "./helpers";
 
-const chainId = '1';
+const chainId = "1";
 /**
  * @dev Function::handleOps(tuple[] ops, address beneficiary)
  * @param context trigger object with contains {function: {ops ,beneficiary }, transaction, block, log}
@@ -12,12 +12,15 @@ export const handleOpsHandler = async (context: any, load: any, save: any) => {
   const blockNumber = context.block.block_number;
   const blockTimeStamp = context.block.block_timestamp;
 
-  // block 
+  // block
   const block = await Block.load(blockNumber, load);
   block.blockNumber = blockNumber;
-  block.transactionHashesWithUserOps = [...block.transactionHashesWithUserOps, transactionHash];
+  block.transactionHashesWithUserOps = [
+    ...block.transactionHashesWithUserOps,
+    transactionHash,
+  ];
   await Block.save(block, save);
-  
+
   // transaction
   const transaction = await Transaction.load(transactionHash, load);
   transaction.transactionHash = transactionHash;
@@ -47,7 +50,7 @@ export const handleOpsHandler = async (context: any, load: any, save: any) => {
 
     userOp.transactionHash = transactionHash;
     userOp.blockNumber = blockNumber;
-    userOp.blockTimeStamp = blockTimeStamp
+    userOp.blockTimeStamp = blockTimeStamp;
     userOp.entryPoint = entryPoint;
 
     await UserOp.save(userOp, save);
