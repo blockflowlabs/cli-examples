@@ -1,25 +1,32 @@
 name: ERC4337
 description: Indexing UserOps from an Entry Point Contract
-startBlock: latest
+startBlock: 18883973
 userId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
 network: Ethereum
 user: Vaibhav Khanna
 schema:
   file: ./studio.schema.ts
+  Entities:
+    - name: UserOp
+      uniqueId: c5f5864e-63e7-44bb-a3f8-e6ef030c88c1
+    - name: Transaction
+      uniqueId: 3ce06d73-d9bd-4ed9-b753-bb8aaa4b9c4b
+    - name: Block
+      uniqueId: a95d2eba-5187-432f-a7fc-8b2ca74e5600
 sources:
   - name: entrypoint
     abi: src/abis/entrypoint.json
-    handler: src/handlers/entrypoint/handlerOps.ts
+    handler: src/handlers/entrypoint
     type: contract/function
-    contract: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789"
+    contract: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789'
     functions:
       - >-
-        tuple(address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes)
+        handleOps(tuple(address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes),address)
   - name: blockflow
     abi: src/abis/entrypoint.json
-    handler: src/handlers/extrypoint/userOperationEvent.ts
+    handler: src/handlers/blockflow
     type: contract/event
-    contract: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789"
+    contract: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789'
     events:
       - >-
         UserOperationEvent(bytes32 indexed,address indexed,address

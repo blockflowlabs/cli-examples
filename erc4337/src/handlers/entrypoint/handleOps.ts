@@ -1,5 +1,5 @@
 import { UserOp, Transaction, Block } from "../../types/schema";
-import getUserOpHash from "./helpers";
+import getUserOpHash from "../utils/helpers";
 
 const chainId = "1";
 /**
