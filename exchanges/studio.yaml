@@ -1,0 +1,27 @@
+name: Project Apollo
+description: A top-secret research project to the moon
+startBlock: latest
+userId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
+network: Ethereum
+user: John doe
+schema:
+  file: ./studio.schema.ts
+  Entities: []
+sources:
+  - name: blockflow
+    abi: src/abis/blockflow.json
+    handler: src/handlers/blockflow
+    type: contract/event
+    contract: '0xdAC17F958D2ee523a2206206994597C13D831ec7'
+    events:
+      - Issue(uint256)
+      - Redeem(uint256)
+      - Deprecate(address)
+      - Params(uint256,uint256)
+      - DestroyedBlackFunds(address,uint256)
+      - AddedBlackList(address)
+      - RemovedBlackList(address)
+      - Approval(address indexed,address indexed,uint256)
+      - Transfer(address indexed,address indexed,uint256)
+      - Pause()
+      - Unpause()
