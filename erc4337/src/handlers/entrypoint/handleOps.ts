@@ -15,10 +15,8 @@ export const handleOpsHandler = async (context: any, load: any, save: any) => {
   // block
   const block = await Block.load(blockNumber, load);
   block.blockNumber = blockNumber;
-  block.transactionHashesWithUserOps = [
-    ...block.transactionHashesWithUserOps,
-    transactionHash,
-  ];
+  block.transactionHashesWithUserOps.push(transactionHash);
+
   await Block.save(block, save);
 
   // transaction

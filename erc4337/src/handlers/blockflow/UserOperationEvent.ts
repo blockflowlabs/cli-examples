@@ -7,15 +7,15 @@ import { UserOp } from "../../types/schema";
 export const UserOperationEventHandler = async (
   context: any,
   load: any,
-  save: any,
+  save: any
 ) => {
   // Implement your event handler logic for UserOperationEvent here
-  const userOpHash = context.event.userOpHash;
+  const userOpHash = context.payload.userOpHash;
   const userOp = await UserOp.load(userOpHash, load);
 
-  userOp.success = context.event.success;
-  userOp.actualGasCost = context.event.actualGasCost;
-  userOp.actualGasUsed = context.event.actualGasUsed;
+  userOp.success = context.payload.success;
+  userOp.actualGasCost = context.payload.actualGasCost;
+  userOp.actualGasUsed = context.payload.actualGasUsed;
 
   await UserOp.save(userOp, save);
 };
