@@ -18,7 +18,7 @@ sources:
     abi: src/abis/entrypoint.json
     handler: src/handlers/entrypoint
     type: contract/function
-    contract: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789"
+    contract: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789'
     functions:
       - >-
         handleOps(tuple(address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes)[],address)
@@ -31,7 +31,7 @@ sources:
     abi: src/abis/entrypoint.json
     handler: src/handlers/blockflow
     type: contract/event
-    contract: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789"
+    contract: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789'
     events:
       - >-
         UserOperationEvent(bytes32 indexed,address indexed,address
