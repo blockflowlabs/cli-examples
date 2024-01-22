@@ -1,0 +1,20 @@
+name: Aave Liquidations
+description: A top-secret research project to the moon
+startBlock: latest
+userId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
+network: Ethereum
+user: John doe
+schema:
+  file: ./studio.schema.ts
+  Entities: []
+sources:
+  - name: aave
+    abi: src/abis/aave.json
+    handler: src/handlers/aave
+    type: contract/event
+    contract: "0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2"
+    events:
+      - >-
+        LiquidationCall(address indexed,address indexed,address
+        indexed,uint256,uint256,address,bool)
+    entities: []

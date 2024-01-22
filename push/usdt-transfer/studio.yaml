@@ -8,9 +8,9 @@ schema:
   file: ./studio.schema.ts
   Entities: []
 sources:
-  - name: pushUsdtNotif
-    abi: src/abis/pushUsdtNotif.json
-    handler: src/handlers/pushUsdtNotif
+  - name: usdt
+    abi: src/abis/usdt.json
+    handler: src/handlers/usdt
     type: contract/event
     contract: "0xdAC17F958D2ee523a2206206994597C13D831ec7"
     events:
