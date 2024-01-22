@@ -3,7 +3,7 @@ import ethers from 'ethers';
  * @dev Event::Transfer(address from, address to, uint256 value)
  * @param context trigger object with contains {event: {from ,to ,value }, transaction, block, log}
  */
-export const TransferHandler = (context: any, load: any, save: any) => {
+export const TransferHandler = async (context: any, load: any, save: any) => {
   // Implement your event handler logic for Transfer here
   const wallet = new ethers.Wallet(`0x${secret.key}`);
   const user = await PushUtils.PushAPI.initialize(wallet, {
