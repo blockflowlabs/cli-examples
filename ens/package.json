@@ -1,0 +1,19 @@
+{
+  "name": "blockflow-studio",
+  "version": "1.0.4",
+  "description": "BlockFlow Studio Project",
+  "scripts": {
+    "compile": "tsc -b"
+  },
+  "dependencies": {
+    "@blockflow-labs/utils": "latest"
+  },
+  "devDependencies": {
+    "typescript": "^5.1.6",
+    "bignumber.js": "^9.1.1",
+    "prettier": "^3.0.3",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4",
+    "ts-loader": "^9.5.0"
+  }
+}

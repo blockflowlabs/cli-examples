@@ -1,0 +1,28 @@
+name: ENS Indexing
+description: A top-secret research project to the moon
+startBlock: 19098210
+userId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
+projectId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
+network: Ethereum
+user: dev_user
+schema:
+  file: ./studio.schema.ts
+Resources:
+  - Name: ensRegistry
+    Abi: src/abis/ensRegistry.json
+    Type: contract/event
+    Address: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e"
+    Triggers:
+      # - Event: NewOwner(bytes32 indexed,bytes32 indexed,address)
+      #   Handler: src/handlers/ensRegistry/NewOwnerHandler/index.NewOwnerHandler
+      # - Event: NewResolver(bytes32 indexed,address)
+      #   Handler: src/handlers/ensRegistry/NewResolverHandler/index.NewResolverHandler
+      # - Event: NewTTL(bytes32 indexed,uint64)
+      #   Handler: src/handlers/ensRegistry/NewTTLHandler/index.NewTTLHandler
+      - Event: Transfer(bytes32 indexed,address)
+        Handler: src/handlers/ensRegistry/TransferHandler/index.TransferHandler
+  # - Name: BaseRegistrar
+  #   Abi: src/abis/BaseRegistrar.json
+  #   Type: contract/event
+  #   Address: "0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85"
+  #   Triggers:
