@@ -1,18 +1,21 @@
-import { String, Array } from "@blockflow-labs/utils";
+import { String, Array, Number } from "@blockflow-labs/utils";
 
 interface Account {
   id: String;
+  domains: [String]; // domain ids
+  wrappedDomains: [String]; // wrapped domain ids
+  registrations: [String]; // registration ids
 }
 
 interface Registration {
   id: String;
-  domain: Domain;
+  domain: String;
   registrationDate: Number;
   expiryDate: Number;
   cost: Number;
-  registrant: Account;
+  registrant: String;
   labelName: String;
-  events: [RegistrationEvent];
+  events: [String];
 }
 
 interface RegistrationEvent {
@@ -37,16 +40,17 @@ interface Domain {
   subdomains: [String];
   subdomainCount: Number;
   resolvedAddress: String;
+  owner: String;
   resolver: Resolver;
   ttl: Number;
   isMigrated: Boolean;
   createdAt: Number;
-  owner: String;
   registrant: String;
   wrappedOwner: String;
   expiryDate: Number;
   wrappedDomain: WrappedDomain;
-  events: [DomainEvent];
+  events: [String];
+  registration: Registration;
 }
 
 interface Resolver {
@@ -77,4 +81,30 @@ interface Transfer {
   blockNumber: Number;
   transactionID: String;
   owner: String;
+}
+
+interface AddrChanged {
+  id: String;
+  resolver: Resolver;
+  blockNumber: Number;
+  transactionID: String;
+  addr: Account;
+}
+
+interface MulticoinAddrChanged {
+  id: String;
+  resolver: Resolver;
+  blockNumber: Number;
+  transactionID: String;
+  coinType: Number;
+  addr: String;
+}
+
+interface TextChanged {
+  id: String;
+  resolver: Resolver;
+  blockNumber: Number;
+  transactionID: String;
+  key: String;
+  value: String;
 }
