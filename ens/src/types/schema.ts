@@ -166,30 +166,38 @@ export class AddrChanged {
   static entity = "AddrChanged";
   static schema = {
     id: "String",
-    resolver: {
-      id: "String",
-      address: "String",
-      addr: {
-        id: "String",
-        domains: ["String"],
-        wrappedDomains: ["String"],
-        registrations: ["String"],
-      },
-      contentHash: "String",
-      texts: ["String"],
-      coinTypes: ["Number"],
-      events: [
-        { id: "String", blockNumber: "Number", transactionID: "String" },
-      ],
-    },
+    resolver: "String",
     blockNumber: "Number",
     transactionID: "String",
-    addr: {
-      id: "String",
-      domains: ["String"],
-      wrappedDomains: ["String"],
-      registrations: ["String"],
-    },
+    addr: "String",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "String", index: true },
+  };
+}
+
+export class MulticoinAddrChanged {
+  static entity = "MulticoinAddrChanged";
+  static schema = {
+    id: "String",
+    resolver: "string",
+    blockNumber: "Number",
+    transactionID: "String",
+    coinType: "Number",
+    addr: "String",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "String", index: true },
+  };
+}
+
+export class TextChanged {
+  static entity = "TextChanged";
+  static schema = {
+    id: "String",
+    resolver: "String",
+    blockNumber: "Number",
+    transactionID: "String",
+    key: "String",
+    value: "String",
     entityId: { type: "String", index: true },
     blocknumber: { type: "String", index: true },
   };

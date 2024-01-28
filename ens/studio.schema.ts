@@ -85,15 +85,15 @@ interface Transfer {
 
 interface AddrChanged {
   id: String;
-  resolver: Resolver;
+  resolver: String;
   blockNumber: Number;
   transactionID: String;
-  addr: Account;
+  addr: String;
 }
 
 interface MulticoinAddrChanged {
   id: String;
-  resolver: Resolver;
+  resolver: string;
   blockNumber: Number;
   transactionID: String;
   coinType: Number;
@@ -102,7 +102,7 @@ interface MulticoinAddrChanged {
 
 interface TextChanged {
   id: String;
-  resolver: Resolver;
+  resolver: String;
   blockNumber: Number;
   transactionID: String;
   key: String;

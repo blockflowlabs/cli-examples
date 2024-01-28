@@ -1,6 +1,7 @@
-import { IEventContext, Instance } from "@blockflow-labs/utils";
-import { TextChanged } from "../../../types/schema";
+import { IEventContext } from "@blockflow-labs/utils";
+
 import { TextChangeHelper } from "./helper";
+import { TextChanged, Resolver } from "../../../types/schema";
 
 /**
  * @dev Event::TextChanged(bytes32 node, string indexedKey, string key, string value)
@@ -12,42 +13,41 @@ export const TextChangedHandler = async (
   bind: Function
 ) => {
   // Implement your event handler logic for TextChanged here
-
   const { event, transaction, block, log } = context;
   let { node, indexedKey, key, value } = event;
 
   node = node.toString();
+  key = key.toString();
+  value = value.toString();
 
-  const helper = new TextChangeHelper(bind());
+  const helper = new TextChangeHelper(bind(Resolver), bind(TextChanged));
 
-  let resolver = helper.getOrCreateResolver(node, event.address);
-};
+  let resolver = await helper.getOrCreateResolver(
+    node,
+    transaction.transaction_to_address
+  );
 
-/**
- * export function handleTextChangedWithValue(
-  event: TextChangedWithValueEvent
-): void {
-  let resolver = getOrCreateResolver(event.params.node, event.address);
-
-  let key = event.params.key;
-  if (resolver.texts == null) {
+  if (!resolver.texts) {
     resolver.texts = [key];
-    resolver.save();
+    await helper.saveResolver(resolver);
   } else {
-    let texts = resolver.texts!;
-    if (!texts.includes(key)) {
-      texts.push(key);
-      resolver.texts = texts;
-      resolver.save();
+    if (!resolver.texts.includes(key)) {
+      resolver.texts.push(key);
+      await helper.saveResolver(resolver);
     }
   }
 
-  let resolverEvent = new TextChanged(createEventID(event));
-  resolverEvent.resolver = createResolverID(event.params.node, event.address);
-  resolverEvent.blockNumber = event.block.number.toI32();
-  resolverEvent.transactionID = event.transaction.hash;
-  resolverEvent.key = event.params.key;
-  resolverEvent.value = event.params.value;
-  resolverEvent.save();
-}
- */
+  let resolverEvent = await helper.createTextChanged(
+    helper.createEventID(context)
+  );
+
+  resolverEvent.resolver = helper.createResolverID(
+    node,
+    transaction.transaction_to_address
+  );
+  resolverEvent.blockNumber = context.block.block_number;
+  resolverEvent.transactionID = context.transaction.transaction_hash;
+  resolverEvent.key = key;
+  resolverEvent.value = value;
+  await helper.saveTextChanged(resolverEvent);
+};
