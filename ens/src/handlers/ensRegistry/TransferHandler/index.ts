@@ -10,7 +10,7 @@ import { Transferhelper } from "./helper";
  */
 export const TransferHandler = async (
   context: IEventContext,
-  bind: Function
+  bind: Function,
 ) => {
   // Implement your event handler logic for Transfer here
 
@@ -24,7 +24,7 @@ export const TransferHandler = async (
   const tHelper = new Transferhelper(
     bind(Domain),
     bind(Account),
-    bind(Transfer)
+    bind(Transfer),
   );
 
   tHelper.createAccount(owner);
@@ -36,7 +36,7 @@ export const TransferHandler = async (
   tHelper.saveDomain(domain);
 
   let domainEvent = await tHelper.createTransfer(
-    tHelper.createEventID(context)
+    tHelper.createEventID(context),
   );
 
   domainEvent.blockNumber = block.block_number;

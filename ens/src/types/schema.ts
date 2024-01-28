@@ -4,6 +4,9 @@ export class Account {
   static entity = "Account";
   static schema = {
     id: "String",
+    domains: ["String"],
+    wrappedDomains: ["String"],
+    registrations: ["String"],
     entityId: { type: "String", index: true },
     blocknumber: { type: "String", index: true },
   };
@@ -13,49 +16,13 @@ export class Registration {
   static entity = "Registration";
   static schema = {
     id: "String",
-    domain: {
-      id: "String",
-      name: "String",
-      labelName: "String",
-      labelhash: "String",
-      parent: "String",
-      subdomains: ["String"],
-      subdomainCount: "Number",
-      resolvedAddress: "String",
-      resolver: {
-        id: "String",
-        address: "String",
-        addr: { id: "String" },
-        contentHash: "String",
-        texts: ["String"],
-        coinTypes: ["Number"],
-        events: [
-          { id: "String", blockNumber: "Number", transactionID: "String" },
-        ],
-      },
-      ttl: "Number",
-      isMigrated: "Boolean",
-      createdAt: "Number",
-      owner: "String",
-      registrant: "String",
-      wrappedOwner: "String",
-      expiryDate: "Number",
-      wrappedDomain: {
-        id: "String",
-        expiryDate: "Number",
-        fuses: "Number",
-        name: "String",
-      },
-      events: [
-        { id: "String", blockNumber: "Number", transactionID: "String" },
-      ],
-    },
+    domain: "String",
     registrationDate: "Number",
     expiryDate: "Number",
     cost: "Number",
-    registrant: { id: "String" },
+    registrant: "String",
     labelName: "String",
-    events: [{ id: "String", blockNumber: "Number", transactionID: "String" }],
+    events: ["String"],
     entityId: { type: "String", index: true },
     blocknumber: { type: "String", index: true },
   };
@@ -95,10 +62,16 @@ export class Domain {
     subdomains: ["String"],
     subdomainCount: "Number",
     resolvedAddress: "String",
+    owner: "String",
     resolver: {
       id: "String",
       address: "String",
-      addr: { id: "String" },
+      addr: {
+        id: "String",
+        domains: ["String"],
+        wrappedDomains: ["String"],
+        registrations: ["String"],
+      },
       contentHash: "String",
       texts: ["String"],
       coinTypes: ["Number"],
@@ -109,7 +82,6 @@ export class Domain {
     ttl: "Number",
     isMigrated: "Boolean",
     createdAt: "Number",
-    owner: "String",
     registrant: "String",
     wrappedOwner: "String",
     expiryDate: "Number",
@@ -119,7 +91,17 @@ export class Domain {
       fuses: "Number",
       name: "String",
     },
-    events: [{ id: "String", blockNumber: "Number", transactionID: "String" }],
+    events: ["String"],
+    registration: {
+      id: "String",
+      domain: "String",
+      registrationDate: "Number",
+      expiryDate: "Number",
+      cost: "Number",
+      registrant: "String",
+      labelName: "String",
+      events: ["String"],
+    },
     entityId: { type: "String", index: true },
     blocknumber: { type: "String", index: true },
   };
@@ -130,7 +112,12 @@ export class Resolver {
   static schema = {
     id: "String",
     address: "String",
-    addr: { id: "String" },
+    addr: {
+      id: "String",
+      domains: ["String"],
+      wrappedDomains: ["String"],
+      registrations: ["String"],
+    },
     contentHash: "String",
     texts: ["String"],
     coinTypes: ["Number"],
@@ -170,6 +157,39 @@ export class Transfer {
     blockNumber: "Number",
     transactionID: "String",
     owner: "String",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "String", index: true },
+  };
+}
+
+export class AddrChanged {
+  static entity = "AddrChanged";
+  static schema = {
+    id: "String",
+    resolver: {
+      id: "String",
+      address: "String",
+      addr: {
+        id: "String",
+        domains: ["String"],
+        wrappedDomains: ["String"],
+        registrations: ["String"],
+      },
+      contentHash: "String",
+      texts: ["String"],
+      coinTypes: ["Number"],
+      events: [
+        { id: "String", blockNumber: "Number", transactionID: "String" },
+      ],
+    },
+    blockNumber: "Number",
+    transactionID: "String",
+    addr: {
+      id: "String",
+      domains: ["String"],
+      wrappedDomains: ["String"],
+      registrations: ["String"],
+    },
     entityId: { type: "String", index: true },
     blocknumber: { type: "String", index: true },
   };
