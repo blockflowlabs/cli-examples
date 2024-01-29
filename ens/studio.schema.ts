@@ -48,15 +48,23 @@ interface Domain {
   registrant: String;
   wrappedOwner: String;
   expiryDate: Number;
-  wrappedDomain: WrappedDomain;
-  events: [String];
-  registration: Registration;
+  wrappedDomain: String;
+  events: [DomainEvent];
+  registration: String;
+}
+
+interface DomainEvent {
+  id: String;
+  domain: String;
+  blockNumber: Number;
+  transactionID: String;
 }
 
 interface Resolver {
   id: String;
+  domain: String;
   address: String;
-  addr: Account;
+  addr: String;
   contentHash: String;
   texts: [String];
   coinTypes: [Number];
@@ -65,12 +73,7 @@ interface Resolver {
 
 interface ResolverEvent {
   id: String;
-  blockNumber: Number;
-  transactionID: String;
-}
-
-interface DomainEvent {
-  id: String;
+  resolver: String;
   blockNumber: Number;
   transactionID: String;
 }
@@ -115,4 +118,46 @@ interface NameChanged {
   blockNumber: Number;
   transactionID: String;
   name: String;
+}
+
+interface AbiChanged {
+  id: String;
+  resolver: String;
+  blockNumber: Number;
+  transactionID: String;
+  contentType: Number;
+}
+
+interface PubkeyChanged {
+  id: String;
+  resolver: String;
+  blockNumber: Number;
+  transactionID: String;
+  x: String;
+  y: String;
+}
+
+interface ContenthashChanged {
+  id: String;
+  resolver: String;
+  blockNumber: Number;
+  transactionID: String;
+  hash: String;
+}
+
+interface InterfaceChanged {
+  id: String;
+  resolver: String;
+  blockNumber: Number;
+  transactionID: String;
+  interfaceID: String;
+  implementer: String;
+}
+
+interface VersionChanged {
+  id: String;
+  resolver: String;
+  blockNumber: Number;
+  transactionID: String;
+  version: Number;
 }
