@@ -49,6 +49,6 @@ export class TextChangeHelper {
   }
 
   async saveTextChanged(document: any) {
-    this.TEXT_CHANGE.save(document);
+    await this.TEXT_CHANGE.save(document);
   }
 }

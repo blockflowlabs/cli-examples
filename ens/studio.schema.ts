@@ -108,3 +108,11 @@ interface TextChanged {
   key: String;
   value: String;
 }
+
+interface NameChanged {
+  id: String;
+  resolver: String;
+  blockNumber: Number;
+  transactionID: String;
+  name: String;
+}

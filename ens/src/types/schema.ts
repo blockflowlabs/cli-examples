@@ -202,3 +202,16 @@ export class TextChanged {
     blocknumber: { type: "String", index: true },
   };
 }
+
+export class NameChanged {
+  static entity = "NameChanged";
+  static schema = {
+    id: "String",
+    resolver: "String",
+    blockNumber: "Number",
+    transactionID: "String",
+    name: "String",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "String", index: true },
+  };
+}
