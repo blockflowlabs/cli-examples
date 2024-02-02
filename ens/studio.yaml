@@ -1,8 +1,8 @@
 name: ENS Indexing
-description: A top-secret research project to the moon
+description: A top-secret research project to index the Ethereum Name service
 startBlock: 16925619
-userId: test
-projectId: test
+userId: d699d33d-d3f3-47c3-8d4b-2132360f64ee
+projectId: d699d33d-d3f3-47c3-8d4b-2132360f64ee
 network: Ethereum
 user: dev_user
 schema:

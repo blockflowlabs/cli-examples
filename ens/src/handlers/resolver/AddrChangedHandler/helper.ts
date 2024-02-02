@@ -42,11 +42,11 @@ export class AddrChangeHelper {
   }
 
   async createAccountChanged(id: string) {
-    return await this.ADDR_CHANGE.create({ id: id.toLowerCase() });
+    return await this.ACCOUNT.create({ id: id.toLowerCase() });
   }
 
   async saveAccountChanged(document: any) {
-    await this.ADDR_CHANGE.save(document);
+    await this.ACCOUNT.save(document);
   }
 
   async createAddrChanged(id: string) {

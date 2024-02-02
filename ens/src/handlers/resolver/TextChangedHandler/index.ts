@@ -13,7 +13,7 @@ export const TextChangedHandler = async (
   bind: Function
 ) => {
   // Implement your event handler logic for TextChanged here
-  const { event, transaction, block, log } = context;
+  const { event, transaction } = context;
   let { node, indexedKey, key, value } = event;
 
   node = node.toString();
@@ -27,7 +27,7 @@ export const TextChangedHandler = async (
     transaction.transaction_to_address
   );
 
-  if (!resolver.texts) {
+  if (!resolver.texts || resolver.texts.length === 0) {
     resolver.texts = [key];
     await helper.saveResolver(resolver);
   } else {

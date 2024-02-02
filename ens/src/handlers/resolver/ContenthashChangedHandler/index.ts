@@ -1,4 +1,4 @@
-import { IEventContext } from "@blockflow-labs/utils";
+import { IEventContext, Instance, IBind } from "@blockflow-labs/utils";
 
 import { ContenthashChangeHelper } from "./helper";
 import { ContenthashChanged, Resolver } from "../../../types/schema";
@@ -10,7 +10,7 @@ import { ContenthashChanged, Resolver } from "../../../types/schema";
  */
 export const ContenthashChangedHandler = async (
   context: IEventContext,
-  bind: Function
+  bind: IBind
 ) => {
   // Implement your event handler logic for ContenthashChanged here
 

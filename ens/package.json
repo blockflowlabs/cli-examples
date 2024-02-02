@@ -6,7 +6,7 @@
     "compile": "tsc -b"
   },
   "dependencies": {
-    "@blockflow-labs/utils": "latest"
+    "@blockflow-labs/utils": "^1.0.4"
   },
   "devDependencies": {
     "typescript": "^5.1.6",
