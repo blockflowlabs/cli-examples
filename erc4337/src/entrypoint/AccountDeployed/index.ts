@@ -15,7 +15,7 @@ import {
  */
 export const AccountDeployedHandler = async (
   context: IEventContext,
-  bind: IBind
+  bind: IBind,
 ) => {
   try {
     // Implement your event handler logic for UserOperationRevertReason here
@@ -32,7 +32,7 @@ export const AccountDeployedHandler = async (
       bind(Paymaster),
       block.block_timestamp,
       paymaster,
-      userOpHash
+      userOpHash,
     );
     await updateAccountFactory(bind(AccountFactory), factory);
 
@@ -89,7 +89,7 @@ const updatePaymaster = async (
   IPaymaster: Instance,
   timestamp: string,
   id: string,
-  userOpHash: string
+  userOpHash: string,
 ) => {
   try {
     let paymaster = await IPaymaster.findOne({ id: id.toLowerCase() });

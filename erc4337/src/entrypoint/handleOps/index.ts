@@ -24,7 +24,7 @@ export const handleOps = async (context: IFunctionContext, bind: Function) => {
   await updateBlock(
     bind(Block),
     block.block_number.toString(),
-    transactionHash
+    transactionHash,
   );
 
   // transaction
@@ -77,14 +77,14 @@ export const handleOps = async (context: IFunctionContext, bind: Function) => {
   else
     await ITransaction.updateOne(
       { id: transactionHash.toLowerCase() },
-      Xtransaction
+      Xtransaction,
     );
 };
 
 const updateBlock = async (
   IBlock: Instance,
   id: string,
-  transactionHash: string
+  transactionHash: string,
 ) => {
   let firstBlood = false;
   let Xblock = await IBlock.findOne({ id });

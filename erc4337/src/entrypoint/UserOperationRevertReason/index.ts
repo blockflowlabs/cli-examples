@@ -10,7 +10,7 @@ import { UserOperationRevertReason } from "../../types/schema";
  */
 export const UserOperationRevertReasonHandler = async (
   context: IEventContext,
-  bind: IBind
+  bind: IBind,
 ) => {
   try {
     // Implement your event handler logic for UserOperationRevertReason here

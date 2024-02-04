@@ -16,7 +16,7 @@ import {
  */
 export const UserOperationEventHandler = async (
   context: IEventContext,
-  bind: IBind
+  bind: IBind,
 ) => {
   try {
     // Implement your event handler logic for UserOperationEvent here
@@ -120,7 +120,7 @@ const updatePaymaster = async (
   IPaymaster: Instance,
   timestamp: string,
   id: string,
-  userOpHash: string
+  userOpHash: string,
 ) => {
   try {
     let paymaster = await IPaymaster.findOne({ id: id.toLowerCase() });
@@ -150,7 +150,7 @@ const updateBundler = async (
   IBundler: Instance,
   timestamp: string,
   id: string,
-  userOpHash: string
+  userOpHash: string,
 ) => {
   try {
     let bundler = await IBundler.findOne({ id: id.toLowerCase() });
