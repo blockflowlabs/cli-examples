@@ -7,6 +7,7 @@ import {
   Account,
   Paymaster,
   Blockchain,
+  IUserOperation as XUserOperation,
 } from "../../types/schema";
 
 /**
@@ -16,7 +17,7 @@ import {
  */
 export const UserOperationEventHandler = async (
   context: IEventContext,
-  bind: IBind,
+  bind: IBind
 ) => {
   try {
     // Implement your event handler logic for UserOperationEvent here
@@ -70,7 +71,9 @@ export const UserOperationEventHandler = async (
 
     const IUserOp = bind(UserOperation);
     firstBlood = false;
-    let userOp = await IUserOp.findOne({ id: userOpHash.toLowerCase() });
+    let userOp: XUserOperation = await IUserOp.findOne({
+      id: userOpHash.toLowerCase(),
+    });
     if (!userOp) {
       firstBlood = true;
       userOp = await IUserOp.create({ id: userOpHash.toLowerCase() });
@@ -84,7 +87,6 @@ export const UserOperationEventHandler = async (
     userOp.actualGasCost = Number(actualGasCost);
     userOp.actualGasUsed = Number(actualGasUsed);
 
-    userOp.block = block.block_number;
     userOp.txHash = transaction.transaction_hash;
     userOp.createdAt = block.block_timestamp;
 
@@ -120,7 +122,7 @@ const updatePaymaster = async (
   IPaymaster: Instance,
   timestamp: string,
   id: string,
-  userOpHash: string,
+  userOpHash: string
 ) => {
   try {
     let paymaster = await IPaymaster.findOne({ id: id.toLowerCase() });
@@ -150,7 +152,7 @@ const updateBundler = async (
   IBundler: Instance,
   timestamp: string,
   id: string,
-  userOpHash: string,
+  userOpHash: string
 ) => {
   try {
     let bundler = await IBundler.findOne({ id: id.toLowerCase() });
