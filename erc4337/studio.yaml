@@ -27,3 +27,34 @@ Resources:
         Handler: src/entrypoint/UserOperationRevertReason/index.UserOperationRevertReasonHandler
       - Event: AccountDeployed(indexed bytes32,indexed address,address,address)
         Handler: src/entrypoint/AccountDeployed/index.AccountDeployedHandler
+
+  ## APIS
+  - Name: paymaster
+    Type: api
+    Slug: paymaster
+    Handler: src/apis/paymaster/index.paymasterHandler
+
+  - Name: bundler
+    Type: api
+    Slug: bundler
+    Handler: src/apis/bundler/index.bundlerHandler
+
+  - Name: account
+    Type: api
+    Slug: account
+    Handler: src/apis/account/index.accountHandler
+
+  - Name: userop
+    Type: api
+    Slug: userop
+    Handler: src/apis/userop/index.useropHandler
+
+  - Name: tx
+    Type: api
+    Slug: tx
+    Handler: src/apis/tx/index.txHandler
+
+  - Name: block
+    Type: api
+    Slug: block
+    Handler: src/apis/block/index.blockHandler
