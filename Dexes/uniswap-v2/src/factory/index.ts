@@ -62,15 +62,15 @@ export const PairCreatedHandler = async (
     newPair.token0Price = ZERO_BI.toString();
     newPair.token1Price = ZERO_BI.toString();
 
-    newPair.save(pair);
+    await XPair.save(pair);
   }
 };
 
-const createBundle = async (IBundle: Instance) => {
+const createBundle = async (XBundle: Instance) => {
   // create new bundle
-  let bundle: IBundle = await IBundle.create({ id: "1" });
+  let bundle: IBundle = await XBundle.create({ id: "1" });
   bundle.ethPrice = ZERO_BI.toString();
-  await IBundle.save(bundle);
+  await XBundle.save(bundle);
 };
 
 const updateFactory = async (IFactory: Instance, IBundle: Instance) => {
@@ -98,8 +98,8 @@ const updateFactory = async (IFactory: Instance, IBundle: Instance) => {
     .plus(1)
     .toString();
 
-  if (firstBlood) IFactory.save(factory);
-  else IFactory.updateOne({ id: FACTORY_ADDRESS.toLowerCase() }, factory);
+  if (firstBlood) await IFactory.save(factory);
+  else await IFactory.updateOne({ id: FACTORY_ADDRESS.toLowerCase() }, factory);
 };
 
 const updateToken = async (XToken: Instance, token: string) => {
@@ -120,6 +120,6 @@ const updateToken = async (XToken: Instance, token: string) => {
     tokenInContext.txCount = ZERO_BI.toString();
   }
 
-  if (firstBlood) XToken.save(tokenInContext);
-  else XToken.updateOne({ id: token.toLowerCase() }, tokenInContext);
+  if (firstBlood) await XToken.save(tokenInContext);
+  else await XToken.updateOne({ id: token.toLowerCase() }, tokenInContext);
 };
