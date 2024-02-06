@@ -3,18 +3,33 @@
   "version": "1.0.2",
   "description": "BlockFlow Studio Project",
   "scripts": {
-    "compile": "tsc -b"
+    "compile": "tsc -b",
+    "api-test": "nodemon --exec blockflow api-test"
   },
   "dependencies": {
+    "@blockflow-labs/utils": "^1.0.5",
     "@ethersproject/abi": "^5.7.0",
     "@ethersproject/keccak256": "^5.7.0"
   },
   "devDependencies": {
     "bignumber.js": "^9.1.1",
+    "nodemon": "^3.0.3",
     "prettier": "^3.0.3",
     "ts-loader": "^9.5.0",
     "typescript": "^5.1.6",
     "webpack": "^5.89.0",
     "webpack-cli": "^5.1.4"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "build/",
+      "out/",
+      "src/types/**"
+    ],
+    "delay": 100,
+    "ext": "ts",
+    "watch": [
+      "src"
+    ]
   }
 }
