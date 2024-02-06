@@ -1,80 +1,33 @@
-name: Project Apollo
-description: A top-secret research project to the moon
-startBlock: 18509038
+name: uniswapV2
+description: " Uniswap is a decentralized protocol for automated token exchange on Ethereum."
+startBlock: latest
 userId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
+projectId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
 network: Ethereum
-user: John doe
-config:
-  - contract: "0xa478c2975ab1ea89e8196811f51a7b7ade33eb11"
-    name: dai_weth
-    abi: src/abis/pair.json
-    handler: src/handlers/pair.ts
-    event:
-      - Burn(address indexed,uint256,uint256,address indexed)
-      - Mint(address indexed,uint256,uint256)
-      - Swap(address indexed,uint256,uint256,uint256,uint256,address indexed)
-      - Sync(uint112,uint112)
-      # - Transfer(address indexed,address indexed,uint256)
-  - contract: "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc"
-    name: usdc_weth
-    abi: src/abis/pair.json
-    handler: src/handlers/pair.ts
-    event:
-      - Burn(address indexed,uint256,uint256,address indexed)
-      - Mint(address indexed,uint256,uint256)
-      - Swap(address indexed,uint256,uint256,uint256,uint256,address indexed)
-      - Sync(uint112,uint112)
-      # - Transfer(address indexed,address indexed,uint256)
-  - contract: "0x0d4a11d5eeaac28ec3f61d100daf4d40471f1852"
-    name: weth_usdt
-    abi: src/abis/pair.json
-    handler: src/handlers/pair.ts
-    event:
-      - Burn(address indexed,uint256,uint256,address indexed)
-      - Mint(address indexed,uint256,uint256)
-      - Swap(address indexed,uint256,uint256,uint256,uint256,address indexed)
-      - Sync(uint112,uint112)
-      # - Transfer(address indexed,address indexed,uint256)
-api:
-  - name: pairs
-    description: pairs
-    handler: src/apis/pairs/index.ts
-    instances:
-      # - 2c6a2c2c-c536-48d8-af20-5d95ce794c81 // TODO:
-    status: 1
-  - name: all-swaps
-    description: all swaps
-    handler: src/apis/swaps/all-swaps/index.ts
-    instances:
-      # - 2c6a2c2c-c536-48d8-af20-5d95ce794c81 // TODO:
-    status: 1
-  - name: pair-swaps
-    description: pair swaps
-    handler: src/apis/swaps/pair-swaps/index.ts
-    instances:
-      # - 2c6a2c2c-c536-48d8-af20-5d95ce794c81 // TODO:
-    status: 1
-  - name: all-mints
-    description: all mints
-    handler: src/apis/mints/all-mints/index.ts
-    instances:
-      # - 2c6a2c2c-c536-48d8-af20-5d95ce794c81 // TODO:
-    status: 1
-  - name: mints
-    description: mints
-    handler: src/apis/mints/pair-mints/index.ts
-    instances:
-      # - 2c6a2c2c-c536-48d8-af20-5d95ce794c81 // TODO:
-    status: 1
-  - name: all-burns
-    description: all burns
-    handler: src/apis/mints/all-mints/index.ts
-    instances:
-      # - 2c6a2c2c-c536-48d8-af20-5d95ce794c81 // TODO:
-    status: 1
-  - name: pair-burns
-    description: pair burns
-    handler: src/apis/burns/pair-burns/index.ts
-    instances:
-      # - 2c6a2c2c-c536-48d8-af20-5d95ce794c81 // TODO:
-    status: 1
+user: dev_user
+schema:
+  file: ./studio.schema.ts
+Resources:
+  - Name: factory
+    Abi: src/abis/factory.json
+    Type: contract/event
+    Address: "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f"
+    Triggers:
+      - Event: PairCreated(address indexed,address indexed,address,uint256)
+        Handler: src/factory/index.PairCreatedHandler
+  - Name: pair
+    Abi: src/abis/pair.json
+    Type: transaction/event
+    Triggers:
+      - Event: Approval(address indexed,address indexed,uint256)
+        Handler: src/pair/Approval/index.ApprovalHandler
+      - Event: Burn(address indexed,uint256,uint256,address indexed)
+        Handler: src/pair/Burn/index.BurnHandler
+      - Event: Mint(address indexed,uint256,uint256)
+        Handler: src/pair/Mint/index.MintHandler
+      - Event: Swap(address indexed,uint256,uint256,uint256,uint256,address indexed)
+        Handler: src/pair/Swap/index.SwapHandler
+      - Event: Sync(uint112,uint112)
+        Handler: src/pair/Sync/index.SyncHandler
+      - Event: Transfer(address indexed,address indexed,uint256)
+        Handler: src/pair/Transfer/index.TransferHandler
