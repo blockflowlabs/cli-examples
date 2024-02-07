@@ -42,27 +42,27 @@ export const PairCreatedHandler = async (
 
   {
     const pairDb = bind(Pair);
-    let newPair: IPair = await pairDb.create({ id: pair.toLowerCase() });
-    newPair.token0 = token0.toLowerCase();
-    newPair.token1 = token1.toLowerCase();
-    newPair.liquidityProviderCount = ZERO_BI.toString();
-    newPair.createdAtTimestamp = block.block_timestamp;
-    newPair.createdAtBlockNumber = block.block_number;
-    newPair.txCount = ZERO_BI.toString();
-    newPair.reserve0 = ZERO_BI.toString();
-    newPair.reserve1 = ZERO_BI.toString();
-    newPair.trackedReserveETH = ZERO_BI.toString();
-    newPair.reserveETH = ZERO_BI.toString();
-    newPair.reserveUSD = ZERO_BI.toString();
-    newPair.totalSupply = ZERO_BI.toString();
-    newPair.volumeToken0 = ZERO_BI.toString();
-    newPair.volumeToken1 = ZERO_BI.toString();
-    newPair.volumeUSD = ZERO_BI.toString();
-    newPair.untrackedVolumeUSD = ZERO_BI.toString();
-    newPair.token0Price = ZERO_BI.toString();
-    newPair.token1Price = ZERO_BI.toString();
-
-    await pairDb.save(newPair);
+    await pairDb.create({
+      id: pair.toLowerCase(),
+      token0: token0.toLowerCase(),
+      token1: token1.toLowerCase(),
+      liquidityProviderCount: ZERO_BI.toString(),
+      createdAtTimestamp: block.block_timestamp,
+      createdAtBlockNumber: block.block_number,
+      txCount: ZERO_BI.toString(),
+      reserve0: ZERO_BI.toString(),
+      reserve1: ZERO_BI.toString(),
+      trackedReserveETH: ZERO_BI.toString(),
+      reserveETH: ZERO_BI.toString(),
+      reserveUSD: ZERO_BI.toString(),
+      totalSupply: ZERO_BI.toString(),
+      volumeToken0: ZERO_BI.toString(),
+      volumeToken1: ZERO_BI.toString(),
+      volumeUSD: ZERO_BI.toString(),
+      untrackedVolumeUSD: ZERO_BI.toString(),
+      token0Price: ZERO_BI.toString(),
+      token1Price: ZERO_BI.toString(),
+    });
   }
 };
 

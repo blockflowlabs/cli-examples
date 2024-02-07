@@ -1,6 +1,6 @@
 name: uniswapV2
 description: "Uniswap is a decentralized protocol for automated token exchange on Ethereum."
-startBlock: 19168758
+startBlock: 10008355
 userId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
 projectId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
 network: Ethereum
@@ -15,9 +15,11 @@ Resources:
     Triggers:
       - Event: PairCreated(address indexed,address indexed,address,uint256)
         Handler: src/factory/index.PairCreatedHandler
+
   - Name: pair
     Abi: src/abis/pair.json
-    Type: transaction/event
+    Type: contract/event
+    Address: "0xB4e16d0168e52d35CaCD2c6185b44281Ec28C9Dc"
     Triggers:
       - Event: Burn(address indexed,uint256,uint256,address indexed)
         Handler: src/pair/Burn/index.BurnHandler
@@ -29,3 +31,18 @@ Resources:
         Handler: src/pair/Sync/index.SyncHandler
       - Event: Transfer(address indexed,address indexed,uint256)
         Handler: src/pair/Transfer/index.TransferHandler
+
+  # - Name: pair
+  #   Abi: src/abis/pair.json
+  #   Type: transaction/event
+  #   Triggers:
+  #     - Event: Burn(address indexed,uint256,uint256,address indexed)
+  #       Handler: src/pair/Burn/index.BurnHandler
+  #     - Event: Mint(address indexed,uint256,uint256)
+  #       Handler: src/pair/Mint/index.MintHandler
+  #     - Event: Swap(address indexed,uint256,uint256,uint256,uint256,address indexed)
+  #       Handler: src/pair/Swap/index.SwapHandler
+  #     - Event: Sync(uint112,uint112)
+  #       Handler: src/pair/Sync/index.SyncHandler
+  #     - Event: Transfer(address indexed,address indexed,uint256)
+  #       Handler: src/pair/Transfer/index.TransferHandler
