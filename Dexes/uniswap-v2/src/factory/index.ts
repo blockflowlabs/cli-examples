@@ -29,7 +29,7 @@ export const PairCreatedHandler = async (
   bind: IBind
 ) => {
   // Implement your event handler logic for PairCreated here
-  const { event, transaction, block, log } = context;
+  const { event, block } = context;
   let { token0, token1, pair } = event;
 
   pair = pair.toString();

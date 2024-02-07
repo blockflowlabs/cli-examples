@@ -81,6 +81,149 @@ export class Bundle {
   };
 }
 
+export class Transaction {
+  static entity = "Transaction";
+  static schema = {
+    id: "String",
+    timestamp: "String",
+    mints: ["String"],
+    burns: ["String"],
+    swaps: ["String"],
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "String", index: true },
+  };
+}
+
+export class Mint {
+  static entity = "Mint";
+  static schema = {
+    id: "String",
+    transaction: "String",
+    timestamp: "String",
+    pair: "String",
+    to: "String",
+    liquidity: "String",
+    sender: "String",
+    amount0: "String",
+    amount1: "String",
+    logIndex: "String",
+    amountUSD: "String",
+    feeTo: "String",
+    feeLiquidity: "String",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "String", index: true },
+  };
+}
+
+export class LiquidityPosition {
+  static entity = "LiquidityPosition";
+  static schema = {
+    id: "String",
+    user: "String",
+    pair: "String",
+    liquidityTokenBalance: "String",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "String", index: true },
+  };
+}
+
+export class LiquidityPositionSnapshot {
+  static entity = "LiquidityPositionSnapshot";
+  static schema = {
+    id: "String",
+    liquidityPosition: "String",
+    timestamp: "String",
+    user: "String",
+    pair: "String",
+    token0PriceUSD: "String",
+    token1PriceUSD: "String",
+    reserve0: "String",
+    reserve1: "String",
+    reserveUSD: "String",
+    liquidityTokenTotalSupply: "String",
+    liquidityTokenBalance: "String",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "String", index: true },
+  };
+}
+
+export class PairDayData {
+  static entity = "PairDayData";
+  static schema = {
+    id: "String",
+    date: "String",
+    pairAddress: "String",
+    token0: "String",
+    token1: "String",
+    reserve0: "String",
+    reserve1: "String",
+    totalSupply: "String",
+    reserveUSD: "String",
+    dailyVolumeToken0: "String",
+    dailyVolumeToken1: "String",
+    dailyVolumeUSD: "String",
+    dailyTxns: "String",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "String", index: true },
+  };
+}
+
+export class PairHourData {
+  static entity = "PairHourData";
+  static schema = {
+    id: "String",
+    hourStartUnix: "String",
+    pair: "String",
+    reserve0: "String",
+    reserve1: "String",
+    totalSupply: "String",
+    reserveUSD: "String",
+    hourlyVolumeToken0: "String",
+    hourlyVolumeToken1: "String",
+    hourlyVolumeUSD: "String",
+    hourlyTxns: "String",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "String", index: true },
+  };
+}
+
+export class UniswapDayData {
+  static entity = "UniswapDayData";
+  static schema = {
+    id: "String",
+    date: "String",
+    dailyVolumeETH: "String",
+    dailyVolumeUSD: "String",
+    dailyVolumeUntracked: "String",
+    totalVolumeETH: "String",
+    totalLiquidityETH: "String",
+    totalVolumeUSD: "String",
+    totalLiquidityUSD: "String",
+    txCount: "String",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "String", index: true },
+  };
+}
+
+export class TokenDayData {
+  static entity = "TokenDayData";
+  static schema = {
+    id: "String",
+    date: "String",
+    token: "String",
+    dailyVolumeToken: "String",
+    dailyVolumeETH: "String",
+    dailyVolumeUSD: "String",
+    dailyTxns: "String",
+    totalLiquidityToken: "String",
+    totalLiquidityETH: "String",
+    totalLiquidityUSD: "String",
+    priceUSD: "String",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "String", index: true },
+  };
+}
+
 import { String, Array, Number } from "@blockflow-labs/utils";
 
 export interface IUniswapFactory extends Document {
@@ -156,6 +299,139 @@ export interface IPair extends Document {
 export interface IBundle extends Document {
   id: String;
   ethPrice: String;
+  blocknumber: String;
+  entityId: String;
+}
+
+export interface ITransaction extends Document {
+  id: String;
+  timestamp: String;
+  mints: [String];
+  burns: [String];
+  swaps: [String];
+  blocknumber: String;
+  entityId: String;
+}
+
+export interface IMint extends Document {
+  id: String;
+  transaction: String;
+  timestamp: String;
+  pair: String;
+  to: String;
+  liquidity: String;
+  sender: String;
+  amount0: String;
+  amount1: String;
+  logIndex: String;
+  amountUSD: String;
+  feeTo: String;
+  feeLiquidity: String;
+  blocknumber: String;
+  entityId: String;
+}
+
+export interface ILiquidityPosition extends Document {
+  id: String;
+  user: String;
+  pair: String;
+  liquidityTokenBalance: String;
+  blocknumber: String;
+  entityId: String;
+}
+
+export interface ILiquidityPositionSnapshot extends Document {
+  id: String;
+  liquidityPosition: String;
+  timestamp: String;
+  user: String;
+  pair: String;
+  token0PriceUSD: String;
+  token1PriceUSD: String;
+  reserve0: String;
+  reserve1: String;
+  reserveUSD: String;
+  liquidityTokenTotalSupply: String;
+  liquidityTokenBalance: String;
+  blocknumber: String;
+  entityId: String;
+}
+
+export interface IPairDayData extends Document {
+  id: String;
+  date: String;
+  pairAddress: String;
+  token0: String;
+  token1: String;
+
+  reserve0: String;
+  reserve1: String;
+
+  totalSupply: String;
+
+  reserveUSD: String;
+
+  dailyVolumeToken0: String;
+  dailyVolumeToken1: String;
+  dailyVolumeUSD: String;
+  dailyTxns: String;
+  blocknumber: String;
+  entityId: String;
+}
+
+export interface IPairHourData extends Document {
+  id: String;
+  hourStartUnix: String;
+  pair: String;
+
+  reserve0: String;
+  reserve1: String;
+
+  totalSupply: String;
+
+  reserveUSD: String;
+
+  hourlyVolumeToken0: String;
+  hourlyVolumeToken1: String;
+  hourlyVolumeUSD: String;
+  hourlyTxns: String;
+  blocknumber: String;
+  entityId: String;
+}
+
+export interface IUniswapDayData extends Document {
+  id: String;
+  date: String;
+
+  dailyVolumeETH: String;
+  dailyVolumeUSD: String;
+  dailyVolumeUntracked: String;
+
+  totalVolumeETH: String;
+  totalLiquidityETH: String;
+  totalVolumeUSD: String;
+  totalLiquidityUSD: String;
+
+  txCount: String;
+  blocknumber: String;
+  entityId: String;
+}
+
+export interface ITokenDayData extends Document {
+  id: String;
+  date: String;
+  token: String;
+
+  dailyVolumeToken: String;
+  dailyVolumeETH: String;
+  dailyVolumeUSD: String;
+  dailyTxns: String;
+
+  totalLiquidityToken: String;
+  totalLiquidityETH: String;
+  totalLiquidityUSD: String;
+
+  priceUSD: String;
   blocknumber: String;
   entityId: String;
 }
