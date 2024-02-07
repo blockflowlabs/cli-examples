@@ -1,7 +1,8 @@
 import { BigNumber } from "bignumber.js";
+import { Instance } from "@blockflow-labs/utils";
 
 import { IBundle, IPair, IToken } from "../types/schema";
-import { UNTRACKED_PAIRS, ZERO_BI } from "./helper";
+import { UNTRACKED_PAIRS, ZERO_BI, ONE_BI } from "./helper";
 
 // token where amounts should contribute to tracked volume and liquidity
 let WHITELIST: string[] = [
@@ -105,6 +106,91 @@ export function getTrackedVolumeUSD(
   // take full value of the whitelisted token amount
   if (!WHITELIST.includes(token0.id) && WHITELIST.includes(token1.id)) {
     return new BigNumber(tokenAmount1).times(price1).toString();
+  }
+
+  // neither token is on white list, tracked volume is 0
+  return ZERO_BI.toString();
+}
+
+export async function getEthPriceInUSD(pairDB: Instance) {
+  // fetch eth prices for each stablecoin
+  let daiPair: IPair = await pairDB.findOne({
+    id: DAI_WETH_PAIR.toLowerCase(),
+  });
+  let usdcPair: IPair = await pairDB.findOne({
+    id: USDC_WETH_PAIR.toLowerCase(),
+  });
+  let usdtPair: IPair = await pairDB.findOne({
+    id: USDT_WETH_PAIR.toLowerCase(),
+  });
+
+  // all 3 have been created
+  if (daiPair !== null && usdcPair !== null && usdtPair !== null) {
+    let totalLiquidityETH = new BigNumber(daiPair.reserve1)
+      .plus(usdcPair.reserve1)
+      .plus(usdtPair.reserve0);
+
+    let daiWeight = new BigNumber(daiPair.reserve1).div(totalLiquidityETH);
+    let usdcWeight = new BigNumber(usdcPair.reserve1).div(totalLiquidityETH);
+    let usdtWeight = new BigNumber(usdtPair.reserve0).div(totalLiquidityETH);
+
+    return new BigNumber(daiPair.token0Price)
+      .times(daiWeight)
+      .plus(new BigNumber(usdcPair.token0Price).times(usdcWeight))
+      .plus(new BigNumber(usdtPair.token1Price).times(usdtWeight))
+      .toString();
+
+    // dai and USDC have been created
+  } else if (daiPair !== null && usdcPair !== null) {
+    let totalLiquidityETH = new BigNumber(daiPair.reserve1).plus(
+      usdcPair.reserve1
+    );
+    let daiWeight = new BigNumber(daiPair.reserve1).div(totalLiquidityETH);
+    let usdcWeight = new BigNumber(usdcPair.reserve1).div(totalLiquidityETH);
+    return new BigNumber(daiPair.token0Price)
+      .times(daiWeight)
+      .plus(new BigNumber(usdcPair.token0Price).times(usdcWeight))
+      .toString();
+    // USDC is the only pair so far
+  } else if (usdcPair !== null) {
+    return new BigNumber(usdcPair.token0Price).toString();
+  } else {
+    return ZERO_BI.toString();
+  }
+}
+
+/**
+ * Accepts tokens and amounts, return tracked amount based on token whitelist
+ * If one token on whitelist, return amount in that token converted to USD * 2.
+ * If both are, return sum of two amounts
+ * If neither is, return 0
+ */
+export function getTrackedLiquidityUSD(
+  tokenAmount0: string,
+  token0: IToken,
+  tokenAmount1: string,
+  token1: IToken,
+  ethprice: string
+) {
+  let price0 = new BigNumber(token0.derivedETH).times(ethprice);
+  let price1 = new BigNumber(token1.derivedETH).times(ethprice);
+
+  // both are whitelist tokens, take average of both amounts
+  if (WHITELIST.includes(token0.id) && WHITELIST.includes(token1.id)) {
+    return new BigNumber(tokenAmount0)
+      .times(price0)
+      .plus(new BigNumber(tokenAmount1).times(price1))
+      .toString();
+  }
+
+  // take double value of the whitelisted token amount
+  if (WHITELIST.includes(token0.id) && !WHITELIST.includes(token1.id)) {
+    return new BigNumber(tokenAmount0).times(price0).times(2);
+  }
+
+  // take double value of the whitelisted token amount
+  if (!WHITELIST.includes(token0.id) && WHITELIST.includes(token1.id)) {
+    return new BigNumber(tokenAmount1).times(price1).times(2);
   }
 
   // neither token is on white list, tracked volume is 0
