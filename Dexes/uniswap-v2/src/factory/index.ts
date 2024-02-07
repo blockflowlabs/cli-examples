@@ -41,8 +41,8 @@ export const PairCreatedHandler = async (
   await updateToken(bind(Token), token1);
 
   {
-    const XPair = bind(Pair);
-    let newPair: IPair = await XPair.create({ id: pair.toLowerCase() });
+    const pairDb = bind(Pair);
+    let newPair: IPair = await pairDb.create({ id: pair.toLowerCase() });
     newPair.token0 = token0.toLowerCase();
     newPair.token1 = token1.toLowerCase();
     newPair.liquidityProviderCount = ZERO_BI.toString();
@@ -62,27 +62,27 @@ export const PairCreatedHandler = async (
     newPair.token0Price = ZERO_BI.toString();
     newPair.token1Price = ZERO_BI.toString();
 
-    await XPair.save(pair);
+    await pairDb.save(newPair);
   }
 };
 
-const createBundle = async (XBundle: Instance) => {
+const createBundle = async (bundleDB: Instance) => {
   // create new bundle
-  let bundle: IBundle = await XBundle.create({ id: "1" });
+  let bundle: IBundle = await bundleDB.create({ id: "1" });
   bundle.ethPrice = ZERO_BI.toString();
-  await XBundle.save(bundle);
+  await bundleDB.save(bundle);
 };
 
-const updateFactory = async (IFactory: Instance, IBundle: Instance) => {
+const updateFactory = async (factoryDB: Instance, IBundle: Instance) => {
   // load factory (create if first exchange)
-  let factory: IUniswapFactory = await IFactory.findOne({
+  let factory: IUniswapFactory = await factoryDB.findOne({
     id: FACTORY_ADDRESS.toLowerCase(),
   });
 
   let firstBlood = false;
   if (!factory) {
     firstBlood = true;
-    factory = await IFactory.create({ id: FACTORY_ADDRESS.toLowerCase() });
+    factory = await factoryDB.create({ id: FACTORY_ADDRESS.toLowerCase() });
     factory.pairCount = ZERO_BI.toString();
     factory.totalVolumeETH = ZERO_BI.toString();
     factory.totalLiquidityETH = ZERO_BI.toString();
@@ -98,12 +98,13 @@ const updateFactory = async (IFactory: Instance, IBundle: Instance) => {
     .plus(1)
     .toString();
 
-  if (firstBlood) await IFactory.save(factory);
-  else await IFactory.updateOne({ id: FACTORY_ADDRESS.toLowerCase() }, factory);
+  if (firstBlood) await factoryDB.save(factory);
+  else
+    await factoryDB.updateOne({ id: FACTORY_ADDRESS.toLowerCase() }, factory);
 };
 
-const updateToken = async (XToken: Instance, token: string) => {
-  let tokenInContext: IToken = await XToken.findOne({
+const updateToken = async (tokenDB: Instance, token: string) => {
+  let tokenInContext: IToken = await tokenDB.findOne({
     id: token.toLowerCase(),
   });
   let firstBlood = false;
@@ -111,7 +112,7 @@ const updateToken = async (XToken: Instance, token: string) => {
   // fetch info if null
   if (!tokenInContext) {
     firstBlood = true;
-    tokenInContext = await XToken.create({ id: token.toLowerCase() });
+    tokenInContext = await tokenDB.create({ id: token.toLowerCase() });
     tokenInContext.derivedETH = ZERO_BI.toString();
     tokenInContext.tradeVolume = ZERO_BI.toString();
     tokenInContext.tradeVolumeUSD = ZERO_BI.toString();
@@ -120,6 +121,6 @@ const updateToken = async (XToken: Instance, token: string) => {
     tokenInContext.txCount = ZERO_BI.toString();
   }
 
-  if (firstBlood) await XToken.save(tokenInContext);
-  else await XToken.updateOne({ id: token.toLowerCase() }, tokenInContext);
+  if (firstBlood) await tokenDB.save(tokenInContext);
+  else await tokenDB.updateOne({ id: token.toLowerCase() }, tokenInContext);
 };
