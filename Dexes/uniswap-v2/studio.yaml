@@ -36,13 +36,13 @@ Resources:
   #   Abi: src/abis/pair.json
   #   Type: transaction/event
   #   Triggers:
-  #     - Event: Burn(address indexed,uint256,uint256,address indexed)
-  #       Handler: src/pair/Burn/index.BurnHandler
   #     - Event: Mint(address indexed,uint256,uint256)
   #       Handler: src/pair/Mint/index.MintHandler
+  #     - Event: Burn(address indexed,uint256,uint256,address indexed)
+  #       Handler: src/pair/Burn/index.BurnHandler
   #     - Event: Swap(address indexed,uint256,uint256,uint256,uint256,address indexed)
   #       Handler: src/pair/Swap/index.SwapHandler
-  #     - Event: Sync(uint112,uint112)
-  #       Handler: src/pair/Sync/index.SyncHandler
   #     - Event: Transfer(address indexed,address indexed,uint256)
   #       Handler: src/pair/Transfer/index.TransferHandler
+  #     - Event: Sync(uint112,uint112)
+  #       Handler: src/pair/Sync/index.SyncHandler

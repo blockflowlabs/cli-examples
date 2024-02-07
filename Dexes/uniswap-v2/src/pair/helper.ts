@@ -24,6 +24,10 @@ export let ZERO_BI = new BigNumber(0);
 export let ONE_BI = new BigNumber(1);
 export let BI_18 = new BigNumber(18);
 
+export const getTimestamp = (time: string) => {
+  new BigNumber(new Date(time).getTime().toString()).toString();
+};
+
 export async function createLiquidityPosition(
   exchange: string,
   user: string,

@@ -173,7 +173,7 @@ export const SwapHandler = async (context: IEventContext, bind: IBind) => {
   if (!tx) {
     firstBlood = true;
     tx = await txDB.create({ id: transaction.transaction_hash.toLowerCase() });
-    tx.timestamp = event.block.timestamp;
+    tx.timestamp = block.block_timestamp;
   }
 
   let swaps = tx.swaps;
