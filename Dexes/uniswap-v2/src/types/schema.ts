@@ -224,6 +224,27 @@ export class TokenDayData {
   };
 }
 
+export class Swap {
+  static entity = "Swap";
+  static schema = {
+    id: "String",
+    transaction: "String",
+    timestamp: "String",
+    pair: "String",
+    sender: "String",
+    from: "String",
+    amount0In: "String",
+    amount1In: "String",
+    amount0Out: "String",
+    amount1Out: "String",
+    to: "String",
+    logIndex: "String",
+    amountUSD: "String",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "String", index: true },
+  };
+}
+
 import { String, Array, Number } from "@blockflow-labs/utils";
 
 export interface IUniswapFactory extends Document {
@@ -432,6 +453,26 @@ export interface ITokenDayData extends Document {
   totalLiquidityUSD: String;
 
   priceUSD: String;
+  blocknumber: String;
+  entityId: String;
+}
+
+export interface ISwap extends Document {
+  id: String;
+  transaction: String;
+  timestamp: String;
+  pair: String;
+
+  sender: String;
+  from: String;
+  amount0In: String;
+  amount1In: String;
+  amount0Out: String;
+  amount1Out: String;
+  to: String;
+  logIndex: String;
+
+  amountUSD: String;
   blocknumber: String;
   entityId: String;
 }

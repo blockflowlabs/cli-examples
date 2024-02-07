@@ -185,3 +185,21 @@ interface TokenDayData {
 
   priceUSD: String;
 }
+
+interface Swap {
+  id: String;
+  transaction: String;
+  timestamp: String;
+  pair: String;
+
+  sender: String;
+  from: String;
+  amount0In: String;
+  amount1In: String;
+  amount0Out: String;
+  amount1Out: String;
+  to: String;
+  logIndex: String;
+
+  amountUSD: String;
+}

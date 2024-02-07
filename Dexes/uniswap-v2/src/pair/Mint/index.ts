@@ -5,11 +5,14 @@ import {
   FACTORY_ADDRESS,
   createLiquidityPosition,
   createLiquiditySnapshot,
+} from "../helper";
+
+import {
   updatePairDayData,
   updatePairHourData,
-  updateUniswapDayData,
   updateTokenDayData,
-} from "../helper";
+  updateUniswapDayData,
+} from "../dayUpdates";
 
 import {
   Pair,
@@ -31,6 +34,7 @@ import {
   IToken,
   IBundle,
   ITransaction,
+  IUniswapFactory,
 } from "../../types/schema";
 
 /**
@@ -49,16 +53,15 @@ export const MintHandler = async (context: IEventContext, bind: IBind) => {
 
   // update pair database
   const pairDB: Instance = bind(Pair);
-  // prettier-ignore
   let pair: IPair = await pairDB.findOne({ id: log.log_address.toLowerCase() });
   // update txn counts
   pair.txCount = new BigNumber(pair.txCount).plus(1).toString();
-  // prettier-ignore
   await pairDB.updateOne({ id: log.log_address.toLowerCase() }, pair);
 
   // update factory database
   const factoryDB: Instance = bind(UniswapFactory);
-  let uniswap = await factoryDB.findOne({ id: FACTORY_ADDRESS.toLowerCase() });
+  // prettier-ignore
+  let uniswap: IUniswapFactory = await factoryDB.findOne({ id: FACTORY_ADDRESS.toLowerCase()});
   uniswap.txCount = new BigNumber(uniswap.txCount).plus(1).toString();
   await factoryDB.updateOne({ id: FACTORY_ADDRESS.toLowerCase() }, uniswap);
 
@@ -94,9 +97,9 @@ export const MintHandler = async (context: IEventContext, bind: IBind) => {
   let mint: IMint = await mintDB.findOne({ id: mints[mints.length - 1].toLowerCase() });
 
   mint.sender = sender;
+  mint.logIndex = log.log_index;
   mint.amount0 = token0Amount.toString();
   mint.amount1 = token1Amount.toString();
-  mint.logIndex = log.log_index;
   mint.amountUSD = amountTotalUSD.toString();
 
   await mintDB.updateOne({ id: mints[mints.length - 1].toLowerCase() }, mint);
