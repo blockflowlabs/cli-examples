@@ -1,6 +1,6 @@
 name: uniswapV2
-description: " Uniswap is a decentralized protocol for automated token exchange on Ethereum."
-startBlock: latest
+description: "Uniswap is a decentralized protocol for automated token exchange on Ethereum."
+startBlock: 19168758
 userId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
 projectId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
 network: Ethereum
