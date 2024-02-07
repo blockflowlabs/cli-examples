@@ -93,3 +93,19 @@ export async function createLiquiditySnapshot(
 
   await snapshotDB.save(snapshot);
 }
+
+export async function createUser(address: string, userDB: Instance) {
+  let user = await userDB.findOne({ id: address.toLowerCase() });
+  if (!user) {
+    user = await userDB.create({ id: address.toLowerCase() });
+    user.usdSwapped = ZERO_BI.toString();
+    await userDB.save(user);
+  }
+}
+
+export const convertTokenToDecimal = (
+  amount: string,
+  decimals = 18
+): string => {
+  return new BigNumber(amount).dividedBy(10 ** decimals).toString();
+};

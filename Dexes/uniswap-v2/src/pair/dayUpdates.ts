@@ -16,7 +16,7 @@ import {
   IUniswapFactory,
   ITokenDayData,
 } from "../types/schema";
-s;
+
 import { FACTORY_ADDRESS, ZERO_BI, ONE_BI } from "./helper";
 
 export async function createLiquiditySnapshot(

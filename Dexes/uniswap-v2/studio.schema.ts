@@ -1,5 +1,11 @@
 import { String, Array, Number } from "@blockflow-labs/utils";
 
+interface User {
+  id: String;
+  liquidityPositions: [String];
+  usdSwapped: String;
+}
+
 interface UniswapFactory {
   id: String;
   pairCount: String;
@@ -202,4 +208,25 @@ interface Swap {
   logIndex: String;
 
   amountUSD: String;
+}
+
+interface Burn {
+  id: String;
+  transaction: String;
+  timestamp: String;
+  pair: String;
+
+  liquidity: String;
+
+  sender: String;
+  amount0: String;
+  amount1: String;
+  to: String;
+  logIndex: String;
+  amountUSD: String;
+
+  needsComplete: Boolean;
+
+  feeTo: String;
+  feeLiquidity: String;
 }

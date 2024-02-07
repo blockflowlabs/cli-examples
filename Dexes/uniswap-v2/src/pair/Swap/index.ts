@@ -2,7 +2,12 @@ import { IEventContext, IBind, Instance } from "@blockflow-labs/utils";
 import { BigNumber } from "bignumber.js";
 
 import { getTrackedVolumeUSD } from "../price";
-import { ONE_BI, ZERO_BI, FACTORY_ADDRESS } from "../helper";
+import {
+  ONE_BI,
+  ZERO_BI,
+  FACTORY_ADDRESS,
+  convertTokenToDecimal,
+} from "../helper";
 
 import {
   updatePairDayData,
@@ -33,10 +38,6 @@ import {
   ISwap,
   IUniswapDayData,
 } from "../../types/schema";
-
-const convertTokenToDecimal = (amount: string, decimals = 18): string => {
-  return new BigNumber(amount).dividedBy(10 ** decimals).toString();
-};
 
 /**
  * @dev Event::Swap(address sender, uint256 amount0In, uint256 amount1In, uint256 amount0Out, uint256 amount1Out, address to)

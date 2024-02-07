@@ -2,6 +2,17 @@
 
 import { Document } from "@blockflow-labs/utils";
 
+export class User {
+  static entity = "User";
+  static schema = {
+    id: "String",
+    liquidityPositions: ["String"],
+    usdSwapped: "String",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "String", index: true },
+  };
+}
+
 export class UniswapFactory {
   static entity = "UniswapFactory";
   static schema = {
@@ -245,7 +256,37 @@ export class Swap {
   };
 }
 
+export class Burn {
+  static entity = "Burn";
+  static schema = {
+    id: "String",
+    transaction: "String",
+    timestamp: "String",
+    pair: "String",
+    liquidity: "String",
+    sender: "String",
+    amount0: "String",
+    amount1: "String",
+    to: "String",
+    logIndex: "String",
+    amountUSD: "String",
+    needsComplete: "Boolean",
+    feeTo: "String",
+    feeLiquidity: "String",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "String", index: true },
+  };
+}
+
 import { String, Array, Number } from "@blockflow-labs/utils";
+
+export interface IUser extends Document {
+  id: String;
+  liquidityPositions: [String];
+  usdSwapped: String;
+  blocknumber: String;
+  entityId: String;
+}
 
 export interface IUniswapFactory extends Document {
   id: String;
@@ -473,6 +514,29 @@ export interface ISwap extends Document {
   logIndex: String;
 
   amountUSD: String;
+  blocknumber: String;
+  entityId: String;
+}
+
+export interface IBurn extends Document {
+  id: String;
+  transaction: String;
+  timestamp: String;
+  pair: String;
+
+  liquidity: String;
+
+  sender: String;
+  amount0: String;
+  amount1: String;
+  to: String;
+  logIndex: String;
+  amountUSD: String;
+
+  needsComplete: Boolean;
+
+  feeTo: String;
+  feeLiquidity: String;
   blocknumber: String;
   entityId: String;
 }
