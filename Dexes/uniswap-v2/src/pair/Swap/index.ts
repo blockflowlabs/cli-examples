@@ -44,7 +44,11 @@ import {
  * @param context trigger object with contains {event: {sender ,amount0In ,amount1In ,amount0Out ,amount1Out ,to }, transaction, block, log}
  * @param bind init function for database wrapper class
  */
-export const SwapHandler = async (context: IEventContext, bind: IBind) => {
+export const SwapHandler = async (
+  context: IEventContext,
+  bind: IBind,
+  secrets: any
+) => {
   // Implement your event handler logic for Swap here
 
   const { event, transaction, block, log } = context;

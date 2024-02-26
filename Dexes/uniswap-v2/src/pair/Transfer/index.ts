@@ -37,7 +37,11 @@ async function isCompleteMint(
  * @param context trigger object with contains {event: {from ,to ,value }, transaction, block, log}
  * @param bind init function for database wrapper class
  */
-export const TransferHandler = async (context: IEventContext, bind: IBind) => {
+export const TransferHandler = async (
+  context: IEventContext,
+  bind: IBind,
+  secrets: any
+) => {
   // Implement your event handler logic for Transfer here
 
   const { event, transaction, block, log } = context;

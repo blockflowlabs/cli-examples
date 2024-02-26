@@ -43,7 +43,11 @@ import {
  * @param context trigger object with contains {event: {sender ,amount0 ,amount1 ,to }, transaction, block, log}
  * @param bind init function for database wrapper class
  */
-export const BurnHandler = async (context: IEventContext, bind: IBind) => {
+export const BurnHandler = async (
+  context: IEventContext,
+  bind: IBind,
+  secrets: any
+) => {
   // Implement your event handler logic for Burn here
 
   const { event, transaction, block, log } = context;

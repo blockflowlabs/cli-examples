@@ -11,7 +11,11 @@ import { IPair, IToken, IBundle, IUniswapFactory } from "../../types/schema";
  * @param context trigger object with contains {event: {reserve0 ,reserve1 }, transaction, block, log}
  * @param bind init function for database wrapper class
  */
-export const SyncHandler = async (context: IEventContext, bind: IBind) => {
+export const SyncHandler = async (
+  context: IEventContext,
+  bind: IBind,
+  secrets: any
+) => {
   // Implement your event handler logic for Sync here
 
   const { event, transaction, block, log } = context;

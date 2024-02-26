@@ -42,7 +42,11 @@ import {
  * @param context trigger object with contains {event: {sender ,amount0 ,amount1 }, transaction, block, log}
  * @param bind init function for database wrapper class
  */
-export const MintHandler = async (context: IEventContext, bind: IBind) => {
+export const MintHandler = async (
+  context: IEventContext,
+  bind: IBind,
+  secrets: any
+) => {
   // Implement your event handler logic for Mint here
   const { event, transaction, log } = context;
   let { sender, amount0, amount1 } = event;

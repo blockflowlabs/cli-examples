@@ -26,7 +26,8 @@ export let BI_18 = new BigNumber(18);
  */
 export const PairCreatedHandler = async (
   context: IEventContext,
-  bind: IBind
+  bind: IBind,
+  secrets: any
 ) => {
   // Implement your event handler logic for PairCreated here
   const { event, block } = context;
