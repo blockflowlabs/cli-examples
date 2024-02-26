@@ -38,23 +38,22 @@ export async function createLiquidityPosition(
   let liquidityPosition: ILiquidityPosition = await liquidityDB.findOne({
     id,
   });
-  let firstBlood = false;
+
   if (!liquidityPosition) {
-    firstBlood = true;
-    let pair: IPair = await pairDB.create({ id: exchange.toLowerCase() });
-    liquidityPosition = await liquidityDB.create({ id });
+    await pairDB.create({
+      id: exchange.toLowerCase(),
+      liquidityProviderCount: new BigNumber(1).toString(),
+    });
 
-    pair.liquidityProviderCount = new BigNumber(pair.liquidityProviderCount)
-      .plus(1)
-      .toString();
-    liquidityPosition.liquidityTokenBalance = ZERO_BI.toString();
-    liquidityPosition.pair = exchange.toLowerCase();
-    liquidityPosition.user = user.toLowerCase();
-
-    await pairDB.save(pair);
-    await liquidityDB.save(liquidityPosition);
+    liquidityPosition = await liquidityDB.create({
+      id,
+      liquidityTokenBalance: ZERO_BI.toString(),
+      pair: exchange.toLowerCase(),
+      user: user.toLowerCase(),
+    });
   }
-  return { liquidityPosition, firstBlood };
+
+  return liquidityPosition;
 }
 
 export async function createLiquiditySnapshot(
@@ -74,37 +73,34 @@ export async function createLiquiditySnapshot(
 
   // create new snapshot
   const snapshotDB: Instance = bind(LiquidityPositionSnapshot);
-  let snapshot: ILiquidityPositionSnapshot = await snapshotDB.create({
+  await snapshotDB.create({
     id: position.id.concat(timestamp.toString()).toLowerCase(),
+    liquidityPosition: position.id,
+    timestamp: timestamp,
+    user: position.user,
+    pair: position.pair,
+    token0PriceUSD: new BigNumber(token0.derivedETH)
+      .times(bundle.ethPrice)
+      .toString(),
+    token1PriceUSD: new BigNumber(token1.derivedETH)
+      .times(bundle.ethPrice)
+      .toString(),
+    reserve0: pair.reserve0,
+    reserve1: pair.reserve1,
+    reserveUSD: pair.reserveUSD,
+    liquidityTokenTotalSupply: pair.totalSupply,
+    liquidityTokenBalance: position.liquidityTokenBalance,
   });
-
-  snapshot.liquidityPosition = position.id;
-  snapshot.timestamp = timestamp;
-  snapshot.user = position.user;
-  snapshot.pair = position.pair;
-  snapshot.token0PriceUSD = new BigNumber(token0.derivedETH)
-    .times(bundle.ethPrice)
-    .toString();
-  snapshot.token1PriceUSD = new BigNumber(token1.derivedETH)
-    .times(bundle.ethPrice)
-    .toString();
-  snapshot.reserve0 = pair.reserve0;
-  snapshot.reserve1 = pair.reserve1;
-  snapshot.reserveUSD = pair.reserveUSD;
-  snapshot.liquidityTokenTotalSupply = pair.totalSupply;
-  snapshot.liquidityTokenBalance = position.liquidityTokenBalance;
-  snapshot.liquidityPosition = position.id;
-
-  await snapshotDB.save(snapshot);
 }
 
 export async function createUser(address: string, userDB: Instance) {
   let user = await userDB.findOne({ id: address.toLowerCase() });
-  if (!user) {
-    user = await userDB.create({ id: address.toLowerCase() });
-    user.usdSwapped = ZERO_BI.toString();
-    await userDB.save(user);
-  }
+
+  // if user does not exist, create one
+  user ??= await userDB.create({
+    id: address.toLowerCase(),
+    usdSwapped: ZERO_BI.toString(),
+  });
 }
 
 export const convertTokenToDecimal = (
