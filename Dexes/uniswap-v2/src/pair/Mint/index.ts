@@ -102,24 +102,19 @@ export const MintHandler = async (context: IEventContext, bind: IBind) => {
   mint.amount1 = token1Amount.toString();
   mint.amountUSD = amountTotalUSD.toString();
 
-  await mintDB.updateOne({ id: mints[mints.length - 1].toLowerCase() }, mint);
+  await mintDB.save(mint);
 
   // update the LP position
   const liquidityDB: Instance = bind(LiquidityPosition);
-  const { liquidityPosition, firstBlood } = await createLiquidityPosition(
+  const liquidityPosition = await createLiquidityPosition(
     log.log_address,
     mint.to,
     liquidityDB,
     pairDB
   );
-  await createLiquiditySnapshot(liquidityPosition, context, bind);
 
-  if (firstBlood) await liquidityDB.save(liquidityPosition);
-  else
-    await liquidityDB.updateOne(
-      { id: liquidityPosition.id.toLowerCase() },
-      liquidityPosition
-    );
+  await createLiquiditySnapshot(liquidityPosition, context, bind);
+  await liquidityDB.save(liquidityPosition);
 
   // update analytics data
   await updatePairDayData(context, bind(PairDayData), pairDB);
