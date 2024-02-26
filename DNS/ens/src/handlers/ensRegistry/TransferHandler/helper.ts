@@ -51,7 +51,7 @@ export class Transferhelper {
     // await this.recurseDomainDelete(domain);
     await this.DOMAIN.updateOne(
       { id: domain.owner.toLowerCase() },
-      domain,
+      domain
     ).exec();
   }
 
@@ -69,7 +69,7 @@ export class Transferhelper {
         parentDomain.subdomainCount = parentDomain.subdomainCount - 1;
         await this.DOMAIN.updateOne(
           { id: domain.parent.toLowerCase() },
-          parentDomain,
+          parentDomain
         );
         this.recurseDomainDelete(parentDomain);
       }

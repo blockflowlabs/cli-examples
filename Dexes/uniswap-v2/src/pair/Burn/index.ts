@@ -69,13 +69,13 @@ export const BurnHandler = async (context: IEventContext, bind: IBind) => {
   // update pair database
   let pair: IPair = await pairDB.findOne({ id: log.log_address.toLowerCase() });
   pair.txCount = new BigNumber(pair.txCount).plus(1).toString();
-  await pairDB.updateOne({ id: log.log_address.toLowerCase() }, pair);
+  await pairDB.save(pair);
 
   // update factory database
   // prettier-ignore
   let uniswap: IUniswapFactory = await factoryDB.findOne({ id: FACTORY_ADDRESS.toLowerCase()});
   uniswap.txCount = new BigNumber(uniswap.txCount).plus(1).toString();
-  await factoryDB.updateOne({ id: FACTORY_ADDRESS.toLowerCase() }, uniswap);
+  await factoryDB.save(uniswap);
 
   // update tokens database
   const tokenDB = bind(Token);
@@ -85,8 +85,8 @@ export const BurnHandler = async (context: IEventContext, bind: IBind) => {
   token0.txCount = new BigNumber(token0.txCount).plus(1).toString();
   token1.txCount = new BigNumber(token1.txCount).plus(1).toString();
 
-  await tokenDB.updateOne({ id: pair.token0.toLowerCase() }, token0);
-  await tokenDB.updateOne({ id: pair.token1.toLowerCase() }, token1);
+  await tokenDB.save(token0);
+  await tokenDB.save(token1);
 
   // taking both tokens as 18 decimals
   let token0Amount = new BigNumber(amount0).dividedBy(10 ** 18);

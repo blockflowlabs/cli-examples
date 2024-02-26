@@ -129,8 +129,8 @@ export const SwapHandler = async (context: IEventContext, bind: IBind) => {
   token0.txCount = new BigNumber(token0.txCount).plus(ONE_BI).toString();
   token1.txCount = new BigNumber(token1.txCount).plus(ONE_BI).toString();
 
-  await tokenDB.updateOne({ id: pair.token0.toLowerCase() }, token0);
-  await tokenDB.updateOne({ id: pair.token1.toLowerCase() }, token1);
+  await tokenDB.save(token0);
+  await tokenDB.save(token1);
 
   // update pair volume data, use tracked amount if we have it as its probably more accurate
   pair.volumeUSD = new BigNumber(pair.volumeUSD)
@@ -146,7 +146,7 @@ export const SwapHandler = async (context: IEventContext, bind: IBind) => {
     .plus(derivedAmountUSD)
     .toString();
   pair.txCount = new BigNumber(pair.txCount).plus(ONE_BI).toString();
-  await pairDB.updateOne({ id: log.log_address.toLowerCase() }, pair);
+  await pairDB.save(pair);
 
   const factoryDB: Instance = bind(UniswapFactory);
   let uniswap: IUniswapFactory = await factoryDB.findOne({
@@ -162,7 +162,7 @@ export const SwapHandler = async (context: IEventContext, bind: IBind) => {
     .plus(derivedAmountUSD)
     .toString();
   uniswap.txCount = new BigNumber(uniswap.txCount).plus(ONE_BI).toString();
-  await factoryDB.updateOne({ id: FACTORY_ADDRESS.toLowerCase() }, uniswap);
+  await factoryDB.save(uniswap);
 
   const txDB: Instance = bind(Transaction);
   let tx: ITransaction = await txDB.findOne({
