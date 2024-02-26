@@ -1,4 +1,4 @@
-import { IFunctionContext, Instance } from "@blockflow-labs/utils";
+import { IFunctionContext, Instance, IBind } from "@blockflow-labs/utils";
 
 import getUserOpHash from "../../utils/helpers";
 import { UserOperation, Block, Transaction } from "../../types/schema";
@@ -9,7 +9,11 @@ const CHAIN_ID = "1";
  * @param context trigger object with contains {function: {ops ,beneficiary }, transaction, block, log}
  * @param bind init function for database wrapper methods
  */
-export const handleOps = async (context: IFunctionContext, bind: Function) => {
+export const handleOps = async (
+  context: IFunctionContext,
+  bind: IBind,
+  secrets: any
+) => {
   // Implement your function handler logic for handleOps here
 
   const { functionParams, transaction, block } = context;
