@@ -52,25 +52,26 @@ export const BurnHandler = async (context: IEventContext, bind: IBind) => {
   amount0 = amount0.toString();
   amount1 = amount1.toString();
 
+  const burnDB = bind(Burn);
+  const pairDB: Instance = bind(Pair);
   const txDB: Instance = bind(Transaction);
+  const factoryDB: Instance = bind(UniswapFactory);
+
   // prettier-ignore
   let tx: ITransaction = await txDB.findOne({ id: transaction.transaction_hash.toLowerCase() });
   if (!tx) return;
 
   let burns = tx.burns;
-  const burnDB = bind(Burn);
   let burn: IBurn = await burnDB.findOne({
     id: burns[burns.length - 1].toLowerCase(),
   });
 
   // update pair database
-  const pairDB: Instance = bind(Pair);
   let pair: IPair = await pairDB.findOne({ id: log.log_address.toLowerCase() });
   pair.txCount = new BigNumber(pair.txCount).plus(1).toString();
   await pairDB.updateOne({ id: log.log_address.toLowerCase() }, pair);
 
   // update factory database
-  const factoryDB: Instance = bind(UniswapFactory);
   // prettier-ignore
   let uniswap: IUniswapFactory = await factoryDB.findOne({ id: FACTORY_ADDRESS.toLowerCase()});
   uniswap.txCount = new BigNumber(uniswap.txCount).plus(1).toString();
@@ -106,24 +107,19 @@ export const BurnHandler = async (context: IEventContext, bind: IBind) => {
   burn.logIndex = log.log_index;
   burn.amountUSD = amountTotalUSD.toString();
 
-  await burnDB.updateOne({ id: burn.id }, burn);
+  await burnDB.save(burn);
 
   // update the LP position
   const liquidityDB: Instance = bind(LiquidityPosition);
-  const { liquidityPosition, firstBlood } = await createLiquidityPosition(
+  const liquidityPosition = await createLiquidityPosition(
     log.log_address,
     burn.sender,
     liquidityDB,
     pairDB
   );
-  await createLiquiditySnapshot(liquidityPosition, context, bind);
 
-  if (firstBlood) await liquidityDB.save(liquidityPosition);
-  else
-    await liquidityDB.updateOne(
-      { id: liquidityPosition.id.toLowerCase() },
-      liquidityPosition
-    );
+  await createLiquiditySnapshot(liquidityPosition, context, bind);
+  await liquidityDB.save(liquidityPosition);
 
   // update analytics data
   await updatePairDayData(context, bind(PairDayData), pairDB);
