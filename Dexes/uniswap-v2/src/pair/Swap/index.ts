@@ -168,13 +168,11 @@ export const SwapHandler = async (context: IEventContext, bind: IBind) => {
   let tx: ITransaction = await txDB.findOne({
     id: transaction.transaction_hash.toLowerCase(),
   });
-  let firstBlood = false;
 
-  if (!tx) {
-    firstBlood = true;
-    tx = await txDB.create({ id: transaction.transaction_hash.toLowerCase() });
-    tx.timestamp = block.block_timestamp;
-  }
+  tx ??= await txDB.create({
+    id: transaction.transaction_hash.toLowerCase(),
+    timestamp: block.block_timestamp,
+  });
 
   let swaps = tx.swaps;
   const swapDB = bind(Swap);
@@ -183,37 +181,26 @@ export const SwapHandler = async (context: IEventContext, bind: IBind) => {
       .concat("-")
       .concat(swaps.length.toString())
       .toLowerCase(),
+    transaction: tx.id,
+    pair: pair.id,
+    timestamp: tx.timestamp,
+    sender: sender,
+    amount0In: amount0In,
+    amount1In: amount1In,
+    amount0Out: amount0Out,
+    amount1Out: amount1Out,
+    to: to,
+    from: transaction.transaction_from_address,
+    logIndex: log.log_index,
+    // use the tracked amount if we have it
+    amountUSD:
+      trackedAmountUSD === ZERO_BI.toString()
+        ? derivedAmountUSD.toString()
+        : trackedAmountUSD.toString(),
   });
 
-  // update swap event
-  swap.transaction = tx.id;
-  swap.pair = pair.id;
-  swap.timestamp = tx.timestamp;
-  swap.transaction = tx.id;
-  swap.sender = sender;
-  swap.amount0In = amount0In;
-  swap.amount1In = amount1In;
-  swap.amount0Out = amount0Out;
-  swap.amount1Out = amount1Out;
-  swap.to = to;
-  swap.from = transaction.transaction_from_address;
-  swap.logIndex = log.log_index;
-  // use the tracked amount if we have it
-  swap.amountUSD =
-    trackedAmountUSD === ZERO_BI.toString()
-      ? derivedAmountUSD.toString()
-      : trackedAmountUSD.toString();
-
-  await swapDB.save(swap);
-
   tx.swaps.push(swap.id);
-
-  if (firstBlood) await txDB.save(tx);
-  else
-    await txDB.updateOne(
-      { id: transaction.transaction_hash.toLowerCase() },
-      tx
-    );
+  await txDB.save(tx);
 
   // prettier-ignore
   {
@@ -224,7 +211,7 @@ export const SwapHandler = async (context: IEventContext, bind: IBind) => {
     pairDayData.dailyVolumeToken0 = new BigNumber(pairDayData.dailyVolumeToken0).plus(amount0Total).toString();
     pairDayData.dailyVolumeToken1 = new BigNumber(pairDayData.dailyVolumeToken1).plus(amount1Total).toString();
     pairDayData.dailyVolumeUSD = new BigNumber(pairDayData.dailyVolumeUSD).plus(trackedAmountUSD).toString();
-    await PairDayDataDB.updateOne({id: pairDayData.id}, pairDayData)
+    await PairDayDataDB.save(pairDayData)
   }
 
   // prettier-ignore
@@ -236,7 +223,7 @@ export const SwapHandler = async (context: IEventContext, bind: IBind) => {
     pairHourData.hourlyVolumeToken0 = new BigNumber(pairHourData.hourlyVolumeToken0).plus(amount0Total).toString();
     pairHourData.hourlyVolumeToken1 = new BigNumber(pairHourData.hourlyVolumeToken1).plus(amount1Total).toString();
     pairHourData.hourlyVolumeUSD = new BigNumber(pairHourData.hourlyVolumeUSD).plus(trackedAmountUSD).toString();
-    await PairHourDataDB.updateOne({id: pairHourData.id}, pairHourData)
+    await PairHourDataDB.save(pairHourData)
   }
 
   // prettier-ignore
@@ -248,7 +235,7 @@ export const SwapHandler = async (context: IEventContext, bind: IBind) => {
     uniswapDayData.dailyVolumeUSD = new BigNumber(uniswapDayData.dailyVolumeUSD).plus(trackedAmountUSD).toString();
     uniswapDayData.dailyVolumeETH = new BigNumber(uniswapDayData.dailyVolumeETH).plus(trackedAmountETH).toString();
     uniswapDayData.dailyVolumeUntracked = new BigNumber(uniswapDayData.dailyVolumeUntracked).plus(derivedAmountUSD).toString();
-    await UniswapDayDataDB.updateOne({id: uniswapDayData.id}, uniswapDayData)
+    await UniswapDayDataDB.save(uniswapDayData)
   }
 
   const TokenDayDataDB = bind(TokenDayData);
@@ -263,7 +250,7 @@ export const SwapHandler = async (context: IEventContext, bind: IBind) => {
       new BigNumber(amount0Total).times(token0.derivedETH).times(bundle.ethPrice)
     ).toString();
 
-    await TokenDayDataDB.updateOne({id: token0DayData.id}, token0DayData)
+    await TokenDayDataDB.save(token0DayData)
   }
 
   // prettier-ignore
@@ -277,6 +264,6 @@ export const SwapHandler = async (context: IEventContext, bind: IBind) => {
       new BigNumber(amount1Total).times(token1.derivedETH).times(bundle.ethPrice)
     ).toString();
 
-    await TokenDayDataDB.updateOne({id: token1DayData.id}, token1DayData)
+    await TokenDayDataDB.save(token1DayData)
   }
 };
