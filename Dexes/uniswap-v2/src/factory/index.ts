@@ -67,10 +67,10 @@ export const PairCreatedHandler = async (
 };
 
 const createBundle = async (bundleDB: Instance) => {
-  // create new bundle
-  let bundle: IBundle = await bundleDB.create({ id: "1" });
-  bundle.ethPrice = ZERO_BI.toString();
-  await bundleDB.save(bundle);
+  await bundleDB.create({
+    id: "1",
+    ethPrice: ZERO_BI.toString(),
+  });
 };
 
 const updateFactory = async (factoryDB: Instance, IBundle: Instance) => {
@@ -79,17 +79,17 @@ const updateFactory = async (factoryDB: Instance, IBundle: Instance) => {
     id: FACTORY_ADDRESS.toLowerCase(),
   });
 
-  let firstBlood = false;
   if (!factory) {
-    firstBlood = true;
-    factory = await factoryDB.create({ id: FACTORY_ADDRESS.toLowerCase() });
-    factory.pairCount = ZERO_BI.toString();
-    factory.totalVolumeETH = ZERO_BI.toString();
-    factory.totalLiquidityETH = ZERO_BI.toString();
-    factory.totalVolumeUSD = ZERO_BI.toString();
-    factory.untrackedVolumeUSD = ZERO_BI.toString();
-    factory.totalLiquidityUSD = ZERO_BI.toString();
-    factory.txCount = ZERO_BI.toString();
+    factory = await factoryDB.create({
+      id: FACTORY_ADDRESS.toLowerCase(),
+      pairCount: ZERO_BI.toString(),
+      totalVolumeETH: ZERO_BI.toString(),
+      totalLiquidityETH: ZERO_BI.toString(),
+      totalVolumeUSD: ZERO_BI.toString(),
+      untrackedVolumeUSD: ZERO_BI.toString(),
+      totalLiquidityUSD: ZERO_BI.toString(),
+      txCount: ZERO_BI.toString(),
+    });
 
     await createBundle(IBundle);
   }
@@ -98,29 +98,23 @@ const updateFactory = async (factoryDB: Instance, IBundle: Instance) => {
     .plus(1)
     .toString();
 
-  if (firstBlood) await factoryDB.save(factory);
-  else
-    await factoryDB.updateOne({ id: FACTORY_ADDRESS.toLowerCase() }, factory);
+  await factoryDB.save(factory);
 };
 
 const updateToken = async (tokenDB: Instance, token: string) => {
   let tokenInContext: IToken = await tokenDB.findOne({
     id: token.toLowerCase(),
   });
-  let firstBlood = false;
 
-  // fetch info if null
-  if (!tokenInContext) {
-    firstBlood = true;
-    tokenInContext = await tokenDB.create({ id: token.toLowerCase() });
-    tokenInContext.derivedETH = ZERO_BI.toString();
-    tokenInContext.tradeVolume = ZERO_BI.toString();
-    tokenInContext.tradeVolumeUSD = ZERO_BI.toString();
-    tokenInContext.untrackedVolumeUSD = ZERO_BI.toString();
-    tokenInContext.totalLiquidity = ZERO_BI.toString();
-    tokenInContext.txCount = ZERO_BI.toString();
-  }
+  tokenInContext ??= await tokenDB.create({
+    id: token.toLowerCase(),
+    derivedETH: ZERO_BI.toString(),
+    tradeVolume: ZERO_BI.toString(),
+    tradeVolumeUSD: ZERO_BI.toString(),
+    untrackedVolumeUSD: ZERO_BI.toString(),
+    totalLiquidity: ZERO_BI.toString(),
+    txCount: ZERO_BI.toString(),
+  });
 
-  if (firstBlood) await tokenDB.save(tokenInContext);
-  else await tokenDB.updateOne({ id: token.toLowerCase() }, tokenInContext);
+  await tokenDB.save(tokenInContext);
 };
