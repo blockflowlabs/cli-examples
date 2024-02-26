@@ -20,15 +20,7 @@ import {
   IBurn,
 } from "../../types/schema";
 
-import {
-  IPair,
-  IToken,
-  IBundle,
-  ITransaction,
-  IUniswapFactory,
-  ISwap,
-  IUniswapDayData,
-} from "../../types/schema";
+import { IPair, ITransaction } from "../../types/schema";
 
 async function isCompleteMint(
   mintId: string,
@@ -71,13 +63,11 @@ export const TransferHandler = async (context: IEventContext, bind: IBind) => {
   let tx: ITransaction = await txDB.findOne({
     id: transaction.transaction_hash.toLowerCase(),
   });
-  let firstBlood = false;
 
-  if (!tx) {
-    firstBlood = true;
-    tx = await txDB.create({ id: transaction.transaction_hash.toLowerCase() });
-    tx.timestamp = block.block_timestamp;
-  }
+  tx ??= await txDB.create({
+    id: transaction.transaction_hash.toLowerCase(),
+    timestamp: block.block_timestamp,
+  });
 
   if (from == ADDRESS_ZERO) {
     // mints
@@ -85,7 +75,7 @@ export const TransferHandler = async (context: IEventContext, bind: IBind) => {
 
     // update total supply
     pair.totalSupply = new BigNumber(pair.totalSupply).plus(value).toString();
-    await pairDB.updateOne({ id: pair.id }, pair);
+    await pairDB.save(pair);
 
     // create new mint if no mints so far or if last one is done already
     const MintDB: Instance = bind(Mint);
@@ -98,17 +88,14 @@ export const TransferHandler = async (context: IEventContext, bind: IBind) => {
           .concat("-")
           .concat(mints.length.toString())
           .toLowerCase(),
+        transaction: tx.id,
+        pair: pair.id,
+        to: to,
+        liquidity: value,
+        timestamp: new BigNumber(
+          new Date(block.block_timestamp).getTime().toString()
+        ).toString(),
       });
-
-      mint.transaction = tx.id;
-      mint.pair = pair.id;
-      mint.to = to;
-      mint.liquidity = value;
-      mint.timestamp = new BigNumber(
-        new Date(block.block_timestamp).getTime().toString()
-      ).toString();
-
-      await MintDB.save(mint);
 
       // update mints in transaction
       tx.mints.push(mint.id);
@@ -122,19 +109,16 @@ export const TransferHandler = async (context: IEventContext, bind: IBind) => {
           .concat("-")
           .concat(tx.burns.length.toString())
           .toLowerCase(),
+        transaction: tx.id,
+        pair: pair.id,
+        liquidity: value,
+        timestamp: new BigNumber(
+          new Date(block.block_timestamp).getTime().toString()
+        ).toString(),
+        to: event.params.to,
+        sender: event.params.from,
+        needsComplete: true,
       });
-
-      burn.transaction = tx.id;
-      burn.pair = pair.id;
-      burn.liquidity = value;
-      burn.timestamp = new BigNumber(
-        new Date(block.block_timestamp).getTime().toString()
-      ).toString();
-      burn.to = event.params.to;
-      burn.sender = event.params.from;
-      burn.needsComplete = true;
-
-      await burnDB.save(burn);
 
       // TODO: Consider using .concat() for handling array updates to protect
       // against unintended side effects for other code paths.
@@ -146,13 +130,12 @@ export const TransferHandler = async (context: IEventContext, bind: IBind) => {
       pair.totalSupply = new BigNumber(pair.totalSupply)
         .minus(value)
         .toString();
-      await pairDB.updateOne({ id: pair.id }, pair);
+      await pairDB.save(pair);
 
       // this is a new instance of a logical burn
       let burns = tx.burns;
       let burn: IBurn;
       const burnDB = bind(Burn);
-      let burnFirstBlood = false;
       if (burns.length > 0) {
         let currentBurn: IBurn = await burnDB.findOne({
           id: burns[burns.length - 1].toLowerCase(),
@@ -160,36 +143,34 @@ export const TransferHandler = async (context: IEventContext, bind: IBind) => {
         if (currentBurn.needsComplete) {
           burn = currentBurn;
         } else {
-          burnFirstBlood = true;
           burn = await burnDB.create({
             id: transaction.transaction_hash
               .concat("-")
               .concat(tx.burns.length.toString())
               .toLowerCase(),
+            transaction: tx.id,
+            needsComplete: false,
+            pair: pair.id,
+            liquidity: value,
+            timestamp: new BigNumber(
+              new Date(block.block_timestamp).getTime().toString()
+            ).toString(),
           });
-          burn.transaction = tx.id;
-          burn.needsComplete = false;
-          burn.pair = pair.id;
-          burn.liquidity = value;
-          burn.timestamp = new BigNumber(
-            new Date(block.block_timestamp).getTime().toString()
-          ).toString();
         }
       } else {
-        burnFirstBlood = true;
         burn = await burnDB.create({
           id: transaction.transaction_hash
             .concat("-")
             .concat(tx.burns.length.toString())
             .toLowerCase(),
+          transaction: tx.id,
+          needsComplete: false,
+          pair: pair.id,
+          liquidity: value,
+          timestamp: new BigNumber(
+            new Date(block.block_timestamp).getTime().toString()
+          ).toString(),
         });
-        burn.transaction = tx.id;
-        burn.needsComplete = false;
-        burn.pair = pair.id;
-        burn.liquidity = value;
-        burn.timestamp = new BigNumber(
-          new Date(block.block_timestamp).getTime().toString()
-        ).toString();
       }
 
       // if this logical burn included a fee mint, account for this
@@ -212,8 +193,7 @@ export const TransferHandler = async (context: IEventContext, bind: IBind) => {
         tx.mints = mints;
       }
 
-      if (burnFirstBlood) await burnDB.save(burn);
-      else await burnDB.updateOne({ id: burn.id }, burn);
+      await burnDB.save(burn);
 
       // if accessing last one, replace it
       if (burn.needsComplete) {
@@ -230,39 +210,22 @@ export const TransferHandler = async (context: IEventContext, bind: IBind) => {
       if (from != ADDRESS_ZERO && from.toLowerCase() != pair.id.toLowerCase()) {
         // update the LP position
         const liquidityDB: Instance = bind(LiquidityPosition);
-        let { liquidityPosition, firstBlood } = await createLiquidityPosition(log.log_address, from, liquidityDB, pairDB)
+        let  liquidityPosition  = await createLiquidityPosition(log.log_address, from, liquidityDB, pairDB)
         // fromUserLiquidityPosition.liquidityTokenBalance = convertTokenToDecimal(pairContract.balanceOf(from), BI_18)
         await createLiquiditySnapshot(liquidityPosition, context, bind);
-
-        if (firstBlood) await liquidityDB.save(liquidityPosition);
-        else
-          await liquidityDB.updateOne(
-            { id: liquidityPosition.id.toLowerCase() },
-            liquidityPosition
-          );
+        await liquidityDB.save(liquidityPosition);
       }
 
       if (to != ADDRESS_ZERO && to.toLowerCase() != pair.id.toLowerCase()) {
         // update the LP position
         const liquidityDB: Instance = bind(LiquidityPosition);
-        let { liquidityPosition, firstBlood } = await createLiquidityPosition(log.log_address, to, liquidityDB, pairDB)
+        let liquidityPosition = await createLiquidityPosition(log.log_address, to, liquidityDB, pairDB)
         // toUserLiquidityPosition.liquidityTokenBalance = convertTokenToDecimal(pairContract.balanceOf(to), BI_18)
         await createLiquiditySnapshot(liquidityPosition, context, bind);
-
-        if (firstBlood) await liquidityDB.save(liquidityPosition);
-        else
-          await liquidityDB.updateOne(
-            { id: liquidityPosition.id.toLowerCase() },
-            liquidityPosition
-          );
+        await liquidityDB.save(liquidityPosition);
       }
     }
 
-    if (firstBlood) await txDB.save(tx);
-    else
-      await txDB.updateOne(
-        { id: transaction.transaction_hash.toLowerCase() },
-        tx
-      );
+    await txDB.save(tx);
   }
 };
