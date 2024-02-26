@@ -36,28 +36,24 @@ export async function createLiquiditySnapshot(
 
   // create new snapshot
   const snapshotDB: Instance = bind(LiquidityPositionSnapshot);
-  let snapshot: ILiquidityPositionSnapshot = await snapshotDB.create({
+  await snapshotDB.create({
     id: position.id.concat(timestamp.toString()).toLowerCase(),
+    liquidityPosition: position.id,
+    timestamp: timestamp,
+    user: position.user,
+    pair: position.pair,
+    token0PriceUSD: new BigNumber(token0.derivedETH)
+      .times(bundle.ethPrice)
+      .toString(),
+    token1PriceUSD: new BigNumber(token1.derivedETH)
+      .times(bundle.ethPrice)
+      .toString(),
+    reserve0: pair.reserve0,
+    reserve1: pair.reserve1,
+    reserveUSD: pair.reserveUSD,
+    liquidityTokenTotalSupply: pair.totalSupply,
+    liquidityTokenBalance: position.liquidityTokenBalance,
   });
-
-  snapshot.liquidityPosition = position.id;
-  snapshot.timestamp = timestamp;
-  snapshot.user = position.user;
-  snapshot.pair = position.pair;
-  snapshot.token0PriceUSD = new BigNumber(token0.derivedETH)
-    .times(bundle.ethPrice)
-    .toString();
-  snapshot.token1PriceUSD = new BigNumber(token1.derivedETH)
-    .times(bundle.ethPrice)
-    .toString();
-  snapshot.reserve0 = pair.reserve0;
-  snapshot.reserve1 = pair.reserve1;
-  snapshot.reserveUSD = pair.reserveUSD;
-  snapshot.liquidityTokenTotalSupply = pair.totalSupply;
-  snapshot.liquidityTokenBalance = position.liquidityTokenBalance;
-  snapshot.liquidityPosition = position.id;
-
-  await snapshotDB.save(snapshot);
 }
 
 export async function updatePairDayData(
@@ -81,19 +77,18 @@ export async function updatePairDayData(
   let pairDayData: IPairDayData = await pairDayDataDB.findOne({
     id: dayPairID,
   });
-  let firstBlood = false;
-  if (!pairDayData) {
-    firstBlood = true;
-    pairDayData = await pairDayDataDB.create({ id: dayPairID });
-    pairDayData.date = dayStartTimestamp.toString();
-    pairDayData.token0 = pair.token0;
-    pairDayData.token1 = pair.token1;
-    pairDayData.pairAddress = context.log.log_address;
-    pairDayData.dailyVolumeToken0 = ZERO_BI.toString();
-    pairDayData.dailyVolumeToken1 = ZERO_BI.toString();
-    pairDayData.dailyVolumeUSD = ZERO_BI.toString();
-    pairDayData.dailyTxns = ZERO_BI.toString();
-  }
+
+  pairDayData ??= await pairDayDataDB.create({
+    id: dayPairID,
+    date: dayStartTimestamp.toString(),
+    token0: pair.token0,
+    token1: pair.token1,
+    pairAddress: context.log.log_address,
+    dailyVolumeToken0: ZERO_BI.toString(),
+    dailyVolumeToken1: ZERO_BI.toString(),
+    dailyVolumeUSD: ZERO_BI.toString(),
+    dailyTxns: ZERO_BI.toString(),
+  });
 
   pairDayData.totalSupply = pair.totalSupply;
   pairDayData.reserve0 = pair.reserve0;
@@ -103,9 +98,7 @@ export async function updatePairDayData(
     .plus(ONE_BI)
     .toString();
 
-  if (firstBlood) await pairDayDataDB.save(pairDayData);
-  else await pairDayDataDB.updateOne({ id: dayPairID }, pairDayData);
-
+  await pairDayDataDB.save(pairDayData);
   return pairDayData;
 }
 
@@ -130,17 +123,16 @@ export async function updatePairHourData(
   let pairHourData: IPairHourData = await PairHourDataDB.findOne({
     id: hourPairID,
   });
-  let firstBlood = false;
-  if (!pairHourData) {
-    firstBlood = true;
-    pairHourData = await PairHourDataDB.create({ id: hourPairID });
-    pairHourData.hourStartUnix = hourStartUnix;
-    pairHourData.pair = context.log.log_address;
-    pairHourData.hourlyVolumeToken0 = ZERO_BI.toString();
-    pairHourData.hourlyVolumeToken1 = ZERO_BI.toString();
-    pairHourData.hourlyVolumeUSD = ZERO_BI.toString();
-    pairHourData.hourlyTxns = ZERO_BI.toString();
-  }
+
+  pairHourData ??= await PairHourDataDB.create({
+    id: hourPairID,
+    hourStartUnix: hourStartUnix,
+    pair: context.log.log_address,
+    hourlyVolumeToken0: ZERO_BI.toString(),
+    hourlyVolumeToken1: ZERO_BI.toString(),
+    hourlyVolumeUSD: ZERO_BI.toString(),
+    hourlyTxns: ZERO_BI.toString(),
+  });
 
   pairHourData.totalSupply = pair.totalSupply;
   pairHourData.reserve0 = pair.reserve0;
@@ -151,9 +143,7 @@ export async function updatePairHourData(
     .toString();
   pairHourData.save();
 
-  if (firstBlood) await PairHourDataDB.save(pairHourData);
-  else await PairHourDataDB.updateOne({ id: hourPairID }, pairHourData);
-
+  await PairHourDataDB.save(pairHourData);
   return pairHourData;
 }
 
@@ -169,17 +159,16 @@ export async function updateUniswapDayData(
   let dayStartTimestamp = dayID.multipliedBy(86400).toString();
 
   let uniswapDayData = await UniswapDayDataDB.findOne({ id: dayID.toString() });
-  let firstBlood = false;
-  if (!uniswapDayData) {
-    firstBlood = true;
-    uniswapDayData = await UniswapDayDataDB.create({ id: dayID.toString() });
-    uniswapDayData.date = dayStartTimestamp;
-    uniswapDayData.dailyVolumeUSD = ZERO_BI.toString();
-    uniswapDayData.dailyVolumeETH = ZERO_BI.toString();
-    uniswapDayData.totalVolumeUSD = ZERO_BI.toString();
-    uniswapDayData.totalVolumeETH = ZERO_BI.toString();
-    uniswapDayData.dailyVolumeUntracked = ZERO_BI.toString();
-  }
+
+  uniswapDayData ??= await UniswapDayDataDB.create({
+    id: dayID.toString(),
+    date: dayStartTimestamp,
+    dailyVolumeUSD: ZERO_BI.toString(),
+    dailyVolumeETH: ZERO_BI.toString(),
+    totalVolumeUSD: ZERO_BI.toString(),
+    totalVolumeETH: ZERO_BI.toString(),
+    dailyVolumeUntracked: ZERO_BI.toString(),
+  });
 
   let uniswap: IUniswapFactory = await UniswapFactoryDB.findOne({
     id: FACTORY_ADDRESS.toLowerCase(),
@@ -189,10 +178,7 @@ export async function updateUniswapDayData(
   uniswapDayData.totalLiquidityETH = uniswap.totalLiquidityETH;
   uniswapDayData.txCount = uniswap.txCount;
 
-  if (firstBlood) await UniswapDayDataDB.save(uniswapDayData);
-  else
-    await UniswapDayDataDB.updateOne({ id: dayID.toString() }, uniswapDayData);
-
+  await UniswapDayDataDB.save(uniswapDayData);
   return uniswapDayData;
 }
 
@@ -213,21 +199,18 @@ export async function updateTokenDayData(
   let tokenDayData: ITokenDayData = await TokenDayDataDB.findOne({
     id: tokenDayID,
   });
-  let firstBlood = false;
-  if (!tokenDayData) {
-    firstBlood = true;
-    tokenDayData = await TokenDayDataDB.create({ id: tokenDayID });
-    tokenDayData.date = dayStartTimestamp;
-    tokenDayData.token = token.id;
-    tokenDayData.priceUSD = new BigNumber(token.derivedETH)
-      .times(bundle.ethPrice)
-      .toString();
-    tokenDayData.dailyVolumeToken = ZERO_BI.toString();
-    tokenDayData.dailyVolumeETH = ZERO_BI.toString();
-    tokenDayData.dailyVolumeUSD = ZERO_BI.toString();
-    tokenDayData.dailyTxns = ZERO_BI.toString();
-    tokenDayData.totalLiquidityUSD = ZERO_BI.toString();
-  }
+
+  tokenDayData ??= await TokenDayDataDB.create({
+    id: tokenDayID,
+    date: dayStartTimestamp,
+    token: token.id,
+    priceUSD: new BigNumber(token.derivedETH).times(bundle.ethPrice).toString(),
+    dailyVolumeToken: ZERO_BI.toString(),
+    dailyVolumeETH: ZERO_BI.toString(),
+    dailyVolumeUSD: ZERO_BI.toString(),
+    dailyTxns: ZERO_BI.toString(),
+    totalLiquidityUSD: ZERO_BI.toString(),
+  });
 
   tokenDayData.priceUSD = new BigNumber(token.derivedETH)
     .times(bundle.ethPrice)
@@ -243,8 +226,6 @@ export async function updateTokenDayData(
     .plus(ONE_BI)
     .toString();
 
-  if (firstBlood) await TokenDayDataDB.save(tokenDayData);
-  else await TokenDayDataDB.updateOne({ id: tokenDayID }, tokenDayData);
-
+  await TokenDayDataDB.save(tokenDayData);
   return tokenDayData;
 }
