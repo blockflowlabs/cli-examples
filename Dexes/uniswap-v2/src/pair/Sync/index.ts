@@ -1,45 +1,10 @@
 import { IEventContext, IBind, Instance } from "@blockflow-labs/utils";
 import { BigNumber } from "bignumber.js";
 
-import {
-  ZERO_BI,
-  FACTORY_ADDRESS,
-  createLiquidityPosition,
-  createLiquiditySnapshot,
-  convertTokenToDecimal,
-} from "../helper";
-
+import { ZERO_BI, FACTORY_ADDRESS, convertTokenToDecimal } from "../helper";
 import { getEthPriceInUSD, getTrackedLiquidityUSD } from "../price";
-
-import {
-  updatePairDayData,
-  updatePairHourData,
-  updateTokenDayData,
-  updateUniswapDayData,
-} from "../dayUpdates";
-
-import {
-  Pair,
-  Mint,
-  Bundle,
-  Token,
-  Transaction,
-  PairDayData,
-  TokenDayData,
-  PairHourData,
-  UniswapFactory,
-  UniswapDayData,
-  LiquidityPosition,
-} from "../../types/schema";
-
-import {
-  IMint,
-  IPair,
-  IToken,
-  IBundle,
-  ITransaction,
-  IUniswapFactory,
-} from "../../types/schema";
+import { Pair, Bundle, Token, UniswapFactory } from "../../types/schema";
+import { IPair, IToken, IBundle, IUniswapFactory } from "../../types/schema";
 
 /**
  * @dev Event::Sync(uint112 reserve0, uint112 reserve1)
@@ -99,7 +64,7 @@ export const SyncHandler = async (context: IEventContext, bind: IBind) => {
   const bundleDB: Instance = bind(Bundle);
   const bundle: IBundle = await bundleDB.findOne({ id: "1" });
   bundle.ethPrice = await getEthPriceInUSD(pairDB);
-  await bundleDB.updateOne({ id: "1" }, bundle);
+  await bundleDB.save(bundle);
 
   // get tracked liquidity - will be 0 if neither is in whitelist
   let trackedLiquidityETH: string;
@@ -146,8 +111,8 @@ export const SyncHandler = async (context: IEventContext, bind: IBind) => {
     .toString();
 
   // save entities
-  await pairDB.updateOne({ id: pair.id }, pair);
-  await factoryDB.updateOne({ id: FACTORY_ADDRESS.toLowerCase() }, uniswap);
-  await tokenDB.updateOne({ id: pair.token0.toLowerCase() }, token0);
-  await tokenDB.updateOne({ id: pair.token1.toLowerCase() }, token1);
+  await pairDB.save(pair);
+  await factoryDB.save(uniswap);
+  await tokenDB.save(token0);
+  await tokenDB.save(token1);
 };
