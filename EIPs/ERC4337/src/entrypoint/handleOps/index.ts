@@ -24,37 +24,31 @@ export const handleOps = async (context: IFunctionContext, bind: Function) => {
   await updateBlock(
     bind(Block),
     block.block_number.toString(),
-    transactionHash,
+    transactionHash
   );
 
   // transaction
-  const ITransaction = bind(Transaction);
-  let firstBlood = false;
-  let Xtransaction = await ITransaction.findOne({
+  const transactionDB = bind(Transaction);
+  let transaction_ = await transactionDB.findOne({
     id: transactionHash.toLowerCase(),
   });
 
-  if (!Xtransaction) {
-    firstBlood = true;
-    Xtransaction = await ITransaction.create({
-      id: transactionHash.toLowerCase(),
-    });
-  }
+  transaction_ ??= await transactionDB.create({
+    id: transactionHash.toLowerCase(),
+  });
 
-  Xtransaction.transactionHash = transactionHash;
+  transaction_.transactionHash = transactionHash;
 
   // updating userOps
   const entryPoint = transaction.transaction_to_address;
 
   for (const op of ops) {
     const userOpHash = getUserOpHash(op, entryPoint, CHAIN_ID);
-    Xtransaction.userOpHashes.push(userOpHash);
+    transaction_.userOpHashes.push(userOpHash);
 
-    const IUserOp = bind(UserOperation);
-    let userOp = await IUserOp.findOne({ id: userOpHash.toLowerCase() });
-    if (!userOp) {
-      userOp = await IUserOp.create({ id: userOpHash.toLowerCase() });
-    }
+    const userOpDB = bind(UserOperation);
+    let userOp = await userOpDB.findOne({ id: userOpHash.toLowerCase() });
+    userOp ??= await userOpDB.create({ id: userOpHash.toLowerCase() });
 
     userOp.sender = op.sender;
     userOp.nonce = op.nonce;
@@ -69,32 +63,20 @@ export const handleOps = async (context: IFunctionContext, bind: Function) => {
     userOp.signature = op.signature;
     userOp.beneficiary = beneficiary;
 
-    if (firstBlood) await IUserOp.save(userOp);
-    else await IUserOp.updateOne({ id: userOpHash.toLowerCase() }, userOp);
+    await userOpDB.save(userOp);
   }
 
-  if (firstBlood) await ITransaction.save(Xtransaction);
-  else
-    await ITransaction.updateOne(
-      { id: transactionHash.toLowerCase() },
-      Xtransaction,
-    );
+  await transactionDB.save(transaction_);
 };
 
 const updateBlock = async (
-  IBlock: Instance,
+  blockDB: Instance,
   id: string,
-  transactionHash: string,
+  transactionHash: string
 ) => {
-  let firstBlood = false;
-  let Xblock = await IBlock.findOne({ id });
-  if (!Xblock) {
-    firstBlood = true;
-    Xblock = await IBlock.create({ id });
-  }
+  let block = await blockDB.findOne({ id });
+  block ??= await blockDB.create({ id });
 
-  Xblock.transactionHashesWithUserOps.push(transactionHash);
-
-  if (firstBlood) await IBlock.save(Xblock);
-  else await IBlock.updateOne({ id }, Xblock);
+  block.transactionHashesWithUserOps.push(transactionHash);
+  await blockDB.save(block);
 };

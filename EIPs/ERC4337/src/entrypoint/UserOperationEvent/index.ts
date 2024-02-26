@@ -7,7 +7,8 @@ import {
   Account,
   Paymaster,
   Blockchain,
-  IUserOperation as XUserOperation,
+  IUserOperation,
+  IAccount,
 } from "../../types/schema";
 
 /**
@@ -46,38 +47,32 @@ export const UserOperationEventHandler = async (
     // prettier-ignore
     await updateBundler(bind(Bundler), block.block_timestamp, transaction.transaction_from_address, userOpHash);
 
-    const IAccount = bind(Account);
-    let account = await IAccount.findOne({ id: sender.toLowerCase() });
-    let firstBlood = false;
-    if (!account) {
-      firstBlood = true;
-      account = await IAccount.create({ id: sender.toLowerCase() });
-
-      account.totalOperations = "0";
-      account.createdOpHash = userOpHash;
-      account.paymaster = paymaster.toLowerCase();
-      account.createdAt = block.block_timestamp;
-      account.createdHash = transaction.transaction_hash;
-    }
+    const accountDB = bind(Account);
+    let account: IAccount = await accountDB.findOne({
+      id: sender.toLowerCase(),
+    });
+    account ??= await accountDB.create({
+      id: sender.toLowerCase(),
+      totalOperations: "0",
+      createdOpHash: userOpHash,
+      paymaster: paymaster.toLowerCase(),
+      createdAt: block.block_timestamp,
+      createdHash: transaction.transaction_hash,
+    });
 
     account.ops.push(userOpHash);
-    account.totalOperations = new BigNumber(account.totalOperations)
+    account.totalOperations = new BigNumber(account.totalOperations.toString())
       .plus(1)
       .toString();
     account.updatedAt = block.block_timestamp;
 
-    if (firstBlood) await IAccount.save(account);
-    else await IAccount.updateOne({ id: sender.toLowerCase() }, account);
+    await accountDB.save(account);
 
-    const IUserOp = bind(UserOperation);
-    firstBlood = false;
-    let userOp: XUserOperation = await IUserOp.findOne({
+    const userOpDB = bind(UserOperation);
+    let userOp: IUserOperation = await userOpDB.findOne({
       id: userOpHash.toLowerCase(),
     });
-    if (!userOp) {
-      firstBlood = true;
-      userOp = await IUserOp.create({ id: userOpHash.toLowerCase() });
-    }
+    userOp ??= await userOpDB.create({ id: userOpHash.toLowerCase() });
 
     userOp.bundler = transaction.transaction_from_address.toLowerCase();
     userOp.paymaster = paymaster.toLowerCase();
@@ -86,54 +81,44 @@ export const UserOperationEventHandler = async (
     userOp.success = success;
     userOp.actualGasCost = Number(actualGasCost);
     userOp.actualGasUsed = Number(actualGasUsed);
-
     userOp.txHash = transaction.transaction_hash;
     userOp.createdAt = block.block_timestamp;
 
-    if (firstBlood) await IUserOp.save(userOp);
-    else await IUserOp.updateOne({ id: userOpHash.toLowerCase() }, userOp);
+    await userOpDB.save(userOp);
   } catch (error) {
     console.error(error);
   }
 };
 
-const updateBlockchain = async (IBlockchain: Instance) => {
+const updateBlockchain = async (blockchainDB: Instance) => {
   try {
-    let firstBlood = false;
-    let blockchain = await IBlockchain.findOne({ id: "ETH" });
-    if (!blockchain) {
-      blockchain = await IBlockchain.create({ id: "ETH" });
-      firstBlood = true;
-    }
+    let blockchain = await blockchainDB.findOne({ id: "ETH" });
+    blockchain ??= await blockchainDB.create({ id: "ETH" });
 
     blockchain.totalOperations = blockchain.totalOperations || "0";
     blockchain.totalOperations = new BigNumber(blockchain.totalOperations)
       .plus(1)
       .toString();
 
-    if (firstBlood) await IBlockchain.save(blockchain);
-    else await IBlockchain.updateOne({ id: blockchain.id }, blockchain);
+    await blockchainDB.save(blockchain);
   } catch (error) {
     console.error(error);
   }
 };
 
 const updatePaymaster = async (
-  IPaymaster: Instance,
+  paymasterDB: Instance,
   timestamp: string,
   id: string,
   userOpHash: string
 ) => {
   try {
-    let paymaster = await IPaymaster.findOne({ id: id.toLowerCase() });
-    let firstBlood = false;
-
-    if (!paymaster) {
-      firstBlood = true;
-      paymaster = await IPaymaster.create({ id: id.toLowerCase() });
-      paymaster.totalOperations = "0";
-      paymaster.createdAt = timestamp;
-    }
+    let paymaster = await paymasterDB.findOne({ id: id.toLowerCase() });
+    paymaster ??= await paymasterDB.create({
+      id: id.toLowerCase(),
+      totalOperations: "0",
+      createdAt: timestamp,
+    });
 
     paymaster.ops.push(userOpHash);
     paymaster.updatedAt = timestamp;
@@ -141,28 +126,25 @@ const updatePaymaster = async (
       .plus(1)
       .toString();
 
-    if (firstBlood) await IPaymaster.save(paymaster);
-    else await IPaymaster.updateOne({ id: id.toLowerCase() }, paymaster);
+    await paymasterDB.save(paymaster);
   } catch (error) {
     console.error(error);
   }
 };
 
 const updateBundler = async (
-  IBundler: Instance,
+  bundlerDB: Instance,
   timestamp: string,
   id: string,
   userOpHash: string
 ) => {
   try {
-    let bundler = await IBundler.findOne({ id: id.toLowerCase() });
-    let firstBlood = false;
-    if (!bundler) {
-      firstBlood = true;
-      bundler = await IBundler.create({ id: id.toLowerCase() });
-      bundler.totalOperations = "0";
-      bundler.createdAt = timestamp;
-    }
+    let bundler = await bundlerDB.findOne({ id: id.toLowerCase() });
+    bundler ??= await bundlerDB.create({
+      id: id.toLowerCase(),
+      totalOperations: "0",
+      createdAt: timestamp,
+    });
 
     bundler.ops.push(userOpHash);
     bundler.updatedAt = timestamp;
@@ -170,8 +152,7 @@ const updateBundler = async (
       .plus(1)
       .toString();
 
-    if (firstBlood) await IBundler.save(bundler);
-    else await IBundler.updateOne({ id: id.toLocaleLowerCase() }, bundler);
+    await bundlerDB.save(bundler);
   } catch (error) {
     console.error(error);
   }

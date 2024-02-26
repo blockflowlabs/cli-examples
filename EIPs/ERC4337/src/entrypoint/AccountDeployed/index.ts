@@ -15,7 +15,7 @@ import {
  */
 export const AccountDeployedHandler = async (
   context: IEventContext,
-  bind: IBind,
+  bind: IBind
 ) => {
   try {
     // Implement your event handler logic for UserOperationRevertReason here
@@ -32,74 +32,62 @@ export const AccountDeployedHandler = async (
       bind(Paymaster),
       block.block_timestamp,
       paymaster,
-      userOpHash,
+      userOpHash
     );
     await updateAccountFactory(bind(AccountFactory), factory);
 
     {
-      const IAccount = bind(Account);
-      let account = await IAccount.findOne({ id: sender.toLowerCase() });
-      let firstBlood = false;
-      if (!account) {
-        firstBlood = true;
-        account = await IAccount.create({ id: sender.toLowerCase() });
-
-        account.factory = factory.toLowerCase();
-        account.paymaster = paymaster.toLowerCase();
-        account.totalOperations = "0";
-
-        account.createdAt = block.block_timestamp;
-        account.createdHash = transaction.transaction_hash;
-        account.createdOpHash = userOpHash;
-      }
+      const accountDB = bind(Account);
+      let account = await accountDB.findOne({ id: sender.toLowerCase() });
+      account ??= await accountDB.create({
+        id: sender.toLowerCase(),
+        factory: factory.toLowerCase(),
+        paymaster: paymaster.toLowerCase(),
+        totalOperations: "0",
+        createdAt: block.block_timestamp,
+        createdHash: transaction.transaction_hash,
+        createdOpHash: userOpHash,
+      });
 
       account.factory = factory.toLowerCase();
       account.updatedAt = block.block_timestamp;
 
-      if (firstBlood) await IAccount.save(account);
-      else await IAccount.updateOne({ id: sender.toLowerCase() }, account);
+      await accountDB.save(account);
     }
   } catch (error) {
     console.error(error);
   }
 };
 
-const updateBlockchain = async (IBlockchain: Instance) => {
+const updateBlockchain = async (blockchainDB: Instance) => {
   try {
-    let firstBlood = false;
-    let blockchain = await IBlockchain.findOne({ id: "ETH" });
-    if (!blockchain) {
-      blockchain = await IBlockchain.create({ id: "ETH" });
-      firstBlood = true;
-    }
+    let blockchain = await blockchainDB.findOne({ id: "ETH" });
+    blockchain ??= await blockchainDB.create({ id: "ETH" });
 
     blockchain.totalAccount = blockchain.totalAccount || 0;
     blockchain.totalAccount = new BigNumber(blockchain.totalAccount)
       .plus(1)
       .toString();
 
-    if (firstBlood) await IBlockchain.save(blockchain);
-    else await IBlockchain.updateOne({ id: blockchain.id }, blockchain);
+    await blockchainDB.save(blockchain);
   } catch (error) {
     console.error(error);
   }
 };
 
 const updatePaymaster = async (
-  IPaymaster: Instance,
+  paymasterDB: Instance,
   timestamp: string,
   id: string,
-  userOpHash: string,
+  userOpHash: string
 ) => {
   try {
-    let paymaster = await IPaymaster.findOne({ id: id.toLowerCase() });
-    let firstBlood = false;
-    if (!paymaster) {
-      firstBlood = true;
-      paymaster = await IPaymaster.create({ id: id.toLowerCase() });
-      paymaster.totalOperations = "0";
-      paymaster.createdAt = timestamp;
-    }
+    let paymaster = await paymasterDB.findOne({ id: id.toLowerCase() });
+    paymaster ??= await paymasterDB.create({
+      id: id.toLowerCase(),
+      totalOperations: "0",
+      createdAt: timestamp,
+    });
 
     paymaster.ops.push(userOpHash);
     paymaster.updatedAt = timestamp;
@@ -107,8 +95,7 @@ const updatePaymaster = async (
       .plus(1)
       .toString();
 
-    if (firstBlood) await IPaymaster.save(paymaster);
-    else await IPaymaster.updateOne({ id: id.toLowerCase() }, paymaster);
+    await paymasterDB.save(paymaster);
   } catch (error) {
     console.error(error);
   }
@@ -117,17 +104,14 @@ const updatePaymaster = async (
 const updateAccountFactory = async (Ifactory: Instance, id: string) => {
   try {
     let factory = await Ifactory.findOne({ id: id.toLowerCase() });
-    let firstBlood = false;
-    if (!factory) {
-      factory = await Ifactory.create({ id: id.toLowerCase() });
-      factory.totalAccount = 0;
-      firstBlood = !firstBlood;
-    }
+    factory ??= await Ifactory.create({
+      id: id.toLowerCase(),
+      totalAccount: 0,
+    });
 
     factory.totalAccount = factory.totalAccount + 1;
 
-    if (firstBlood) await Ifactory.save(factory);
-    else await Ifactory.updateOne({ id: id.toLowerCase() }, factory);
+    await Ifactory.save(factory);
   } catch (error) {
     console.error(error);
   }
