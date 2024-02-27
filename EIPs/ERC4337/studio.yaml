@@ -1,10 +1,10 @@
 name: ERC4337
 description: Indexing UserOps from an Entry Point Contract
-startBlock: 18889759
-userId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
-projectId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
+startBlock: 17066994
+userId: f6c81b54-b17e-4e19-9809-42d9a473fedb
+projectId: c133b337-6358-4c62-a985-b3d30916becd
 network: Ethereum
-user: dev_user
+user: prady
 schema:
   file: ./studio.schema.ts
 Resources:
