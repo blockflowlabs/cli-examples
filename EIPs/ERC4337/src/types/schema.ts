@@ -5,39 +5,41 @@ import { Document } from "@blockflow-labs/utils";
 export class Transaction {
   static entity = "Transaction";
   static schema = {
-    id: "string",
+    id: { type: "String", index: true },
     transactionHash: "string",
+    gasPrice: "string",
+    gasLimit: "string",
     userOpHashes: ["string"],
     entityId: { type: "String", index: true },
-    blocknumber: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
   };
 }
 
 export class Block {
   static entity = "Block";
   static schema = {
-    id: "string",
+    id: { type: "String", index: true },
     transactionHashesWithUserOps: ["string"],
     entityId: { type: "String", index: true },
-    blocknumber: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
   };
 }
 
 export class AccountFactory {
   static entity = "AccountFactory";
   static schema = {
-    id: "String",
+    id: { type: "String", index: true },
     totalAccount: "Number",
     accounts: ["String"],
     entityId: { type: "String", index: true },
-    blocknumber: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
   };
 }
 
 export class Account {
   static entity = "Account";
   static schema = {
-    id: "String",
+    id: { type: "String", index: true },
     ops: ["String"],
     paymaster: "String",
     createdAt: "String",
@@ -47,51 +49,51 @@ export class Account {
     totalOperations: "String",
     factory: "String",
     entityId: { type: "String", index: true },
-    blocknumber: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
   };
 }
 
 export class Blockchain {
   static entity = "Blockchain";
   static schema = {
-    id: "String",
+    id: { type: "String", index: true },
     totalAccount: "String",
     totalOperations: "String",
     entityId: { type: "String", index: true },
-    blocknumber: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
   };
 }
 
 export class Paymaster {
   static entity = "Paymaster";
   static schema = {
-    id: "String",
+    id: { type: "String", index: true },
     ops: ["String"],
     createdAt: "String",
     updatedAt: "String",
     totalOperations: "String",
     entityId: { type: "String", index: true },
-    blocknumber: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
   };
 }
 
 export class Bundler {
   static entity = "Bundler";
   static schema = {
-    id: "String",
+    id: { type: "String", index: true },
     ops: ["String"],
     createdAt: "String",
     updatedAt: "String",
     totalOperations: "Number",
     entityId: { type: "String", index: true },
-    blocknumber: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
   };
 }
 
 export class UserOperationRevertReason {
   static entity = "UserOperationRevertReason";
   static schema = {
-    id: "String",
+    id: { type: "String", index: true },
     sender: "String",
     nonce: "Number",
     reason: "String",
@@ -99,14 +101,14 @@ export class UserOperationRevertReason {
     block: "String",
     createdAt: "String",
     entityId: { type: "String", index: true },
-    blocknumber: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
   };
 }
 
 export class UserOperation {
   static entity = "UserOperation";
   static schema = {
-    id: "String",
+    id: { type: "String", index: true },
     txHash: "String",
     block: "String",
     bundler: "String",
@@ -117,6 +119,8 @@ export class UserOperation {
     actualGasCost: "Number",
     actualGasUsed: "Number",
     createdAt: "String",
+    entryPoint: "String",
+    network: "String",
     initCode: "string",
     callData: "string",
     callGasLimit: "string",
@@ -128,13 +132,15 @@ export class UserOperation {
     signature: "string",
     beneficiary: "string",
     entityId: { type: "String", index: true },
-    blocknumber: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
   };
 }
 
 export interface ITransaction extends Document {
   id: string; // keep this same as transaction hash
   transactionHash: string;
+  gasPrice: string;
+  gasLimit: string;
   userOpHashes: [string];
   blocknumber: String;
   entityId: String;
@@ -222,6 +228,8 @@ export interface IUserOperation extends Document {
   actualGasCost: Number;
   actualGasUsed: Number;
   createdAt: String;
+  entryPoint: String;
+  network: String;
 
   // Will get all these from function calldata
   initCode: string;

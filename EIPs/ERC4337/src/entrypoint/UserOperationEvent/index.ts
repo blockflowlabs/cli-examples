@@ -84,6 +84,8 @@ export const UserOperationEventHandler = async (
     userOp.actualGasUsed = Number(actualGasUsed);
     userOp.txHash = transaction.transaction_hash;
     userOp.createdAt = block.block_timestamp;
+    userOp.entryPoint = transaction.transaction_to_address;
+    userOp.network = "mainnet";
 
     await userOpDB.save(userOp);
   } catch (error) {

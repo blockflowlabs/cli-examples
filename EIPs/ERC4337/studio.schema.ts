@@ -1,6 +1,8 @@
 interface Transaction {
   id: string; // keep this same as transaction hash
   transactionHash: string;
+  gasPrice: string;
+  gasLimit: string;
   userOpHashes: [string];
 }
 
@@ -72,6 +74,8 @@ interface UserOperation {
   actualGasCost: Number;
   actualGasUsed: Number;
   createdAt: String;
+  entryPoint: String;
+  network: String;
 
   // Will get all these from function calldata
   initCode: string;

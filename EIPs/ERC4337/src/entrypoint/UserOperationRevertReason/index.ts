@@ -17,7 +17,7 @@ export const UserOperationRevertReasonHandler = async (
 ) => {
   try {
     // Implement your event handler logic for UserOperationRevertReason here
-    const { event, transaction, block, log } = context;
+    const { event, transaction, block } = context;
     let { userOpHash, sender, nonce, revertReason } = event;
 
     userOpHash = userOpHash.toString();
@@ -26,10 +26,11 @@ export const UserOperationRevertReasonHandler = async (
 
     const revertDB: Instance = bind(UserOperationRevertReason);
     let revert: IUserOperationRevertReason = await revertDB.findOne({
-      id: userOpHash.toLowercase(),
+      id: userOpHash.toLowerCase(),
     });
+
     revert ??= await revertDB.create({
-      id: userOpHash.toLowercase(),
+      id: userOpHash.toLowerCase(),
       sender: sender,
       nonce: parseInt(nonce),
       reason: revertReason,

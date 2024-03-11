@@ -1,9 +1,15 @@
 import { IFunctionContext, Instance, IBind } from "@blockflow-labs/utils";
 
 import getUserOpHash from "../../utils/helpers";
-import { UserOperation, Block, Transaction } from "../../types/schema";
+import {
+  UserOperation,
+  Block,
+  Transaction,
+  ITransaction,
+} from "../../types/schema";
 
 const CHAIN_ID = "1";
+
 /**
  * @dev Function::handleOps(tuple[] ops, address beneficiary)
  * @param context trigger object with contains {function: {ops ,beneficiary }, transaction, block, log}
@@ -32,8 +38,8 @@ export const handleOps = async (
   );
 
   // transaction
-  const transactionDB = bind(Transaction);
-  let transaction_ = await transactionDB.findOne({
+  const transactionDB: Instance = bind(Transaction);
+  let transaction_: ITransaction = await transactionDB.findOne({
     id: transactionHash.toLowerCase(),
   });
 
@@ -42,6 +48,8 @@ export const handleOps = async (
   });
 
   transaction_.transactionHash = transactionHash;
+  transaction_.gasPrice = transaction.transaction_gas_price;
+  transaction_.gasLimit = transaction.transaction_gas;
 
   // updating userOps
   const entryPoint = transaction.transaction_to_address;

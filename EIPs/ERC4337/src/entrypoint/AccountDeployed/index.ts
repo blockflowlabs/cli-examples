@@ -35,7 +35,7 @@ export const AccountDeployedHandler = async (
       paymaster,
       userOpHash
     );
-    await updateAccountFactory(bind(AccountFactory), factory);
+    await updateAccountFactory(bind(AccountFactory), factory, sender);
 
     {
       const accountDB = bind(Account);
@@ -102,17 +102,22 @@ const updatePaymaster = async (
   }
 };
 
-const updateAccountFactory = async (Ifactory: Instance, id: string) => {
+const updateAccountFactory = async (
+  factoryDB: Instance,
+  id: string,
+  account: string
+) => {
   try {
-    let factory = await Ifactory.findOne({ id: id.toLowerCase() });
-    factory ??= await Ifactory.create({
+    let factory = await factoryDB.findOne({ id: id.toLowerCase() });
+    factory ??= await factoryDB.create({
       id: id.toLowerCase(),
       totalAccount: 0,
     });
 
     factory.totalAccount = factory.totalAccount + 1;
+    factory.accounts.push(account);
 
-    await Ifactory.save(factory);
+    await factoryDB.save(factory);
   } catch (error) {
     console.error(error);
   }
