@@ -1,0 +1,42 @@
+name: Router Nitro Ethereum
+description: Indexing cross chain transfers on router nitro protocol for etheruem and linea
+startBlock: 19062096 # linea deployment blocknumber 1523862, ethereum deployment blocknumber 19062096
+userId: f6c81b54-b17e-4e19-9809-42d9a473fedb
+projectId: 6aa2619a-2485-4dd9-882c-56b4ed1a86d0
+network: Ethereum #Linea
+user: prady
+schema:
+  file: ./studio.schema.ts
+Resources:
+  - Name: assetForwarderEthereum
+    Abi: src/abis/assetForwarderEthereum.json
+    Type: contract/function
+    Address: "0xc21e4ebd1d92036cb467b53fe3258f219d909eb9"
+    Triggers:
+      - Function: iRelay(tuple(uint256,bytes32,uint256,address,address))payable
+        Handler: src/receive/index.iRelayHandler
+
+  - Name: assetForwarderEthereum
+    Abi: src/abis/assetForwarderEthereum.json
+    Type: contract/event
+    Address: "0xC21e4ebD1d92036Cb467b53fE3258F219d909Eb9"
+    Triggers:
+      - Event: FundsDeposited(uint256,uint256,bytes32,uint256,uint256,address,address,bytes,bytes)
+        Handler: src/deposit/index.FundsDepositedHandler
+
+  #### Linea
+  # - Name: assetForwarderLinea
+  #   Abi: src/abis/assetForwarderEthereum.json
+  #   Type: contract/function
+  #   Address: "0x8c4acd74ff4385f3b7911432fa6787aa14406f8b"
+  #   Triggers:
+  #     - Function: iRelay(tuple(uint256,bytes32,uint256,address,address))payable
+  #       Handler: src/receive/index.iRelayHandler
+
+  # - Name: assetForwarderLinea
+  #   Abi: src/abis/assetForwarderEthereum.json
+  #   Type: contract/event
+  #   Address: "0x8c4acd74ff4385f3b7911432fa6787aa14406f8b"
+  #   Triggers:
+  #     - Event: FundsDeposited(uint256,uint256,bytes32,uint256,uint256,address,address,bytes,bytes)
+  #       Handler: src/deposit/index.FundsDepositedHandler
