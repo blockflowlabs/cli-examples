@@ -1,0 +1,60 @@
+name: ERC4337
+description: Indexing UserOps from an Entry Point Contract
+startBlock: 19402833
+userId: f6c81b54-b17e-4e19-9809-42d9a473fedb
+projectId: 9b45e41f-2ab4-4419-a08b-ba7be2cefe9f
+network: Ethereum
+user: prady
+schema:
+  file: ./studio.schema.ts
+Resources:
+  - Name: entrypointFunction
+    Type: contract/function
+    Abi: src/abis/entrypoint.json
+    Address: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789"
+    Triggers:
+      - Function: handleOps(tuple(address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes)[],address)
+        Handler: src/entrypoint/handleOps/index.handleOps
+
+  - Name: entrypointEvents
+    Abi: src/abis/entrypoint.json
+    Type: contract/event
+    Address: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789"
+    Triggers:
+      - Event: UserOperationEvent(bytes32 indexed,address indexed,address indexed,uint256,bool,uint256,uint256)
+        Handler: src/entrypoint/UserOperationEvent/index.UserOperationEventHandler
+      - Event: UserOperationRevertReason(indexed bytes32,indexed address,uint256,bytes)
+        Handler: src/entrypoint/UserOperationRevertReason/index.UserOperationRevertReasonHandler
+      - Event: AccountDeployed(indexed bytes32,indexed address,address,address)
+        Handler: src/entrypoint/AccountDeployed/index.AccountDeployedHandler
+
+  ## APIS
+  - Name: paymaster
+    Type: api
+    Slug: paymaster
+    Handler: src/apis/paymaster/index.paymasterHandler
+
+  - Name: bundler
+    Type: api
+    Slug: bundler
+    Handler: src/apis/bundler/index.bundlerHandler
+
+  - Name: account
+    Type: api
+    Slug: account
+    Handler: src/apis/account/index.accountHandler
+
+  - Name: userop
+    Type: api
+    Slug: userop
+    Handler: src/apis/userop/index.useropHandler
+
+  - Name: tx
+    Type: api
+    Slug: tx
+    Handler: src/apis/tx/index.txHandler
+
+  - Name: block
+    Type: api
+    Slug: block
+    Handler: src/apis/block/index.blockHandler
