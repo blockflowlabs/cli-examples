@@ -1,5 +1,11 @@
-import { IEventContext, IBind, Instance } from "@blockflow-labs/utils";
+import {
+  IEventContext,
+  IBind,
+  Instance,
+  ISecrets,
+} from "@blockflow-labs/utils";
 
+import { hexToString } from "../utils/helper";
 import { CrossTransferSrc } from "../types/schema";
 
 /**
@@ -10,7 +16,7 @@ import { CrossTransferSrc } from "../types/schema";
 export const FundsDepositedHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: Record<string, string>
+  secrets: ISecrets
 ) => {
   // Implement your event handler logic for FundsDeposited here
   const { event, transaction, block } = context;
@@ -40,13 +46,14 @@ export const FundsDepositedHandler = async (
   }
 
   const srcTransferDB: Instance = bind(CrossTransferSrc);
+  const srcChain = block.chain_id;
+  const dstChain = hexToString(destChainIdBytes);
 
-  const transferId = `${recipient}_${depositId}_${block.chain_id}`;
+  const transferId = `${depositId}_${srcChain}_${dstChain}`;
 
   // create this receipt entry for src chain
   await srcTransferDB.create({
     id: transferId.toLowerCase(),
-    chainId: block.chain_id,
     partnerId: partnerId,
     depositId: depositId,
     depositor: depositor,
@@ -56,8 +63,10 @@ export const FundsDepositedHandler = async (
     senderAddress: transaction.transaction_from_address,
     srcTxTime: block.block_timestamp,
     srcTxStatus: transaction.transaction_receipt_status,
-    srcChain: block.chain_id,
+    srcChain,
     dstToken: destToken,
     dstTokenAmount: destAmount,
+    dstChain,
+    recipient,
   });
 };

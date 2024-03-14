@@ -5,6 +5,7 @@ import {
   IFunctionContext,
 } from "@blockflow-labs/utils";
 
+import { hexToString } from "../utils/helper";
 import { CrossTransferDst } from "../types/schema";
 
 /**
@@ -22,17 +23,18 @@ export const iRelayHandler = async (
   const { relayData } = functionParams;
 
   const amount = relayData.amount.toString();
-  const srcChain = relayData.srcChainId.toString();
+  const srcChain = hexToString(relayData.srcChainId.toString());
   const depositId = relayData.depositId.toString();
   const destToken = relayData.destToken.toString();
   const recipient = relayData.recipient.toString();
 
+  const dstChain = block.chain_id;
   const transferDB: Instance = bind(CrossTransferDst);
-  const transferId = `${recipient}_${depositId}_${block.chain_id}`;
+
+  const transferId = `${depositId}_${srcChain}_${dstChain}`;
 
   await transferDB.create({
     id: transferId.toLowerCase(),
-    chainId: block.chain_id,
     depositId,
     destToken,
     dstAmount: amount,
@@ -40,5 +42,7 @@ export const iRelayHandler = async (
     dstTxHash: transaction.transaction_hash,
     dstTxTime: block.block_timestamp,
     dstTxStatus: transaction.transaction_receipt_status,
+    dstChain,
+    recipient,
   });
 };

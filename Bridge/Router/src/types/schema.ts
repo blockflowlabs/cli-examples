@@ -6,10 +6,10 @@ export class CrossTransferSrc {
   static entity = "CrossTransferSrc";
   static schema = {
     id: { type: "String", index: true },
-    chainId: "string",
     partnerId: "string",
     depositId: "string",
     depositor: "string",
+    recipient: "string",
     srcTxHash: "string",
     srcBlockNumber: "string",
     srcTokenAmount: "string",
@@ -29,7 +29,7 @@ export class CrossTransferDst {
   static entity = "CrossTransferDst";
   static schema = {
     id: { type: "String", index: true },
-    chainId: "string",
+    recipient: "string",
     depositId: "string",
     destToken: "string",
     dstAmount: "string",
@@ -37,6 +37,7 @@ export class CrossTransferDst {
     dstTxHash: "string",
     dstTxTime: "string",
     dstTxStatus: "boolean",
+    dstChain: "string",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
   };
@@ -46,10 +47,10 @@ import { String, Array } from "@blockflow-labs/utils";
 
 export interface ICrossTransferSrc extends Document {
   id: string; // receipt_chainId
-  chainId: string;
   partnerId: string;
   depositId: string;
   depositor: string;
+  recipient: string;
 
   srcTxHash: string;
   srcBlockNumber: string;
@@ -68,15 +69,17 @@ export interface ICrossTransferSrc extends Document {
 
 export interface ICrossTransferDst extends Document {
   id: string;
-  chainId: string;
+  recipient: string;
 
   depositId: string;
   destToken: string;
   dstAmount: string;
   srcChain: string;
+
   dstTxHash: string;
   dstTxTime: string;
   dstTxStatus: boolean;
+  dstChain: string;
   blocknumber: String;
   entityId: String;
 }

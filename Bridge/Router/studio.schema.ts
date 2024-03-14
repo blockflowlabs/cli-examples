@@ -2,10 +2,10 @@ import { String, Array } from "@blockflow-labs/utils";
 
 export interface CrossTransferSrc {
   id: string; // receipt_chainId
-  chainId: string;
   partnerId: string;
   depositId: string;
   depositor: string;
+  recipient: string;
 
   srcTxHash: string;
   srcBlockNumber: string;
@@ -22,13 +22,15 @@ export interface CrossTransferSrc {
 
 export interface CrossTransferDst {
   id: string;
-  chainId: string;
+  recipient: string;
 
   depositId: string;
   destToken: string;
   dstAmount: string;
   srcChain: string;
+
   dstTxHash: string;
   dstTxTime: string;
   dstTxStatus: boolean;
+  dstChain: string;
 }
