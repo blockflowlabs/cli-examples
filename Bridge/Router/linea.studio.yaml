@@ -1,0 +1,25 @@
+name: Router Nitro
+description: Indexing cross chain transfers on router nitro protocol
+startBlock: 1523862 # linea deployment blocknumber 1523862
+userId: 6cd145d5-b8bc-41a0-a74d-2e9b88ffb675
+projectId: 6aa2619a-2485-4dd9-882c-56b4ed1a86d0
+network: Linea
+user: prady
+schema:
+  file: ./studio.schema.ts
+Resources:
+  - Name: assetForwarderLinea
+    Abi: src/abis/assetForwarderEthereum.json
+    Type: contract/function
+    Address: "0x8c4acd74ff4385f3b7911432fa6787aa14406f8b"
+    Triggers:
+      - Function: iRelay(tuple(uint256,bytes32,uint256,address,address))payable
+        Handler: src/receive/index.iRelayHandler
+
+  - Name: assetForwarderLinea
+    Abi: src/abis/assetForwarderEthereum.json
+    Type: contract/event
+    Address: "0x8c4acd74ff4385f3b7911432fa6787aa14406f8b"
+    Triggers:
+      - Event: FundsDeposited(uint256,uint256,bytes32,uint256,uint256,address,address,bytes,bytes)
+        Handler: src/deposit/index.FundsDepositedHandler
