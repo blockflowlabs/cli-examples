@@ -5,9 +5,11 @@
   "scripts": {
     "compile": "tsc -b",
     "instance-test-linea": "blockflow instance-test --path 'linea.studio.yaml' --range 10",
-    "instance-deploy-linea": "blockflow instance-deploy --path 'linea.studio.yaml' --range 10",
+    "instance-deploy-linea": "blockflow instance-deploy --path 'linea.studio.yaml'",
     "instance-test-ethereum": "blockflow instance-test --path 'ethereum.studio.yaml' --range 10",
-    "instance-deploy-ethereum": "blockflow instance-deploy --path 'ethereum.studio.yaml' --range 10",
+    "instance-deploy-ethereum": "blockflow instance-deploy --path 'ethereum.studio.yaml'",
+    "instance-deploy-optimism": "blockflow instance-deploy --path 'op.studio.yaml'",
+    "instance-test-optimism": "blockflow instance-test --path 'op.studio.yaml' --range 10",
     "api-test": "blockflow api-test --path 'api.studio.yaml'",
     "api-deploy": "blockflow api-deploy --path 'api.studio.yaml'"
   },
