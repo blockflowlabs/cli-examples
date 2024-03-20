@@ -1,7 +1,5 @@
-import { String, Array } from "@blockflow-labs/utils";
-
 export interface CrossTransferSrc {
-  id: string; // receipt_chainId
+  id: string; // depositID_src_dst
   partnerId: string;
   depositId: string;
   depositor: string;
@@ -21,7 +19,7 @@ export interface CrossTransferSrc {
 }
 
 export interface CrossTransferDst {
-  id: string;
+  id: string; //depositID_src_dst
   recipient: string;
 
   depositId: string;

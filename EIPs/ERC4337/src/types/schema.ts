@@ -29,7 +29,7 @@ export class AccountFactory {
   static entity = "AccountFactory";
   static schema = {
     id: { type: "String", index: true },
-    totalAccount: "Number",
+    totalAccount: "String",
     accounts: ["String"],
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
@@ -84,7 +84,7 @@ export class Bundler {
     ops: ["String"],
     createdAt: "String",
     updatedAt: "String",
-    totalOperations: "Number",
+    totalOperations: "String",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
   };
@@ -155,7 +155,7 @@ export interface IBlock extends Document {
 
 export interface IAccountFactory extends Document {
   id: String;
-  totalAccount: Number;
+  totalAccount: String;
   accounts: [String];
   blocknumber: String;
   entityId: String;
@@ -198,7 +198,7 @@ export interface IBundler extends Document {
   ops: [String];
   createdAt: String;
   updatedAt: String;
-  totalOperations: Number;
+  totalOperations: String;
   blocknumber: String;
   entityId: String;
 }

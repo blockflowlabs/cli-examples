@@ -6,6 +6,10 @@ import {
   Paymaster,
   AccountFactory,
   Account,
+  IPaymaster,
+  IBlockchain,
+  IAccountFactory,
+  IAccount,
 } from "../../types/schema";
 
 /**
@@ -38,8 +42,10 @@ export const AccountDeployedHandler = async (
     await updateAccountFactory(bind(AccountFactory), factory, sender);
 
     {
-      const accountDB = bind(Account);
-      let account = await accountDB.findOne({ id: sender.toLowerCase() });
+      const accountDB: Instance = bind(Account);
+      let account: IAccount = await accountDB.findOne({
+        id: sender.toLowerCase(),
+      });
       account ??= await accountDB.create({
         id: sender.toLowerCase(),
         factory: factory.toLowerCase(),
@@ -62,11 +68,14 @@ export const AccountDeployedHandler = async (
 
 const updateBlockchain = async (blockchainDB: Instance) => {
   try {
-    let blockchain = await blockchainDB.findOne({ id: "ETH" });
-    blockchain ??= await blockchainDB.create({ id: "ETH" });
+    let blockchain: IBlockchain = await blockchainDB.findOne({ id: "ETH" });
+    blockchain ??= await blockchainDB.create({
+      id: "ETH",
+      totalOperations: "0",
+      totalAccount: "0",
+    });
 
-    blockchain.totalAccount = blockchain.totalAccount || 0;
-    blockchain.totalAccount = new BigNumber(blockchain.totalAccount)
+    blockchain.totalAccount = new BigNumber(blockchain.totalAccount.toString())
       .plus(1)
       .toString();
 
@@ -83,7 +92,9 @@ const updatePaymaster = async (
   userOpHash: string
 ) => {
   try {
-    let paymaster = await paymasterDB.findOne({ id: id.toLowerCase() });
+    let paymaster: IPaymaster = await paymasterDB.findOne({
+      id: id.toLowerCase(),
+    });
     paymaster ??= await paymasterDB.create({
       id: id.toLowerCase(),
       totalOperations: "0",
@@ -92,7 +103,9 @@ const updatePaymaster = async (
 
     paymaster.ops.push(userOpHash);
     paymaster.updatedAt = timestamp;
-    paymaster.totalOperations = new BigNumber(paymaster.totalOperations)
+    paymaster.totalOperations = new BigNumber(
+      paymaster.totalOperations.toString()
+    )
       .plus(1)
       .toString();
 
@@ -108,15 +121,19 @@ const updateAccountFactory = async (
   account: string
 ) => {
   try {
-    let factory = await factoryDB.findOne({ id: id.toLowerCase() });
+    let factory: IAccountFactory = await factoryDB.findOne({
+      id: id.toLowerCase(),
+    });
     factory ??= await factoryDB.create({
       id: id.toLowerCase(),
-      totalAccount: 0,
+      totalAccount: "0",
     });
 
-    factory.totalAccount = factory.totalAccount + 1;
-    factory.accounts.push(account);
+    factory.totalAccount = new BigNumber(factory.totalAccount.toString())
+      .plus(1)
+      .toString();
 
+    factory.accounts.push(account);
     await factoryDB.save(factory);
   } catch (error) {
     console.error(error);
