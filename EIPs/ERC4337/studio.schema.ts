@@ -13,7 +13,7 @@ interface Block {
 
 interface AccountFactory {
   id: String;
-  totalAccount: Number;
+  totalAccount: String;
   accounts: [String];
 }
 
@@ -48,7 +48,7 @@ interface Bundler {
   ops: [String];
   createdAt: String;
   updatedAt: String;
-  totalOperations: Number;
+  totalOperations: String;
 }
 
 interface UserOperationRevertReason {

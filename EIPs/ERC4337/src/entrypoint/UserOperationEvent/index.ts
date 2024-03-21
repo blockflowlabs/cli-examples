@@ -9,6 +9,9 @@ import {
   Blockchain,
   IUserOperation,
   IAccount,
+  IPaymaster,
+  IBundler,
+  IBlockchain,
 } from "../../types/schema";
 
 /**
@@ -65,8 +68,8 @@ export const UserOperationEventHandler = async (
     account.totalOperations = new BigNumber(account.totalOperations.toString())
       .plus(1)
       .toString();
-    account.updatedAt = block.block_timestamp;
 
+    account.updatedAt = block.block_timestamp;
     await accountDB.save(account);
 
     const userOpDB = bind(UserOperation);
@@ -95,11 +98,16 @@ export const UserOperationEventHandler = async (
 
 const updateBlockchain = async (blockchainDB: Instance) => {
   try {
-    let blockchain = await blockchainDB.findOne({ id: "ETH" });
-    blockchain ??= await blockchainDB.create({ id: "ETH" });
+    let blockchain: IBlockchain = await blockchainDB.findOne({ id: "ETH" });
+    blockchain ??= await blockchainDB.create({
+      id: "ETH",
+      totalOperations: "0",
+      totalAccount: "0",
+    });
 
-    blockchain.totalOperations = blockchain.totalOperations || "0";
-    blockchain.totalOperations = new BigNumber(blockchain.totalOperations)
+    blockchain.totalOperations = new BigNumber(
+      blockchain.totalOperations.toString()
+    )
       .plus(1)
       .toString();
 
@@ -112,24 +120,28 @@ const updateBlockchain = async (blockchainDB: Instance) => {
 const updatePaymaster = async (
   paymasterDB: Instance,
   timestamp: string,
-  id: string,
+  paymaster: string,
   userOpHash: string
 ) => {
   try {
-    let paymaster = await paymasterDB.findOne({ id: id.toLowerCase() });
-    paymaster ??= await paymasterDB.create({
-      id: id.toLowerCase(),
+    let $paymaster: IPaymaster = await paymasterDB.findOne({
+      id: paymaster.toLowerCase(),
+    });
+    $paymaster ??= await paymasterDB.create({
+      id: paymaster.toLowerCase(),
       totalOperations: "0",
       createdAt: timestamp,
     });
 
-    paymaster.ops.push(userOpHash);
-    paymaster.updatedAt = timestamp;
-    paymaster.totalOperations = new BigNumber(paymaster.totalOperations)
+    $paymaster.ops.push(userOpHash);
+    $paymaster.updatedAt = timestamp;
+    $paymaster.totalOperations = new BigNumber(
+      $paymaster.totalOperations.toString()
+    )
       .plus(1)
       .toString();
 
-    await paymasterDB.save(paymaster);
+    await paymasterDB.save($paymaster);
   } catch (error) {
     console.error(error);
   }
@@ -138,24 +150,29 @@ const updatePaymaster = async (
 const updateBundler = async (
   bundlerDB: Instance,
   timestamp: string,
-  id: string,
+  bundler: string,
   userOpHash: string
 ) => {
   try {
-    let bundler = await bundlerDB.findOne({ id: id.toLowerCase() });
-    bundler ??= await bundlerDB.create({
-      id: id.toLowerCase(),
+    let $bundler: IBundler = await bundlerDB.findOne({
+      id: bundler.toLowerCase(),
+    });
+
+    $bundler ??= await bundlerDB.create({
+      id: bundler.toLowerCase(),
       totalOperations: "0",
       createdAt: timestamp,
     });
 
-    bundler.ops.push(userOpHash);
-    bundler.updatedAt = timestamp;
-    bundler.totalOperations = new BigNumber(bundler.totalOperations)
+    $bundler.ops.push(userOpHash);
+    $bundler.updatedAt = timestamp;
+    $bundler.totalOperations = new BigNumber(
+      $bundler.totalOperations.toString()
+    )
       .plus(1)
       .toString();
 
-    await bundlerDB.save(bundler);
+    await bundlerDB.save($bundler);
   } catch (error) {
     console.error(error);
   }
