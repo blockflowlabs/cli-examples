@@ -117,15 +117,17 @@ export async function getEthPriceInUSD(pairDB: Instance) {
   let daiPair: IPair = await pairDB.findOne({
     id: DAI_WETH_PAIR.toLowerCase(),
   });
+
   let usdcPair: IPair = await pairDB.findOne({
     id: USDC_WETH_PAIR.toLowerCase(),
   });
+
   let usdtPair: IPair = await pairDB.findOne({
     id: USDT_WETH_PAIR.toLowerCase(),
   });
 
   // all 3 have been created
-  if (daiPair !== null && usdcPair !== null && usdtPair !== null) {
+  if (daiPair && usdcPair && usdtPair) {
     let totalLiquidityETH = new BigNumber(daiPair.reserve1)
       .plus(usdcPair.reserve1)
       .plus(usdtPair.reserve0);
@@ -141,7 +143,7 @@ export async function getEthPriceInUSD(pairDB: Instance) {
       .toString();
 
     // dai and USDC have been created
-  } else if (daiPair !== null && usdcPair !== null) {
+  } else if (daiPair && usdcPair) {
     let totalLiquidityETH = new BigNumber(daiPair.reserve1).plus(
       usdcPair.reserve1
     );
@@ -152,7 +154,7 @@ export async function getEthPriceInUSD(pairDB: Instance) {
       .plus(new BigNumber(usdcPair.token0Price).times(usdcWeight))
       .toString();
     // USDC is the only pair so far
-  } else if (usdcPair !== null) {
+  } else if (usdcPair) {
     return new BigNumber(usdcPair.token0Price).toString();
   } else {
     return ZERO_BI.toString();

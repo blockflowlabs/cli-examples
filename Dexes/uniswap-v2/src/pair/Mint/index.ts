@@ -55,34 +55,27 @@ export const MintHandler = async (
   amount0 = amount0.toString();
   amount1 = amount1.toString();
 
-  // update pair database
+  // define all databases
+  const tokenDB = bind(Token);
   const pairDB: Instance = bind(Pair);
-  let pair: IPair = await pairDB.findOne({ id: log.log_address.toLowerCase() });
-  // update txn counts
-  pair.txCount = new BigNumber(pair.txCount).plus(1).toString();
-  await pairDB.save(pair);
-
-  // update factory database
   const factoryDB: Instance = bind(UniswapFactory);
-  // prettier-ignore
-  let uniswap: IUniswapFactory = await factoryDB.findOne({ id: FACTORY_ADDRESS.toLowerCase()});
-  uniswap.txCount = new BigNumber(uniswap.txCount).plus(1).toString();
-  await factoryDB.save(uniswap);
+
+  // update pair database
+  const pair = await updatePair(pairDB, log.log_address);
+  // update factory database
+  await updateFactory(factoryDB);
 
   // update tokens database
-  const tokenDB = bind(Token);
-  let token0: IToken = await tokenDB.findOne({ id: pair.token0.toLowerCase() });
-  let token1: IToken = await tokenDB.findOne({ id: pair.token1.toLowerCase() });
-
-  token0.txCount = new BigNumber(token0.txCount).plus(1).toString();
-  token1.txCount = new BigNumber(token1.txCount).plus(1).toString();
-
-  await tokenDB.save(token0);
-  await tokenDB.save(token1);
+  const token0: IToken = await updateToken(tokenDB, pair.token0);
+  const token1: IToken = await updateToken(tokenDB, pair.token1);
 
   // taking both tokens as 18 decimals
-  let token0Amount = new BigNumber(amount0).dividedBy(10 ** 18);
-  let token1Amount = new BigNumber(amount1).dividedBy(10 ** 18);
+  let token0Amount = new BigNumber(amount0).dividedBy(
+    10 ** parseInt(token0.decimals)
+  );
+  let token1Amount = new BigNumber(amount1).dividedBy(
+    10 ** parseInt(token1.decimals)
+  );
 
   const bundleDB: Instance = bind(Bundle);
   const bundle: IBundle = await bundleDB.findOne({ id: "1" });
@@ -126,4 +119,27 @@ export const MintHandler = async (
   await updateUniswapDayData(context, bind(UniswapDayData), factoryDB);
   await updateTokenDayData(context, token0, bind(TokenDayData), bundleDB);
   await updateTokenDayData(context, token1, bind(TokenDayData), bundleDB);
+};
+
+const updatePair = async (pairDB: Instance, address: string) => {
+  let pair: IPair = await pairDB.findOne({ id: address.toLowerCase() });
+  pair.txCount = new BigNumber(pair.txCount).plus(1).toString();
+  await pairDB.save(pair);
+
+  return pair;
+};
+
+const updateFactory = async (factoryDB: Instance) => {
+  // prettier-ignore
+  let uniswap: IUniswapFactory = await factoryDB.findOne({ id: FACTORY_ADDRESS.toLowerCase()});
+  uniswap.txCount = new BigNumber(uniswap.txCount).plus(1).toString();
+  await factoryDB.save(uniswap);
+};
+
+const updateToken = async (tokenDB: Instance, token: string) => {
+  let _token: IToken = await tokenDB.findOne({ id: token.toLowerCase() });
+  _token.txCount = new BigNumber(_token.txCount).plus(1).toString();
+  await tokenDB.save(_token);
+
+  return _token;
 };

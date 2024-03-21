@@ -19,10 +19,10 @@ interface UniswapFactory {
 
 interface Token {
   id: String;
-  // symbol: String;
-  // name: String;
-  // decimals: String;
-  // totalSupply: String;
+  symbol: String;
+  name: String;
+  decimals: String;
+  totalSupply: String;
   tradeVolume: String;
   tradeVolumeUSD: String;
   untrackedVolumeUSD: String;

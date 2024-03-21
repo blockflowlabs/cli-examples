@@ -67,10 +67,10 @@ export const SwapHandler = async (
   let token1: IToken = await tokenDB.findOne({ id: pair.token1.toLowerCase() });
 
   // @dev 18 decimals conversion
-  amount0In = convertTokenToDecimal(amount0In, 18);
-  amount1In = convertTokenToDecimal(amount1In, 18);
-  amount0Out = convertTokenToDecimal(amount0Out, 18);
-  amount1Out = convertTokenToDecimal(amount1Out, 18);
+  amount0In = convertTokenToDecimal(amount0In, parseInt(token0.decimals));
+  amount1In = convertTokenToDecimal(amount1In, parseInt(token1.decimals));
+  amount0Out = convertTokenToDecimal(amount0Out, parseInt(token0.decimals));
+  amount1Out = convertTokenToDecimal(amount1Out, parseInt(token1.decimals));
 
   // totals for volume updates
   let amount0Total = new BigNumber(amount0Out).plus(amount0In).toString();
@@ -109,7 +109,7 @@ export const SwapHandler = async (
 
   // update token0 global volume and token liquidity stats
   token0.tradeVolume = new BigNumber(token0.tradeVolume)
-    .plus(amount0In.plus(amount0Out))
+    .plus(new BigNumber(amount0In).plus(amount0Out))
     .toString();
   token0.tradeVolumeUSD = new BigNumber(token0.tradeVolumeUSD)
     .plus(trackedAmountUSD)
@@ -120,7 +120,7 @@ export const SwapHandler = async (
 
   // update token1 global volume and token liquidity stats
   token1.tradeVolume = new BigNumber(token1.tradeVolume)
-    .plus(amount1In.plus(amount1Out))
+    .plus(new BigNumber(amount1In).plus(amount1Out))
     .toString();
   token1.tradeVolumeUSD = new BigNumber(token1.tradeVolumeUSD)
     .plus(trackedAmountUSD)

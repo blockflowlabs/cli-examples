@@ -5,18 +5,18 @@ import { Document } from "@blockflow-labs/utils";
 export class User {
   static entity = "User";
   static schema = {
-    id: "String",
+    id: { type: "String", index: true },
     liquidityPositions: ["String"],
     usdSwapped: "String",
     entityId: { type: "String", index: true },
-    blocknumber: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
   };
 }
 
 export class UniswapFactory {
   static entity = "UniswapFactory";
   static schema = {
-    id: "String",
+    id: { type: "String", index: true },
     pairCount: "String",
     totalVolumeUSD: "String",
     totalVolumeETH: "String",
@@ -25,14 +25,18 @@ export class UniswapFactory {
     totalLiquidityETH: "String",
     txCount: "String",
     entityId: { type: "String", index: true },
-    blocknumber: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
   };
 }
 
 export class Token {
   static entity = "Token";
   static schema = {
-    id: "String",
+    id: { type: "String", index: true },
+    symbol: "String",
+    name: "String",
+    decimals: "String",
+    totalSupply: "String",
     tradeVolume: "String",
     tradeVolumeUSD: "String",
     untrackedVolumeUSD: "String",
@@ -45,14 +49,14 @@ export class Token {
     pairBase: ["String"],
     pairQuote: ["String"],
     entityId: { type: "String", index: true },
-    blocknumber: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
   };
 }
 
 export class Pair {
   static entity = "Pair";
   static schema = {
-    id: "String",
+    id: { type: "String", index: true },
     token0: "String",
     token1: "String",
     reserve0: "String",
@@ -78,37 +82,37 @@ export class Pair {
     burns: ["String"],
     swaps: ["String"],
     entityId: { type: "String", index: true },
-    blocknumber: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
   };
 }
 
 export class Bundle {
   static entity = "Bundle";
   static schema = {
-    id: "String",
+    id: { type: "String", index: true },
     ethPrice: "String",
     entityId: { type: "String", index: true },
-    blocknumber: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
   };
 }
 
 export class Transaction {
   static entity = "Transaction";
   static schema = {
-    id: "String",
+    id: { type: "String", index: true },
     timestamp: "String",
     mints: ["String"],
     burns: ["String"],
     swaps: ["String"],
     entityId: { type: "String", index: true },
-    blocknumber: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
   };
 }
 
 export class Mint {
   static entity = "Mint";
   static schema = {
-    id: "String",
+    id: { type: "String", index: true },
     transaction: "String",
     timestamp: "String",
     pair: "String",
@@ -122,26 +126,26 @@ export class Mint {
     feeTo: "String",
     feeLiquidity: "String",
     entityId: { type: "String", index: true },
-    blocknumber: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
   };
 }
 
 export class LiquidityPosition {
   static entity = "LiquidityPosition";
   static schema = {
-    id: "String",
+    id: { type: "String", index: true },
     user: "String",
     pair: "String",
     liquidityTokenBalance: "String",
     entityId: { type: "String", index: true },
-    blocknumber: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
   };
 }
 
 export class LiquidityPositionSnapshot {
   static entity = "LiquidityPositionSnapshot";
   static schema = {
-    id: "String",
+    id: { type: "String", index: true },
     liquidityPosition: "String",
     timestamp: "String",
     user: "String",
@@ -154,14 +158,14 @@ export class LiquidityPositionSnapshot {
     liquidityTokenTotalSupply: "String",
     liquidityTokenBalance: "String",
     entityId: { type: "String", index: true },
-    blocknumber: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
   };
 }
 
 export class PairDayData {
   static entity = "PairDayData";
   static schema = {
-    id: "String",
+    id: { type: "String", index: true },
     date: "String",
     pairAddress: "String",
     token0: "String",
@@ -175,14 +179,14 @@ export class PairDayData {
     dailyVolumeUSD: "String",
     dailyTxns: "String",
     entityId: { type: "String", index: true },
-    blocknumber: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
   };
 }
 
 export class PairHourData {
   static entity = "PairHourData";
   static schema = {
-    id: "String",
+    id: { type: "String", index: true },
     hourStartUnix: "String",
     pair: "String",
     reserve0: "String",
@@ -194,14 +198,14 @@ export class PairHourData {
     hourlyVolumeUSD: "String",
     hourlyTxns: "String",
     entityId: { type: "String", index: true },
-    blocknumber: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
   };
 }
 
 export class UniswapDayData {
   static entity = "UniswapDayData";
   static schema = {
-    id: "String",
+    id: { type: "String", index: true },
     date: "String",
     dailyVolumeETH: "String",
     dailyVolumeUSD: "String",
@@ -212,14 +216,14 @@ export class UniswapDayData {
     totalLiquidityUSD: "String",
     txCount: "String",
     entityId: { type: "String", index: true },
-    blocknumber: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
   };
 }
 
 export class TokenDayData {
   static entity = "TokenDayData";
   static schema = {
-    id: "String",
+    id: { type: "String", index: true },
     date: "String",
     token: "String",
     dailyVolumeToken: "String",
@@ -231,14 +235,14 @@ export class TokenDayData {
     totalLiquidityUSD: "String",
     priceUSD: "String",
     entityId: { type: "String", index: true },
-    blocknumber: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
   };
 }
 
 export class Swap {
   static entity = "Swap";
   static schema = {
-    id: "String",
+    id: { type: "String", index: true },
     transaction: "String",
     timestamp: "String",
     pair: "String",
@@ -252,14 +256,14 @@ export class Swap {
     logIndex: "String",
     amountUSD: "String",
     entityId: { type: "String", index: true },
-    blocknumber: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
   };
 }
 
 export class Burn {
   static entity = "Burn";
   static schema = {
-    id: "String",
+    id: { type: "String", index: true },
     transaction: "String",
     timestamp: "String",
     pair: "String",
@@ -274,7 +278,7 @@ export class Burn {
     feeTo: "String",
     feeLiquidity: "String",
     entityId: { type: "String", index: true },
-    blocknumber: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
   };
 }
 
@@ -303,10 +307,10 @@ export interface IUniswapFactory extends Document {
 
 export interface IToken extends Document {
   id: String;
-  // symbol: String;
-  // name: String;
-  // decimals: String;
-  // totalSupply: String;
+  symbol: String;
+  name: String;
+  decimals: String;
+  totalSupply: String;
   tradeVolume: String;
   tradeVolumeUSD: String;
   untrackedVolumeUSD: String;

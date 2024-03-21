@@ -11,6 +11,7 @@ import {
   Pair,
   IPair,
 } from "../types/schema";
+import { tokens } from "../utils/tokens";
 
 export const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000";
 export const FACTORY_ADDRESS = "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f";
@@ -42,7 +43,7 @@ export const PairCreatedHandler = async (
   await updateToken(bind(Token), token1);
 
   {
-    const pairDb = bind(Pair);
+    const pairDb: Instance = bind(Pair);
     await pairDb.create({
       id: pair.toLowerCase(),
       token0: token0.toLowerCase(),
@@ -107,15 +108,22 @@ const updateToken = async (tokenDB: Instance, token: string) => {
     id: token.toLowerCase(),
   });
 
-  tokenInContext ??= await tokenDB.create({
-    id: token.toLowerCase(),
-    derivedETH: ZERO_BI.toString(),
-    tradeVolume: ZERO_BI.toString(),
-    tradeVolumeUSD: ZERO_BI.toString(),
-    untrackedVolumeUSD: ZERO_BI.toString(),
-    totalLiquidity: ZERO_BI.toString(),
-    txCount: ZERO_BI.toString(),
-  });
+  if (!tokenInContext) {
+    let tokenInfo = { symbol: "", name: "", decimals: 18, totalsupply: "" };
+    if (tokens[token.toLowerCase()]) tokenInfo = tokens[token.toLowerCase()];
 
-  await tokenDB.save(tokenInContext);
+    tokenInContext = await tokenDB.create({
+      id: token.toLowerCase(),
+      symbol: tokenInfo["symbol"],
+      name: tokenInfo["name"],
+      decimals: tokenInfo["decimals"].toString(),
+      totalSupply: tokenInfo["totalsupply"].toString(),
+      derivedETH: ZERO_BI.toString(),
+      tradeVolume: ZERO_BI.toString(),
+      tradeVolumeUSD: ZERO_BI.toString(),
+      untrackedVolumeUSD: ZERO_BI.toString(),
+      totalLiquidity: ZERO_BI.toString(),
+      txCount: ZERO_BI.toString(),
+    });
+  }
 };

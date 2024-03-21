@@ -83,6 +83,7 @@ export async function updatePairDayData(
     date: dayStartTimestamp.toString(),
     token0: pair.token0,
     token1: pair.token1,
+    totalSupply: ZERO_BI.toString(),
     pairAddress: context.log.log_address,
     dailyVolumeToken0: ZERO_BI.toString(),
     dailyVolumeToken1: ZERO_BI.toString(),
@@ -141,7 +142,6 @@ export async function updatePairHourData(
   pairHourData.hourlyTxns = new BigNumber(pairHourData.hourlyTxns)
     .plus(ONE_BI)
     .toString();
-  pairHourData.save();
 
   await PairHourDataDB.save(pairHourData);
   return pairHourData;

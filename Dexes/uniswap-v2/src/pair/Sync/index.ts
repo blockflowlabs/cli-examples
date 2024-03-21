@@ -17,7 +17,6 @@ export const SyncHandler = async (
   secrets: any
 ) => {
   // Implement your event handler logic for Sync here
-
   const { event, transaction, block, log } = context;
   let { reserve0, reserve1 } = event;
 
@@ -27,7 +26,6 @@ export const SyncHandler = async (
   // update pair database
   const pairDB: Instance = bind(Pair);
   let pair: IPair = await pairDB.findOne({ id: log.log_address.toLowerCase() });
-
   // update tokens database
   const tokenDB = bind(Token);
   let token0: IToken = await tokenDB.findOne({ id: pair.token0.toLowerCase() });
@@ -51,14 +49,15 @@ export const SyncHandler = async (
     .minus(pair.trackedReserveETH)
     .toString();
 
-  pair.reserve0 = convertTokenToDecimal(reserve0, 18);
-  pair.reserve1 = convertTokenToDecimal(reserve1, 18);
+  pair.reserve0 = convertTokenToDecimal(reserve0, parseInt(token0.decimals));
+  pair.reserve1 = convertTokenToDecimal(reserve1, parseInt(token1.decimals));
 
   if (!new BigNumber(pair.reserve1).isEqualTo(ZERO_BI))
     pair.token0Price = new BigNumber(pair.reserve0)
       .div(pair.reserve1)
       .toString();
   else pair.token0Price = ZERO_BI.toString();
+
   if (!new BigNumber(pair.reserve0).isEqualTo(ZERO_BI))
     pair.token1Price = new BigNumber(pair.reserve1)
       .div(pair.reserve0)
