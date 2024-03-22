@@ -17,6 +17,7 @@ import { IBind, IEventContext, Instance } from "@blockflow-labs/utils";
 export const UNTRACKED_PAIRS: string[] = [
   "0x9ea3b5b4ec044b70375236a281986106457b20ef",
 ];
+
 export const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000";
 export const FACTORY_ADDRESS = "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f";
 
@@ -40,10 +41,13 @@ export async function createLiquidityPosition(
   });
 
   if (!liquidityPosition) {
-    await pairDB.create({
+    const pair: IPair = await pairDB.findOne({
       id: exchange.toLowerCase(),
-      liquidityProviderCount: new BigNumber(1).toString(),
     });
+
+    pair.liquidityProviderCount = new BigNumber(pair.liquidityProviderCount)
+      .plus(ONE_BI)
+      .toString();
 
     liquidityPosition = await liquidityDB.create({
       id,

@@ -13,6 +13,16 @@ export class User {
   };
 }
 
+export class TokenToPair {
+  static entity = "TokenToPair";
+  static schema = {
+    id: { type: "String", index: true },
+    pair: "string",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+  };
+}
+
 export class UniswapFactory {
   static entity = "UniswapFactory";
   static schema = {
@@ -288,6 +298,13 @@ export interface IUser extends Document {
   id: String;
   liquidityPositions: [String];
   usdSwapped: String;
+  blocknumber: String;
+  entityId: String;
+}
+
+export interface ITokenToPair extends Document {
+  id: string;
+  pair: string;
   blocknumber: String;
   entityId: String;
 }

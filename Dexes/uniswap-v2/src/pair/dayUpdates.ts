@@ -10,7 +10,6 @@ import {
   IPair,
   ILiquidityPosition,
   LiquidityPositionSnapshot,
-  ILiquidityPositionSnapshot,
   IPairDayData,
   IPairHourData,
   IUniswapFactory,
@@ -19,59 +18,17 @@ import {
 
 import { FACTORY_ADDRESS, ZERO_BI, ONE_BI } from "./helper";
 
-export async function createLiquiditySnapshot(
-  position: ILiquidityPosition,
-  context: IEventContext,
-  bind: IBind
-) {
-  let timestamp = context.block.block_timestamp;
-  const bundleDB: Instance = bind(Bundle);
-  const paidDB: Instance = bind(Pair);
-  const tokenDB = bind(Token);
-
-  const bundle: IBundle = await bundleDB.findOne({ id: "1" });
-  let pair: IPair = await paidDB.findOne({ id: position.pair.toLowerCase() });
-  let token0: IToken = await tokenDB.findOne({ id: pair.token0.toLowerCase() });
-  let token1: IToken = await tokenDB.findOne({ id: pair.token1.toLowerCase() });
-
-  // create new snapshot
-  const snapshotDB: Instance = bind(LiquidityPositionSnapshot);
-  await snapshotDB.create({
-    id: position.id.concat(timestamp.toString()).toLowerCase(),
-    liquidityPosition: position.id,
-    timestamp: timestamp,
-    user: position.user,
-    pair: position.pair,
-    token0PriceUSD: new BigNumber(token0.derivedETH)
-      .times(bundle.ethPrice)
-      .toString(),
-    token1PriceUSD: new BigNumber(token1.derivedETH)
-      .times(bundle.ethPrice)
-      .toString(),
-    reserve0: pair.reserve0,
-    reserve1: pair.reserve1,
-    reserveUSD: pair.reserveUSD,
-    liquidityTokenTotalSupply: pair.totalSupply,
-    liquidityTokenBalance: position.liquidityTokenBalance,
-  });
-}
-
 export async function updatePairDayData(
   context: IEventContext,
   pairDayDataDB: Instance,
   pairDB: Instance
 ) {
-  let timestamp = new BigNumber(
-    new Date(context.block.block_timestamp).getTime().toString()
-  );
-  let dayID = timestamp.div(86400);
-  let dayStartTimestamp = dayID.multipliedBy(86400);
-  let dayPairID = context.log.log_address
-    .concat("-")
-    .concat(dayID.toString())
-    .toLowerCase();
+  const timestamp = context.block.block_timestamp;
+  const dayID = Math.floor(parseInt(timestamp) / 86400);
+  const dayStartTimestamp = dayID * 86400;
+  const dayPairID = `${context.log.log_address.toLowerCase()}-${dayID}`;
 
-  let pair: IPair = await pairDB.findOne({
+  const pair: IPair = await pairDB.findOne({
     id: context.log.log_address.toLowerCase(),
   });
   let pairDayData: IPairDayData = await pairDayDataDB.findOne({
@@ -108,17 +65,12 @@ export async function updatePairHourData(
   PairHourDataDB: Instance,
   pairDB: Instance
 ) {
-  let timestamp = new BigNumber(
-    new Date(context.block.block_timestamp).getTime().toString()
-  );
-  let hourIndex = timestamp.div(3600); // get unique hour within unix history
-  let hourStartUnix = hourIndex.multipliedBy(3600).toString(); // want the rounded effect
-  let hourPairID = context.log.log_address
-    .concat("-")
-    .concat(hourIndex.toString())
-    .toLowerCase();
+  const timestamp = context.block.block_timestamp;
+  const hourIndex = Math.floor(parseInt(timestamp) / 3600); // get unique hour within unix history
+  const hourStartUnix = hourIndex * 3600;
+  const hourPairID = `${context.log.log_address.toLowerCase()}-${hourIndex}`;
 
-  let pair: IPair = await pairDB.findOne({
+  const pair: IPair = await pairDB.findOne({
     id: context.log.log_address.toLowerCase(),
   });
   let pairHourData: IPairHourData = await PairHourDataDB.findOne({
@@ -127,7 +79,7 @@ export async function updatePairHourData(
 
   pairHourData ??= await PairHourDataDB.create({
     id: hourPairID,
-    hourStartUnix: hourStartUnix,
+    hourStartUnix: hourStartUnix.toString(),
     pair: context.log.log_address,
     hourlyVolumeToken0: ZERO_BI.toString(),
     hourlyVolumeToken1: ZERO_BI.toString(),
@@ -152,17 +104,15 @@ export async function updateUniswapDayData(
   UniswapDayDataDB: Instance,
   UniswapFactoryDB: Instance
 ) {
-  let timestamp = new BigNumber(
-    new Date(context.block.block_timestamp).getTime().toString()
-  );
-  let dayID = timestamp.div(86400);
-  let dayStartTimestamp = dayID.multipliedBy(86400).toString();
+  const timestamp = context.block.block_timestamp;
+  const dayID = Math.floor(parseInt(timestamp) / 86400);
+  const dayStartTimestamp = dayID * 86400;
 
   let uniswapDayData = await UniswapDayDataDB.findOne({ id: dayID.toString() });
 
   uniswapDayData ??= await UniswapDayDataDB.create({
     id: dayID.toString(),
-    date: dayStartTimestamp,
+    date: dayStartTimestamp.toString(),
     dailyVolumeUSD: ZERO_BI.toString(),
     dailyVolumeETH: ZERO_BI.toString(),
     totalVolumeUSD: ZERO_BI.toString(),
@@ -170,7 +120,7 @@ export async function updateUniswapDayData(
     dailyVolumeUntracked: ZERO_BI.toString(),
   });
 
-  let uniswap: IUniswapFactory = await UniswapFactoryDB.findOne({
+  const uniswap: IUniswapFactory = await UniswapFactoryDB.findOne({
     id: FACTORY_ADDRESS.toLowerCase(),
   });
 
@@ -188,13 +138,11 @@ export async function updateTokenDayData(
   TokenDayDataDB: Instance,
   BundleDB: Instance
 ) {
-  let bundle = await BundleDB.findOne({ id: "1" });
-  let timestamp = new BigNumber(
-    new Date(context.block.block_timestamp).getTime().toString()
-  );
-  let dayID = timestamp.div(86400);
-  let dayStartTimestamp = dayID.multipliedBy(86400).toString();
-  let tokenDayID = token.id.toString().concat("-").concat(dayID.toString());
+  const bundle = await BundleDB.findOne({ id: "1" });
+  const timestamp = context.block.block_timestamp;
+  const dayID = Math.floor(parseInt(timestamp) / 86400);
+  const dayStartTimestamp = dayID * 86400;
+  const tokenDayID = `${token.id}-${dayID}`;
 
   let tokenDayData: ITokenDayData = await TokenDayDataDB.findOne({
     id: tokenDayID,
@@ -202,7 +150,7 @@ export async function updateTokenDayData(
 
   tokenDayData ??= await TokenDayDataDB.create({
     id: tokenDayID,
-    date: dayStartTimestamp,
+    date: dayStartTimestamp.toString(),
     token: token.id,
     priceUSD: new BigNumber(token.derivedETH).times(bundle.ethPrice).toString(),
     dailyVolumeToken: ZERO_BI.toString(),

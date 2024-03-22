@@ -1,10 +1,10 @@
 name: uniswapV2
 description: "Uniswap is a decentralized protocol for automated token exchange on Ethereum."
-startBlock: 10051877 #10008355
+startBlock: 10008355 #10008355
 userId: 6cd145d5-b8bc-41a0-a74d-2e9b88ffb675
 projectId: 25427f4a-d389-488d-a38a-86c445e05233
 network: Ethereum
-user: dev_user
+user: prady
 schema:
   file: ./studio.schema.ts
 Resources:

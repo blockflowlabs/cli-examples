@@ -4,6 +4,7 @@ import { BigNumber } from "bignumber.js";
 import {
   UniswapFactory,
   IUniswapFactory,
+  TokenToPair,
   Bundle,
   IBundle,
   IToken,
@@ -41,6 +42,12 @@ export const PairCreatedHandler = async (
   await updateFactory(bind(UniswapFactory), bind(Bundle));
   await updateToken(bind(Token), token0);
   await updateToken(bind(Token), token1);
+  await updateTokenPairRegistry(
+    bind(TokenToPair),
+    token0.toLowerCase(),
+    token1.toLowerCase(),
+    pair.toLowerCase()
+  );
 
   {
     const pairDb: Instance = bind(Pair);
@@ -66,6 +73,18 @@ export const PairCreatedHandler = async (
       token1Price: ZERO_BI.toString(),
     });
   }
+};
+
+const updateTokenPairRegistry = async (
+  registryDB: Instance,
+  token0: string,
+  token1: string,
+  pair: string
+) => {
+  // Ensure token0 is lexicographically smaller than token1
+  if (token0 > token1) [token0, token1] = [token1, token0];
+
+  await registryDB.create({ id: `${token0}-${token1}`, pair });
 };
 
 const createBundle = async (bundleDB: Instance) => {

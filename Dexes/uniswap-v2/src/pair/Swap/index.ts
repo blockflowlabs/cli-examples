@@ -50,7 +50,6 @@ export const SwapHandler = async (
   secrets: any
 ) => {
   // Implement your event handler logic for Swap here
-
   const { event, transaction, block, log } = context;
   let { sender, amount0In, amount1In, amount0Out, amount1Out, to } = event;
 

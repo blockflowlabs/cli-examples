@@ -6,6 +6,11 @@ interface User {
   usdSwapped: String;
 }
 
+interface TokenToPair {
+  id: string;
+  pair: string;
+}
+
 interface UniswapFactory {
   id: String;
   pairCount: String;

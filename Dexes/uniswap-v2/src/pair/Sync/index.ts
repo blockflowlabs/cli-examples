@@ -1,9 +1,19 @@
 import { IEventContext, IBind, Instance } from "@blockflow-labs/utils";
 import { BigNumber } from "bignumber.js";
 
+import {
+  getEthPriceInUSD,
+  getTrackedLiquidityUSD,
+  findEthPerToken,
+} from "../price";
 import { ZERO_BI, FACTORY_ADDRESS, convertTokenToDecimal } from "../helper";
-import { getEthPriceInUSD, getTrackedLiquidityUSD } from "../price";
-import { Pair, Bundle, Token, UniswapFactory } from "../../types/schema";
+import {
+  Pair,
+  Bundle,
+  Token,
+  UniswapFactory,
+  TokenToPair,
+} from "../../types/schema";
 import { IPair, IToken, IBundle, IUniswapFactory } from "../../types/schema";
 
 /**
@@ -17,19 +27,26 @@ export const SyncHandler = async (
   secrets: any
 ) => {
   // Implement your event handler logic for Sync here
-  const { event, transaction, block, log } = context;
+  const { event, log } = context;
   let { reserve0, reserve1 } = event;
 
   reserve0 = reserve0.toString();
   reserve1 = reserve1.toString();
 
-  // update pair database
-  const pairDB: Instance = bind(Pair);
-  let pair: IPair = await pairDB.findOne({ id: log.log_address.toLowerCase() });
-  // update tokens database
   const tokenDB = bind(Token);
+  const pairDB: Instance = bind(Pair);
+  const factoryDB: Instance = bind(UniswapFactory);
+
+  let pair: IPair = await pairDB.findOne({ id: log.log_address.toLowerCase() });
   let token0: IToken = await tokenDB.findOne({ id: pair.token0.toLowerCase() });
   let token1: IToken = await tokenDB.findOne({ id: pair.token1.toLowerCase() });
+  // prettier-ignore
+  let uniswap: IUniswapFactory = await factoryDB.findOne({ id: FACTORY_ADDRESS.toLowerCase()});
+
+  // reset factory liquidity by subtracting onluy tarcked liquidity
+  uniswap.totalLiquidityETH = new BigNumber(uniswap.totalLiquidityETH)
+    .minus(pair.trackedReserveETH)
+    .toString();
 
   // reset token total liquidity amounts
   token0.totalLiquidity = new BigNumber(token0.totalLiquidity)
@@ -37,16 +54,6 @@ export const SyncHandler = async (
     .toString();
   token1.totalLiquidity = new BigNumber(token1.totalLiquidity)
     .minus(pair.reserve1)
-    .toString();
-
-  // update factory database
-  const factoryDB: Instance = bind(UniswapFactory);
-  // prettier-ignore
-  let uniswap: IUniswapFactory = await factoryDB.findOne({ id: FACTORY_ADDRESS.toLowerCase()});
-
-  // reset factory liquidity by subtracting onluy tarcked liquidity
-  uniswap.totalLiquidityETH = new BigNumber(uniswap.totalLiquidityETH)
-    .minus(pair.trackedReserveETH)
     .toString();
 
   pair.reserve0 = convertTokenToDecimal(reserve0, parseInt(token0.decimals));
@@ -69,23 +76,19 @@ export const SyncHandler = async (
   bundle.ethPrice = await getEthPriceInUSD(pairDB);
   await bundleDB.save(bundle);
 
+  // prettier-ignore
+  token0.derivedETH = await findEthPerToken(token0.id, pairDB, bind(TokenToPair), tokenDB);
+  // prettier-ignore
+  token1.derivedETH = await findEthPerToken(token1.id, pairDB, bind(TokenToPair), tokenDB);
+
   // get tracked liquidity - will be 0 if neither is in whitelist
   let trackedLiquidityETH: string;
   if (!new BigNumber(bundle.ethPrice).eq(ZERO_BI)) {
-    trackedLiquidityETH = new BigNumber(
-      getTrackedLiquidityUSD(
-        pair.reserve0,
-        token0,
-        pair.reserve1,
-        token1,
-        bundle.ethPrice
-      )
-    )
+    // prettier-ignore
+    trackedLiquidityETH = new BigNumber(getTrackedLiquidityUSD(pair.reserve0, token0, pair.reserve1, token1, bundle.ethPrice))
       .div(bundle.ethPrice)
       .toString();
-  } else {
-    trackedLiquidityETH = ZERO_BI.toString();
-  }
+  } else trackedLiquidityETH = ZERO_BI.toString();
 
   // use derived amounts within pair
   pair.trackedReserveETH = trackedLiquidityETH;

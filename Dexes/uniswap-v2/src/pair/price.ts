@@ -1,7 +1,7 @@
 import { BigNumber } from "bignumber.js";
 import { Instance } from "@blockflow-labs/utils";
 
-import { IBundle, IPair, IToken } from "../types/schema";
+import { IBundle, IPair, IToken, ITokenToPair } from "../types/schema";
 import { UNTRACKED_PAIRS, ZERO_BI, ONE_BI } from "./helper";
 
 // token where amounts should contribute to tracked volume and liquidity
@@ -62,9 +62,7 @@ export function getTrackedVolumeUSD(
     .toString();
 
   // dont count tracked volume on these pairs - usually rebass tokens
-  if (UNTRACKED_PAIRS.includes(pair.id)) {
-    return ZERO_BI.toString();
-  }
+  if (UNTRACKED_PAIRS.includes(pair.id)) return ZERO_BI.toString();
 
   // if less than 5 LPs, require high minimum reserve amount amount or return 0
   if (new BigNumber(pair.liquidityProviderCount).lt(5)) {
@@ -110,6 +108,45 @@ export function getTrackedVolumeUSD(
 
   // neither token is on white list, tracked volume is 0
   return ZERO_BI.toString();
+}
+
+export async function findEthPerToken(
+  token: string,
+  pairDB: Instance,
+  registryDB: Instance,
+  tokenDB: Instance
+) {
+  if (token == WETH_ADDRESS) return ONE_BI.toString();
+
+  // loop through whitelist and check if paired with any
+  for (let i = 0; i < WHITELIST.length; ++i) {
+    const [token0, token1] =
+      token.toLowerCase() > WHITELIST[i].toLowerCase()
+        ? [WHITELIST[i].toLowerCase(), token.toLowerCase()]
+        : [token.toLowerCase(), WHITELIST[i].toLowerCase()];
+
+    let registry: ITokenToPair = await registryDB.findOne({
+      id: `${token0}-${token1}`,
+    });
+
+    if (!registry) continue;
+
+    // prettier-ignore
+    if (registry.pair !== "") {
+      let pair: IPair = await pairDB.findOne({id: registry.pair.toLowerCase()});
+      if (pair.token0 == token && new BigNumber(pair.reserveETH).gt(MINIMUM_LIQUIDITY_THRESHOLD_ETH)) {
+        let token1: IToken = await tokenDB.findOne({id: pair.token1.toLowerCase()});
+        return new BigNumber(pair.token1Price).times(token1.derivedETH).toString(); // return token1 per our token * Eth per token 1
+      }
+
+      if (pair.token1 == token && new BigNumber(pair.reserveETH).gt(MINIMUM_LIQUIDITY_THRESHOLD_ETH)) {
+        let token0: IToken = await tokenDB.findOne({id: pair.token0.toLowerCase()});
+        return new BigNumber(pair.token0Price).times(token0.derivedETH).toString(); // return token0 per our token * ETH per token 0
+      }
+    }
+  }
+
+  return ZERO_BI.toString(); // nothing was found return 0
 }
 
 export async function getEthPriceInUSD(pairDB: Instance) {
