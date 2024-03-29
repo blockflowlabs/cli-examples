@@ -5,8 +5,13 @@ import {
   ISecrets,
 } from "@blockflow-labs/utils";
 
-import { hexToString } from "../utils/helper";
-import { CrossTransferSrc } from "../types/schema";
+import {
+  hexToString,
+  chainToContract,
+  hashDepositData,
+  stringToHex,
+} from "../utils/helper";
+import { Source } from "../types/schema";
 
 /**
  * @dev Event::FundsDeposited(uint256 partnerId, uint256 amount, bytes32 destChainIdBytes, uint256 destAmount, uint256 depositId, address srcToken, address depositor, bytes recipient, bytes destToken)
@@ -45,28 +50,48 @@ export const FundsDepositedHandler = async (
     destToken = destToken.toString();
   }
 
-  const srcTransferDB: Instance = bind(CrossTransferSrc);
+  const srcDB: Instance = bind(Source);
   const srcChain = block.chain_id;
   const dstChain = hexToString(destChainIdBytes);
 
-  const transferId = `${depositId}_${srcChain}_${dstChain}`;
+  let messageHash = "0x";
+
+  try {
+    messageHash = hashDepositData({
+      amount,
+      srcChainId: stringToHex(srcChain),
+      depositId,
+      destToken,
+      recipient,
+      contract: chainToContract(dstChain),
+    });
+  } catch (error) {}
+
+  const id = `${srcChain}_${dstChain}_${depositId}`; // messageHash.toLowerCase()
 
   // create this receipt entry for src chain
-  await srcTransferDB.create({
-    id: transferId.toLowerCase(),
-    partnerId: partnerId,
+  await srcDB.create({
+    id: id.toLowerCase(), // message hash
+    blocktimestamp: parseInt(block.block_timestamp.toString(), 10),
+    blockNumber: block.block_number,
+    chainId: srcChain,
+    transactionHash: transaction.transaction_hash,
+    sourcetoken: {
+      address: srcToken,
+      amount: amount,
+      symbol: "XOXO",
+    },
+    stableToken: {
+      address: "",
+      amount: "",
+      symbol: "",
+    },
+    depositorAddress: depositor, // Contract from where txn came
+    senderAddress: transaction.transaction_to_address, // Who triggered the transaction
     depositId: depositId,
-    depositor: depositor,
-    srcTxHash: transaction.transaction_hash,
-    srcBlockNumber: block.block_number.toString(),
-    srcTokenAmount: amount,
-    senderAddress: transaction.transaction_from_address,
-    srcTxTime: block.block_timestamp,
-    srcTxStatus: transaction.transaction_receipt_status,
-    srcChain,
-    dstToken: destToken,
-    dstTokenAmount: destAmount,
-    dstChain,
-    recipient,
+    messageHash: messageHash,
+    partnerId: partnerId,
+    message: "",
+    usdValue: "",
   });
 };

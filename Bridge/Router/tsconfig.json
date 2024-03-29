@@ -1,13 +1,15 @@
 {
   "compilerOptions": {
-    "target": "ES6",
+    "target": "ES2021",
     "module": "CommonJS",
     "outDir": "./build/bin/",
     "rootDir": "./src",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]

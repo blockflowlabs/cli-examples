@@ -2,7 +2,7 @@ name: Router Nitro
 description: Indexing cross chain transfers on router nitro protocol
 startBlock: 19062096 # ethereum deployment blocknumber 19062096
 userId: 6cd145d5-b8bc-41a0-a74d-2e9b88ffb675
-projectId: 6aa2619a-2485-4dd9-882c-56b4ed1a86d0
+projectId: 29fe0f13-9f73-4c60-84f3-9fe05294e294
 network: Ethereum
 user: prady
 schema:
