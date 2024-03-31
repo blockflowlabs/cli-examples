@@ -1,6 +1,6 @@
 name: Router Nitro
 description: Indexing cross chain transfers on router nitro protocol
-startBlock: 113123990 # ethereum deployment blocknumber 19062096
+startBlock: 113123990 # optimism deployment blocknumber 113123990
 userId: 6cd145d5-b8bc-41a0-a74d-2e9b88ffb675
 projectId: 29fe0f13-9f73-4c60-84f3-9fe05294e294
 network: Optimism
