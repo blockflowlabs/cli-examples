@@ -2,56 +2,13 @@
 
 import { Document } from "@blockflow-labs/utils";
 
-export class CrossTransferSrc {
-  static entity = "CrossTransferSrc";
-  static schema = {
-    partnerId: "string",
-    depositId: "string",
-    depositor: "string",
-    recipient: "string",
-    srcTxHash: "string",
-    srcBlockNumber: "string",
-    srcTokenAmount: "string",
-    senderAddress: "string",
-    srcTxTime: "string",
-    srcTxStatus: "string",
-    srcChain: "string",
-    dstChain: "string",
-    dstToken: "string",
-    dstTokenAmount: "string",
-    id: { type: "String", index: true },
-    entityId: { type: "String", index: true },
-    blocknumber: { type: "Number", index: true },
-  };
-}
-
-export class CrossTransferDst {
-  static entity = "CrossTransferDst";
-  static schema = {
-    recipient: "string",
-    depositId: "string",
-    destToken: "string",
-    dstAmount: "string",
-    srcChain: "string",
-    dstTxHash: "string",
-    dstTxTime: "string",
-    dstTxStatus: "boolean",
-    dstChain: "string",
-    id: { type: "String", index: true },
-    entityId: { type: "String", index: true },
-    blocknumber: { type: "Number", index: true },
-  };
-}
-
 export class Source {
   static entity = "Source";
   static schema = {
     blocktimestamp: "Number",
     blockNumber: "Number",
-    chainId: "String",
+    chainId: { type: "String", index: true },
     transactionHash: "String",
-    sourcetoken: { address: "String", amount: "String", symbol: "String" },
-    stableToken: { address: "String", amount: "String", symbol: "String" },
     depositId: "String",
     messageHash: "String",
     partnerId: "String",
@@ -68,14 +25,12 @@ export class Destination {
   static schema = {
     blocktimestamp: "Number",
     blockNumber: "Number",
-    chainId: "String",
+    chainId: { type: "String", index: true },
     transactionHash: "String",
     destnationtoken: { address: "String", amount: "String", symbol: "String" },
-    stableToken: { address: "String", amount: "String", symbol: "String" },
     paidId: "String",
     forwarderAddress: "String",
     messageHash: "String",
-    execFlag: "Boolean",
     execData: "String",
     usdValue: "String",
     id: { type: "String", index: true },
@@ -92,6 +47,7 @@ export class FeeInfo {
     usdValue: "String",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
   };
 }
 
@@ -99,12 +55,11 @@ export class DepositInfoUpdate {
   static entity = "DepositInfoUpdate";
   static schema = {
     id: { type: "String", index: true },
-    updateId: "String",
     isWithdraw: "Boolean",
     transactionHash: "String",
-    refundOutboundId: "String",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
   };
 }
 
@@ -113,8 +68,10 @@ export class RefuelInfo {
   static schema = {
     id: { type: "String", index: true },
     nativeToken: { amount: "String", symbol: "String" },
+    nativeRecipient: "String",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
   };
 }
 
@@ -124,55 +81,10 @@ export class ExtraInfo {
     id: { type: "String", index: true },
     gasFeeUsd: "String",
     bridgeFeeUsd: "String",
-    competitorData: {
-      gasFeeUsd: "String",
-      bridgeFeeUsd: "String",
-      time: "String",
-    },
-    sys_fee: "String",
-    partner_fee: "String",
-    forwarder_fee: "String",
-    expiry_timestamp: "Number",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
   };
-}
-
-export interface ICrossTransferSrc extends Document {
-  id: string; // depositID_src_dst
-  partnerId: string;
-  depositId: string;
-  depositor: string;
-  recipient: string;
-  srcTxHash: string;
-  srcBlockNumber: string;
-  srcTokenAmount: string;
-  senderAddress: string;
-  srcTxTime: string;
-  srcTxStatus: string;
-  srcChain: string;
-  dstChain: string;
-  dstToken: string;
-  dstTokenAmount: string;
-  blocknumber: String;
-  entityId: String;
-}
-
-export interface ICrossTransferDst extends Document {
-  id: string; //depositID_src_dst
-  recipient: string;
-
-  depositId: string;
-  destToken: string;
-  dstAmount: string;
-  srcChain: string;
-
-  dstTxHash: string;
-  dstTxTime: string;
-  dstTxStatus: boolean;
-  dstChain: string;
-  blocknumber: String;
-  entityId: String;
 }
 
 type native = {
@@ -192,8 +104,8 @@ export interface ISource extends Document {
   blockNumber: Number;
   chainId: String;
   transactionHash: String;
-  sourcetoken: Token;
-  stableToken: Token;
+  sourcetoken: Token; // actual token in
+  stableToken: Token; // usdt, usdc, eth. @todo Still a doubt, how to fetch it
   depositorAddress: String; // Contract from where txn came
   senderAddress: String; // Who triggered the transaction
   depositId: String;
@@ -212,42 +124,49 @@ export interface IDestination extends Document {
   chainId: String;
   transactionHash: String;
   destnationtoken: Token;
-  stableToken: Token;
+  stableToken: Token; // @todo
   recipientAddress: String; // Contract from where txn came
   receiverAddress: String; // Who received the funds
   paidId: String;
   forwarderAddress: String;
   messageHash: String;
-  execFlag: Boolean;
+  execFlag: Boolean; // for swap related transaction
   execData: String;
   usdValue: String;
   blocknumber: String;
   entityId: String;
 }
 
+// difference between src and destination
 export interface IFeeInfo extends Document {
   id: String;
   feeToken: Token;
   usdValue: String;
   blocknumber: String;
   entityId: String;
+  chainId: String;
 }
 
+//DepositInfoUpdate
 export interface IDepositInfoUpdate extends Document {
   id: String;
-  updateId: String;
+  updateId: String; // eventNonce
   isWithdraw: Boolean;
   transactionHash: String;
-  refundOutboundId: String;
+  refundOutboundId: String; // NA
   blocknumber: String;
   entityId: String;
+  chainId: String;
 }
 
+// GasLeaked: Waiting for contact addresses
 export interface IRefuelInfo extends Document {
   id: String;
   nativeToken: native;
+  nativeRecipient: String;
   blocknumber: String;
   entityId: String;
+  chainId: String;
 }
 
 type competitorData = {
@@ -261,12 +180,13 @@ export interface IExtraInfo extends Document {
   flowType: String; //Either Asset Forwarder or Asset bridge or Circle flow or Same chain Swap
   gasFeeUsd: String;
   bridgeFeeUsd: String;
-  competitorData: competitorData;
+  // competitorData: competitorData;
   // Partner info from middle-ware contract
-  sys_fee: String;
-  partner_fee: String;
-  forwarder_fee: String;
-  expiry_timestamp: Number;
+  // sys_fee: String;
+  // partner_fee: String;
+  // forwarder_fee: String;
+  // expiry_timestamp: Number;
   blocknumber: String;
   entityId: String;
+  chainId: String;
 }

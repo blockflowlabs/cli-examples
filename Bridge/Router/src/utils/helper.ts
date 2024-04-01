@@ -1,4 +1,5 @@
 import { AbiCoder, keccak256 } from "ethers";
+import { list } from "./tokenlist";
 
 export type DepositData = {
   amount: any;
@@ -8,6 +9,24 @@ export type DepositData = {
   recipient: string;
   contract: string;
 };
+
+export type DepositDataWithMessage = {
+  amount: any;
+  srcChainId: string;
+  depositId: string;
+  destToken: string;
+  recipient: string;
+  contract: string;
+  message: string;
+};
+
+// export const TransactionFlowType = Object.freeze({
+//   ASSET_BRIDGE: "asset-bridge",
+//   ASSET_FORWARDER: "asset-forwarder",
+//   CIRCLE: "circle",
+//   SAME_CHAIN: "same-chain",
+//   NONE: "none",
+// });
 
 export function getChainId(network: string): string | null {
   switch (network.toLowerCase()) {
@@ -53,6 +72,27 @@ export function hexToString(hex: string) {
   return str;
 }
 
+export function hashDepositDataWithMessage(
+  data: DepositDataWithMessage,
+): string {
+  const coder = new AbiCoder();
+  const encodedData = coder.encode(
+    ["uint256", "bytes32", "uint256", "address", "address", "address", "bytes"],
+    [
+      data.amount,
+      data.srcChainId,
+      data.depositId,
+      data.destToken,
+      data.recipient,
+      data.contract,
+      data.message,
+    ],
+  );
+
+  const hashedData = keccak256(encodedData);
+  return hashedData;
+}
+
 export function hashDepositData(data: DepositData): string {
   const coder = new AbiCoder();
   const encodedData = coder.encode(
@@ -64,7 +104,7 @@ export function hashDepositData(data: DepositData): string {
       data.destToken,
       data.recipient,
       data.contract,
-    ]
+    ],
   );
 
   const hashedData = keccak256(encodedData);
@@ -83,3 +123,21 @@ export const chainToContract = (chain: string) => {
       return "0x8c4acd74ff4385f3b7911432fa6787aa14406f8b";
   }
 };
+
+export function getTokenInfo(chainId: string, token: string) {
+  for (const [key, value] of Object.entries(list))
+    if (key.toLowerCase() === `${chainId}---${token}`.toLowerCase())
+      return {
+        chainId: value[0],
+        token: value[1],
+        symbol: value[2],
+        decimals: value[3],
+      };
+
+  return {
+    chainId: "",
+    token: "",
+    symbol: "",
+    decimals: "",
+  };
+}

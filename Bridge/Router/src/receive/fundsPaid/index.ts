@@ -1,11 +1,4 @@
 import { IEventContext, IBind, Instance } from "@blockflow-labs/utils";
-
-import {
-  hexToString,
-  chainToContract,
-  hashDepositData,
-  stringToHex,
-} from "../../utils/helper";
 import { Destination, IDestination } from "../../types/schema";
 
 /**
@@ -16,7 +9,7 @@ import { Destination, IDestination } from "../../types/schema";
 export const FundsPaidHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: Record<string, string>
+  secrets: Record<string, string>,
 ) => {
   // Implement your event handler logic for FundsPaid here
   const { event, block } = context;
@@ -25,7 +18,6 @@ export const FundsPaidHandler = async (
   messageHash = messageHash.toString();
   nonce = nonce.toString();
 
-  const dstChain = block.chain_id;
   const transferDB: Instance = bind(Destination);
 
   const dstEntry: IDestination = await transferDB.findOne({

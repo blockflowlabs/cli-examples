@@ -1,36 +1,3 @@
-export interface CrossTransferSrc {
-  id: string; // depositID_src_dst
-  partnerId: string;
-  depositId: string;
-  depositor: string;
-  recipient: string;
-  srcTxHash: string;
-  srcBlockNumber: string;
-  srcTokenAmount: string;
-  senderAddress: string;
-  srcTxTime: string;
-  srcTxStatus: string;
-  srcChain: string;
-  dstChain: string;
-  dstToken: string;
-  dstTokenAmount: string;
-}
-
-export interface CrossTransferDst {
-  id: string; //depositID_src_dst
-  recipient: string;
-
-  depositId: string;
-  destToken: string;
-  dstAmount: string;
-  srcChain: string;
-
-  dstTxHash: string;
-  dstTxTime: string;
-  dstTxStatus: boolean;
-  dstChain: string;
-}
-
 type native = {
   amount: String;
   symbol: String;
@@ -48,8 +15,8 @@ export interface Source {
   blockNumber: Number;
   chainId: String;
   transactionHash: String;
-  sourcetoken: Token;
-  stableToken: Token;
+  sourcetoken: Token; // actual token in
+  stableToken: Token; // usdt, usdc, eth. @todo Still a doubt, how to fetch it
   depositorAddress: String; // Contract from where txn came
   senderAddress: String; // Who triggered the transaction
   depositId: String;
@@ -66,34 +33,38 @@ export interface Destination {
   chainId: String;
   transactionHash: String;
   destnationtoken: Token;
-  stableToken: Token;
+  stableToken: Token; // @todo
   recipientAddress: String; // Contract from where txn came
   receiverAddress: String; // Who received the funds
   paidId: String;
   forwarderAddress: String;
   messageHash: String;
-  execFlag: Boolean;
+  execFlag: Boolean; // for swap related transaction
   execData: String;
   usdValue: String;
 }
 
+// difference between src and destination
 export interface FeeInfo {
   id: String;
   feeToken: Token;
   usdValue: String;
 }
 
+//DepositInfoUpdate
 export interface DepositInfoUpdate {
   id: String;
-  updateId: String;
+  updateId: String; // eventNonce
   isWithdraw: Boolean;
   transactionHash: String;
-  refundOutboundId: String;
+  refundOutboundId: String; // NA
 }
 
+// GasLeaked: Waiting for contact addresses
 export interface RefuelInfo {
   id: String;
   nativeToken: native;
+  nativeRecipient: String;
 }
 
 type competitorData = {
@@ -107,10 +78,10 @@ export interface ExtraInfo {
   flowType: String; //Either Asset Forwarder or Asset bridge or Circle flow or Same chain Swap
   gasFeeUsd: String;
   bridgeFeeUsd: String;
-  competitorData: competitorData;
+  // competitorData: competitorData;
   // Partner info from middle-ware contract
-  sys_fee: String;
-  partner_fee: String;
-  forwarder_fee: String;
-  expiry_timestamp: Number;
+  // sys_fee: String;
+  // partner_fee: String;
+  // forwarder_fee: String;
+  // expiry_timestamp: Number;
 }

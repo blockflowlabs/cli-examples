@@ -1,3 +1,4 @@
+import { BigNumber } from "bignumber.js";
 import {
   IEventContext,
   IBind,
@@ -10,8 +11,9 @@ import {
   chainToContract,
   hashDepositData,
   stringToHex,
-} from "../utils/helper";
-import { Source } from "../types/schema";
+  getTokenInfo,
+} from "../../utils/helper";
+import { Source, FeeInfo } from "../../types/schema";
 
 /**
  * @dev Event::FundsDeposited(uint256 partnerId, uint256 amount, bytes32 destChainIdBytes, uint256 destAmount, uint256 depositId, address srcToken, address depositor, bytes recipient, bytes destToken)
@@ -21,7 +23,7 @@ import { Source } from "../types/schema";
 export const FundsDepositedHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets
+  secrets: ISecrets,
 ) => {
   // Implement your event handler logic for FundsDeposited here
   const { event, transaction, block } = context;
@@ -53,8 +55,11 @@ export const FundsDepositedHandler = async (
   const srcDB: Instance = bind(Source);
   const srcChain = block.chain_id;
   const dstChain = hexToString(destChainIdBytes);
+  const tokenInfo = getTokenInfo(srcChain, srcToken);
+  const feeDB: Instance = bind(FeeInfo);
 
   let messageHash = "0x";
+  if (destToken === "0x") destToken = tokenInfo.token;
 
   try {
     messageHash = hashDepositData({
@@ -67,7 +72,17 @@ export const FundsDepositedHandler = async (
     });
   } catch (error) {}
 
-  const id = `${srcChain}_${dstChain}_${depositId}`; // messageHash.toLowerCase()
+  const id = `${srcChain}_${dstChain}_${depositId}_${chainToContract(srcChain)}_${chainToContract(dstChain)}`; // messageHash.toLowerCase()
+
+  // update bridgefee info for this transfer
+  await feeDB.create({
+    id: id.toLowerCase(),
+    feeToken: {
+      amount: new BigNumber(amount).minus(destAmount),
+      symbol: tokenInfo.symbol,
+    },
+    usdValue: "",
+  });
 
   // create this receipt entry for src chain
   await srcDB.create({
@@ -79,7 +94,7 @@ export const FundsDepositedHandler = async (
     sourcetoken: {
       address: srcToken,
       amount: amount,
-      symbol: "XOXO",
+      symbol: tokenInfo.symbol,
     },
     stableToken: {
       address: "",
@@ -87,11 +102,11 @@ export const FundsDepositedHandler = async (
       symbol: "",
     },
     depositorAddress: depositor, // Contract from where txn came
-    senderAddress: transaction.transaction_to_address, // Who triggered the transaction
+    senderAddress: transaction.transaction_from_address, // Who triggered the transaction
     depositId: depositId,
     messageHash: messageHash,
     partnerId: partnerId,
-    message: "",
+    message: "", // fundDepositWithMessage
     usdValue: "",
   });
 };

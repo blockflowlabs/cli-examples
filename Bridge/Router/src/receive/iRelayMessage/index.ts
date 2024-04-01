@@ -1,29 +1,25 @@
-import {
-  IBind,
-  Instance,
-  ISecrets,
-  IFunctionContext,
-} from "@blockflow-labs/utils";
+import { IBind, Instance, IFunctionContext } from "@blockflow-labs/utils";
 
 import {
   hexToString,
   chainToContract,
-  hashDepositData,
   stringToHex,
+  getTokenInfo,
+  hashDepositDataWithMessage,
 } from "../../utils/helper";
-import { Destination, IDestination } from "../../types/schema";
+import { Destination } from "../../types/schema";
 
 /**
- * @dev Function::iRelay(tuple relayData)
+ * @dev Function::iRelayMessage(tuple relayData)
  * @param context trigger object with contains {functionParams: {relayData }, transaction, block}
  * @param bind init function for database wrapper methods
  */
-export const iRelayHandler = async (
+export const iRelayMessageHandler = async (
   context: IFunctionContext,
   bind: IBind,
-  secrets: ISecrets
+  secrets: Record<string, string>
 ) => {
-  // Implement your function handler logic for iRelay here
+  // Implement your function handler logic for iRelayMessage here
   const { functionParams, transaction, block } = context;
   const { relayData } = functionParams;
 
@@ -32,25 +28,27 @@ export const iRelayHandler = async (
   const depositId = relayData.depositId.toString();
   const destToken = relayData.destToken.toString();
   const recipient = relayData.recipient.toString();
+  const message = relayData.message.toString();
 
   const dstChain = block.chain_id;
   const transferDB: Instance = bind(Destination);
+  const tokenInfo = getTokenInfo(dstChain, destToken);
 
   let messageHash = "0x";
 
   try {
-    messageHash = hashDepositData({
+    messageHash = hashDepositDataWithMessage({
       amount,
       srcChainId: stringToHex(srcChain),
       depositId,
       destToken,
       recipient,
       contract: chainToContract(dstChain),
+      message,
     });
   } catch (error) {}
 
-  const id = `${srcChain}_${dstChain}_${depositId}`;
-  // messageHash
+  const id = `${srcChain}_${dstChain}_${depositId}_${chainToContract(srcChain)}_${chainToContract(dstChain)}`; // messageHash.toLowerCase()
 
   await transferDB.create({
     id: id.toLowerCase(),
@@ -61,20 +59,21 @@ export const iRelayHandler = async (
     destnationtoken: {
       address: destToken,
       amount: amount,
-      symbol: "XOXO",
+      symbol: tokenInfo.symbol,
     },
     stableToken: {
+      // @todo
       address: "",
       amount: "",
       symbol: "",
     },
     recipientAddress: transaction.transaction_to_address, // Contract from where txn came
     receiverAddress: recipient, // Who received the funds
-    paidId: "", // can get this from event
+    paidId: "", // FundsPaidWithMessageHandler
     forwarderAddress: transaction.transaction_from_address,
     messageHash: messageHash,
-    execFlag: false,
-    execData: "",
-    usdValue: "",
+    execFlag: false, // FundsPaidWithMessageHandler
+    execData: "", // FundsPaidWithMessageHandler
+    usdValue: "", // @todo
   });
 };
