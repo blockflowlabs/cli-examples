@@ -8,26 +8,50 @@ user: prady
 schema:
   file: ./studio.schema.ts
 Resources:
-  - Name: assetForwarderLinea
+  - Name: iRelay
     Abi: src/abis/assetForwarderEthereum.json
     Type: contract/function
     Address: "0x8c4acd74ff4385f3b7911432fa6787aa14406f8b"
     Triggers:
       - Function: iRelay(tuple(uint256,bytes32,uint256,address,address))payable
-        Handler: src/receive/relay/index.iRelayHandler
+        Handler: src/receive/iRelay/index.iRelayHandler
 
-  - Name: assetForwarderEthereum
+  - Name: fundsPaidWithMessage
+    Abi: src/abis/assetForwarderEthereum.json
+    Type: contract/event
+    Address: "0x8c4acd74ff4385f3b7911432fa6787aa14406f8b"
+    Triggers:
+      - Event: FundsPaidWithMessage(bytes32,address,uint256,bool,bytes)
+        Handler: src/receive/fundsPaidWithMessage/index.FundsPaidWithMessageHandler
+
+  - Name: fundsPaid
     Abi: src/abis/assetForwarderEthereum.json
     Type: contract/event
     Address: "0x8c4acd74ff4385f3b7911432fa6787aa14406f8b"
     Triggers:
       - Event: FundsPaid(bytes32,address,uint256)
-        Handler: src/receive/paid/index.FundsPaidHandler
+        Handler: src/receive/fundsPaid/index.FundsPaidHandler
 
-  - Name: assetForwarderLinea
+  - Name: fundsDeposited
     Abi: src/abis/assetForwarderEthereum.json
     Type: contract/event
     Address: "0x8c4acd74ff4385f3b7911432fa6787aa14406f8b"
     Triggers:
       - Event: FundsDeposited(uint256,uint256,bytes32,uint256,uint256,address,address,bytes,bytes)
-        Handler: src/deposit/index.FundsDepositedHandler
+        Handler: src/deposit/FundsDeposited/index.FundsDepositedHandler
+
+  - Name: fundsDepositedWithMessage
+    Abi: src/abis/assetForwarderEthereum.json
+    Type: contract/event
+    Address: "0x8c4acd74ff4385f3b7911432fa6787aa14406f8b"
+    Triggers:
+      - Event: FundsDepositedWithMessage(uint256,uint256,bytes32,uint256,uint256,address,bytes,address,bytes,bytes)
+        Handler: src/deposit/FundsDepositedWithMessage/index.FundsDepositedWithMessageHandler
+
+  - Name: depositInfoUpdate
+    Abi: src/abis/assetForwarderEthereum.json
+    Type: contract/event
+    Address: "0x8c4acd74ff4385f3b7911432fa6787aa14406f8b"
+    Triggers:
+      - Event: DepositInfoUpdate(address,uint256,uint256,uint256,bool,address)
+        Handler: src/deposit/DepositInfoUpdate/index.DepositInfoUpdate
