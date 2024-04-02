@@ -57,7 +57,6 @@ export const iRelayMessageHandler = async (
       symbol: tokenInfo.symbol,
     },
     stableToken: {
-      // @todo
       address: destToken,
       amount: amount,
       symbol: tokenInfo.symbol,
