@@ -29,9 +29,11 @@ export const FundsPaidWithMessageHandler = async (
     messageHash: messageHash.toLowerCase(),
   });
 
-  const isGasLeaked = transaction.logs.find(
-    (log) => log.topics[0].toLowerCase() === GASLEAKED_TOPIC0
-  );
+  const isGasLeaked = transaction.logs
+    ? transaction.logs.find(
+        (log) => log.topics[0].toLowerCase() === GASLEAKED_TOPIC0
+      )
+    : null;
 
   if (isGasLeaked) {
     // https://basescan.org/tx/0x6da3e396dca98cb736db6ee824ddffc74e0a4fde8b723a71ab84c5adfa4e3842#eventlog

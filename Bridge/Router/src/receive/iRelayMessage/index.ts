@@ -65,9 +65,11 @@ export const iRelayMessageHandler = async (
 
   const id = `${srcChain}_${dstChain}_${depositId}_${chainToContract(srcChain)}_${chainToContract(dstChain)}`; // messageHash.toLowerCase()
 
-  const isSwapWithReceiptRelay = transaction.logs.find(
-    (log) => log.topics[0].toLowerCase() === SWAP_WITH_RECIPIENT_TOPIC0
-  );
+  const isSwapWithReceiptRelay = transaction.logs
+    ? transaction.logs.find(
+        (log) => log.topics[0].toLowerCase() === SWAP_WITH_RECIPIENT_TOPIC0
+      )
+    : null;
 
   if (isSwapWithReceiptRelay) {
     // ex tx: https://polygonscan.com/tx/0xa96654d213f548d61ed8d5d827fd596b68f4ec98d074b03a5816d2b7d3d56839

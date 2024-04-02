@@ -100,6 +100,7 @@ export const FundsDepositedWithMessageHandler = async (
       transaction.transaction_input,
       transaction.transaction_value
     );
+
     const swapData = decodeTx[6];
     const [sourceToken, stableToken] = swapData[0];
     // prettier-ignore

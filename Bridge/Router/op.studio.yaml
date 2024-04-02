@@ -1,6 +1,6 @@
 name: Router Nitro
 description: Indexing cross chain transfers on router nitro protocol
-startBlock: 113123990 # optimism deployment blocknumber 113123990, address 0x86dfc31d9cb3280ee1eb1096caa9fc66299af973
+startBlock: 113123990 # optimism deployment blocknumber 113123990, address 0x8201c02d4ab2214471e8c3ad6475c8b0cd9f2d06
 userId: 6cd145d5-b8bc-41a0-a74d-2e9b88ffb675
 projectId: 29fe0f13-9f73-4c60-84f3-9fe05294e294
 network: Optimism
@@ -11,7 +11,7 @@ Resources:
   - Name: iRelay
     Abi: src/abis/assetForwarderEthereum.json
     Type: contract/function
-    Address: "0x86dfc31d9cb3280ee1eb1096caa9fc66299af973"
+    Address: "0x8201c02d4ab2214471e8c3ad6475c8b0cd9f2d06"
     Triggers:
       - Function: iRelay(tuple(uint256,bytes32,uint256,address,address))payable
         Handler: src/receive/iRelay/index.iRelayHandler
@@ -19,7 +19,7 @@ Resources:
   - Name: iRelayMessage
     Abi: src/abis/assetForwarderEthereum.json
     Type: contract/function
-    Address: "0x86dfc31d9cb3280ee1eb1096caa9fc66299af973"
+    Address: "0x8201c02d4ab2214471e8c3ad6475c8b0cd9f2d06"
     Triggers:
       - Function: iRelayMessage(tuple(uint256,bytes32,uint256,address,address,bytes))payable
         Handler: src/receive/iRelayMessage/index.iRelayMessageHandler
@@ -27,7 +27,7 @@ Resources:
   - Name: fundsPaidWithMessage
     Abi: src/abis/assetForwarderEthereum.json
     Type: contract/event
-    Address: "0x86dfc31d9cb3280ee1eb1096caa9fc66299af973"
+    Address: "0x8201c02d4ab2214471e8c3ad6475c8b0cd9f2d06"
     Triggers:
       - Event: FundsPaidWithMessage(bytes32,address,uint256,bool,bytes)
         Handler: src/receive/fundsPaidWithMessage/index.FundsPaidWithMessageHandler
@@ -35,7 +35,7 @@ Resources:
   - Name: fundsPaid
     Abi: src/abis/assetForwarderEthereum.json
     Type: contract/event
-    Address: "0x86dfc31d9cb3280ee1eb1096caa9fc66299af973"
+    Address: "0x8201c02d4ab2214471e8c3ad6475c8b0cd9f2d06"
     Triggers:
       - Event: FundsPaid(bytes32,address,uint256)
         Handler: src/receive/fundsPaid/index.FundsPaidHandler
@@ -43,7 +43,7 @@ Resources:
   - Name: fundsDeposited
     Abi: src/abis/assetForwarderEthereum.json
     Type: contract/event
-    Address: "0x86dfc31d9cb3280ee1eb1096caa9fc66299af973"
+    Address: "0x8201c02d4ab2214471e8c3ad6475c8b0cd9f2d06"
     Triggers:
       - Event: FundsDeposited(uint256,uint256,bytes32,uint256,uint256,address,address,bytes,bytes)
         Handler: src/deposit/FundsDeposited/index.FundsDepositedHandler
@@ -51,7 +51,7 @@ Resources:
   - Name: fundsDepositedWithMessage
     Abi: src/abis/assetForwarderEthereum.json
     Type: contract/event
-    Address: "0x86dfc31d9cb3280ee1eb1096caa9fc66299af973"
+    Address: "0x8201c02d4ab2214471e8c3ad6475c8b0cd9f2d06"
     Triggers:
       - Event: FundsDepositedWithMessage(uint256,uint256,bytes32,uint256,uint256,address,bytes,address,bytes,bytes)
         Handler: src/deposit/FundsDepositedWithMessage/index.FundsDepositedWithMessageHandler
@@ -59,7 +59,7 @@ Resources:
   - Name: depositInfoUpdate
     Abi: src/abis/assetForwarderEthereum.json
     Type: contract/event
-    Address: "0x86dfc31d9cb3280ee1eb1096caa9fc66299af973"
+    Address: "0x8201c02d4ab2214471e8c3ad6475c8b0cd9f2d06"
     Triggers:
       - Event: DepositInfoUpdate(address,uint256,uint256,uint256,bool,address)
         Handler: src/deposit/DepositInfoUpdate/index.DepositInfoUpdate

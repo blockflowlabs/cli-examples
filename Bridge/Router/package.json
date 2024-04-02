@@ -11,6 +11,7 @@
     "instance-deploy-ethereum": "blockflow instance-deploy --path 'ethereum.studio.yaml'",
     "instance-deploy-optimism": "blockflow instance-deploy --path 'op.studio.yaml'",
     "instance-test-optimism": "blockflow instance-test --path 'op.studio.yaml' --range 10",
+    "instance-test-optimism-swapWithReceipt": "blockflow instance-test --path 'op.studio.yaml' --range 1 --startBlock 117775092",
     "api-test": "blockflow api-test --path 'api.studio.yaml'",
     "api-deploy": "blockflow api-deploy --path 'api.studio.yaml'"
   },
