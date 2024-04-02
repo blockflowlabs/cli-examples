@@ -16,6 +16,14 @@ Resources:
       - Function: iRelay(tuple(uint256,bytes32,uint256,address,address))payable
         Handler: src/receive/iRelay/index.iRelayHandler
 
+  - Name: iRelayMessage
+    Abi: src/abis/assetForwarderEthereum.json
+    Type: contract/function
+    Address: "0x86dfc31d9cb3280ee1eb1096caa9fc66299af973"
+    Triggers:
+      - Function: iRelayMessage(tuple(uint256,bytes32,uint256,address,address,bytes))payable
+        Handler: src/receive/iRelayMessage/index.iRelayMessageHandler
+
   - Name: fundsPaidWithMessage
     Abi: src/abis/assetForwarderEthereum.json
     Type: contract/event
