@@ -9,23 +9,6 @@ type Token = {
   symbol: String;
 };
 
-export interface Source {
-  id: String; // message hash
-  blocktimestamp: Number;
-  blockNumber: Number;
-  chainId: String;
-  transactionHash: String;
-  sourcetoken: Token; // actual token in
-  stableToken: Token; // usdt, usdc, eth.
-  depositorAddress: String; // Contract from where txn came
-  senderAddress: String; // Who triggered the transaction
-  depositId: String;
-  messageHash: String;
-  partnerId: String;
-  message: String;
-  usdValue: String;
-}
-
 export interface Destination {
   id: String; // message hash
   blocktimestamp: Number;
@@ -41,6 +24,23 @@ export interface Destination {
   messageHash: String;
   execFlag: Boolean; // for swap related transaction
   execData: String;
+  usdValue: String;
+}
+
+export interface Source {
+  id: String; // message hash
+  blocktimestamp: Number;
+  blockNumber: Number;
+  chainId: String;
+  transactionHash: String;
+  sourcetoken: Token;
+  stableToken: Token;
+  depositorAddress: String; // Contract from where txn came
+  senderAddress: String; // Who triggered the transaction
+  depositId: String;
+  messageHash: String;
+  partnerId: String;
+  message: String;
   usdValue: String;
 }
 

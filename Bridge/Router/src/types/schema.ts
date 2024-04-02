@@ -2,24 +2,6 @@
 
 import { Document } from "@blockflow-labs/utils";
 
-export class Source {
-  static entity = "Source";
-  static schema = {
-    blocktimestamp: "Number",
-    blockNumber: "Number",
-    chainId: { type: "String", index: true },
-    transactionHash: "String",
-    depositId: "String",
-    messageHash: "String",
-    partnerId: "String",
-    message: "String",
-    usdValue: "String",
-    id: { type: "String", index: true },
-    entityId: { type: "String", index: true },
-    blocknumber: { type: "Number", index: true },
-  };
-}
-
 export class Destination {
   static entity = "Destination";
   static schema = {
@@ -28,10 +10,31 @@ export class Destination {
     chainId: { type: "String", index: true },
     transactionHash: "String",
     destnationtoken: { address: "String", amount: "String", symbol: "String" },
+    stableToken: { address: "String", amount: "String", symbol: "String" },
     paidId: "String",
     forwarderAddress: "String",
     messageHash: "String",
     execData: "String",
+    usdValue: "String",
+    id: { type: "String", index: true },
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+  };
+}
+
+export class Source {
+  static entity = "Source";
+  static schema = {
+    blocktimestamp: "Number",
+    blockNumber: "Number",
+    chainId: { type: "String", index: true },
+    transactionHash: "String",
+    sourcetoken: { address: "String", amount: "String", symbol: "String" },
+    stableToken: { address: "String", amount: "String", symbol: "String" },
+    depositId: "String",
+    messageHash: "String",
+    partnerId: "String",
+    message: "String",
     usdValue: "String",
     id: { type: "String", index: true },
     entityId: { type: "String", index: true },
@@ -98,25 +101,6 @@ type Token = {
   symbol: String;
 };
 
-export interface ISource extends Document {
-  id: String; // message hash
-  blocktimestamp: Number;
-  blockNumber: Number;
-  chainId: String;
-  transactionHash: String;
-  sourcetoken: Token; // actual token in
-  stableToken: Token; // usdt, usdc, eth. @todo Still a doubt, how to fetch it
-  depositorAddress: String; // Contract from where txn came
-  senderAddress: String; // Who triggered the transaction
-  depositId: String;
-  messageHash: String;
-  partnerId: String;
-  message: String;
-  usdValue: String;
-  blocknumber: String;
-  entityId: String;
-}
-
 export interface IDestination extends Document {
   id: String; // message hash
   blocktimestamp: Number;
@@ -124,7 +108,7 @@ export interface IDestination extends Document {
   chainId: String;
   transactionHash: String;
   destnationtoken: Token;
-  stableToken: Token; // @todo
+  stableToken: Token;
   recipientAddress: String; // Contract from where txn came
   receiverAddress: String; // Who received the funds
   paidId: String;
@@ -132,6 +116,25 @@ export interface IDestination extends Document {
   messageHash: String;
   execFlag: Boolean; // for swap related transaction
   execData: String;
+  usdValue: String;
+  blocknumber: String;
+  entityId: String;
+}
+
+export interface ISource extends Document {
+  id: String; // message hash
+  blocktimestamp: Number;
+  blockNumber: Number;
+  chainId: String;
+  transactionHash: String;
+  sourcetoken: Token;
+  stableToken: Token;
+  depositorAddress: String; // Contract from where txn came
+  senderAddress: String; // Who triggered the transaction
+  depositId: String;
+  messageHash: String;
+  partnerId: String;
+  message: String;
   usdValue: String;
   blocknumber: String;
   entityId: String;
@@ -159,7 +162,7 @@ export interface IDepositInfoUpdate extends Document {
   chainId: String;
 }
 
-// GasLeaked: Waiting for contact addresses
+// GasLeaked, emitted with fundPaidWithMessage
 export interface IRefuelInfo extends Document {
   id: String;
   nativeToken: native;

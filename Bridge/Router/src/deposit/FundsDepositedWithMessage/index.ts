@@ -12,7 +12,7 @@ import {
   hashDepositDataWithMessage,
   stringToHex,
   getTokenInfo,
-  SWAP_AND_DEPOSIT_SIG,
+  SWAP_AND_DEPOSIT_SIGS,
   decodeSwapAndDeposit,
 } from "../../utils/helper";
 import { Source, FeeInfo } from "../../types/schema";
@@ -90,8 +90,9 @@ export const FundsDepositedWithMessageHandler = async (
     },
   };
 
-  const isSwapAndDeposit =
-    transaction.transaction_input.slice(0, 10) === SWAP_AND_DEPOSIT_SIG;
+  const isSwapAndDeposit = SWAP_AND_DEPOSIT_SIGS.includes(
+    transaction.transaction_input.slice(0, 10)
+  );
 
   if (isSwapAndDeposit) {
     // https://etherscan.io/tx/0xc396afbd9f874a47b217a57fd74c46299bb79abd460700c01f4407ae166ca5e6
