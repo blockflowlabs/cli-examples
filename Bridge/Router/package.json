@@ -14,7 +14,7 @@
     "api-deploy": "blockflow api-deploy --path 'api.studio.yaml'"
   },
   "dependencies": {
-    "@blockflow-labs/utils": "^1.0.6",
+    "@blockflow-labs/utils": "^1.0.7",
     "@typegoose/typegoose": "^11.7.0",
     "ethers": "^6.11.1"
   },
