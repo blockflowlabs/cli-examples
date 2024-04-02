@@ -1,5 +1,14 @@
 import { AbiCoder, keccak256 } from "ethers";
 import { list } from "./tokenlist";
+import { Interface } from "ethers";
+
+export const SWAP_WITH_RECIPIENT_TOPIC0 =
+  "0xc40fae9d5f584875c393ac222c6f88b6c9dced1e9cc6251483648ac2e902c8b0";
+export const SWAP_AND_DEPOSIT_SIG = "0x87b47f11";
+const DEX_SPAN_ABI = [
+  "event SwapWithRecipient(string indexed funcName, address[] tokenPath, uint256 amount, address indexed sender, address indexed receiver, uint256 finalAmt, uint256[] flags, uint256 widgetID)",
+  "function swapAndDeposit(uint256 partnerId, bytes32 destChainIdBytes, bytes recipient, uint256 feeAmount, bytes message, bool isMessage, tuple(address[] tokens, uint256 amount, uint256 minReturn, uint256[] flags, bytes[] dataTx, bool isWrapper, address recipient, bytes destToken) swapData, address refundRecipient) payable",
+];
 
 export type DepositData = {
   amount: any;
@@ -19,6 +28,16 @@ export type DepositDataWithMessage = {
   contract: string;
   message: string;
 };
+
+export function decodeSwapAndDeposit(input: string, value: string) {
+  const iface = new Interface(DEX_SPAN_ABI);
+  return iface.parseTransaction({ data: input, value })?.args;
+}
+
+export function decodeSwapWithRecipient(event: any) {
+  const iface = new Interface(DEX_SPAN_ABI);
+  return iface.parseLog({ topics: event.topics, data: event.log_data })?.args;
+}
 
 // export const TransactionFlowType = Object.freeze({
 //   ASSET_BRIDGE: "asset-bridge",
@@ -73,7 +92,7 @@ export function hexToString(hex: string) {
 }
 
 export function hashDepositDataWithMessage(
-  data: DepositDataWithMessage,
+  data: DepositDataWithMessage
 ): string {
   const coder = new AbiCoder();
   const encodedData = coder.encode(
@@ -86,7 +105,7 @@ export function hashDepositDataWithMessage(
       data.recipient,
       data.contract,
       data.message,
-    ],
+    ]
   );
 
   const hashedData = keccak256(encodedData);
@@ -104,7 +123,7 @@ export function hashDepositData(data: DepositData): string {
       data.destToken,
       data.recipient,
       data.contract,
-    ],
+    ]
   );
 
   const hashedData = keccak256(encodedData);

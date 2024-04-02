@@ -6,6 +6,8 @@ import {
   stringToHex,
   getTokenInfo,
   hashDepositDataWithMessage,
+  SWAP_WITH_RECIPIENT_TOPIC0,
+  decodeSwapWithRecipient,
 } from "../../utils/helper";
 import { Destination } from "../../types/schema";
 
@@ -48,14 +50,7 @@ export const iRelayMessageHandler = async (
     });
   } catch (error) {}
 
-  const id = `${srcChain}_${dstChain}_${depositId}_${chainToContract(srcChain)}_${chainToContract(dstChain)}`; // messageHash.toLowerCase()
-
-  await transferDB.create({
-    id: id.toLowerCase(),
-    blocktimestamp: parseInt(block.block_timestamp.toString(), 10),
-    blockNumber: block.block_number,
-    chainId: srcChain,
-    transactionHash: transaction.transaction_hash,
+  let tokenPath = {
     destnationtoken: {
       address: destToken,
       amount: amount,
@@ -63,17 +58,58 @@ export const iRelayMessageHandler = async (
     },
     stableToken: {
       // @todo
-      address: "",
-      amount: "",
-      symbol: "",
+      address: destToken,
+      amount: amount,
+      symbol: tokenInfo.symbol,
     },
+  };
+
+  const id = `${srcChain}_${dstChain}_${depositId}_${chainToContract(srcChain)}_${chainToContract(dstChain)}`; // messageHash.toLowerCase()
+
+  const isSwapWithReceiptRelay = transaction.logs.find(
+    (log) => log.topics[0].toLowerCase() === SWAP_WITH_RECIPIENT_TOPIC0
+  );
+
+  if (isSwapWithReceiptRelay) {
+    // ex tx: https://polygonscan.com/tx/0xa96654d213f548d61ed8d5d827fd596b68f4ec98d074b03a5816d2b7d3d56839
+    // fundsPaidWithMessage check if SwapAndDesposit is there
+    // tokenPath :
+    // 0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619 stableToken
+    // 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE destToken
+
+    const decodeEvent: any = decodeSwapWithRecipient(isSwapWithReceiptRelay);
+    const [stableToken, destToken] = decodeEvent[1];
+    // prettier-ignore
+    const [amountIn, amountOut] = [decodeEvent[2].toString(), decodeEvent[5].toString()]
+    tokenPath = {
+      stableToken: {
+        address: stableToken,
+        amount: amountIn,
+        symbol: getTokenInfo(dstChain, stableToken).symbol,
+      },
+      destnationtoken: {
+        address: destToken,
+        amount: amountOut,
+        symbol: getTokenInfo(dstChain, destToken).symbol,
+      },
+    };
+  }
+
+  await transferDB.create({
+    id: id.toLowerCase(),
+    blocktimestamp: parseInt(block.block_timestamp.toString(), 10),
+    blockNumber: block.block_number,
+    chainId: srcChain,
+    transactionHash: transaction.transaction_hash,
+    destnationtoken: tokenPath.destnationtoken,
+    stableToken: tokenPath.stableToken,
     recipientAddress: transaction.transaction_to_address, // Contract from where txn came
     receiverAddress: recipient, // Who received the funds
-    paidId: "", // FundsPaidWithMessageHandler
+    paidId: "", // can get this from event
     forwarderAddress: transaction.transaction_from_address,
     messageHash: messageHash,
-    execFlag: false, // FundsPaidWithMessageHandler
-    execData: "", // FundsPaidWithMessageHandler
-    usdValue: "", // @todo
+    execFlag: false, // only for fund
+    execData: "", //
+    usdValue: "",
   });
 };

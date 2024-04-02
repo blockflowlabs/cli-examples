@@ -60,7 +60,7 @@ export interface DepositInfoUpdate {
   refundOutboundId: String; // NA
 }
 
-// GasLeaked: Waiting for contact addresses
+// GasLeaked: Waiting for contact addresses @todo
 export interface RefuelInfo {
   id: String;
   nativeToken: native;

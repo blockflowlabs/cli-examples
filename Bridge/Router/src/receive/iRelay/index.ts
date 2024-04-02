@@ -22,7 +22,7 @@ import { Destination } from "../../types/schema";
 export const iRelayHandler = async (
   context: IFunctionContext,
   bind: IBind,
-  secrets: ISecrets,
+  secrets: ISecrets
 ) => {
   // Implement your function handler logic for iRelay here
   const { functionParams, transaction, block } = context;
@@ -51,6 +51,19 @@ export const iRelayHandler = async (
     });
   } catch (error) {}
 
+  let tokenPath = {
+    destnationtoken: {
+      address: destToken,
+      amount: amount,
+      symbol: tokenInfo.symbol,
+    },
+    stableToken: {
+      address: destToken,
+      amount: amount,
+      symbol: tokenInfo.symbol,
+    },
+  };
+
   const id = `${srcChain}_${dstChain}_${depositId}_${chainToContract(srcChain)}_${chainToContract(dstChain)}`; // messageHash.toLowerCase()
 
   await transferDB.create({
@@ -59,17 +72,8 @@ export const iRelayHandler = async (
     blockNumber: block.block_number,
     chainId: srcChain,
     transactionHash: transaction.transaction_hash,
-    destnationtoken: {
-      address: destToken,
-      amount: amount,
-      symbol: tokenInfo.symbol,
-    },
-    stableToken: {
-      // @todo
-      address: "",
-      amount: "",
-      symbol: "",
-    },
+    destnationtoken: tokenPath.destnationtoken,
+    stableToken: tokenPath.stableToken,
     recipientAddress: transaction.transaction_to_address, // Contract from where txn came
     receiverAddress: recipient, // Who received the funds
     paidId: "", // can get this from event

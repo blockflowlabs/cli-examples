@@ -23,7 +23,7 @@ import { Source, FeeInfo } from "../../types/schema";
 export const FundsDepositedHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets,
+  secrets: ISecrets
 ) => {
   // Implement your event handler logic for FundsDeposited here
   const { event, transaction, block } = context;
@@ -74,7 +74,7 @@ export const FundsDepositedHandler = async (
 
   const id = `${srcChain}_${dstChain}_${depositId}_${chainToContract(srcChain)}_${chainToContract(dstChain)}`; // messageHash.toLowerCase()
 
-  // update bridgefee info for this transfer
+  // feetoken - stable token
   await feeDB.create({
     id: id.toLowerCase(),
     feeToken: {
@@ -84,6 +84,19 @@ export const FundsDepositedHandler = async (
     usdValue: "",
   });
 
+  const tokenList = {
+    sourcetoken: {
+      address: srcToken,
+      amount: amount,
+      symbol: tokenInfo.symbol,
+    },
+    stableToken: {
+      address: srcToken,
+      amount: amount,
+      symbol: tokenInfo.symbol,
+    },
+  };
+
   // create this receipt entry for src chain
   await srcDB.create({
     id: id.toLowerCase(), // message hash
@@ -91,16 +104,8 @@ export const FundsDepositedHandler = async (
     blockNumber: block.block_number,
     chainId: srcChain,
     transactionHash: transaction.transaction_hash,
-    sourcetoken: {
-      address: srcToken,
-      amount: amount,
-      symbol: tokenInfo.symbol,
-    },
-    stableToken: {
-      address: "",
-      amount: "",
-      symbol: "",
-    },
+    sourcetoken: tokenList.sourcetoken,
+    stableToken: tokenList.stableToken,
     depositorAddress: depositor, // Contract from where txn came
     senderAddress: transaction.transaction_from_address, // Who triggered the transaction
     depositId: depositId,

@@ -9,7 +9,7 @@ import { Destination, IDestination } from "../../types/schema";
 export const FundsPaidHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: Record<string, string>,
+  secrets: Record<string, string>
 ) => {
   // Implement your event handler logic for FundsPaid here
   const { event, block } = context;

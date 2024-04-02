@@ -11,7 +11,7 @@ import { DepositInfoUpdate as infoUpdate } from "../../types/schema";
 export const DepositInfoUpdate = async (
   context: IEventContext,
   bind: IBind,
-  secrets: Record<string, string>,
+  secrets: Record<string, string>
 ) => {
   // Implement your event handler logic for DepositInfoUpdate here
   const { event, transaction, block } = context;

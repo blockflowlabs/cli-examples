@@ -4,6 +4,7 @@ import {
   Instance,
   ISecrets,
 } from "@blockflow-labs/utils";
+import { BigNumber } from "bignumber.js";
 
 import {
   hexToString,
@@ -11,8 +12,10 @@ import {
   hashDepositDataWithMessage,
   stringToHex,
   getTokenInfo,
+  SWAP_AND_DEPOSIT_SIG,
+  decodeSwapAndDeposit,
 } from "../../utils/helper";
-import { Source } from "../../types/schema";
+import { Source, FeeInfo } from "../../types/schema";
 
 /**
  * @dev Event::FundsDepositedWithMessage(uint256 partnerId, uint256 amount, bytes32 destChainIdBytes, uint256 destAmount, uint256 depositId, address srcToken, bytes recipient, address depositor, bytes destToken, bytes message)
@@ -22,7 +25,7 @@ import { Source } from "../../types/schema";
 export const FundsDepositedWithMessageHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: Record<string, string>,
+  secrets: ISecrets
 ) => {
   // Implement your event handler logic for FundsDepositedWithMessage here
   const { event, transaction, block } = context;
@@ -56,6 +59,7 @@ export const FundsDepositedWithMessageHandler = async (
   const srcDB: Instance = bind(Source);
   const srcChain = block.chain_id;
   const dstChain = hexToString(destChainIdBytes);
+  const feeDB: Instance = bind(FeeInfo);
 
   const tokenInfo = getTokenInfo(srcChain, srcToken);
   let messageHash = "0x";
@@ -73,7 +77,57 @@ export const FundsDepositedWithMessageHandler = async (
     });
   } catch (error) {}
 
+  let tokenPath = {
+    sourcetoken: {
+      address: srcToken,
+      amount: amount,
+      symbol: tokenInfo.symbol,
+    },
+    stableToken: {
+      address: srcToken,
+      amount: amount,
+      symbol: tokenInfo.symbol,
+    },
+  };
+
+  const isSwapAndDeposit =
+    transaction.transaction_input.slice(0, 10) === SWAP_AND_DEPOSIT_SIG;
+
+  if (isSwapAndDeposit) {
+    // https://etherscan.io/tx/0xc396afbd9f874a47b217a57fd74c46299bb79abd460700c01f4407ae166ca5e6
+    const decodeTx: any = decodeSwapAndDeposit(
+      transaction.transaction_input,
+      transaction.transaction_value
+    );
+    const swapData = decodeTx[6];
+    const [sourceToken, stableToken] = swapData[0];
+    // prettier-ignore
+    const [amountIn, amountOut] = [swapData[1].toString(), amount]
+    tokenPath = {
+      stableToken: {
+        address: stableToken,
+        amount: amountOut,
+        symbol: getTokenInfo(srcChain, stableToken).symbol,
+      },
+      sourcetoken: {
+        address: sourceToken,
+        amount: amountIn,
+        symbol: getTokenInfo(srcChain, sourceToken).symbol,
+      },
+    };
+  }
+
   const id = `${srcChain}_${dstChain}_${depositId}_${chainToContract(srcChain)}_${chainToContract(dstChain)}`; // messageHash.toLowerCase()
+
+  // feetoken - stable token
+  await feeDB.create({
+    id: id.toLowerCase(),
+    feeToken: {
+      amount: new BigNumber(amount).minus(destAmount),
+      symbol: getTokenInfo(dstChain, tokenPath.stableToken.address).symbol,
+    },
+    usdValue: "",
+  });
 
   // create this receipt entry for src chain
   await srcDB.create({
@@ -82,16 +136,8 @@ export const FundsDepositedWithMessageHandler = async (
     blockNumber: block.block_number,
     chainId: srcChain,
     transactionHash: transaction.transaction_hash,
-    sourcetoken: {
-      address: srcToken,
-      amount: amount,
-      symbol: tokenInfo.symbol,
-    },
-    stableToken: {
-      address: "",
-      amount: "",
-      symbol: "",
-    },
+    sourcetoken: tokenPath.sourcetoken,
+    stableToken: tokenPath.stableToken,
     depositorAddress: depositor,
     senderAddress: transaction.transaction_from_address,
     depositId: depositId,

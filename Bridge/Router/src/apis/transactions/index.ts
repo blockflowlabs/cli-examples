@@ -16,7 +16,7 @@ import {
 export const transactionsHandler = async (
   context: any,
   bind: ABind,
-  secrets: Record<string, string>,
+  secrets: Record<string, string>
 ) => {
   // Implement your function handler logic for API here
   let { request, response } = context;
@@ -48,7 +48,7 @@ export const transactionsHandler = async (
     {
       skip: skip,
       limit: limit,
-    },
+    }
   );
 
   if (srcTransations.length === 0)
@@ -70,7 +70,7 @@ export const transactionsHandler = async (
       id: { $in: depositIds },
     },
     {},
-    {},
+    {}
   );
 
   // Create a map of destination transactions indexed by their ID
