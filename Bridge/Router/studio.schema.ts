@@ -16,7 +16,7 @@ export interface Source {
   chainId: String;
   transactionHash: String;
   sourcetoken: Token; // actual token in
-  stableToken: Token; // usdt, usdc, eth. @todo Still a doubt, how to fetch it
+  stableToken: Token; // usdt, usdc, eth.
   depositorAddress: String; // Contract from where txn came
   senderAddress: String; // Who triggered the transaction
   depositId: String;
@@ -33,7 +33,7 @@ export interface Destination {
   chainId: String;
   transactionHash: String;
   destnationtoken: Token;
-  stableToken: Token; // @todo
+  stableToken: Token;
   recipientAddress: String; // Contract from where txn came
   receiverAddress: String; // Who received the funds
   paidId: String;
@@ -60,7 +60,7 @@ export interface DepositInfoUpdate {
   refundOutboundId: String; // NA
 }
 
-// GasLeaked: Waiting for contact addresses @todo
+// GasLeaked, emitted with fundPaidWithMessage
 export interface RefuelInfo {
   id: String;
   nativeToken: native;

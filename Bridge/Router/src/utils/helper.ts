@@ -4,10 +4,16 @@ import { Interface } from "ethers";
 
 export const SWAP_WITH_RECIPIENT_TOPIC0 =
   "0xc40fae9d5f584875c393ac222c6f88b6c9dced1e9cc6251483648ac2e902c8b0";
+export const GASLEAKED_TOPIC0 =
+  "0xb533c49a97624f1eac09c983a52eb3d79e537b2bbf90d5ad83bcb0a721a9afae";
+
 export const SWAP_AND_DEPOSIT_SIG = "0x87b47f11";
 const DEX_SPAN_ABI = [
   "event SwapWithRecipient(string indexed funcName, address[] tokenPath, uint256 amount, address indexed sender, address indexed receiver, uint256 finalAmt, uint256[] flags, uint256 widgetID)",
   "function swapAndDeposit(uint256 partnerId, bytes32 destChainIdBytes, bytes recipient, uint256 feeAmount, bytes message, bool isMessage, tuple(address[] tokens, uint256 amount, uint256 minReturn, uint256[] flags, bytes[] dataTx, bool isWrapper, address recipient, bytes destToken) swapData, address refundRecipient) payable",
+];
+const REFUEL_ABI = [
+  "event GasLeaked(address ttoken, uint256 ttokenAmount, uint256 nativeAmount, address recipient)",
 ];
 
 export type DepositData = {
@@ -36,6 +42,11 @@ export function decodeSwapAndDeposit(input: string, value: string) {
 
 export function decodeSwapWithRecipient(event: any) {
   const iface = new Interface(DEX_SPAN_ABI);
+  return iface.parseLog({ topics: event.topics, data: event.log_data })?.args;
+}
+
+export function decodeGasLeaked(event: any) {
+  const iface = new Interface(REFUEL_ABI);
   return iface.parseLog({ topics: event.topics, data: event.log_data })?.args;
 }
 

@@ -1,5 +1,10 @@
 import { IEventContext, IBind, Instance } from "@blockflow-labs/utils";
-import { Destination, IDestination } from "../../types/schema";
+import {
+  GASLEAKED_TOPIC0,
+  decodeGasLeaked,
+  getTokenInfo,
+} from "../../utils/helper";
+import { Destination, IDestination, RefuelInfo } from "../../types/schema";
 
 /**
  * @dev Event::FundsPaidWithMessage(bytes32 messageHash, address forwarder, uint256 nonce, bool execFlag, bytes execData)
@@ -23,6 +28,23 @@ export const FundsPaidWithMessageHandler = async (
   const dstEntry: IDestination = await transferDB.findOne({
     messageHash: messageHash.toLowerCase(),
   });
+
+  const isGasLeaked = transaction.logs.find(
+    (log) => log.topics[0].toLowerCase() === GASLEAKED_TOPIC0
+  );
+
+  if (isGasLeaked) {
+    const refuelDB: Instance = bind(RefuelInfo);
+    const decodeEvent: any = decodeGasLeaked(isGasLeaked);
+    await refuelDB.create({
+      id: messageHash.toLowerCase(),
+      nativeToken: {
+        amount: decodeEvent[2].toString(),
+        symbol: getTokenInfo(block.chain_id, decodeEvent[0].toString()),
+      },
+      nativeRecipient: decodeEvent[3].toString(),
+    });
+  }
 
   if (dstEntry) {
     dstEntry.paidId = nonce;
