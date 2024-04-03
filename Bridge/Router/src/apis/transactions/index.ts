@@ -1,12 +1,7 @@
 // import { ABind, API } from "@blockflow-labs/utils";
 
 // import { getChainId } from "../../utils/helper";
-// import {
-//   CrossTransferSrc,
-//   CrossTransferDst,
-//   ICrossTransferSrc,
-//   ICrossTransferDst,
-// } from "../../types/schema";
+// import { Source, Destination, ISource, IDestination } from "../../types/schema";
 
 // /**
 //  * @dev API
@@ -36,13 +31,13 @@
 //     return response;
 //   }
 
-//   const srcDB: API = bind(CrossTransferSrc);
-//   const dstDB: API = bind(CrossTransferDst);
+//   const srcDB: API = bind(Source);
+//   const dstDB: API = bind(Destination);
 
 //   const limit = 100;
 //   const skip = (page - 1) * limit;
 
-//   const srcTransations: Array<ICrossTransferSrc> = await srcDB.find(
+//   const srcTransations: Array<ISource> = await srcDB.find(
 //     { srcChain: srcChainId, dstChain: dstChainId },
 //     {},
 //     {
@@ -65,7 +60,7 @@
 //   const depositIds = srcTransations.map((srcTx) => srcTx.id);
 
 //   // Fetch the destination transactions based on the deposit IDs
-//   const dstTransactions: Array<ICrossTransferDst> = await dstDB.find(
+//   const dstTransactions: Array<IDestination> = await dstDB.find(
 //     {
 //       id: { $in: depositIds },
 //     },
@@ -74,7 +69,7 @@
 //   );
 
 //   // Create a map of destination transactions indexed by their ID
-//   const dstTransactionsMap: Record<string, ICrossTransferDst> = {};
+//   const dstTransactionsMap: Record<string, IDestination> = {};
 //   dstTransactions.forEach((dstTx) => (dstTransactionsMap[dstTx.id] = dstTx));
 
 //   const idsToReponse: any = {};
