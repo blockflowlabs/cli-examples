@@ -5,18 +5,21 @@ import { Document } from "@blockflow-labs/utils";
 export class Destination {
   static entity = "Destination";
   static schema = {
+    id: { type: "String", index: true },
     blocktimestamp: "Number",
     blockNumber: "Number",
     chainId: { type: "String", index: true },
     transactionHash: "String",
     destnationtoken: { address: "String", amount: "String", symbol: "String" },
     stableToken: { address: "String", amount: "String", symbol: "String" },
+    recipientAddress: "String",
+    receiverAddress: "String",
     paidId: "String",
     forwarderAddress: "String",
     messageHash: "String",
+    execFlag: "Boolean",
     execData: "String",
     usdValue: "String",
-    id: { type: "String", index: true },
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
   };
@@ -25,18 +28,20 @@ export class Destination {
 export class Source {
   static entity = "Source";
   static schema = {
+    id: { type: "String", index: true },
     blocktimestamp: "Number",
     blockNumber: "Number",
     chainId: { type: "String", index: true },
     transactionHash: "String",
     sourcetoken: { address: "String", amount: "String", symbol: "String" },
     stableToken: { address: "String", amount: "String", symbol: "String" },
+    depositorAddress: "String",
+    senderAddress: "String",
     depositId: "String",
     messageHash: "String",
     partnerId: "String",
     message: "String",
     usdValue: "String",
-    id: { type: "String", index: true },
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
   };
@@ -58,8 +63,10 @@ export class DepositInfoUpdate {
   static entity = "DepositInfoUpdate";
   static schema = {
     id: { type: "String", index: true },
+    updateId: "String",
     isWithdraw: "Boolean",
     transactionHash: "String",
+    refundOutboundId: "String",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
@@ -82,6 +89,7 @@ export class ExtraInfo {
   static entity = "ExtraInfo";
   static schema = {
     id: { type: "String", index: true },
+    flowType: "String",
     gasFeeUsd: "String",
     bridgeFeeUsd: "String",
     entityId: { type: "String", index: true },
@@ -102,19 +110,19 @@ type Token = {
 };
 
 export interface IDestination extends Document {
-  id: String; // message hash
+  id: String;
   blocktimestamp: Number;
   blockNumber: Number;
   chainId: String;
   transactionHash: String;
   destnationtoken: Token;
   stableToken: Token;
-  recipientAddress: String; // Contract from where txn came
-  receiverAddress: String; // Who received the funds
+  recipientAddress: String;
+  receiverAddress: String;
   paidId: String;
   forwarderAddress: String;
   messageHash: String;
-  execFlag: Boolean; // for swap related transaction
+  execFlag: Boolean;
   execData: String;
   usdValue: String;
   blocknumber: String;
@@ -122,15 +130,15 @@ export interface IDestination extends Document {
 }
 
 export interface ISource extends Document {
-  id: String; // message hash
+  id: String;
   blocktimestamp: Number;
   blockNumber: Number;
   chainId: String;
   transactionHash: String;
   sourcetoken: Token;
   stableToken: Token;
-  depositorAddress: String; // Contract from where txn came
-  senderAddress: String; // Who triggered the transaction
+  depositorAddress: String;
+  senderAddress: String;
   depositId: String;
   messageHash: String;
   partnerId: String;
@@ -153,10 +161,10 @@ export interface IFeeInfo extends Document {
 //DepositInfoUpdate
 export interface IDepositInfoUpdate extends Document {
   id: String;
-  updateId: String; // eventNonce
+  updateId: String;
   isWithdraw: Boolean;
   transactionHash: String;
-  refundOutboundId: String; // NA
+  refundOutboundId: String;
   blocknumber: String;
   entityId: String;
   chainId: String;
@@ -180,7 +188,7 @@ type competitorData = {
 
 export interface IExtraInfo extends Document {
   id: String;
-  flowType: String; //Either Asset Forwarder or Asset bridge or Circle flow or Same chain Swap
+  flowType: String;
   gasFeeUsd: String;
   bridgeFeeUsd: String;
   // competitorData: competitorData;

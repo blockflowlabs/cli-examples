@@ -80,12 +80,20 @@ export const FundsDepositedWithMessageHandler = async (
   let tokenPath = {
     sourcetoken: {
       address: srcToken,
-      amount: amount,
+      amount: new BigNumber(amount)
+        .dividedBy(
+          new BigNumber(10).pow(tokenInfo.decimals || 0) // as decimals can be ""
+        )
+        .toString(),
       symbol: tokenInfo.symbol,
     },
     stableToken: {
       address: srcToken,
-      amount: amount,
+      amount: new BigNumber(amount)
+        .dividedBy(
+          new BigNumber(10).pow(tokenInfo.decimals || 0) // as decimals can be ""
+        )
+        .toString(),
       symbol: tokenInfo.symbol,
     },
   };
@@ -108,7 +116,13 @@ export const FundsDepositedWithMessageHandler = async (
     tokenPath = {
       stableToken: {
         address: stableToken,
-        amount: amountOut,
+        amount: new BigNumber(amountOut)
+          .dividedBy(
+            new BigNumber(10).pow(
+              getTokenInfo(srcChain, stableToken).decimals || 0
+            )
+          )
+          .toString(),
         symbol: getTokenInfo(srcChain, stableToken).symbol,
       },
       sourcetoken: {
@@ -121,11 +135,12 @@ export const FundsDepositedWithMessageHandler = async (
 
   const id = `${srcChain}_${dstChain}_${depositId}_${chainToContract(srcChain)}_${chainToContract(dstChain)}`; // messageHash.toLowerCase()
 
+  // prettier-ignore
   // feetoken - stable token
   await feeDB.create({
     id: id.toLowerCase(),
     feeToken: {
-      amount: new BigNumber(amount).minus(destAmount),
+      amount: new BigNumber(amount).minus(destAmount).dividedBy(new BigNumber(10).pow(getTokenInfo(dstChain, tokenPath.stableToken.address).decimals || 0)).toString(),
       symbol: getTokenInfo(dstChain, tokenPath.stableToken.address).symbol,
     },
     usdValue: "",

@@ -78,7 +78,12 @@ export const FundsDepositedHandler = async (
   await feeDB.create({
     id: id.toLowerCase(),
     feeToken: {
-      amount: new BigNumber(amount).minus(destAmount),
+      amount: new BigNumber(amount)
+        .minus(destAmount)
+        .dividedBy(
+          new BigNumber(10).pow(tokenInfo.decimals || 0) // as decimals can be ""
+        )
+        .toString(),
       symbol: tokenInfo.symbol,
     },
     usdValue: "",
@@ -87,12 +92,20 @@ export const FundsDepositedHandler = async (
   const tokenList = {
     sourcetoken: {
       address: srcToken,
-      amount: amount,
+      amount: new BigNumber(amount)
+        .dividedBy(
+          new BigNumber(10).pow(tokenInfo.decimals || 0) // as decimals can be ""
+        )
+        .toString(),
       symbol: tokenInfo.symbol,
     },
     stableToken: {
       address: srcToken,
-      amount: amount,
+      amount: new BigNumber(amount)
+        .dividedBy(
+          new BigNumber(10).pow(tokenInfo.decimals || 0) // as decimals can be ""
+        )
+        .toString(),
       symbol: tokenInfo.symbol,
     },
   };

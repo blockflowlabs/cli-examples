@@ -10,33 +10,33 @@ type Token = {
 };
 
 export interface Destination {
-  id: String; // message hash
+  id: String;
   blocktimestamp: Number;
   blockNumber: Number;
   chainId: String;
   transactionHash: String;
   destnationtoken: Token;
   stableToken: Token;
-  recipientAddress: String; // Contract from where txn came
-  receiverAddress: String; // Who received the funds
+  recipientAddress: String;
+  receiverAddress: String;
   paidId: String;
   forwarderAddress: String;
   messageHash: String;
-  execFlag: Boolean; // for swap related transaction
+  execFlag: Boolean;
   execData: String;
   usdValue: String;
 }
 
 export interface Source {
-  id: String; // message hash
+  id: String;
   blocktimestamp: Number;
   blockNumber: Number;
   chainId: String;
   transactionHash: String;
   sourcetoken: Token;
   stableToken: Token;
-  depositorAddress: String; // Contract from where txn came
-  senderAddress: String; // Who triggered the transaction
+  depositorAddress: String;
+  senderAddress: String;
   depositId: String;
   messageHash: String;
   partnerId: String;
@@ -54,10 +54,10 @@ export interface FeeInfo {
 //DepositInfoUpdate
 export interface DepositInfoUpdate {
   id: String;
-  updateId: String; // eventNonce
+  updateId: String;
   isWithdraw: Boolean;
   transactionHash: String;
-  refundOutboundId: String; // NA
+  refundOutboundId: String;
 }
 
 // GasLeaked, emitted with fundPaidWithMessage
@@ -75,7 +75,7 @@ type competitorData = {
 
 export interface ExtraInfo {
   id: String;
-  flowType: String; //Either Asset Forwarder or Asset bridge or Circle flow or Same chain Swap
+  flowType: String;
   gasFeeUsd: String;
   bridgeFeeUsd: String;
   // competitorData: competitorData;
