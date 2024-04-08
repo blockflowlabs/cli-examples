@@ -1,34 +1,87 @@
-export interface CrossTransferSrc {
-  id: string; // depositID_src_dst
-  partnerId: string;
-  depositId: string;
-  depositor: string;
-  recipient: string;
+type native = {
+  amount: String;
+  symbol: String;
+};
 
-  srcTxHash: string;
-  srcBlockNumber: string;
-  srcTokenAmount: string;
-  senderAddress: string;
-  srcTxTime: string;
-  srcTxStatus: string;
-  srcChain: string;
+type Token = {
+  address: String;
+  amount: String;
+  symbol: String;
+};
 
-  dstChain: string;
-  dstToken: string;
-  dstTokenAmount: string;
+export interface Destination {
+  id: String;
+  blocktimestamp: Number;
+  blockNumber: Number;
+  chainId: String;
+  transactionHash: String;
+  destnationtoken: Token;
+  stableToken: Token;
+  recipientAddress: String;
+  receiverAddress: String;
+  paidId: String;
+  forwarderAddress: String;
+  messageHash: String;
+  execFlag: Boolean;
+  execData: String;
+  usdValue: String;
 }
 
-export interface CrossTransferDst {
-  id: string; //depositID_src_dst
-  recipient: string;
+export interface Source {
+  id: String;
+  blocktimestamp: Number;
+  blockNumber: Number;
+  chainId: String;
+  transactionHash: String;
+  sourcetoken: Token;
+  stableToken: Token;
+  depositorAddress: String;
+  senderAddress: String;
+  depositId: String;
+  messageHash: String;
+  partnerId: String;
+  message: String;
+  usdValue: String;
+}
 
-  depositId: string;
-  destToken: string;
-  dstAmount: string;
-  srcChain: string;
+// difference between src and destination
+export interface FeeInfo {
+  id: String;
+  feeToken: Token;
+  usdValue: String;
+}
 
-  dstTxHash: string;
-  dstTxTime: string;
-  dstTxStatus: boolean;
-  dstChain: string;
+//DepositInfoUpdate
+export interface DepositInfoUpdate {
+  id: String;
+  updateId: String;
+  isWithdraw: Boolean;
+  transactionHash: String;
+  refundOutboundId: String;
+}
+
+// GasLeaked, emitted with fundPaidWithMessage
+export interface RefuelInfo {
+  id: String;
+  nativeToken: native;
+  nativeRecipient: String;
+}
+
+type competitorData = {
+  gasFeeUsd: String;
+  bridgeFeeUsd: String;
+  time: String;
+};
+
+export interface ExtraInfo {
+  id: String;
+  flowType: String;
+  gasFeeUsd: String;
+  bridgeFeeUsd: String;
+  // competitorData: competitorData;
+  // Partner info from middle-ware contract
+  // sys_fee: String;
+  // partner_fee: String;
+  // forwarder_fee: String;
+  // expiry_timestamp: Number;
 }
