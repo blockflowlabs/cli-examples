@@ -12,6 +12,7 @@ export class Transaction {
     userOpHashes: ["string"],
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
   };
 }
 
@@ -22,6 +23,7 @@ export class Block {
     transactionHashesWithUserOps: ["string"],
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
   };
 }
 
@@ -33,6 +35,7 @@ export class AccountFactory {
     accounts: ["String"],
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
   };
 }
 
@@ -50,6 +53,7 @@ export class Account {
     factory: "String",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
   };
 }
 
@@ -61,6 +65,7 @@ export class Blockchain {
     totalOperations: "String",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
   };
 }
 
@@ -74,6 +79,7 @@ export class Paymaster {
     totalOperations: "String",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
   };
 }
 
@@ -87,6 +93,7 @@ export class Bundler {
     totalOperations: "String",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
   };
 }
 
@@ -102,6 +109,7 @@ export class UserOperationRevertReason {
     createdAt: "String",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
   };
 }
 
@@ -133,6 +141,7 @@ export class UserOperation {
     beneficiary: "string",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
   };
 }
 
@@ -144,6 +153,7 @@ export interface ITransaction extends Document {
   userOpHashes: [string];
   blocknumber: String;
   entityId: String;
+  chainId: String;
 }
 
 export interface IBlock extends Document {
@@ -151,6 +161,7 @@ export interface IBlock extends Document {
   transactionHashesWithUserOps: [string];
   blocknumber: String;
   entityId: String;
+  chainId: String;
 }
 
 export interface IAccountFactory extends Document {
@@ -159,6 +170,7 @@ export interface IAccountFactory extends Document {
   accounts: [String];
   blocknumber: String;
   entityId: String;
+  chainId: String;
 }
 
 export interface IAccount extends Document {
@@ -173,6 +185,7 @@ export interface IAccount extends Document {
   factory: String;
   blocknumber: String;
   entityId: String;
+  chainId: String;
 }
 
 export interface IBlockchain extends Document {
@@ -181,6 +194,7 @@ export interface IBlockchain extends Document {
   totalOperations: String;
   blocknumber: String;
   entityId: String;
+  chainId: String;
 }
 
 export interface IPaymaster extends Document {
@@ -191,6 +205,7 @@ export interface IPaymaster extends Document {
   totalOperations: String;
   blocknumber: String;
   entityId: String;
+  chainId: String;
 }
 
 export interface IBundler extends Document {
@@ -201,6 +216,7 @@ export interface IBundler extends Document {
   totalOperations: String;
   blocknumber: String;
   entityId: String;
+  chainId: String;
 }
 
 export interface IUserOperationRevertReason extends Document {
@@ -213,6 +229,7 @@ export interface IUserOperationRevertReason extends Document {
   createdAt: String;
   blocknumber: String;
   entityId: String;
+  chainId: String;
 }
 
 export interface IUserOperation extends Document {
@@ -244,4 +261,5 @@ export interface IUserOperation extends Document {
   beneficiary: string;
   blocknumber: String;
   entityId: String;
+  chainId: String;
 }
