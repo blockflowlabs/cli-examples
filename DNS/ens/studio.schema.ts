@@ -100,7 +100,6 @@ interface TextChanged {
   resolver: String;
   transactionID: String;
   key: String;
-  value: String;
 }
 
 interface NameChanged {
