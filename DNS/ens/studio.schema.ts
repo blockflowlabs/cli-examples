@@ -135,7 +135,6 @@ interface PubkeyChanged {
 interface ContenthashChanged {
   id: String;
   resolver: String;
-  blockNumber: Number;
   transactionID: String;
   hash: String;
 }

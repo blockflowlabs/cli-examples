@@ -1,7 +1,11 @@
 import { IEventContext, Instance } from "@blockflow-labs/utils";
 
+import {
+  createResolverID,
+  createEventID,
+  getResolver,
+} from "../../../utils/helper";
 import { AbiChanged, Resolver } from "../../../types/schema";
-import { createResolverID, createEventID } from "../../../utils/helper";
 
 /**
  * @dev Event::ABIChanged(bytes32 node, uint256 contentType)
@@ -20,7 +24,7 @@ export const ABIChangedHandler = async (
   contentType = contentType.toString();
 
   const AbiChangedDB: Instance = bind(AbiChanged);
-  createResolver(node, log.log_address, bind(Resolver));
+  await getResolver(node, log.log_address, bind(Resolver));
 
   await AbiChangedDB.create({
     id: createEventID(context).toLowerCase(),
@@ -29,20 +33,3 @@ export const ABIChangedHandler = async (
     contentType,
   });
 };
-
-async function createResolver(
-  node: string,
-  address: string,
-  resolverDB: Instance
-) {
-  let id = createResolverID(node, address);
-  let resolver = await resolverDB.findOne({ id: id.toLowerCase() });
-
-  resolver ??= await resolverDB.create({
-    id: id.toLowerCase(),
-    domain: node,
-    address: address,
-  });
-
-  return resolver;
-}

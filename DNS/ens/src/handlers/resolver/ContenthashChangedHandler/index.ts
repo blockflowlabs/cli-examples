@@ -1,7 +1,11 @@
 import { IEventContext, Instance, IBind } from "@blockflow-labs/utils";
 
-import { ContenthashChangeHelper } from "./helper";
-import { ContenthashChanged, Resolver } from "../../../types/schema";
+import {
+  createResolverID,
+  createEventID,
+  getResolver,
+} from "../../../utils/helper";
+import { ContenthashChanged, IResolver, Resolver } from "../../../types/schema";
 
 /**
  * @dev Event::ContenthashChanged(bytes32 node, bytes hash)
@@ -10,37 +14,30 @@ import { ContenthashChanged, Resolver } from "../../../types/schema";
  */
 export const ContenthashChangedHandler = async (
   context: IEventContext,
-  bind: IBind,
+  bind: IBind
 ) => {
   // Implement your event handler logic for ContenthashChanged here
-
-  const { event, transaction, block, log } = context;
+  const { event, transaction, log } = context;
   let { node, hash } = event;
 
   node = node.toString();
   hash = hash.toString();
 
-  const helper = new ContenthashChangeHelper(
-    bind(Resolver),
-    bind(ContenthashChanged),
+  const resolverDB: Instance = bind(Resolver);
+  const resolver: IResolver = await getResolver(
+    node,
+    log.log_address,
+    resolverDB
   );
 
-  let resolver = await helper.getOrCreateResolver(
-    node,
-    transaction.transaction_to_address,
-  );
   resolver.contentHash = hash;
-  await helper.saveResolver(resolver);
+  await resolverDB.save(resolver);
 
-  let resolverEvent = await helper.createContentHashChanged(
-    helper.createEventID(context),
-  );
-  resolverEvent.resolver = helper.createResolverID(
-    node,
-    transaction.transaction_to_address,
-  );
-  resolverEvent.blockNumber = context.block.block_number;
-  resolverEvent.transactionID = context.transaction.transaction_hash;
-  resolverEvent.hash = hash;
-  await helper.saveContentHashChanged(resolverEvent);
+  const ContenthashChangedDB: Instance = bind(ContenthashChanged);
+  await ContenthashChangedDB.create({
+    id: createEventID(context).toLowerCase(),
+    resolver: createResolverID(node, log.log_address),
+    transactionID: transaction.transaction_hash,
+    hash: hash,
+  });
 };
