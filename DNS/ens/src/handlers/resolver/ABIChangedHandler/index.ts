@@ -1,7 +1,6 @@
-import { IEventContext } from "@blockflow-labs/utils";
+import { IEventContext, Instance } from "@blockflow-labs/utils";
 
-import { AbiChangeHelper } from "./helper";
-import { AbiChanged } from "../../../types/schema";
+import { AbiChanged, Resolver } from "../../../types/schema";
 
 /**
  * @dev Event::ABIChanged(bytes32 node, uint256 contentType)
@@ -13,23 +12,47 @@ export const ABIChangedHandler = async (
   bind: Function
 ) => {
   // Implement your event handler logic for ABIChanged here
-
-  const { event, transaction } = context;
+  const { event, transaction, log } = context;
   let { node, contentType } = event;
 
   node = node.toString();
+  contentType = contentType.toString();
 
-  const helper = new AbiChangeHelper(bind(AbiChanged));
+  const AbiChangedDB: Instance = bind(AbiChanged);
+  createResolver(node, log.log_address, bind(Resolver));
 
-  let resolverEvent = await helper.createAbiChanged(
-    helper.createEventID(context)
-  );
-  resolverEvent.resolver = resolverEvent.resolver = helper.createResolverID(
-    node,
-    transaction.transaction_to_address
-  );
-  resolverEvent.blockNumber = context.block.block_number;
-  resolverEvent.transactionID = context.transaction.transaction_hash;
-  resolverEvent.contentType = contentType;
-  await helper.saveAbiChanged(resolverEvent);
+  await AbiChangedDB.create({
+    id: createEventID(context).toLowerCase(),
+    resolver: createResolverID(node, log.log_address).toLowerCase(),
+    transactionID: transaction.transaction_hash,
+    contentType,
+  });
 };
+
+async function createResolver(
+  node: string,
+  address: string,
+  resolverDB: Instance
+) {
+  let id = createResolverID(node, address);
+  let resolver = await resolverDB.findOne({ id: id.toLowerCase() });
+
+  resolver ??= await resolverDB.create({
+    id: id.toLowerCase(),
+    domain: node,
+    address: address,
+  });
+
+  return resolver;
+}
+
+export function createResolverID(node: string, resolver: string): string {
+  return resolver.concat("-").concat(node);
+}
+
+function createEventID(context: IEventContext): string {
+  return context.block.block_number
+    .toString()
+    .concat("-")
+    .concat(context.log.log_index.toString());
+}

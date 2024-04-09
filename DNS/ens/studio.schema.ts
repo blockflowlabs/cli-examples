@@ -121,7 +121,6 @@ interface NameChanged {
 interface AbiChanged {
   id: String;
   resolver: String;
-  blockNumber: Number;
   transactionID: String;
   contentType: Number;
 }
