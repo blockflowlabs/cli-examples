@@ -10,7 +10,7 @@ import { ContenthashChanged, Resolver } from "../../../types/schema";
  */
 export const ContenthashChangedHandler = async (
   context: IEventContext,
-  bind: IBind
+  bind: IBind,
 ) => {
   // Implement your event handler logic for ContenthashChanged here
 
@@ -22,22 +22,22 @@ export const ContenthashChangedHandler = async (
 
   const helper = new ContenthashChangeHelper(
     bind(Resolver),
-    bind(ContenthashChanged)
+    bind(ContenthashChanged),
   );
 
   let resolver = await helper.getOrCreateResolver(
     node,
-    transaction.transaction_to_address
+    transaction.transaction_to_address,
   );
   resolver.contentHash = hash;
   await helper.saveResolver(resolver);
 
   let resolverEvent = await helper.createContentHashChanged(
-    helper.createEventID(context)
+    helper.createEventID(context),
   );
   resolverEvent.resolver = helper.createResolverID(
     node,
-    transaction.transaction_to_address
+    transaction.transaction_to_address,
   );
   resolverEvent.blockNumber = context.block.block_number;
   resolverEvent.transactionID = context.transaction.transaction_hash;

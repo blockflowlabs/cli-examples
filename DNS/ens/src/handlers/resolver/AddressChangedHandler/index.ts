@@ -10,7 +10,7 @@ import { MulticoinAddrChanged, Resolver } from "../../../types/schema";
  */
 export const AddressChangedHandler = async (
   context: IEventContext,
-  bind: Function
+  bind: Function,
 ) => {
   // Implement your event handler logic for AddressChanged here
 
@@ -23,12 +23,12 @@ export const AddressChangedHandler = async (
 
   const helper = new AddressChangeHelper(
     bind(Resolver),
-    bind(MulticoinAddrChanged)
+    bind(MulticoinAddrChanged),
   );
 
   let resolver = await helper.getOrCreateResolver(
     node,
-    transaction.transaction_to_address
+    transaction.transaction_to_address,
   );
 
   if (!resolver.coinTypes) {
@@ -42,7 +42,7 @@ export const AddressChangedHandler = async (
   }
 
   let resolverEvent = await helper.createAddressChanged(
-    helper.createEventID(context)
+    helper.createEventID(context),
   );
   resolverEvent.resolver = resolver.id.toLowerCase();
   resolverEvent.blockNumber = context.block.block_number;

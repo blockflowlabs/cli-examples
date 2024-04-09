@@ -43,7 +43,7 @@ export class ContenthashChangeHelper {
     } catch (error) {
       await this.RESOLVER.updateOne(
         { id: resolver.id.toLowerCase() },
-        resolver
+        resolver,
       );
     }
   }

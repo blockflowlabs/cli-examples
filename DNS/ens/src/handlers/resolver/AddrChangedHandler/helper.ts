@@ -10,7 +10,7 @@ export class AddrChangeHelper {
     account: Instance,
     domain: Instance,
     resolver: Instance,
-    addrChange: Instance
+    addrChange: Instance,
   ) {
     this.DOMAIN = domain;
     this.ACCOUNT = account;
@@ -70,7 +70,7 @@ export class AddrChangeHelper {
     } catch (error) {
       await this.RESOLVER.updateOne(
         { id: resolver.id.toLowerCase() },
-        resolver
+        resolver,
       );
     }
   }

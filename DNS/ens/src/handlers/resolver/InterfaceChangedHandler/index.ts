@@ -10,7 +10,7 @@ import { InterfaceChanged } from "../../../types/schema";
  */
 export const InterfaceChangedHandler = async (
   context: IEventContext,
-  bind: Function
+  bind: Function,
 ) => {
   // Implement your event handler logic for InterfaceChanged here
 
@@ -23,12 +23,12 @@ export const InterfaceChangedHandler = async (
   const helper = new InterfaceChangeHelper(bind(InterfaceChanged));
 
   let resolverEvent = await helper.createInterfaceChanged(
-    helper.createEventID(context)
+    helper.createEventID(context),
   );
 
   resolverEvent.resolver = helper.createResolverID(
     node,
-    transaction.transaction_to_address
+    transaction.transaction_to_address,
   );
   resolverEvent.blockNumber = context.block.block_number;
   resolverEvent.transactionID = context.transaction.transaction_hash;

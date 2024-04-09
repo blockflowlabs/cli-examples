@@ -9,7 +9,7 @@ import { PubkeyChanged } from "../../../types/schema";
  */
 export const PubkeyChangedHandler = async (
   context: IEventContext,
-  bind: Function
+  bind: Function,
 ) => {
   // Implement your event handler logic for PubkeyChanged here
   const { event, transaction } = context;
@@ -22,11 +22,11 @@ export const PubkeyChangedHandler = async (
   const helper = new PubkeyChangeHelper(bind(PubkeyChanged));
 
   let resolverEvent = await helper.createPubkeyChanged(
-    helper.createEventID(context)
+    helper.createEventID(context),
   );
   resolverEvent.resolver = helper.createResolverID(
     node,
-    transaction.transaction_to_address
+    transaction.transaction_to_address,
   );
 
   resolverEvent.blockNumber = context.block.block_number;

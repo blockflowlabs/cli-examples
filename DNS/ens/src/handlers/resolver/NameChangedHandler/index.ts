@@ -10,7 +10,7 @@ import { NameChangeHelper } from "./helper";
  */
 export const NameChangedHandler = async (
   context: IEventContext,
-  bind: Function
+  bind: Function,
 ) => {
   // Implement your event handler logic for NameChanged here
   const { event, transaction } = context;
@@ -23,12 +23,12 @@ export const NameChangedHandler = async (
   const helper = new NameChangeHelper(bind(NameChanged));
 
   let resolverEvent = await helper.createNameChanged(
-    helper.createEventID(context)
+    helper.createEventID(context),
   );
 
   resolverEvent.resolver = helper.createResolverID(
     node,
-    transaction.transaction_to_address
+    transaction.transaction_to_address,
   );
   resolverEvent.blockNumber = context.block.block_number;
   resolverEvent.transactionID = context.transaction.transaction_hash;

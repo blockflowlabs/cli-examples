@@ -10,7 +10,7 @@ import { TextChanged, Resolver } from "../../../types/schema";
  */
 export const TextChangedHandler = async (
   context: IEventContext,
-  bind: Function
+  bind: Function,
 ) => {
   // Implement your event handler logic for TextChanged here
   const { event, transaction } = context;
@@ -24,7 +24,7 @@ export const TextChangedHandler = async (
 
   let resolver = await helper.getOrCreateResolver(
     node,
-    transaction.transaction_to_address
+    transaction.transaction_to_address,
   );
 
   if (!resolver.texts || resolver.texts.length === 0) {
@@ -38,12 +38,12 @@ export const TextChangedHandler = async (
   }
 
   let resolverEvent = await helper.createTextChanged(
-    helper.createEventID(context)
+    helper.createEventID(context),
   );
 
   resolverEvent.resolver = helper.createResolverID(
     node,
-    transaction.transaction_to_address
+    transaction.transaction_to_address,
   );
   resolverEvent.blockNumber = context.block.block_number;
   resolverEvent.transactionID = context.transaction.transaction_hash;

@@ -10,7 +10,7 @@ import { VersionChanged, Resolver, Domain } from "../../../types/schema";
  */
 export const VersionChangedHandler = async (
   context: IEventContext,
-  bind: Function
+  bind: Function,
 ) => {
   // Implement your event handler logic for VersionChanged here
   const { event, transaction } = context;
@@ -22,15 +22,15 @@ export const VersionChangedHandler = async (
   const helper = new VersionChangeHelper(
     bind(Domain),
     bind(Resolver),
-    bind(VersionChanged)
+    bind(VersionChanged),
   );
 
   let resolverEvent = await helper.createVersionChanged(
-    helper.createEventID(context)
+    helper.createEventID(context),
   );
   resolverEvent.resolver = helper.createResolverID(
     node,
-    transaction.transaction_to_address
+    transaction.transaction_to_address,
   );
   resolverEvent.blockNumber = context.block.block_number;
   resolverEvent.transactionID = context.transaction.transaction_hash;
@@ -45,7 +45,7 @@ export const VersionChangedHandler = async (
 
   let resolver = await helper.getOrCreateResolver(
     node,
-    transaction.transaction_to_address
+    transaction.transaction_to_address,
   );
   resolver.addr = null;
   resolver.contentHash = null;

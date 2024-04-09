@@ -57,7 +57,7 @@ export class VersionChangeHelper {
     } catch (error) {
       await this.RESOLVER.updateOne(
         { id: resolver.id.toLowerCase() },
-        resolver
+        resolver,
       );
     }
   }

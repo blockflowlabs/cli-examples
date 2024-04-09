@@ -47,7 +47,7 @@ export class AddressChangeHelper {
     } catch (error) {
       await this.RESOLVER.updateOne(
         { id: resolver.id.toLowerCase() },
-        resolver
+        resolver,
       );
     }
   }

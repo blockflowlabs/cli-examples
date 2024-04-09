@@ -10,7 +10,7 @@ import { Account, Resolver, Domain, AddrChanged } from "../../../types/schema";
  */
 export const AddrChangedHandler = async (
   context: IEventContext,
-  bind: Function
+  bind: Function,
 ) => {
   // Implement your event handler logic for AddrChanged here
   const { event, transaction } = context;
@@ -23,7 +23,7 @@ export const AddrChangedHandler = async (
     bind(Account),
     bind(Domain),
     bind(Resolver),
-    bind(AddrChanged)
+    bind(AddrChanged),
   );
 
   const account = await helper.createAccountChanged(a);
@@ -42,7 +42,7 @@ export const AddrChangedHandler = async (
   }
 
   let resolverEvent = await helper.createAddrChanged(
-    helper.createEventID(context)
+    helper.createEventID(context),
   );
   resolverEvent.resolver = resolver.id;
   resolverEvent.blockNumber = context.block.block_number;

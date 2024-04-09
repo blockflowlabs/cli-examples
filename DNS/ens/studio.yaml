@@ -5,27 +5,30 @@ userId: d699d33d-d3f3-47c3-8d4b-2132360f64ee
 projectId: d699d33d-d3f3-47c3-8d4b-2132360f64ee
 network: Ethereum
 user: dev_user
+execution: parallel
 schema:
   file: ./studio.schema.ts
 Resources:
-  # - Name: ensRegistry
-  #   Abi: src/abis/ensRegistry.json
-  #   Type: contract/event
-  #   Address: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e"
-  #   Triggers:
-  #     - Event: Transfer(bytes32 indexed,address)
-  #       Handler: src/handlers/ensRegistry/TransferHandler/index.TransferHandler
-  # - Name: baseRegistrar
-  #   Abi: src/abis/BaseRegistrar.json
-  #   Type: contract/event
-  #   Address: "0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85"
-  #   Triggers:
-  #     - Event: NameRegistered(uint256 indexed,address indexed,uint256)
-  #       Handler: src/handlers/BaseRegistrar/NameRegisteredHandler/index.NameRegisteredHandler
-  #     - Event: NameRenewed(uint256 indexed,uint256)
-  #       Handler: src/handlers/BaseRegistrar/NameRenewedHandler/index.NameRenewedHandler
-  #     - Event: Transfer(address indexed,address indexed,uint256 indexed)
-  #       Handler: src/handlers/BaseRegistrar/TransferHandler/index.TransferHandler
+  - Name: ensRegistry
+    Abi: src/abis/ensRegistry.json
+    Type: contract/event
+    Address: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e"
+    Triggers:
+      - Event: Transfer(bytes32 indexed,address)
+        Handler: src/handlers/ensRegistry/TransferHandler/index.TransferHandler
+
+  - Name: baseRegistrar
+    Abi: src/abis/BaseRegistrar.json
+    Type: contract/event
+    Address: "0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85"
+    Triggers:
+      - Event: NameRegistered(uint256 indexed,address indexed,uint256)
+        Handler: src/handlers/BaseRegistrar/NameRegisteredHandler/index.NameRegisteredHandler
+      - Event: NameRenewed(uint256 indexed,uint256)
+        Handler: src/handlers/BaseRegistrar/NameRenewedHandler/index.NameRenewedHandler
+      - Event: Transfer(address indexed,address indexed,uint256 indexed)
+        Handler: src/handlers/BaseRegistrar/TransferHandler/index.TransferHandler
+
   - Name: resolver
     Abi: src/abis/resolver.json
     Type: contract/event
@@ -39,13 +42,17 @@ Resources:
         Handler: src/handlers/resolver/AddressChangedHandler/index.AddressChangedHandler
       - Event: ContenthashChanged(bytes32 indexed,bytes)
         Handler: src/handlers/resolver/ContenthashChangedHandler/index.ContenthashChangedHandler
+      - Event: DNSRecordChanged(bytes32 indexed,bytes,uint16,bytes)
+        Handler: src/handlers/resolver/DNSRecordChangedHandler/index.DNSRecordChangedHandler
+      - Event: DNSRecordDeleted(bytes32 indexed,bytes,uint16)
+        Handler: src/handlers/resolver/DNSRecordDeletedHandler/index.DNSRecordDeletedHandler
+      - Event: DNSZoneCleared(bytes32 indexed)
+        Handler: src/handlers/resolver/DNSZoneClearedHandler/index.DNSZoneClearedHandler
       - Event: InterfaceChanged(bytes32 indexed,bytes4 indexed,address)
         Handler: src/handlers/resolver/InterfaceChangedHandler/index.InterfaceChangedHandler
       - Event: NameChanged(bytes32 indexed,string)
         Handler: src/handlers/resolver/NameChangedHandler/index.NameChangedHandler
       - Event: PubkeyChanged(bytes32 indexed,bytes32,bytes32)
         Handler: src/handlers/resolver/PubkeyChangedHandler/index.PubkeyChangedHandler
-      - Event: TextChanged(bytes32 indexed,string indexed,string,string)
+      - Event: TextChanged(bytes32 indexed,string indexed,string)
         Handler: src/handlers/resolver/TextChangedHandler/index.TextChangedHandler
-      - Event: VersionChanged(bytes32 indexed,uint64)
-        Handler: src/handlers/resolver/VersionChangedHandler/index.VersionChangedHandler
