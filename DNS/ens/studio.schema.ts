@@ -94,7 +94,6 @@ interface AddrChanged {
 interface MulticoinAddrChanged {
   id: String;
   resolver: string;
-  blockNumber: Number;
   transactionID: String;
   coinType: Number;
   addr: String;

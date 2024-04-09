@@ -121,7 +121,6 @@ export class AddrChanged {
   static schema = {
     id: { type: "String", index: true },
     resolver: "String",
-    blockNumber: "Number",
     transactionID: "String",
     addr: "String",
     entityId: { type: "String", index: true },
@@ -355,7 +354,6 @@ export interface ITransfer extends Document {
 export interface IAddrChanged extends Document {
   id: String;
   resolver: String;
-  blockNumber: Number;
   transactionID: String;
   addr: String;
   blocknumber: String;

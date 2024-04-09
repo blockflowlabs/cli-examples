@@ -1,6 +1,5 @@
 import { IEventContext, Instance } from "@blockflow-labs/utils";
 
-import { createResolverID, createEventID } from "../../../utils/helper";
 import {
   Account,
   Resolver,
@@ -8,6 +7,7 @@ import {
   AddrChanged,
   IDomain,
 } from "../../../types/schema";
+import { createResolverID, createEventID } from "../../../utils/helper";
 
 /**
  * @dev Event::AddrChanged(bytes32 node, address a)

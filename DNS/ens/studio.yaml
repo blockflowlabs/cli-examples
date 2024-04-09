@@ -9,25 +9,25 @@ execution: parallel
 schema:
   file: ./studio.schema.ts
 Resources:
-  - Name: ensRegistry
-    Abi: src/abis/ensRegistry.json
-    Type: contract/event
-    Address: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e"
-    Triggers:
-      - Event: Transfer(bytes32 indexed,address)
-        Handler: src/handlers/ensRegistry/TransferHandler/index.TransferHandler
+  # - Name: ensRegistry
+  #   Abi: src/abis/ensRegistry.json
+  #   Type: contract/event
+  #   Address: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e"
+  #   Triggers:
+  #     - Event: Transfer(bytes32 indexed,address)
+  #       Handler: src/handlers/ensRegistry/TransferHandler/index.TransferHandler
 
-  - Name: baseRegistrar
-    Abi: src/abis/BaseRegistrar.json
-    Type: contract/event
-    Address: "0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85"
-    Triggers:
-      - Event: NameRegistered(uint256 indexed,address indexed,uint256)
-        Handler: src/handlers/BaseRegistrar/NameRegisteredHandler/index.NameRegisteredHandler
-      - Event: NameRenewed(uint256 indexed,uint256)
-        Handler: src/handlers/BaseRegistrar/NameRenewedHandler/index.NameRenewedHandler
-      - Event: Transfer(address indexed,address indexed,uint256 indexed)
-        Handler: src/handlers/BaseRegistrar/TransferHandler/index.TransferHandler
+  # - Name: baseRegistrar
+  #   Abi: src/abis/BaseRegistrar.json
+  #   Type: contract/event
+  #   Address: "0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85"
+  #   Triggers:
+  #     - Event: NameRegistered(uint256 indexed,address indexed,uint256)
+  #       Handler: src/handlers/BaseRegistrar/NameRegisteredHandler/index.NameRegisteredHandler
+  #     - Event: NameRenewed(uint256 indexed,uint256)
+  #       Handler: src/handlers/BaseRegistrar/NameRenewedHandler/index.NameRenewedHandler
+  #     - Event: Transfer(address indexed,address indexed,uint256 indexed)
+  #       Handler: src/handlers/BaseRegistrar/TransferHandler/index.TransferHandler
 
   - Name: resolver
     Abi: src/abis/resolver.json
