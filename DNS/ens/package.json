@@ -3,7 +3,8 @@
   "version": "1.0.4",
   "description": "BlockFlow Studio Project",
   "scripts": {
-    "compile": "tsc -b"
+    "compile": "tsc -b",
+    "deploy-resolver": "blockflow instance-deploy"
   },
   "dependencies": {
     "@blockflow-labs/utils": "^1.0.7"

@@ -64,7 +64,7 @@ interface Resolver {
   addr: String;
   contentHash: String;
   texts: [String];
-  coinTypes: [Number];
+  coinTypes: [String];
   events: [ResolverEvent];
 }
 
@@ -91,7 +91,7 @@ interface MulticoinAddrChanged {
   id: String;
   resolver: string;
   transactionID: String;
-  coinType: Number;
+  coinType: String;
   addr: String;
 }
 
@@ -113,7 +113,7 @@ interface AbiChanged {
   id: String;
   resolver: String;
   transactionID: String;
-  contentType: Number;
+  contentType: String;
 }
 
 interface PubkeyChanged {
