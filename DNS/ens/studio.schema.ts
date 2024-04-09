@@ -142,7 +142,6 @@ interface ContenthashChanged {
 interface InterfaceChanged {
   id: String;
   resolver: String;
-  blockNumber: Number;
   transactionID: String;
   interfaceID: String;
   implementer: String;
