@@ -29,7 +29,7 @@ export const PubkeyChangedHandler = async (
 
   await PubkeyChangedDB.create({
     id: createEventID(context).toLowerCase(),
-    resolver: createResolverID(node, log.log_address),
+    resolver: createResolverID(node, log.log_address).toLowerCase(),
     transactionID: transaction.transaction_hash,
     x,
     y,

@@ -46,7 +46,7 @@ export const AddressChangedHandler = async (
   const MulticoinAddrChangedDB: Instance = bind(MulticoinAddrChanged);
   await MulticoinAddrChangedDB.create({
     id: createEventID(context).toLowerCase(),
-    resolver: createResolverID(node, log.log_address),
+    resolver: resolver.id,
     transactionID: transaction.transaction_hash,
     coinType: coinType,
     addr: newAddress,

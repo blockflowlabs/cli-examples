@@ -30,7 +30,7 @@ export const NameChangedHandler = async (
 
   await NameChangedDB.create({
     id: createEventID(context).toLowerCase(),
-    resolver: createResolverID(node, log.log_address),
+    resolver: createResolverID(node, log.log_address).toLowerCase(),
     transactionID: transaction.transaction_hash,
     name,
   });

@@ -36,7 +36,7 @@ export const ContenthashChangedHandler = async (
   const ContenthashChangedDB: Instance = bind(ContenthashChanged);
   await ContenthashChangedDB.create({
     id: createEventID(context).toLowerCase(),
-    resolver: createResolverID(node, log.log_address),
+    resolver: resolver.id,
     transactionID: transaction.transaction_hash,
     hash: hash,
   });

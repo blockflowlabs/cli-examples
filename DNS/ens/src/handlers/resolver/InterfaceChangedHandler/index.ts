@@ -29,7 +29,7 @@ export const InterfaceChangedHandler = async (
   const InterfaceChangedDB: Instance = bind(InterfaceChanged);
   await InterfaceChangedDB.create({
     id: createEventID(context).toLowerCase(),
-    resolver: createResolverID(node, log.log_address),
+    resolver: createResolverID(node, log.log_address).toLowerCase(),
     transactionID: transaction.transaction_hash,
     interfaceID,
     implementer,
