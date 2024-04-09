@@ -1,6 +1,7 @@
 import { IEventContext, Instance } from "@blockflow-labs/utils";
 
 import { AbiChanged, Resolver } from "../../../types/schema";
+import { createResolverID, createEventID } from "../../../utils/helper";
 
 /**
  * @dev Event::ABIChanged(bytes32 node, uint256 contentType)
@@ -44,15 +45,4 @@ async function createResolver(
   });
 
   return resolver;
-}
-
-export function createResolverID(node: string, resolver: string): string {
-  return resolver.concat("-").concat(node);
-}
-
-function createEventID(context: IEventContext): string {
-  return context.block.block_number
-    .toString()
-    .concat("-")
-    .concat(context.log.log_index.toString());
 }

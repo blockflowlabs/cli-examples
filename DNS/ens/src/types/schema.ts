@@ -6,9 +6,9 @@ export class Account {
   static entity = "Account";
   static schema = {
     id: { type: "String", index: true },
-    domains: "[String]",
-    wrappedDomains: "[String]",
-    registrations: "[String]",
+    domains: ["String"],
+    wrappedDomains: ["String"],
+    registrations: ["String"],
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
@@ -25,7 +25,7 @@ export class Registration {
     cost: "Number",
     registrant: "String",
     labelName: "String",
-    events: "[String]",
+    events: ["String"],
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
@@ -65,11 +65,11 @@ export class Domain {
     labelName: "String",
     labelhash: "String",
     parent: "String",
-    subdomains: "[String]",
+    subdomains: ["String"],
     subdomainCount: "Number",
     resolvedAddress: "String",
     owner: "String",
-    resolver: "Resolver",
+    resolver: "String",
     ttl: "Number",
     isMigrated: "Boolean",
     createdAt: "Number",
@@ -77,11 +77,7 @@ export class Domain {
     wrappedOwner: "String",
     expiryDate: "Number",
     wrappedDomain: "String",
-    events: {
-      domain: "String",
-      blockNumber: "Number",
-      transactionID: "String",
-    },
+    events: "{ domain: String; blockNumber: Number; transactionID: String; }",
     registration: "String",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
@@ -97,13 +93,9 @@ export class Resolver {
     address: "String",
     addr: "String",
     contentHash: "String",
-    texts: "[String]",
-    coinTypes: "[Number]",
-    events: {
-      resolver: "String",
-      blockNumber: "Number",
-      transactionID: "String",
-    },
+    texts: ["String"],
+    coinTypes: ["Number"],
+    events: "{ resolver: String; blockNumber: Number; transactionID: String; }",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
@@ -187,7 +179,6 @@ export class AbiChanged {
   static schema = {
     id: { type: "String", index: true },
     resolver: "String",
-    blockNumber: "Number",
     transactionID: "String",
     contentType: "Number",
     entityId: { type: "String", index: true },
@@ -309,7 +300,7 @@ export interface IDomain extends Document {
   subdomainCount: Number;
   resolvedAddress: String;
   owner: String;
-  resolver: Resolver;
+  resolver: String;
   ttl: Number;
   isMigrated: Boolean;
   createdAt: Number;
@@ -410,7 +401,6 @@ export interface INameChanged extends Document {
 export interface IAbiChanged extends Document {
   id: String;
   resolver: String;
-  blockNumber: Number;
   transactionID: String;
   contentType: Number;
   blocknumber: String;

@@ -41,7 +41,7 @@ interface Domain {
   subdomainCount: Number;
   resolvedAddress: String;
   owner: String;
-  resolver: Resolver;
+  resolver: String;
   ttl: Number;
   isMigrated: Boolean;
   createdAt: Number;
@@ -87,7 +87,6 @@ interface Transfer {
 interface AddrChanged {
   id: String;
   resolver: String;
-  blockNumber: Number;
   transactionID: String;
   addr: String;
 }
