@@ -111,7 +111,6 @@ interface TextChanged {
 interface NameChanged {
   id: String;
   resolver: String;
-  blockNumber: Number;
   transactionID: String;
   name: String;
 }
