@@ -125,7 +125,6 @@ interface AbiChanged {
 interface PubkeyChanged {
   id: String;
   resolver: String;
-  blockNumber: Number;
   transactionID: String;
   x: String;
   y: String;
