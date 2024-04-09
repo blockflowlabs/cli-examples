@@ -53,12 +53,11 @@ interface Domain {
   registration: String;
 }
 
-interface DomainEvent {
-  id: String;
+type DomainEvent = {
   domain: String;
   blockNumber: Number;
   transactionID: String;
-}
+};
 
 interface Resolver {
   id: String;
@@ -71,12 +70,11 @@ interface Resolver {
   events: [ResolverEvent];
 }
 
-interface ResolverEvent {
-  id: String;
+type ResolverEvent = {
   resolver: String;
   blockNumber: Number;
   transactionID: String;
-}
+};
 
 interface Transfer {
   id: String;
