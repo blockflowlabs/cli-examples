@@ -6,7 +6,6 @@ import {
   getResolver,
 } from "../../../utils/helper";
 import { NameChanged, Resolver } from "../../../types/schema";
-import { NameChangeHelper } from "./helper";
 
 /**
  * @dev Event::NameChanged(bytes32 node, string name)
@@ -30,7 +29,8 @@ export const NameChangedHandler = async (
   const NameChangedDB: Instance = bind(NameChanged);
 
   await NameChangedDB.create({
-    id: createResolverID(node, log.log_address).toLowerCase(),
+    id: createEventID(context).toLowerCase(),
+    resolver: createResolverID(node, log.log_address),
     transactionID: transaction.transaction_hash,
     name,
   });

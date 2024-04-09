@@ -52,7 +52,7 @@ export const AddrChangedHandler = async (
 
   const resolverEventDB: Instance = bind(AddrChanged);
   await resolverEventDB.create({
-    id: createEventID(context),
+    id: createEventID(context).toLowerCase(),
     resolver: createResolverID(node, log.log_address).toLowerCase(),
     addr: a,
     transactionID: transaction.transaction_hash,
