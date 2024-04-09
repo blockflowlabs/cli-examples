@@ -1,7 +1,7 @@
-import { IEventContext } from "@blockflow-labs/utils";
+import { IEventContext, Instance } from "@blockflow-labs/utils";
 
-import { TextChangeHelper } from "./helper";
-import { TextChanged, Resolver } from "../../../types/schema";
+import { createEventID, getResolver } from "../../../utils/helper";
+import { TextChanged, Resolver, IResolver } from "../../../types/schema";
 
 /**
  * @dev Event::TextChanged(bytes32 node, string indexedKey, string key, string value)
@@ -10,44 +10,35 @@ import { TextChanged, Resolver } from "../../../types/schema";
  */
 export const TextChangedHandler = async (
   context: IEventContext,
-  bind: Function,
+  bind: Function
 ) => {
   // Implement your event handler logic for TextChanged here
-  const { event, transaction } = context;
+  const { event, transaction, log } = context;
   let { node, indexedKey, key, value } = event;
 
   node = node.toString();
   key = key.toString();
   value = value.toString();
 
-  const helper = new TextChangeHelper(bind(Resolver), bind(TextChanged));
-
-  let resolver = await helper.getOrCreateResolver(
+  const resolverDB: Instance = bind(Resolver);
+  const resolver: IResolver = await getResolver(
     node,
-    transaction.transaction_to_address,
+    log.log_address,
+    resolverDB
   );
 
-  if (!resolver.texts || resolver.texts.length === 0) {
-    resolver.texts = [key];
-    await helper.saveResolver(resolver);
-  } else {
-    if (!resolver.texts.includes(key)) {
-      resolver.texts.push(key);
-      await helper.saveResolver(resolver);
-    }
-  }
+  //  @ts-ignore
+  if (resolver.texts.length === 0) resolver.texts = [key];
+  else if (!resolver.texts.includes(key)) resolver.texts.push(key);
 
-  let resolverEvent = await helper.createTextChanged(
-    helper.createEventID(context),
-  );
+  await resolverDB.save(resolver);
 
-  resolverEvent.resolver = helper.createResolverID(
-    node,
-    transaction.transaction_to_address,
-  );
-  resolverEvent.blockNumber = context.block.block_number;
-  resolverEvent.transactionID = context.transaction.transaction_hash;
-  resolverEvent.key = key;
-  resolverEvent.value = value;
-  await helper.saveTextChanged(resolverEvent);
+  const TextChangedDB: Instance = bind(TextChanged);
+  await TextChangedDB.create({
+    id: createEventID(context).toLowerCase(),
+    resolver: resolver.id,
+    transactionID: transaction.transaction_hash,
+    key,
+    value,
+  });
 };

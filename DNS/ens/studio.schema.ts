@@ -20,7 +20,6 @@ interface Registration {
 
 interface RegistrationEvent {
   id: String;
-  blockNumber: Number;
   transactionID: String;
 }
 
@@ -55,7 +54,6 @@ interface Domain {
 
 type DomainEvent = {
   domain: String;
-  blockNumber: Number;
   transactionID: String;
 };
 
@@ -72,14 +70,12 @@ interface Resolver {
 
 type ResolverEvent = {
   resolver: String;
-  blockNumber: Number;
   transactionID: String;
 };
 
 interface Transfer {
   id: String;
   domain: String;
-  blockNumber: Number;
   transactionID: String;
   owner: String;
 }
@@ -102,7 +98,6 @@ interface MulticoinAddrChanged {
 interface TextChanged {
   id: String;
   resolver: String;
-  blockNumber: Number;
   transactionID: String;
   key: String;
   value: String;
@@ -148,7 +143,6 @@ interface InterfaceChanged {
 interface VersionChanged {
   id: String;
   resolver: String;
-  blockNumber: Number;
   transactionID: String;
   version: Number;
 }
