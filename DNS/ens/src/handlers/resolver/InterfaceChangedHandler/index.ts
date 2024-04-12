@@ -1,7 +1,11 @@
-import { IEventContext } from "@blockflow-labs/utils";
+import { IEventContext, Instance } from "@blockflow-labs/utils";
 
-import { InterfaceChangeHelper } from "./helper";
-import { InterfaceChanged } from "../../../types/schema";
+import {
+  createResolverID,
+  createEventID,
+  getResolver,
+} from "../../../utils/helper";
+import { InterfaceChanged, Resolver } from "../../../types/schema";
 
 /**
  * @dev Event::InterfaceChanged(bytes32 node, bytes4 interfaceID, address implementer)
@@ -10,30 +14,24 @@ import { InterfaceChanged } from "../../../types/schema";
  */
 export const InterfaceChangedHandler = async (
   context: IEventContext,
-  bind: Function,
+  bind: Function
 ) => {
   // Implement your event handler logic for InterfaceChanged here
-
   const { event, transaction, block, log } = context;
   let { node, interfaceID, implementer } = event;
 
+  node = node.toString();
   interfaceID = interfaceID.toString();
   implementer = implementer.toString();
 
-  const helper = new InterfaceChangeHelper(bind(InterfaceChanged));
+  await getResolver(node, log.log_address, bind(Resolver));
 
-  let resolverEvent = await helper.createInterfaceChanged(
-    helper.createEventID(context),
-  );
-
-  resolverEvent.resolver = helper.createResolverID(
-    node,
-    transaction.transaction_to_address,
-  );
-  resolverEvent.blockNumber = context.block.block_number;
-  resolverEvent.transactionID = context.transaction.transaction_hash;
-  resolverEvent.interfaceID = interfaceID;
-  resolverEvent.implementer = implementer;
-
-  await helper.saveInterfaceChanged(resolverEvent);
+  const InterfaceChangedDB: Instance = bind(InterfaceChanged);
+  await InterfaceChangedDB.create({
+    id: createEventID(context).toLowerCase(),
+    resolver: createResolverID(node, log.log_address).toLowerCase(),
+    transactionID: transaction.transaction_hash,
+    interfaceID,
+    implementer,
+  });
 };

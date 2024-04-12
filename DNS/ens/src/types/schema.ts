@@ -6,9 +6,9 @@ export class Account {
   static entity = "Account";
   static schema = {
     id: { type: "String", index: true },
-    domains: "[String]",
-    wrappedDomains: "[String]",
-    registrations: "[String]",
+    domains: ["String"],
+    wrappedDomains: ["String"],
+    registrations: ["String"],
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
@@ -25,7 +25,7 @@ export class Registration {
     cost: "Number",
     registrant: "String",
     labelName: "String",
-    events: "[String]",
+    events: ["String"],
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
@@ -36,7 +36,6 @@ export class RegistrationEvent {
   static entity = "RegistrationEvent";
   static schema = {
     id: { type: "String", index: true },
-    blockNumber: "Number",
     transactionID: "String",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
@@ -65,11 +64,11 @@ export class Domain {
     labelName: "String",
     labelhash: "String",
     parent: "String",
-    subdomains: "[String]",
+    subdomains: ["String"],
     subdomainCount: "Number",
     resolvedAddress: "String",
     owner: "String",
-    resolver: "Resolver",
+    resolver: "String",
     ttl: "Number",
     isMigrated: "Boolean",
     createdAt: "Number",
@@ -77,11 +76,7 @@ export class Domain {
     wrappedOwner: "String",
     expiryDate: "Number",
     wrappedDomain: "String",
-    events: {
-      domain: "String",
-      blockNumber: "Number",
-      transactionID: "String",
-    },
+    events: [{ domain: "String", transactionID: "String" }],
     registration: "String",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
@@ -97,13 +92,9 @@ export class Resolver {
     address: "String",
     addr: "String",
     contentHash: "String",
-    texts: "[String]",
-    coinTypes: "[Number]",
-    events: {
-      resolver: "String",
-      blockNumber: "Number",
-      transactionID: "String",
-    },
+    texts: ["String"],
+    coinTypes: ["String"],
+    events: [{ resolver: "String", transactionID: "String" }],
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
@@ -115,7 +106,6 @@ export class Transfer {
   static schema = {
     id: { type: "String", index: true },
     domain: "String",
-    blockNumber: "Number",
     transactionID: "String",
     owner: "String",
     entityId: { type: "String", index: true },
@@ -129,7 +119,6 @@ export class AddrChanged {
   static schema = {
     id: { type: "String", index: true },
     resolver: "String",
-    blockNumber: "Number",
     transactionID: "String",
     addr: "String",
     entityId: { type: "String", index: true },
@@ -143,9 +132,8 @@ export class MulticoinAddrChanged {
   static schema = {
     id: { type: "String", index: true },
     resolver: "string",
-    blockNumber: "Number",
     transactionID: "String",
-    coinType: "Number",
+    coinType: "String",
     addr: "String",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
@@ -158,10 +146,8 @@ export class TextChanged {
   static schema = {
     id: { type: "String", index: true },
     resolver: "String",
-    blockNumber: "Number",
     transactionID: "String",
     key: "String",
-    value: "String",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
@@ -173,7 +159,6 @@ export class NameChanged {
   static schema = {
     id: { type: "String", index: true },
     resolver: "String",
-    blockNumber: "Number",
     transactionID: "String",
     name: "String",
     entityId: { type: "String", index: true },
@@ -187,9 +172,8 @@ export class AbiChanged {
   static schema = {
     id: { type: "String", index: true },
     resolver: "String",
-    blockNumber: "Number",
     transactionID: "String",
-    contentType: "Number",
+    contentType: "String",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
@@ -201,7 +185,6 @@ export class PubkeyChanged {
   static schema = {
     id: { type: "String", index: true },
     resolver: "String",
-    blockNumber: "Number",
     transactionID: "String",
     x: "String",
     y: "String",
@@ -216,7 +199,6 @@ export class ContenthashChanged {
   static schema = {
     id: { type: "String", index: true },
     resolver: "String",
-    blockNumber: "Number",
     transactionID: "String",
     hash: "String",
     entityId: { type: "String", index: true },
@@ -230,7 +212,6 @@ export class InterfaceChanged {
   static schema = {
     id: { type: "String", index: true },
     resolver: "String",
-    blockNumber: "Number",
     transactionID: "String",
     interfaceID: "String",
     implementer: "String",
@@ -245,7 +226,6 @@ export class VersionChanged {
   static schema = {
     id: { type: "String", index: true },
     resolver: "String",
-    blockNumber: "Number",
     transactionID: "String",
     version: "Number",
     entityId: { type: "String", index: true },
@@ -282,7 +262,6 @@ export interface IRegistration extends Document {
 
 export interface IRegistrationEvent extends Document {
   id: String;
-  blockNumber: Number;
   transactionID: String;
   blocknumber: String;
   entityId: String;
@@ -309,7 +288,7 @@ export interface IDomain extends Document {
   subdomainCount: Number;
   resolvedAddress: String;
   owner: String;
-  resolver: Resolver;
+  resolver: String;
   ttl: Number;
   isMigrated: Boolean;
   createdAt: Number;
@@ -326,7 +305,6 @@ export interface IDomain extends Document {
 
 type DomainEvent = {
   domain: String;
-  blockNumber: Number;
   transactionID: String;
 };
 
@@ -337,7 +315,7 @@ export interface IResolver extends Document {
   addr: String;
   contentHash: String;
   texts: [String];
-  coinTypes: [Number];
+  coinTypes: [String];
   events: [ResolverEvent];
   blocknumber: String;
   entityId: String;
@@ -346,14 +324,12 @@ export interface IResolver extends Document {
 
 type ResolverEvent = {
   resolver: String;
-  blockNumber: Number;
   transactionID: String;
 };
 
 export interface ITransfer extends Document {
   id: String;
   domain: String;
-  blockNumber: Number;
   transactionID: String;
   owner: String;
   blocknumber: String;
@@ -364,7 +340,6 @@ export interface ITransfer extends Document {
 export interface IAddrChanged extends Document {
   id: String;
   resolver: String;
-  blockNumber: Number;
   transactionID: String;
   addr: String;
   blocknumber: String;
@@ -375,9 +350,8 @@ export interface IAddrChanged extends Document {
 export interface IMulticoinAddrChanged extends Document {
   id: String;
   resolver: string;
-  blockNumber: Number;
   transactionID: String;
-  coinType: Number;
+  coinType: String;
   addr: String;
   blocknumber: String;
   entityId: String;
@@ -387,10 +361,8 @@ export interface IMulticoinAddrChanged extends Document {
 export interface ITextChanged extends Document {
   id: String;
   resolver: String;
-  blockNumber: Number;
   transactionID: String;
   key: String;
-  value: String;
   blocknumber: String;
   entityId: String;
   chainId: String;
@@ -399,7 +371,6 @@ export interface ITextChanged extends Document {
 export interface INameChanged extends Document {
   id: String;
   resolver: String;
-  blockNumber: Number;
   transactionID: String;
   name: String;
   blocknumber: String;
@@ -410,9 +381,8 @@ export interface INameChanged extends Document {
 export interface IAbiChanged extends Document {
   id: String;
   resolver: String;
-  blockNumber: Number;
   transactionID: String;
-  contentType: Number;
+  contentType: String;
   blocknumber: String;
   entityId: String;
   chainId: String;
@@ -421,7 +391,6 @@ export interface IAbiChanged extends Document {
 export interface IPubkeyChanged extends Document {
   id: String;
   resolver: String;
-  blockNumber: Number;
   transactionID: String;
   x: String;
   y: String;
@@ -433,7 +402,6 @@ export interface IPubkeyChanged extends Document {
 export interface IContenthashChanged extends Document {
   id: String;
   resolver: String;
-  blockNumber: Number;
   transactionID: String;
   hash: String;
   blocknumber: String;
@@ -444,7 +412,6 @@ export interface IContenthashChanged extends Document {
 export interface InterfaceChanged extends Document {
   id: String;
   resolver: String;
-  blockNumber: Number;
   transactionID: String;
   interfaceID: String;
   implementer: String;
@@ -456,7 +423,6 @@ export interface InterfaceChanged extends Document {
 export interface IVersionChanged extends Document {
   id: String;
   resolver: String;
-  blockNumber: Number;
   transactionID: String;
   version: Number;
   blocknumber: String;

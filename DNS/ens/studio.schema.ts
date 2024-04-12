@@ -20,7 +20,6 @@ interface Registration {
 
 interface RegistrationEvent {
   id: String;
-  blockNumber: Number;
   transactionID: String;
 }
 
@@ -41,7 +40,7 @@ interface Domain {
   subdomainCount: Number;
   resolvedAddress: String;
   owner: String;
-  resolver: Resolver;
+  resolver: String;
   ttl: Number;
   isMigrated: Boolean;
   createdAt: Number;
@@ -55,7 +54,6 @@ interface Domain {
 
 type DomainEvent = {
   domain: String;
-  blockNumber: Number;
   transactionID: String;
 };
 
@@ -66,20 +64,18 @@ interface Resolver {
   addr: String;
   contentHash: String;
   texts: [String];
-  coinTypes: [Number];
+  coinTypes: [String];
   events: [ResolverEvent];
 }
 
 type ResolverEvent = {
   resolver: String;
-  blockNumber: Number;
   transactionID: String;
 };
 
 interface Transfer {
   id: String;
   domain: String;
-  blockNumber: Number;
   transactionID: String;
   owner: String;
 }
@@ -87,7 +83,6 @@ interface Transfer {
 interface AddrChanged {
   id: String;
   resolver: String;
-  blockNumber: Number;
   transactionID: String;
   addr: String;
 }
@@ -95,25 +90,21 @@ interface AddrChanged {
 interface MulticoinAddrChanged {
   id: String;
   resolver: string;
-  blockNumber: Number;
   transactionID: String;
-  coinType: Number;
+  coinType: String;
   addr: String;
 }
 
 interface TextChanged {
   id: String;
   resolver: String;
-  blockNumber: Number;
   transactionID: String;
   key: String;
-  value: String;
 }
 
 interface NameChanged {
   id: String;
   resolver: String;
-  blockNumber: Number;
   transactionID: String;
   name: String;
 }
@@ -121,15 +112,13 @@ interface NameChanged {
 interface AbiChanged {
   id: String;
   resolver: String;
-  blockNumber: Number;
   transactionID: String;
-  contentType: Number;
+  contentType: String;
 }
 
 interface PubkeyChanged {
   id: String;
   resolver: String;
-  blockNumber: Number;
   transactionID: String;
   x: String;
   y: String;
@@ -138,7 +127,6 @@ interface PubkeyChanged {
 interface ContenthashChanged {
   id: String;
   resolver: String;
-  blockNumber: Number;
   transactionID: String;
   hash: String;
 }
@@ -146,7 +134,6 @@ interface ContenthashChanged {
 interface InterfaceChanged {
   id: String;
   resolver: String;
-  blockNumber: Number;
   transactionID: String;
   interfaceID: String;
   implementer: String;
@@ -155,7 +142,6 @@ interface InterfaceChanged {
 interface VersionChanged {
   id: String;
   resolver: String;
-  blockNumber: Number;
   transactionID: String;
   version: Number;
 }

@@ -1,7 +1,11 @@
-import { IEventContext } from "@blockflow-labs/utils";
+import { IEventContext, Instance } from "@blockflow-labs/utils";
 
-import { NameChanged } from "../../../types/schema";
-import { NameChangeHelper } from "./helper";
+import {
+  createResolverID,
+  createEventID,
+  getResolver,
+} from "../../../utils/helper";
+import { NameChanged, Resolver } from "../../../types/schema";
 
 /**
  * @dev Event::NameChanged(bytes32 node, string name)
@@ -10,28 +14,24 @@ import { NameChangeHelper } from "./helper";
  */
 export const NameChangedHandler = async (
   context: IEventContext,
-  bind: Function,
+  bind: Function
 ) => {
   // Implement your event handler logic for NameChanged here
-  const { event, transaction } = context;
+  const { event, transaction, log } = context;
   let { node, name } = event;
 
   node = node.toString();
   name = name.toString();
 
   if (name.indexOf("\u0000") != -1) return;
-  const helper = new NameChangeHelper(bind(NameChanged));
+  await getResolver(node, log.log_address, bind(Resolver));
 
-  let resolverEvent = await helper.createNameChanged(
-    helper.createEventID(context),
-  );
+  const NameChangedDB: Instance = bind(NameChanged);
 
-  resolverEvent.resolver = helper.createResolverID(
-    node,
-    transaction.transaction_to_address,
-  );
-  resolverEvent.blockNumber = context.block.block_number;
-  resolverEvent.transactionID = context.transaction.transaction_hash;
-  resolverEvent.name = name;
-  await helper.saveTextChanged(resolverEvent);
+  await NameChangedDB.create({
+    id: createEventID(context).toLowerCase(),
+    resolver: createResolverID(node, log.log_address).toLowerCase(),
+    transactionID: transaction.transaction_hash,
+    name,
+  });
 };

@@ -1,7 +1,17 @@
-import { IEventContext } from "@blockflow-labs/utils";
+import { IEventContext, Instance } from "@blockflow-labs/utils";
 
-import { VersionChangeHelper } from "./helper";
-import { VersionChanged, Resolver, Domain } from "../../../types/schema";
+import {
+  createEventID,
+  getResolver,
+  createResolverID,
+} from "../../../utils/helper";
+import {
+  VersionChanged,
+  Resolver,
+  Domain,
+  IDomain,
+  IResolver,
+} from "../../../types/schema";
 
 /**
  * @dev Event::VersionChanged(bytes32 node, uint64 newVersion)
@@ -10,46 +20,50 @@ import { VersionChanged, Resolver, Domain } from "../../../types/schema";
  */
 export const VersionChangedHandler = async (
   context: IEventContext,
-  bind: Function,
+  bind: Function
 ) => {
   // Implement your event handler logic for VersionChanged here
-  const { event, transaction } = context;
+  const { event, transaction, log } = context;
   let { node, newVersion } = event;
 
   node = node.toString();
   newVersion = Number(newVersion.toString());
 
-  const helper = new VersionChangeHelper(
-    bind(Domain),
-    bind(Resolver),
-    bind(VersionChanged),
-  );
+  const VersionChangedDB: Instance = bind(VersionChanged);
+  await VersionChangedDB.create({
+    id: createEventID(context).toLowerCase(),
+    resolver: createResolverID(node, log.log_address),
+    transactionID: transaction.transaction_hash,
+    version: newVersion,
+  });
 
-  let resolverEvent = await helper.createVersionChanged(
-    helper.createEventID(context),
-  );
-  resolverEvent.resolver = helper.createResolverID(
-    node,
-    transaction.transaction_to_address,
-  );
-  resolverEvent.blockNumber = context.block.block_number;
-  resolverEvent.transactionID = context.transaction.transaction_hash;
-  resolverEvent.version = newVersion;
-  await helper.saveVersionChanged(resolverEvent);
+  const domainDB: Instance = bind(Domain);
+  let domain: IDomain = await domainDB.findOne({
+    id: node.toLowerCase(),
+  });
 
-  let domain = await helper.loadDomain(node);
-  if (domain && domain.resolver === resolverEvent.resolver) {
-    domain.resolvedAddress = null;
-    await helper.saveDomain(domain);
+  // prettier-ignore
+  if (domain && domain.resolver.toString().toLowerCase() === createResolverID(node, log.log_address).toLowerCase()) {
+    // @ts-ignore
+    domain.resolvedAddress = "";
+    await domainDB.save(domain);
   }
 
-  let resolver = await helper.getOrCreateResolver(
+  const resolverDB: Instance = bind(Resolver);
+  const resolver: IResolver = await getResolver(
     node,
-    transaction.transaction_to_address,
+    log.log_address,
+    resolverDB
   );
-  resolver.addr = null;
-  resolver.contentHash = null;
-  resolver.texts = null;
-  resolver.coinTypes = null;
-  await helper.saveResolver(resolver);
+
+  // @ts-ignore
+  resolver.addr = "";
+  // @ts-ignore
+  resolver.contentHash = "";
+  // @ts-ignore
+  resolver.texts = [];
+  // @ts-ignore
+  resolver.coinTypes = [];
+
+  await resolverDB.save(resolver);
 };

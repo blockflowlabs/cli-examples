@@ -1,7 +1,15 @@
-import { IEventContext } from "@blockflow-labs/utils";
+import { IEventContext, Instance } from "@blockflow-labs/utils";
 
-import { AddressChangeHelper } from "./helper";
-import { MulticoinAddrChanged, Resolver } from "../../../types/schema";
+import {
+  IResolver,
+  MulticoinAddrChanged,
+  Resolver,
+} from "../../../types/schema";
+import {
+  createResolverID,
+  createEventID,
+  getResolver,
+} from "../../../utils/helper";
 
 /**
  * @dev Event::AddressChanged(bytes32 node, uint256 coinType, bytes newAddress)
@@ -10,44 +18,37 @@ import { MulticoinAddrChanged, Resolver } from "../../../types/schema";
  */
 export const AddressChangedHandler = async (
   context: IEventContext,
-  bind: Function,
+  bind: Function
 ) => {
   // Implement your event handler logic for AddressChanged here
-
-  const { event, transaction } = context;
+  const { event, transaction, log } = context;
   let { node, coinType, newAddress } = event;
 
   node = node.toString();
   coinType = coinType.toString();
   newAddress = newAddress.toString();
 
-  const helper = new AddressChangeHelper(
-    bind(Resolver),
-    bind(MulticoinAddrChanged),
-  );
-
-  let resolver = await helper.getOrCreateResolver(
+  const resolverDB: Instance = bind(Resolver);
+  const resolver: IResolver = await getResolver(
     node,
-    transaction.transaction_to_address,
+    log.log_address,
+    resolverDB
   );
 
-  if (!resolver.coinTypes) {
-    resolver.coinTypes = [coinType];
-    await helper.saveResolver(resolver);
-  } else {
-    if (!resolver.coinTypes.includes(coinType)) {
-      resolver.texts.push(coinType);
-      await helper.saveResolver(resolver);
-    }
-  }
+  // since coinTypes is of type [Number]
+  // @ts-ignore
+  if (resolver.coinTypes.length === 0) resolver.coinTypes = [coinType];
+  else if (!resolver.coinTypes.includes(coinType))
+    resolver.coinTypes.push(coinType);
 
-  let resolverEvent = await helper.createAddressChanged(
-    helper.createEventID(context),
-  );
-  resolverEvent.resolver = resolver.id.toLowerCase();
-  resolverEvent.blockNumber = context.block.block_number;
-  resolverEvent.transactionID = context.transaction.transaction_hash;
-  resolverEvent.coinType = coinType;
-  resolverEvent.addr = newAddress;
-  await helper.saveAddressChanged(resolverEvent);
+  await resolverDB.save(resolver);
+
+  const MulticoinAddrChangedDB: Instance = bind(MulticoinAddrChanged);
+  await MulticoinAddrChangedDB.create({
+    id: createEventID(context).toLowerCase(),
+    resolver: resolver.id,
+    transactionID: transaction.transaction_hash,
+    coinType: coinType,
+    addr: newAddress,
+  });
 };
