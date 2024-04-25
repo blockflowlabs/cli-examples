@@ -1,36 +1,19 @@
-name: erc20
+name: Project Apollo
 description: A top-secret research project to the moon
-startBlock: 8957421
+startBlock: latest
 userId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
+projectId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
 network: Ethereum
-user: John doe
-config:
-  - contract: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
-    name: usdc
-    abi: src/abis/erc20.json
-    handler: src/handlers/erc20.ts
-    event:
-      - Transfer(address indexed,address indexed,uint256)
-  - contract: "0xdAC17F958D2ee523a2206206994597C13D831ec7"
-    name: usdt
-    abi: src/abis/erc20.json
-    handler: src/handlers/erc20.ts
-    event:
-      - Transfer(address indexed,address indexed,uint256)
-  - contract: "0x6B175474E89094C44Da98b954EedeAC495271d0F"
-    name: dai
-    abi: src/abis/erc20.json
-    handler: src/handlers/erc20.ts
-    event:
-      - Transfer(address indexed,address indexed,uint256)
-api:
-  - name: meta-data
-    description: metadata
-    handler: src/apis/metadata/index.ts
-    status: 1
-  - name: balances
-    description: balances
-    handler: src/apis/balances/index.ts
-    instances:
-      # - 2c6a2c2c-c536-48d8-af20-5d95ce794c81 // TODO:
-    status: 1
+user: Jane-doe
+schema:
+  file: ./studio.schema.ts
+execution: parallel
+Resources:
+  - Name: erc20
+    Abi: src/abis/erc20.json
+    Type: contract/event
+    Address:
+      file: tokens.json
+    Triggers:
+      - Event: Transfer(address indexed,address indexed,uint256)
+        Handler: src/transfer/index.TransferHandler

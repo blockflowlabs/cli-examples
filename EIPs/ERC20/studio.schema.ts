@@ -1,0 +1,23 @@
+import { String, Number } from "@blockflow-labs/utils";
+
+export interface Transfer {
+  id: String;
+  from_address: string;
+  to_address: string;
+  token_address: string;
+  token_name: string;
+  token_symbol: string;
+  raw_amount: Number;
+  raw_amount_str: string;
+  amount: Number;
+  amount_str: string;
+  usd_amount: Number;
+  usd_exchange_rate: string;
+  transfer_type: string;
+  transaction_from_address: string;
+  transaction_to_address: string;
+  transaction_hash: string;
+  log_index: string;
+  block_timestamp: string;
+  block_hash: string;
+}
