@@ -35,3 +35,20 @@ export interface Balance {
   block_timestamp: string;
   block_hash: string;
 }
+
+export interface Token {
+  id: String;
+  address: string;
+  decimals: string;
+  name: string;
+  symbol: string;
+  description: string;
+  holder_count: string;
+  burn_event_count: string;
+  mint_event_count: string;
+  transfer_event_count: string;
+  total_supply: string;
+  total_burned: string;
+  total_minted: string;
+  total_transferred: string;
+}

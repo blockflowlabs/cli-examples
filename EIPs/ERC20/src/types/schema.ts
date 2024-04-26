@@ -50,6 +50,29 @@ export class Balance {
   };
 }
 
+export class Token {
+  static entity = "Token";
+  static schema = {
+    id: { type: "String", index: true },
+    address: "string",
+    decimals: "string",
+    name: "string",
+    symbol: "string",
+    description: "string",
+    holder_count: "string",
+    burn_event_count: "string",
+    mint_event_count: "string",
+    transfer_event_count: "string",
+    total_supply: "string",
+    total_burned: "string",
+    total_minted: "string",
+    total_transferred: "string",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+  };
+}
+
 import { String, Number } from "@blockflow-labs/utils";
 
 export interface ITransfer extends Document {
@@ -89,6 +112,26 @@ export interface IBalance extends Document {
   usd_exchange_rate: string;
   block_timestamp: string;
   block_hash: string;
+  blocknumber: String;
+  entityId: String;
+  chainId: String;
+}
+
+export interface IToken extends Document {
+  id: String;
+  address: string;
+  decimals: string;
+  name: string;
+  symbol: string;
+  description: string;
+  holder_count: string;
+  burn_event_count: string;
+  mint_event_count: string;
+  transfer_event_count: string;
+  total_supply: string;
+  total_burned: string;
+  total_minted: string;
+  total_transferred: string;
   blocknumber: String;
   entityId: String;
   chainId: String;
