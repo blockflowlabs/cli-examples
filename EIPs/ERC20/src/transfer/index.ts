@@ -124,33 +124,32 @@ const updateTransfer = async (
   const amount = new BigNumber(value).dividedBy(10 ** tokenDecimals);
 
   // Create a new transfer if it doesn't exist
-  if (!transfer) {
-    transfer = await transferDB.create({
-      id: transactionId,
-      from_address: fromAddress,
-      to_address: toAddress,
-      token_address: tokenAddress,
-      token_name: tokenMetadata.name,
-      token_symbol: tokenMetadata.symbol,
-      raw_amount: Number(value),
-      raw_amount_str: value,
-      amount: Number(amount),
-      amount_str: amount.toString(),
-      usd_amount: Number(value),
-      usd_exchange_rate: value,
-      transfer_type: transferType,
-      transaction_from_address: transaction.transaction_from_address
-        .toString()
-        .toLowerCase(),
-      transaction_to_address: transaction.transaction_to_address
-        .toString()
-        .toLowerCase(),
-      transaction_hash: transaction.transaction_hash.toString(),
-      log_index: log.log_index.toString(),
-      block_timestamp: block.block_timestamp.toString(),
-      block_hash: block.block_hash.toString(),
-    });
-  }
+
+  transfer ??= await transferDB.create({
+    id: transactionId,
+    from_address: fromAddress,
+    to_address: toAddress,
+    token_address: tokenAddress,
+    token_name: tokenMetadata.name,
+    token_symbol: tokenMetadata.symbol,
+    raw_amount: Number(value),
+    raw_amount_str: value,
+    amount: Number(amount),
+    amount_str: amount.toString(),
+    usd_amount: Number(value),
+    usd_exchange_rate: value,
+    transfer_type: transferType,
+    transaction_from_address: transaction.transaction_from_address
+      .toString()
+      .toLowerCase(),
+    transaction_to_address: transaction.transaction_to_address
+      .toString()
+      .toLowerCase(),
+    transaction_hash: transaction.transaction_hash.toString(),
+    log_index: log.log_index.toString(),
+    block_timestamp: block.block_timestamp.toString(),
+    block_hash: block.block_hash.toString(),
+  });
 
   return transfer;
 };
@@ -171,20 +170,11 @@ const updateBalance = async (
   let user: IBalance = await balanceDB.findOne({ id: userTokenId });
 
   // If user doesn't exist, create a new record
-  if (!user) {
-    user = await balanceDB.create({ id: userTokenId, raw_balance: "0" });
-    user.address = address;
-    user.token_address = tokenAddress;
-    user.token_name = tokenMetadata.name;
-    user.token_symbol = tokenMetadata.symbol;
-    user.usd_amount = "0";
-    user.usd_exchange_rate = "0";
-    user.block_timestamp = block.block_timestamp;
-    user.block_hash = block.block_hash;
-  }
+
+  user ??= await balanceDB.create({ id: userTokenId });
 
   // Update raw balance
-  user.raw_balance = new BigNumber(user.raw_balance)
+  user.raw_balance = new BigNumber(user.raw_balance || "0")
     .plus(isSender ? `-${value}` : value)
     .toString();
 
@@ -196,6 +186,10 @@ const updateBalance = async (
     .toString();
 
   // Update user properties
+  user.address = address;
+  user.token_address = tokenAddress;
+  user.token_name = tokenMetadata.name;
+  user.token_symbol = tokenMetadata.symbol;
   user.balance = balance;
   user.usd_amount = balance;
   user.usd_exchange_rate = balance;
@@ -218,24 +212,23 @@ const updateToken = async (
   let token: IToken = await tokenDB.findOne({ id: tokenAddress });
 
   // If token doesn't exist, create a new record
-  if (!token) {
-    token = await tokenDB.create({
-      id: tokenAddress,
-      address: tokenAddress,
-      decimals: tokenMetadata.decimals,
-      name: tokenMetadata.name,
-      symbol: tokenMetadata.symbol,
-      description: tokenMetadata.description,
-      holder_count: holderCount,
-      burn_event_count: "0",
-      mint_event_count: "0",
-      transfer_event_count: "0",
-      total_supply: "0",
-      total_burned: "0",
-      total_minted: "0",
-      total_transferred: "0",
-    });
-  }
+
+  token ??= await tokenDB.create({
+    id: tokenAddress,
+    address: tokenAddress,
+    decimals: tokenMetadata.decimals,
+    name: tokenMetadata.name,
+    symbol: tokenMetadata.symbol,
+    description: tokenMetadata.description,
+    holder_count: holderCount,
+    burn_event_count: "0",
+    mint_event_count: "0",
+    transfer_event_count: "0",
+    total_supply: "0",
+    total_burned: "0",
+    total_minted: "0",
+    total_transferred: "0",
+  });
 
   if (transaction_type === "transfer") {
     token.transfer_event_count = new BigNumber(token.transfer_event_count)
