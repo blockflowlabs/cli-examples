@@ -1,44 +1,51 @@
 import {
   IEventContext,
   IBind,
+  IBlock,
   Instance,
   ISecrets,
 } from "@blockflow-labs/utils";
 import { BigNumber } from "bignumber.js";
 import { TOKENS } from "../utils/tokens";
 import { ITransfer, Transfer } from "../types/schema";
+import { IBalance, Balance } from "../types/schema";
 
 export const TransferHandler = async (
   { event, transaction, block, log }: IEventContext,
   bind: IBind,
   _: ISecrets
 ) => {
+  // Constants
   const zeroAddress = "0x0000000000000000000000000000000000000000";
 
+  // Extract data from event
   const tokenAddress = log.log_address.toString().toLowerCase();
   const token = TOKENS[tokenAddress];
-
   const fromAddress = event.from.toString().toLowerCase();
   const toAddress = event.to.toString().toLowerCase();
-
   const tokenDecimals = parseInt(token.decimals.toString());
   const amount = new BigNumber(event.value.toString()).dividedBy(
     10 ** tokenDecimals
   );
 
+  // Determine transfer type
   let transferType = "";
   if (fromAddress === zeroAddress) transferType = "mint";
   else if (toAddress === zeroAddress) transferType = "burn";
   else transferType = "transfer";
 
-  const uniqueId = `${transaction.transaction_hash.toString()}:${log.log_index.toString()}`;
+  // Construct transaction ID
+  const transactionId =
+    `${transaction.transaction_hash.toString()}:${log.log_index.toString()}`.toLowerCase();
 
+  // Database instance for transfers
   const transferDB: Instance = bind(Transfer);
-  let transfer: ITransfer = await transferDB.findOne({ id: uniqueId });
+  let transfer: ITransfer = await transferDB.findOne({ id: transactionId });
 
+  // Create a new transfer if it doesn't exist
   if (!transfer) {
     transfer = await transferDB.create({
-      id: uniqueId.toLowerCase(),
+      id: transactionId,
       from_address: fromAddress,
       to_address: toAddress,
       token_address: tokenAddress,
@@ -47,7 +54,7 @@ export const TransferHandler = async (
       raw_amount: Number(event.value),
       raw_amount_str: event.value.toString(),
       amount: Number(amount),
-      amount_str: amount,
+      amount_str: amount.toString(),
       usd_amount: Number(event.value),
       usd_exchange_rate: event.value.toString(),
       transfer_type: transferType,
@@ -64,5 +71,78 @@ export const TransferHandler = async (
     });
   }
 
+  // Database instance for balances
+  const balanceDB: Instance = bind(Balance);
+
+  let sender: IBalance = await updateBalance(
+    balanceDB,
+    fromAddress,
+    event.value.toString(),
+    token,
+    block,
+    true
+  );
+
+  let reciever: IBalance = await updateBalance(
+    balanceDB,
+    toAddress,
+    event.value.toString(),
+    token,
+    block,
+    false
+  );
+
+  // Save transfer to database
   await transferDB.save(transfer);
+
+  // Save balances
+  await Promise.all([balanceDB.save(sender), balanceDB.save(reciever)]);
+};
+
+// Update balance function
+const updateBalance = async (
+  balanceDB: Instance,
+  address: string,
+  value: string,
+  token: any,
+  block: IBlock,
+  isSender: boolean
+): Promise<IBalance> => {
+  // Construct user-token ID
+  const userTokenId = `${address}-${token.symbol}`.toLowerCase();
+  let user: IBalance = await balanceDB.findOne({ id: userTokenId });
+
+  // If user doesn't exist, create a new record
+  if (!user) {
+    user = await balanceDB.create({ id: userTokenId, raw_balance: "0" });
+    user.address = address;
+    user.token_address = token.address;
+    user.token_name = token.name;
+    user.token_symbol = token.symbol;
+    user.usd_amount = "0";
+    user.usd_exchange_rate = "0";
+    user.block_timestamp = block.block_timestamp;
+    user.block_hash = block.block_hash;
+  }
+
+  // Update raw balance
+  user.raw_balance = new BigNumber(user.raw_balance)
+    .plus(isSender ? `-${value}` : value)
+    .toString();
+
+  // Convert raw balance to balance considering token decimals
+  const tokenDecimals = parseInt(token.decimals.toString());
+
+  const balance = new BigNumber(user.raw_balance)
+    .dividedBy(10 ** tokenDecimals)
+    .toString();
+
+  // Update user properties
+  user.balance = balance;
+  user.usd_amount = balance;
+  user.usd_exchange_rate = balance;
+  user.block_timestamp = block.block_timestamp;
+  user.block_hash = block.block_hash;
+
+  return user;
 };

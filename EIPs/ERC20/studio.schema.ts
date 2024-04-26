@@ -21,3 +21,17 @@ export interface Transfer {
   block_timestamp: string;
   block_hash: string;
 }
+
+export interface Balance {
+  id: String;
+  address: string;
+  token_address: string;
+  token_name: string;
+  token_symbol: string;
+  balance: string;
+  raw_balance: string;
+  usd_amount: string;
+  usd_exchange_rate: string;
+  block_timestamp: string;
+  block_hash: string;
+}

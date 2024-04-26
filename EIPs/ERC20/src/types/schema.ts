@@ -30,6 +30,26 @@ export class Transfer {
   };
 }
 
+export class Balance {
+  static entity = "Balance";
+  static schema = {
+    id: { type: "String", index: true },
+    address: "string",
+    token_address: "string",
+    token_name: "string",
+    token_symbol: "string",
+    balance: "string",
+    raw_balance: "string",
+    usd_amount: "string",
+    usd_exchange_rate: "string",
+    block_timestamp: "string",
+    block_hash: "string",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+  };
+}
+
 import { String, Number } from "@blockflow-labs/utils";
 
 export interface ITransfer extends Document {
@@ -50,6 +70,23 @@ export interface ITransfer extends Document {
   transaction_to_address: string;
   transaction_hash: string;
   log_index: string;
+  block_timestamp: string;
+  block_hash: string;
+  blocknumber: String;
+  entityId: String;
+  chainId: String;
+}
+
+export interface IBalance extends Document {
+  id: String;
+  address: string;
+  token_address: string;
+  token_name: string;
+  token_symbol: string;
+  balance: string;
+  raw_balance: string;
+  usd_amount: string;
+  usd_exchange_rate: string;
   block_timestamp: string;
   block_hash: string;
   blocknumber: String;
