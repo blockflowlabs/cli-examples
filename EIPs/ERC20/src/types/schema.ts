@@ -44,6 +44,8 @@ export class Balance {
     usd_exchange_rate: "string",
     block_timestamp: "string",
     block_hash: "string",
+    is_past_holder: "boolean",
+    is_holder: "boolean",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
@@ -112,6 +114,8 @@ export interface IBalance extends Document {
   usd_exchange_rate: string;
   block_timestamp: string;
   block_hash: string;
+  is_past_holder: boolean;
+  is_holder: boolean;
   blocknumber: String;
   entityId: String;
   chainId: String;

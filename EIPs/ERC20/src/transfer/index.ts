@@ -16,86 +16,82 @@ import { ITransfer, Transfer } from "../types/schema";
 import { IBalance, Balance } from "../types/schema";
 import { IToken, Token } from "../types/schema";
 
+interface IUpdateBalanceResult {
+  user: IBalance;
+  isFirstTimeHolder: boolean;
+  isActiveHolder: boolean;
+}
+
 export const TransferHandler = async (
   { event, transaction, block, log }: IEventContext,
   bind: IBind,
   _: ISecrets
 ) => {
-  // Constants
   const zeroAddress = "0x0000000000000000000000000000000000000000";
 
-  // Extract data from event
-  const tokenAddress = log.log_address.toString().toLowerCase();
-  const fromAddress = event.from.toString().toLowerCase();
-  const toAddress = event.to.toString().toLowerCase();
+  const tokenAddress = log.log_address.toLowerCase();
+  const fromAddress = event.from.toLowerCase();
+  const toAddress = event.to.toLowerCase();
 
-  // Determine transfer type
-  let transferType = "";
-  if (fromAddress === zeroAddress) transferType = "mint";
-  else if (toAddress === zeroAddress) transferType = "burn";
-  else transferType = "transfer";
+  const transferType =
+    fromAddress === zeroAddress
+      ? "mint"
+      : toAddress === zeroAddress
+        ? "burn"
+        : "transfer";
 
-  // Database instance for transfers
   const transferDB: Instance = bind(Transfer);
-
-  // Database instance for balances
   const balanceDB: Instance = bind(Balance);
-
-  // Database instance for tokens
   const tokenDB: Instance = bind(Token);
 
-  let transfer: ITransfer = await updateTransfer(
+  const transfer = await updateTransfer(
     transferDB,
     tokenAddress,
     fromAddress,
     toAddress,
-    event.value.toString(),
+    event.value,
     transferType,
     transaction,
     block,
     log
   );
-
-  //Save Transfer
   await transferDB.save(transfer);
 
-  let sender: IBalance = await updateBalance(
+  const senderResult: IUpdateBalanceResult = await updateBalance(
     balanceDB,
     tokenAddress,
     fromAddress,
-    event.value.toString(),
+    event.value,
     block,
     true
   );
-
-  let reciever: IBalance = await updateBalance(
+  const receiverResult: IUpdateBalanceResult = await updateBalance(
     balanceDB,
     tokenAddress,
     toAddress,
-    event.value.toString(),
+    event.value,
     block,
     false
   );
 
-  // Save Balances
-  await Promise.all([balanceDB.save(sender), balanceDB.save(reciever)]);
+  await Promise.all([
+    balanceDB.save(senderResult.user),
+    balanceDB.save(receiverResult.user),
+  ]);
 
-  // Finding holders
-  // const holderCount = await balanceDB.find({
-  //   token_address: tokenAddress,
-  //   blocknumber: block.block_number,
-  // });
+  let holderCount =
+    (senderResult.isFirstTimeHolder ? 1 : 0) +
+    (receiverResult.isFirstTimeHolder ? 1 : 0);
+  holderCount -= senderResult.isActiveHolder ? 0 : 1;
+  holderCount -= receiverResult.isActiveHolder ? 0 : 1;
 
-  let token: IToken = await updateToken(
+  const token = await updateToken(
     tokenDB,
     tokenAddress,
-    event.value.toString(),
+    event.value,
     transferType,
-    "0"
-    // holderCount.toString()
+    holderCount.toString()
   );
-
-  //Save Token
   await tokenDB.save(token);
 };
 
@@ -162,16 +158,25 @@ const updateBalance = async (
   value: string,
   block: IBlock,
   isSender: boolean
-): Promise<IBalance> => {
+): Promise<IUpdateBalanceResult> => {
   const tokenMetadata = TOKENS[tokenAddress];
+  let isFirstTimeHolder = false;
+  let isActiveHolder = true;
 
   // Construct user-token ID
   const userTokenId = `${address}-${tokenAddress}`.toLowerCase();
   let user: IBalance = await balanceDB.findOne({ id: userTokenId });
 
   // If user doesn't exist, create a new record
+  if (!user) {
+    user ??= await balanceDB.create({
+      id: userTokenId,
+      is_past_holder: true,
+      is_holder: true,
+    });
 
-  user ??= await balanceDB.create({ id: userTokenId });
+    isFirstTimeHolder = true;
+  }
 
   // Update raw balance
   user.raw_balance = new BigNumber(user.raw_balance || "0")
@@ -196,7 +201,12 @@ const updateBalance = async (
   user.block_timestamp = block.block_timestamp;
   user.block_hash = block.block_hash;
 
-  return user;
+  if (user.raw_balance === "0") {
+    user.is_holder = false;
+    isActiveHolder = false;
+  }
+
+  return { user, isFirstTimeHolder, isActiveHolder };
 };
 
 //Update Token DB
@@ -220,7 +230,7 @@ const updateToken = async (
     name: tokenMetadata.name,
     symbol: tokenMetadata.symbol,
     description: tokenMetadata.description,
-    holder_count: holderCount,
+    holder_count: "0",
     burn_event_count: "0",
     mint_event_count: "0",
     transfer_event_count: "0",
@@ -254,7 +264,11 @@ const updateToken = async (
   }
 
   token.total_supply = new BigNumber(token.total_minted)
-    .minus(token.total_minted)
+    .minus(token.total_burned)
+    .toString();
+
+  token.holder_count = new BigNumber(token.holder_count)
+    .plus(holderCount)
     .toString();
 
   return token;
