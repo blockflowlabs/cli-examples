@@ -3,7 +3,8 @@
   "version": "1.0.4",
   "description": "BlockFlow Studio Project",
   "scripts": {
-    "compile": "tsc -b"
+    "compile": "tsc -b",
+    "test": "blockflow instance-test --clean --range 10 --startBlock 19760614"
   },
   "dependencies": {
     "@blockflow-labs/utils": "latest"

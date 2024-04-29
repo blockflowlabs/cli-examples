@@ -27,6 +27,7 @@ export class Transfer {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -49,6 +50,7 @@ export class Balance {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -60,7 +62,6 @@ export class Token {
     decimals: "string",
     name: "string",
     symbol: "string",
-    description: "string",
     holder_count: "string",
     burn_event_count: "string",
     mint_event_count: "string",
@@ -72,6 +73,7 @@ export class Token {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -127,7 +129,6 @@ export interface IToken extends Document {
   decimals: string;
   name: string;
   symbol: string;
-  description: string;
   holder_count: string;
   burn_event_count: string;
   mint_event_count: string;
