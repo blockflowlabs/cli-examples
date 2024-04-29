@@ -44,7 +44,6 @@ export interface Token {
   decimals: string;
   name: string;
   symbol: string;
-  description: string;
   holder_count: string;
   burn_event_count: string;
   mint_event_count: string;
