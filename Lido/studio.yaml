@@ -1,0 +1,92 @@
+name: Lido Finance
+description: A top-secret research project to the moon
+startBlock: latest
+userId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
+projectId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
+network: Ethereum
+user: Jane-doe
+schema:
+  file: ./studio.schema.ts
+execution: parallel
+Resources:
+  - Name: lido
+    Abi: src/abis/lido.json
+    Type: contract/event
+    Address: "0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84"
+    Triggers:
+      - Event: Submitted(address indexed,uint256,address)
+        Handler: src/handlers/lido/submitted/index.SubmittedHandler
+      - Event: Transfer(address indexed,address indexed,uint256)
+        Handler: src/handlers/lido/transfer/index.TransferHandler
+      - Event: SharesBurnt(address indexed,uint256,uint256,uint256)
+        Handler: src/handlers/lido/sharesBurnt/index.SharesBurntHandler
+      - Event: Approval(address indexed,address indexed,uint256)
+        Handler: src/handlers/lido/approval/index.ApprovalHandler
+      - Event: FeeSet(uint16)
+        Handler: src/handlers/lido/feeSet/index.FeeSetHandler
+      - Event: FeeDistributionSet(uint16,uint16,uint16)
+        Handler: src/handlers/lido/feeDistributionSet/index.FeeDistributionSetHandler
+      - Event: LidoLocatorSet(address)
+        Handler: src/handlers/lido/lidoLocatorSet/index.LidoLocatorSetHandler
+      - Event: Resumed()
+        Handler: src/handlers/lido/resumed/index.ResumedHandler
+      - Event: Stopped()
+        Handler: src/handlers/lido/stopped/index.StoppedHandler
+      - Event: ELRewardsVaultSet(address)
+        Handler: src/handlers/lido/elRewardsVaultSet/index.ELRewardsVaultSetHandler
+      - Event: ELRewardsWithdrawalLimitSet(uint256)
+        Handler: src/handlers/lido/elRewardsWithdrawalLimitSet/index.ELRewardsWithdrawalLimitSetHandler
+      - Event: ProtocolContactsSet(address,address,address)
+        Handler: src/handlers/lido/protocolContactsSet/index.ProtocolContactsSetHandler
+      - Event: StakingLimitRemoved()
+        Handler: src/handlers/lido/stakingLimitRemoved/index.StakingLimitRemovedHandler
+      - Event: StakingLimitSet(uint256,uint256)
+        Handler: src/handlers/lido/stakingLimitSet/index.StakingLimitSetHandler
+      - Event: StakingPaused()
+        Handler: src/handlers/lido/stakingPaused/index.StakingPausedHandler
+      - Event: StakingResumed()
+        Handler: src/handlers/lido/stakingResumed/index.StakingResumedHandler
+      - Event: WithdrawalCredentialsSet(bytes32)
+        Handler: src/handlers/lido/withdrawalCredentialsSet/index.WithdrawalCredentialsSetHandler
+      # - Event: BeaconValidatorsUpdated(uint256)
+      #   Handler: src/handlers/lido/index.BeaconValidatorsUpdatedHandler
+      # - Event: MevTxFeeReceived(uint256)
+      #   Handler: src/handlers/lido/index.MevTxFeeReceivedHandler
+      # - Event: ScriptResult(address indexed,bytes,bytes,bytes)
+      #   Handler: src/handlers/lido/index.ScriptResultHandler
+      # - Event: RecoverToVault(address indexed,address indexed,uint256)
+      #   Handler: src/handlers/lido/index.RecoverToVaultHandler
+      # - Event: TransferShares(address indexed,address indexed,uint256)
+      #   Handler: src/handlers/lido/index.TransferSharesHandler
+      # - Event: SharesBurnt(address indexed,uint256,uint256,uint256)
+      #   Handler: src/handlers/lido/index.SharesBurntHandler
+      # - Event: Stopped()
+      #   Handler: src/handlers/lido/index.StoppedHandler
+      # - Event: Transfer(address indexed,address indexed,uint256)
+      #   Handler: src/handlers/lido/index.TransferHandler
+      # - Event: Approval(address indexed,address indexed,uint256)
+      #   Handler: src/handlers/lido/index.ApprovalHandler
+      # - Event: FeeSet(uint16)
+      #   Handler: src/handlers/lido/index.FeeSetHandler
+      # - Event: ELRewardsReceived(uint256)
+      #   Handler: src/handlers/lido/index.ELRewardsReceivedHandler
+      # - Event: WithdrawalCredentialsSet(bytes32)
+      #   Handler: src/handlers/lido/index.WithdrawalCredentialsSetHandler
+      # - Event: Submitted(address indexed,uint256,address)
+      #   Handler: src/handlers/lido/index.SubmittedHandler
+      # - Event: Unbuffered(uint256)
+      #   Handler: src/handlers/lido/index.UnbufferedHandler
+      # - Event: Withdrawal(address indexed,uint256,uint256,bytes32 indexed,uint256)
+      #   Handler: src/handlers/lido/index.WithdrawalHandler
+      # - Event: >-
+      #     ETHDistributed(uint256
+      #     indexed,uint256,uint256,uint256,uint256,uint256)
+      #   Handler: src/handlers/lido/index.ETHDistributedHandler
+      # - Event: >-
+      #     TokenRebased(uint256
+      #     indexed,uint256,uint256,uint256,uint256,uint256,uint256)
+      #   Handler: src/handlers/lido/index.TokenRebasedHandler
+      # - Event: WithdrawalsReceived(uint256)
+      #   Handler: src/handlers/lido/index.WithdrawalsReceivedHandler
+      # - Event: CLValidatorsUpdated(uint256 indexed,uint256,uint256)
+      #   Handler: src/handlers/lido/index.CLValidatorsUpdatedHandler
