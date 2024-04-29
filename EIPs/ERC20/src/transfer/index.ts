@@ -9,8 +9,7 @@ import {
 } from "@blockflow-labs/utils";
 
 import { BigNumber } from "bignumber.js";
-
-import { TOKENS } from "../utils/tokens";
+import { getTokenMetadata } from "../utils/tokens";
 
 import { ITransfer, Transfer } from "../types/schema";
 import { IBalance, Balance } from "../types/schema";
@@ -22,23 +21,20 @@ interface IUpdateBalanceResult {
   isActiveHolder: boolean;
 }
 
+const ZERO_ADDR = "0x0000000000000000000000000000000000000000";
+
 export const TransferHandler = async (
   { event, transaction, block, log }: IEventContext,
   bind: IBind,
   _: ISecrets
 ) => {
-  const zeroAddress = "0x0000000000000000000000000000000000000000";
-
   const tokenAddress = log.log_address.toLowerCase();
   const fromAddress = event.from.toLowerCase();
   const toAddress = event.to.toLowerCase();
+  const value = event.value.toString();
 
-  const transferType =
-    fromAddress === zeroAddress
-      ? "mint"
-      : toAddress === zeroAddress
-        ? "burn"
-        : "transfer";
+  // prettier-ignore
+  const transferType = fromAddress === ZERO_ADDR ? "mint" : toAddress === ZERO_ADDR ? "burn" : "transfer";
 
   const transferDB: Instance = bind(Transfer);
   const balanceDB: Instance = bind(Balance);
@@ -49,7 +45,7 @@ export const TransferHandler = async (
     tokenAddress,
     fromAddress,
     toAddress,
-    event.value,
+    value,
     transferType,
     transaction,
     block,
@@ -61,7 +57,7 @@ export const TransferHandler = async (
     balanceDB,
     tokenAddress,
     fromAddress,
-    event.value,
+    value,
     block,
     true
   );
@@ -69,7 +65,7 @@ export const TransferHandler = async (
     balanceDB,
     tokenAddress,
     toAddress,
-    event.value,
+    value,
     block,
     false
   );
@@ -88,7 +84,7 @@ export const TransferHandler = async (
   const token = await updateToken(
     tokenDB,
     tokenAddress,
-    event.value,
+    value,
     transferType,
     holderCount.toString()
   );
@@ -107,7 +103,7 @@ const updateTransfer = async (
   block: IBlock,
   log: ILog
 ): Promise<ITransfer> => {
-  const tokenMetadata = TOKENS[tokenAddress];
+  const tokenMetadata = getTokenMetadata(tokenAddress);
 
   // Construct transaction ID
   const transactionId =
@@ -159,7 +155,7 @@ const updateBalance = async (
   block: IBlock,
   isSender: boolean
 ): Promise<IUpdateBalanceResult> => {
-  const tokenMetadata = TOKENS[tokenAddress];
+  const tokenMetadata = getTokenMetadata(tokenAddress);
   let isFirstTimeHolder = false;
   let isActiveHolder = true;
 
@@ -217,7 +213,7 @@ const updateToken = async (
   transaction_type: string,
   holderCount: string
 ): Promise<IToken> => {
-  const tokenMetadata = TOKENS[tokenAddress];
+  const tokenMetadata = getTokenMetadata(tokenAddress);
 
   let token: IToken = await tokenDB.findOne({ id: tokenAddress });
 
@@ -229,7 +225,6 @@ const updateToken = async (
     decimals: tokenMetadata.decimals,
     name: tokenMetadata.name,
     symbol: tokenMetadata.symbol,
-    description: tokenMetadata.description,
     holder_count: "0",
     burn_event_count: "0",
     mint_event_count: "0",
