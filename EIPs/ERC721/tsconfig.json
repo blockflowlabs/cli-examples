@@ -2,8 +2,8 @@
   "compilerOptions": {
     "target": "ES6",
     "module": "CommonJS",
-    "outDir": "out",
-    "rootDir": "src",
+    "outDir": "./build/bin/",
+    "rootDir": "./src",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,

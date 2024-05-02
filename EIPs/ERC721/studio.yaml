@@ -1,26 +1,18 @@
-name: Project Apollo
-description: A top-secret research project to the moon
-startBlock: 16630059
+name: erc721
+description: indexer of erc721
+startBlock: 19779702 #13090020
 userId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
+projectId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
 network: Ethereum
-user: John doe
-config:
-  - contract: "0x207e8B8167890CE966d8486b2954114a269A40cc"
-    name: blockflow
-    abi: src/abis/erc721.json
-    handler: src/handlers/erc721.ts
-    event:
-      - Transfer(address indexed,address indexed,uint256 indexed)
-api:
-  - name: balances
-    description: balances
-    handler: src/apis/balances/index.ts
-    instances:
-      # - 2c6a2c2c-c536-48d8-af20-5d95ce794c81 // TODO:
-    status: 1
-  - name: owners
-    description: owners
-    handler: src/apis/owners/index.ts
-    instances:
-      # - 2c6a2c2c-c536-48d8-af20-5d95ce794c81 // TODO:
-    status: 1
+user: nishim
+schema:
+  file: ./studio.schema.ts
+execution: parallel
+Resources:
+  - Name: milady
+    Abi: src/abis/milady.json
+    Type: contract/event
+    Address: "0x5Af0D9827E0c53E4799BB226655A1de152A425a5"
+    Triggers:
+      - Event: Transfer(address indexed,address indexed,uint256 indexed)
+        Handler: src/handlers/milady/index.TransferHandler
