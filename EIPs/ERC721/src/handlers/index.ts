@@ -8,7 +8,6 @@ import {
   ITransaction,
 } from "@blockflow-labs/utils";
 
-
 /**
  * @dev Event::Transfer(address from, address to, uint256 tokenId)
  * @param context trigger object with contains {event: {from ,to ,tokenId }, transaction, block, log}
@@ -16,9 +15,9 @@ import {
  */
 import { BigNumber } from "bignumber.js";
 
-import { ITransfer, Transfer } from "../../types/schema";
-import { IBalance, Balance } from "../../types/schema";
-import { IToken, Token } from "../../types/schema";
+import { ITransfer, Transfer } from "../types/schema";
+import { IBalance, Balance } from "../types/schema";
+import { IToken, Token } from "../types/schema";
 
 interface IUpdateBalanceResult {
   user: IBalance;
@@ -27,10 +26,11 @@ interface IUpdateBalanceResult {
 }
 
 const ZERO_ADDR = "0x0000000000000000000000000000000000000000";
+
 export const TransferHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets,
+  secrets: ISecrets
 ) => {
   // Implement your event handler logic for Transfer here
   const { event, transaction, block, log } = context;
@@ -39,8 +39,9 @@ export const TransferHandler = async (
   const tokenAddress = log.log_address.toLowerCase();
   const fromAddress = event.from.toLowerCase();
   const toAddress = event.to.toLowerCase();
-  const value = "1"
+  const value = "1";
 
+  // prettier-ignore
   const transferType = fromAddress === ZERO_ADDR ? "mint" : toAddress === ZERO_ADDR ? "burn" : "transfer";
 
   const transferDB: Instance = bind(Transfer);
@@ -57,7 +58,7 @@ export const TransferHandler = async (
     transaction,
     block,
     log
-  )
+  );
   await transferDB.save(transfer);
 
   const senderResult: IUpdateBalanceResult = await updateBalance(
@@ -84,8 +85,8 @@ export const TransferHandler = async (
   let holderCount =
     (senderResult.isFirstTimeHolder ? 1 : 0) +
     (receiverResult.isFirstTimeHolder ? 1 : 0);
-    holderCount -= senderResult.isActiveHolder ? 0 : 1;
-    holderCount -= receiverResult.isActiveHolder ? 0 : 1;
+  holderCount -= senderResult.isActiveHolder ? 0 : 1;
+  holderCount -= receiverResult.isActiveHolder ? 0 : 1;
 
   const token = await updateToken(
     tokenDB,
@@ -108,7 +109,6 @@ const updateTransfer = async (
   block: IBlock,
   log: ILog
 ): Promise<ITransfer> => {
-
   // Construct transaction ID
   const transactionId =
     `${transaction.transaction_hash.toString()}:${log.log_index.toString()}`.toLowerCase();
@@ -116,7 +116,6 @@ const updateTransfer = async (
   let transfer: ITransfer = await transferDB.findOne({ id: transactionId });
 
   // Create a new transfer if it doesn't exist
-
   transfer ??= await transferDB.create({
     id: transactionId,
     from_address: fromAddress,
@@ -170,9 +169,6 @@ const updateBalance = async (
     .plus(isSender ? `-${value}` : value)
     .toString();
 
-
-
-
   // Update user properties
   user.address = address;
   user.token_address = tokenAddress;
@@ -194,7 +190,6 @@ const updateToken = async (
   transaction_type: string,
   holderCount: string
 ): Promise<IToken> => {
-
   let token: IToken = await tokenDB.findOne({ id: tokenAddress });
 
   // If token doesn't exist, create a new record

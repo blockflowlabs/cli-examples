@@ -20,6 +20,7 @@ export class Transfer {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -37,6 +38,7 @@ export class Balance {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -56,6 +58,7 @@ export class Token {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -76,6 +79,7 @@ export interface ITransfer extends Document {
   block_hash: string;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -90,6 +94,7 @@ export interface IBalance extends Document {
   is_holder: boolean; // is current holder of any nft?
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -106,5 +111,6 @@ export interface IToken extends Document {
   total_transferred: string;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }

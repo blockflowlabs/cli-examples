@@ -1,6 +1,6 @@
 name: erc721
 description: indexer of erc721
-startBlock: 19779702 #13090020
+startBlock: 19779702 # 13090020
 userId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
 projectId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
 network: Ethereum
@@ -15,4 +15,4 @@ Resources:
     Address: "0x5Af0D9827E0c53E4799BB226655A1de152A425a5"
     Triggers:
       - Event: Transfer(address indexed,address indexed,uint256 indexed)
-        Handler: src/handlers/milady/index.TransferHandler
+        Handler: src/handlers/index.TransferHandler
