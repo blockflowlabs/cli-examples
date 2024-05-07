@@ -13,9 +13,11 @@ export const TRANSFER_SHARES_TOPIC0 =
 
 export const TOKEN_REBASE_EVENT_TOPIC0 = "";
 
-export const EL_REWARDS_TOPIC0 = "";
+export const EL_REWARDS_TOPIC0 =
+  "0xd27f9b0c98bdee27044afa149eadcd2047d6399cb6613a45c5b87e6aca76e6b5";
 
-export const MEV_TX_FEE_RECIEVED_TOPIC0 = "";
+export const MEV_TX_FEE_RECIEVED_TOPIC0 =
+  "0xe38dbc656b8029e533ec787bb92c50c2aea2fe488332519e1b0abdad046dafa5";
 
 export const ADDRESS = {
   INSURANCE_FUND: "",
