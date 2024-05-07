@@ -15,7 +15,7 @@ import { _loadLidoConfigEntity } from "../../../helpers";
 export const LidoLocatorSetHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets
+  secrets: ISecrets,
 ) => {
   // Implement your event handler logic for LidoLocatorSet here
 
@@ -26,7 +26,7 @@ export const LidoLocatorSetHandler = async (
 
   let lidoConfig: ILidoConfig = await _loadLidoConfigEntity(
     lidoConfigDB,
-    context
+    context,
   );
 
   lidoConfig.lido_locator = lidoLocator.toLowerCase();

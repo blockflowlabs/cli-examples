@@ -1,3 +1,29 @@
 export const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
 
 export const ZERO = "0";
+
+export const DEPOSIT_AMOUNT = "32000000000000000000";
+
+export const CALCULATION_UNIT = "10000";
+
+export const SECONDS_PER_YEAR = "31536000";
+
+export const TRANSFER_SHARES_TOPIC0 =
+  "0x9d9c909296d9c674451c0c24f02cb64981eb3b727f99865939192f880a755dcb";
+
+export const TOKEN_REBASE_EVENT_TOPIC0 = "";
+
+export const EL_REWARDS_TOPIC0 = "";
+
+export const MEV_TX_FEE_RECIEVED_TOPIC0 = "";
+
+export const ADDRESS = {
+  INSURANCE_FUND: "",
+  TREASURY: "",
+};
+
+export const PROTOCOL_UPG_BLOCKS = {
+  V1: 11473216,
+  V1_SHARES: 14860268,
+  V2: 17266004,
+};

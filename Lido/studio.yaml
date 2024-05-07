@@ -35,7 +35,8 @@ Resources:
       - Event: ELRewardsVaultSet(address)
         Handler: src/handlers/lido/elRewardsVaultSet/index.ELRewardsVaultSetHandler
       - Event: ELRewardsWithdrawalLimitSet(uint256)
-        Handler: src/handlers/lido/elRewardsWithdrawalLimitSet/index.ELRewardsWithdrawalLimitSetHandler
+        Handler: >-
+          src/handlers/lido/elRewardsWithdrawalLimitSet/index.ELRewardsWithdrawalLimitSetHandler
       - Event: ProtocolContactsSet(address,address,address)
         Handler: src/handlers/lido/protocolContactsSet/index.ProtocolContactsSetHandler
       - Event: StakingLimitRemoved()
@@ -47,46 +48,34 @@ Resources:
       - Event: StakingResumed()
         Handler: src/handlers/lido/stakingResumed/index.StakingResumedHandler
       - Event: WithdrawalCredentialsSet(bytes32)
-        Handler: src/handlers/lido/withdrawalCredentialsSet/index.WithdrawalCredentialsSetHandler
-      # - Event: BeaconValidatorsUpdated(uint256)
-      #   Handler: src/handlers/lido/index.BeaconValidatorsUpdatedHandler
-      # - Event: MevTxFeeReceived(uint256)
-      #   Handler: src/handlers/lido/index.MevTxFeeReceivedHandler
-      # - Event: ScriptResult(address indexed,bytes,bytes,bytes)
-      #   Handler: src/handlers/lido/index.ScriptResultHandler
-      # - Event: RecoverToVault(address indexed,address indexed,uint256)
-      #   Handler: src/handlers/lido/index.RecoverToVaultHandler
-      # - Event: TransferShares(address indexed,address indexed,uint256)
-      #   Handler: src/handlers/lido/index.TransferSharesHandler
-      # - Event: SharesBurnt(address indexed,uint256,uint256,uint256)
-      #   Handler: src/handlers/lido/index.SharesBurntHandler
-      # - Event: Stopped()
-      #   Handler: src/handlers/lido/index.StoppedHandler
-      # - Event: Transfer(address indexed,address indexed,uint256)
-      #   Handler: src/handlers/lido/index.TransferHandler
-      # - Event: Approval(address indexed,address indexed,uint256)
-      #   Handler: src/handlers/lido/index.ApprovalHandler
-      # - Event: FeeSet(uint16)
-      #   Handler: src/handlers/lido/index.FeeSetHandler
-      # - Event: ELRewardsReceived(uint256)
-      #   Handler: src/handlers/lido/index.ELRewardsReceivedHandler
-      # - Event: WithdrawalCredentialsSet(bytes32)
-      #   Handler: src/handlers/lido/index.WithdrawalCredentialsSetHandler
-      # - Event: Submitted(address indexed,uint256,address)
-      #   Handler: src/handlers/lido/index.SubmittedHandler
-      # - Event: Unbuffered(uint256)
-      #   Handler: src/handlers/lido/index.UnbufferedHandler
-      # - Event: Withdrawal(address indexed,uint256,uint256,bytes32 indexed,uint256)
-      #   Handler: src/handlers/lido/index.WithdrawalHandler
-      # - Event: >-
-      #     ETHDistributed(uint256
-      #     indexed,uint256,uint256,uint256,uint256,uint256)
-      #   Handler: src/handlers/lido/index.ETHDistributedHandler
-      # - Event: >-
-      #     TokenRebased(uint256
-      #     indexed,uint256,uint256,uint256,uint256,uint256,uint256)
-      #   Handler: src/handlers/lido/index.TokenRebasedHandler
-      # - Event: WithdrawalsReceived(uint256)
-      #   Handler: src/handlers/lido/index.WithdrawalsReceivedHandler
-      # - Event: CLValidatorsUpdated(uint256 indexed,uint256,uint256)
-      #   Handler: src/handlers/lido/index.CLValidatorsUpdatedHandler
+        Handler: >-
+          src/handlers/lido/withdrawalCredentialsSet/index.WithdrawalCredentialsSetHandler
+      - Event: ETHDistributed(uint256 indexed,uint256,uint256,uint256,uint256,uint256)
+        Handler: src/handlers/lido/ethDistributed/index.ETHDistributedHandler
+  - Name: legacyOracle
+    Abi: src/abis/legacyOracle.json
+    Type: contract/event
+    Address: "0x442af784A788A5bd6F42A01Ebe9F287a871243fb"
+    Triggers:
+      - Event: Completed(uint256,uint128,uint128)
+        Handler: src/handlers/legacyOracle/completed/index.CompletedHandler
+      - Event: PostTotalShares(uint256,uint256,uint256,uint256)
+        Handler: src/handlers/legacyOracle/postTotalShares/index.PostTotalSharesHandler
+      - Event: MemberAdded(address)
+        Handler: src/handlers/legacyOracle/memberAdded/index.MemberAddedHandler
+      - Event: MemberRemoved(address)
+        Handler: src/handlers/legacyOracle/memberRemoved/index.MemberRemovedHandler
+      - Event: ContractVersionSet(uint256)
+        Handler: src/handlers/legacyOracle/contractVersionSet/index.ContractVersionSetHandler
+      - Event: QuorumChanged(uint256)
+        Handler: src/handlers/legacyOracle/quorumChanged/index.QuorumChangedHandler
+      - Event: BeaconSpecSet(uint64,uint64,uint64,uint64)
+        Handler: src/handlers/legacyOracle/beaconSpecSet/index.BeaconSpecSetHandler
+      - Event: BeaconReportReceiverSet(address)
+        Handler: src/handlers/legacyOracle/beaconReportReceiverSet/index.BeaconReportReceiverSetHandler
+      - Event: AllowedBeaconBalanceRelativeDecreaseSet(uint256)
+        Handler: >-
+          src/handlers/legacyOracle/allowedBeaconBalanceRelativeDecreaseSet/index.AllowedBeaconBalanceRelativeDecreaseSetHandler
+      - Event: AllowedBeaconBalanceAnnualRelativeIncreaseSet(uint256)
+        Handler: >-
+          src/handlers/legacyOracle/allowedBeaconBalanceAnnualRelativeIncreaseSet/index.AllowedBeaconBalanceAnnualRelativeIncreaseSetHandler

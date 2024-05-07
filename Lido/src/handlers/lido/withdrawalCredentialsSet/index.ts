@@ -15,7 +15,7 @@ import { _loadLidoConfigEntity } from "../../../helpers";
 export const WithdrawalCredentialsSetHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets
+  secrets: ISecrets,
 ) => {
   // Implement your event handler logic for WithdrawalCredentialsSet here
 
@@ -26,7 +26,7 @@ export const WithdrawalCredentialsSetHandler = async (
 
   let lidoConfig: ILidoConfig = await _loadLidoConfigEntity(
     lidoConfigDB,
-    context
+    context,
   );
 
   lidoConfig.withdrawal_credentials = withdrawalCredentials.toLowerCase();

@@ -15,7 +15,7 @@ import { _loadLidoConfigEntity } from "../../../helpers";
 export const StoppedHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets
+  secrets: ISecrets,
 ) => {
   // Implement your event handler logic for Stopped here
 
@@ -26,7 +26,7 @@ export const StoppedHandler = async (
 
   let lidoConfig: ILidoConfig = await _loadLidoConfigEntity(
     lidoConfigDB,
-    context
+    context,
   );
 
   lidoConfig.is_stopped = true;

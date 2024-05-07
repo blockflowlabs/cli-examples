@@ -15,7 +15,7 @@ import { _loadLidoConfigEntity } from "../../../helpers";
 export const StakingPausedHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets
+  secrets: ISecrets,
 ) => {
   // Implement your event handler logic for StakingPaused here
 
@@ -26,7 +26,7 @@ export const StakingPausedHandler = async (
 
   let lidoConfig: ILidoConfig = await _loadLidoConfigEntity(
     lidoConfigDB,
-    context
+    context,
   );
 
   lidoConfig.is_staking_paused = true;

@@ -15,7 +15,7 @@ import { _loadLidoApprovalEntity } from "../../../helpers";
 export const ApprovalHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets
+  secrets: ISecrets,
 ) => {
   // Implement your event handler logic for Approval here
 
@@ -26,7 +26,7 @@ export const ApprovalHandler = async (
 
   let approval: ILidoApproval = await _loadLidoApprovalEntity(
     lidoApprovalDB,
-    context
+    context,
   );
 
   await lidoApprovalDB.save(approval);

@@ -118,3 +118,130 @@ export interface LidoHolder {
   address: string;
   has_balance: boolean;
 }
+
+export interface LidoShares {
+  id: String;
+
+  shares: string;
+}
+
+export interface LidoOracleConfig {
+  id: String;
+
+  quorum: string;
+  contract_version: string;
+  allowed_beacon_balance_annual_relative_increase: string;
+  allowed_beacon_balance_relative_decrease: string;
+
+  epochs_per_frame: string;
+  slots_per_epoch: string;
+  seconds_per_slot: string;
+  genesis_time: string;
+
+  beacon_report_receiver: string;
+}
+
+export interface LidoOracleReport {
+  id: String;
+
+  total_reward: string;
+  hash: string;
+  items_processed: string;
+  items_count: string;
+}
+
+export interface LidoOracleCompleted {
+  id: String;
+
+  epoch_id: string;
+  beacon_balance: string;
+  beacon_validators: string;
+
+  block_timestamp: string;
+  transaction_hash: string;
+  log_index: string;
+}
+
+export interface LidoTotalReward {
+  id: String;
+
+  total_rewards: string;
+  total_rewards_with_fees: string;
+
+  mev_fee: string;
+
+  fee_basis: string;
+  treasury_fee_basis_points: string;
+  insurance_fee_basis_points: string;
+  operators_fee_basis_points: string;
+
+  total_fee: string;
+  insurance_fee: string;
+  operators_fee: string;
+  treasury_fee: string;
+  dust: string;
+
+  shares_to_mint: string;
+
+  shares_to_treasury: string;
+  shares_to_insurance_fund: string;
+  shares_to_operators: string;
+  dust_shares_to_treasury: string;
+
+  total_pooled_ether_before: string;
+  total_pooled_ether_after: string;
+  total_shares_before: string;
+  total_shares_after: string;
+
+  time_elapsed: string;
+
+  apr_raw: string;
+  apr_before_fees: string;
+  apr: string;
+
+  block_timestamp: string;
+  transaction_hash: string;
+  transaction_index: string;
+  log_index: string;
+}
+
+export interface LidoOracleMember {
+  id: String;
+
+  member: string;
+  removed: boolean;
+
+  block_timestamp: string;
+  transaction_hash: string;
+  log_index: string;
+}
+
+export interface LidoNodeOperatorFees {
+  id: String;
+
+  total_reward: string;
+
+  address: string;
+  fee: string;
+}
+
+export interface LidoNodeOperatorsShares {
+  id: String;
+  total_reward: string;
+  address: string;
+  shares: string;
+}
+
+export interface LidoBeaconReport {
+  id: String;
+
+  epoch_id: string;
+  beacon_balance: string;
+  beacon_validators: string;
+  caller: string;
+}
+
+export interface LidoOracleExpectedEpoch {
+  id: String;
+  epoch_id: string;
+}

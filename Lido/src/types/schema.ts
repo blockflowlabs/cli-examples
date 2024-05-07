@@ -153,6 +153,171 @@ export class LidoHolder {
   };
 }
 
+export class LidoShares {
+  static entity = "LidoShares";
+  static schema = {
+    id: { type: "String", index: true },
+    shares: "string",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+  };
+}
+
+export class LidoOracleConfig {
+  static entity = "LidoOracleConfig";
+  static schema = {
+    id: { type: "String", index: true },
+    quorum: "string",
+    contract_version: "string",
+    allowed_beacon_balance_annual_relative_increase: "string",
+    allowed_beacon_balance_relative_decrease: "string",
+    epochs_per_frame: "string",
+    slots_per_epoch: "string",
+    seconds_per_slot: "string",
+    genesis_time: "string",
+    beacon_report_receiver: "string",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+  };
+}
+
+export class LidoOracleReport {
+  static entity = "LidoOracleReport";
+  static schema = {
+    id: { type: "String", index: true },
+    total_reward: "string",
+    hash: "string",
+    items_processed: "string",
+    items_count: "string",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+  };
+}
+
+export class LidoOracleCompleted {
+  static entity = "LidoOracleCompleted";
+  static schema = {
+    id: { type: "String", index: true },
+    epoch_id: "string",
+    beacon_balance: "string",
+    beacon_validators: "string",
+    block_timestamp: "string",
+    transaction_hash: "string",
+    log_index: "string",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+  };
+}
+
+export class LidoTotalReward {
+  static entity = "LidoTotalReward";
+  static schema = {
+    id: { type: "String", index: true },
+    total_rewards: "string",
+    total_rewards_with_fees: "string",
+    mev_fee: "string",
+    fee_basis: "string",
+    treasury_fee_basis_points: "string",
+    insurance_fee_basis_points: "string",
+    operators_fee_basis_points: "string",
+    total_fee: "string",
+    insurance_fee: "string",
+    operators_fee: "string",
+    treasury_fee: "string",
+    dust: "string",
+    shares_to_mint: "string",
+    shares_to_treasury: "string",
+    shares_to_insurance_fund: "string",
+    shares_to_operators: "string",
+    dust_shares_to_treasury: "string",
+    total_pooled_ether_before: "string",
+    total_pooled_ether_after: "string",
+    total_shares_before: "string",
+    total_shares_after: "string",
+    time_elapsed: "string",
+    apr_raw: "string",
+    apr_before_fees: "string",
+    apr: "string",
+    block_timestamp: "string",
+    transaction_hash: "string",
+    transaction_index: "string",
+    log_index: "string",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+  };
+}
+
+export class LidoOracleMember {
+  static entity = "LidoOracleMember";
+  static schema = {
+    id: { type: "String", index: true },
+    member: "string",
+    removed: "boolean",
+    block_timestamp: "string",
+    transaction_hash: "string",
+    log_index: "string",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+  };
+}
+
+export class LidoNodeOperatorFees {
+  static entity = "LidoNodeOperatorFees";
+  static schema = {
+    id: { type: "String", index: true },
+    total_reward: "string",
+    address: "string",
+    fee: "string",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+  };
+}
+
+export class LidoNodeOperatorsShares {
+  static entity = "LidoNodeOperatorsShares";
+  static schema = {
+    id: { type: "String", index: true },
+    total_reward: "string",
+    address: "string",
+    shares: "string",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+  };
+}
+
+export class LidoBeaconReport {
+  static entity = "LidoBeaconReport";
+  static schema = {
+    id: { type: "String", index: true },
+    epoch_id: "string",
+    beacon_balance: "string",
+    beacon_validators: "string",
+    caller: "string",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+  };
+}
+
+export class LidoOracleExpectedEpoch {
+  static entity = "LidoOracleExpectedEpoch";
+  static schema = {
+    id: { type: "String", index: true },
+    epoch_id: "string",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+  };
+}
+
 import { String, Array } from "@blockflow-labs/utils";
 
 export interface ILidoSubmission extends Document {
@@ -296,6 +461,163 @@ export interface ILidoHolder extends Document {
 
   address: string;
   has_balance: boolean;
+  blocknumber: String;
+  entityId: String;
+  chainId: String;
+}
+
+export interface ILidoShares extends Document {
+  id: String;
+
+  shares: string;
+  blocknumber: String;
+  entityId: String;
+  chainId: String;
+}
+
+export interface ILidoOracleConfig extends Document {
+  id: String;
+
+  quorum: string;
+  contract_version: string;
+  allowed_beacon_balance_annual_relative_increase: string;
+  allowed_beacon_balance_relative_decrease: string;
+
+  epochs_per_frame: string;
+  slots_per_epoch: string;
+  seconds_per_slot: string;
+  genesis_time: string;
+
+  beacon_report_receiver: string;
+  blocknumber: String;
+  entityId: String;
+  chainId: String;
+}
+
+export interface ILidoOracleReport extends Document {
+  id: String;
+
+  total_reward: string;
+  hash: string;
+  items_processed: string;
+  items_count: string;
+  blocknumber: String;
+  entityId: String;
+  chainId: String;
+}
+
+export interface ILidoOracleCompleted extends Document {
+  id: String;
+
+  epoch_id: string;
+  beacon_balance: string;
+  beacon_validators: string;
+
+  block_timestamp: string;
+  transaction_hash: string;
+  log_index: string;
+  blocknumber: String;
+  entityId: String;
+  chainId: String;
+}
+
+export interface ILidoTotalReward extends Document {
+  id: String;
+
+  total_rewards: string;
+  total_rewards_with_fees: string;
+
+  mev_fee: string;
+
+  fee_basis: string;
+  treasury_fee_basis_points: string;
+  insurance_fee_basis_points: string;
+  operators_fee_basis_points: string;
+
+  total_fee: string;
+  insurance_fee: string;
+  operators_fee: string;
+  treasury_fee: string;
+  dust: string;
+
+  shares_to_mint: string;
+
+  shares_to_treasury: string;
+  shares_to_insurance_fund: string;
+  shares_to_operators: string;
+  dust_shares_to_treasury: string;
+
+  total_pooled_ether_before: string;
+  total_pooled_ether_after: string;
+  total_shares_before: string;
+  total_shares_after: string;
+
+  time_elapsed: string;
+
+  apr_raw: string;
+  apr_before_fees: string;
+  apr: string;
+
+  block_timestamp: string;
+  transaction_hash: string;
+  transaction_index: string;
+  log_index: string;
+  blocknumber: String;
+  entityId: String;
+  chainId: String;
+}
+
+export interface ILidoOracleMember extends Document {
+  id: String;
+
+  member: string;
+  removed: boolean;
+
+  block_timestamp: string;
+  transaction_hash: string;
+  log_index: string;
+  blocknumber: String;
+  entityId: String;
+  chainId: String;
+}
+
+export interface ILidoNodeOperatorFees extends Document {
+  id: String;
+
+  total_reward: string;
+
+  address: string;
+  fee: string;
+  blocknumber: String;
+  entityId: String;
+  chainId: String;
+}
+
+export interface ILidoNodeOperatorsShares extends Document {
+  id: String;
+  total_reward: string;
+  address: string;
+  shares: string;
+  blocknumber: String;
+  entityId: String;
+  chainId: String;
+}
+
+export interface ILidoBeaconReport extends Document {
+  id: String;
+
+  epoch_id: string;
+  beacon_balance: string;
+  beacon_validators: string;
+  caller: string;
+  blocknumber: String;
+  entityId: String;
+  chainId: String;
+}
+
+export interface ILidoOracleExpectedEpoch extends Document {
+  id: String;
+  epoch_id: string;
   blocknumber: String;
   entityId: String;
   chainId: String;

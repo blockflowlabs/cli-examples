@@ -15,7 +15,7 @@ import { _loadLidoConfigEntity } from "../../../helpers";
 export const ProtocolContactsSetHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets
+  secrets: ISecrets,
 ) => {
   // Implement your event handler logic for ProtocolContactsSet here
 
@@ -26,7 +26,7 @@ export const ProtocolContactsSetHandler = async (
 
   let lidoConfig: ILidoConfig = await _loadLidoConfigEntity(
     lidoConfigDB,
-    context
+    context,
   );
 
   lidoConfig.insurance_fund = insuranceFund.toLowerCase();

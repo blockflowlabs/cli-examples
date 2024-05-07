@@ -15,7 +15,7 @@ import { _loadLidoConfigEntity } from "../../../helpers";
 export const ELRewardsVaultSetHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets
+  secrets: ISecrets,
 ) => {
   // Implement your event handler logic for ELRewardsVaultSet here
 
@@ -26,7 +26,7 @@ export const ELRewardsVaultSetHandler = async (
 
   let lidoConfig: ILidoConfig = await _loadLidoConfigEntity(
     lidoConfigDB,
-    context
+    context,
   );
 
   lidoConfig.el_rewards_vault = executionLayerRewardsVault.toLowerCase();

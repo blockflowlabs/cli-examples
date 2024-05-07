@@ -15,7 +15,7 @@ import { _loadLidoConfigEntity } from "../../../helpers";
 export const ELRewardsWithdrawalLimitSetHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets
+  secrets: ISecrets,
 ) => {
   // Implement your event handler logic for ELRewardsWithdrawalLimitSet here
 
@@ -26,7 +26,7 @@ export const ELRewardsWithdrawalLimitSetHandler = async (
 
   let lidoConfig: ILidoConfig = await _loadLidoConfigEntity(
     lidoConfigDB,
-    context
+    context,
   );
 
   lidoConfig.el_rewards_withdrawal_limit_points = limitPoints.toLowerCase();

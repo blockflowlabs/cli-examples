@@ -15,7 +15,7 @@ import { _loadCurrentFeeEntity } from "../../../helpers";
 export const FeeSetHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets
+  secrets: ISecrets,
 ) => {
   // Implement your event handler logic for FeeSet here
 
@@ -26,7 +26,7 @@ export const FeeSetHandler = async (
 
   let currentFee: ICurrentFee = await _loadCurrentFeeEntity(
     currentFeeDB,
-    context
+    context,
   );
 
   currentFee.fee_basis_points = feeBasisPoints.toString();
