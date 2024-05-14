@@ -3,7 +3,8 @@
   "version": "1.0.4",
   "description": "BlockFlow Studio Project",
   "scripts": {
-    "compile": "tsc -b"
+    "compile": "tsc -b",
+      "format": "prettier --write \"src/**/*.ts\""
   },
   "dependencies": {
     "@blockflow-labs/utils": "latest"
