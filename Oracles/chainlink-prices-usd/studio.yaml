@@ -1,44 +1,19 @@
 name: chainlink-prices-usd
-description: A top-secret research project to the moon
+description: "chainlink is a decentralized oracle network "
 startBlock: 18361281
 userId: d699d33d-d3f3-47c3-8d4b-2132360f64ee
+projectId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
 network: Ethereum
 user: John doe
-config:
-  - contract: "0xE62B71cf983019BFf55bC83B48601ce8419650CC"
-    name: eth
-    abi: src/abis/aggregator.json
-    handler: src/handlers/aggregator.ts
-    event:
-      - AnswerUpdated(int256 indexed,uint256 indexed,uint256)
-  - contract: "0xdBe1941BFbe4410D6865b9b7078e0b49af144D2d"
-    name: btc
-    abi: src/abis/aggregator.json
-    handler: src/handlers/aggregator.ts
-    event:
-      - AnswerUpdated(int256 indexed,uint256 indexed,uint256)
-  - contract: "0x478238a1c8B862498c74D0647329Aef9ea6819Ed"
-    name: dai
-    abi: src/abis/aggregator.json
-    handler: src/handlers/aggregator.ts
-    event:
-      - AnswerUpdated(int256 indexed,uint256 indexed,uint256)
-  - contract: "0xa964273552C1dBa201f5f000215F5BD5576e8f93"
-    name: usdt
-    abi: src/abis/aggregator.json
-    handler: src/handlers/aggregator.ts
-    event:
-      - AnswerUpdated(int256 indexed,uint256 indexed,uint256)
-  - contract: "0x789190466E21a8b78b8027866CBBDc151542A26C"
-    name: usdc
-    abi: src/abis/aggregator.json
-    handler: src/handlers/aggregator.ts
-    event:
-      - AnswerUpdated(int256 indexed,uint256 indexed,uint256)
-api:
-  - name: prices-usd
-    description: prices-usd
-    handler: src/apis/prices-usd/index.ts
-    instances:
-      # - 2c6a2c2c-c536-48d8-af20-5d95ce794c81 // TODO:
-    status: 1
+schema:
+  file: ./studio.schema.ts
+execution: parallel
+Resources:
+  - Name: eth
+    Abi: src/abis/eth.json
+    Type: contract/event
+    Address:
+      file: tokens.json
+    Triggers:
+      - Event: AnswerUpdated(int256 indexed,uint256 indexed,uint256)
+        Handler: src/handlers/eth/index.AnswerUpdatedHandler
