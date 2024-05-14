@@ -22,8 +22,12 @@ export const PriceHandler = async (
 ) => {
   const contractAddress = log.log_address.toLowerCase();
   const id = `${transaction.transaction_hash} - ${log.log_index}`.toLowerCase() ;
+  const transanction_hash = transaction.transaction_hash.toString();
+  //code for update count ad implementation update
+  // const update_count = 
+  // const impl_update = 
  
- const { name, symbol, decimals, quote_currency, raw_price,price } = event;
+ const { name, symbol, decimals, quote_currency, raw_price,price, round_id, last_block_number } = event;
 
  //DB bindings over here
  const priceDB: Instance = bind(PriceDB);
@@ -42,7 +46,20 @@ export const PriceHandler = async (
   price,
  );
  await priceDB.save(Price);
-}
+
+ //await updatePairData
+ let PairData = await updatePairData(
+  chainlink_pairDB,
+  id,
+  update_count,
+  transanction_hash,
+  last_block_number,
+  round_id,
+  impl_update,
+ );
+ await chainlink_pairDB.save(PairData);
+};
+
 //async for updatePrice
  const updatePrice = async (
   priceDB : Instance,
@@ -77,8 +94,30 @@ export const PriceHandler = async (
   return Price;
  };
  
+ const updatePairData = async (
+  chainlink_pairDB : Instance,
+  id: string,
+  update_count: number,
+  transanction_hash: string,
+  last_block_number: number,
+  round_id: number,
+  impl_update: number
+ ): Promise<Ichainlink_pair> => {
 
+  let transactionID: chainlink_pair = await chainlink_pairDB.findOne({id: `${transaction.transaction_hash.toString()} - ${log.log_index.toString()}`.toLowerCase()})
 
+  
+  //if PairData doesn't exist create a new one 
+  PairData ??= await chainlink_pairDB.create({
+    id: transactionID,
+    update_count,
+    transanction_hash,
+    last_block_number,
+    round_id,
+    impl_update,
+ });
+  return PairData;
+ };
 
 
   //DB2 
