@@ -19,8 +19,8 @@ export class PriceDB {
   }
 }
 
-export class chainlink_pair {
-  static entity = 'chainlink_pair'
+export class chainlinkPair {
+  static entity = 'chainlinkPair'
   static schema = {
     id: { type: 'String', index: true },
     updateCount: 'number',
@@ -49,7 +49,7 @@ export interface IPriceDB extends Document {
   chainId: String
 }
 
-export interface Ichainlink_pair extends Document {
+export interface IchainlinkPair extends Document {
   id: string
   updateCount: number
   transanctionHash: string

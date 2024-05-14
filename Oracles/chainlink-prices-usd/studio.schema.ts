@@ -11,7 +11,7 @@ export interface PriceDB{
   price: string;
 }
 
-export interface chainlink_pair{
+export interface chainlinkPair{
  id: string;
  updateCount: number;
  transanctionHash: string;

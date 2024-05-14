@@ -4,7 +4,7 @@ import { BigNumber } from 'bignumber.js'
 import { getTokenMetadata } from '../../utils/tokens'
 
 import { PriceDB, IPriceDB } from '../../types/schema'
-import { chainlink_pair, Ichainlink_pair } from '../../types/schema'
+import { chainlinkPair, IchainlinkPair } from '../../types/schema'
 /**
  * @dev Event::AnswerUpdated(int256 current, uint256 roundId, uint256 updatedAt)
  * @param context trigger object with contains {event: {current ,roundId ,updatedAt }, transaction, block, log}
@@ -21,7 +21,7 @@ export const PriceHandler = async (
   const { current, roundId, updatedAt } = event
 
   const priceDB: Instance = bind(PriceDB)
-  const chainlink_pairDB: Instance = bind(chainlink_pair)
+  const chainlinkPairDB: Instance = bind(chainlinkPair)
 
   const tokenMetadata = getTokenMetadata(contractAddress)
   const entryId =
@@ -49,16 +49,16 @@ export const PriceHandler = async (
   const uniqueId = contractAddress
   const transaction_hash = transaction.transaction_hash.toString()
 
-  let pairData: Ichainlink_pair = await chainlink_pairDB.findOne({
-    id: uniqueId,
-    updateCount:"", 
+  let pairData: IchainlinkPair = await chainlinkPairDB.findOne({
+    id: uniqueId.toLowerCase(),
   })
-  pairData ??= await chainlink_pairDB.create({
+
+  pairData ??= await chainlinkPairDB.create({
     id: uniqueId,
-    updateCount: "0",
-    transanction_hash,
-    lastBlockNumber: block.block_number,
-    round_id: "",
   })
-  await chainlink_pairDB.save(pairData)
+  pairData.roundId = roundId
+  pairData.transanctionHash = transaction.transaction_hash
+  pairData.lastBlockNumber = block.block_number
+  pairData.updateCount += 1
+  await chainlinkPairDB.save(pairData)
 }

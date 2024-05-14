@@ -84,6 +84,5 @@ export const getTokenMetadata = (token: string) => {
   const findedToken = Object.keys(TOKENS).filter(
     (tokenAddr) => tokenAddr.toLowerCase() === token.toLowerCase(),
   )
-
   return TOKENS[findedToken[0]]
 }
