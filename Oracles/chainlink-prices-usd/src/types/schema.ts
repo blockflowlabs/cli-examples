@@ -6,13 +6,13 @@ export class PriceDB {
   static entity = "PriceDB";
   static schema = {
     id: { type: "String", index: true },
-    contractAddress: "String",
-    name: "String",
-    symbol: "String",
-    decimals: "Number",
-    quote_currency: "String",
-    raw_price: "String",
-    price: "String",
+    contractAddress: "string",
+    name: "string",
+    symbol: "string",
+    decimals: "number",
+    quoteCurrency: "string",
+    rawPrice: "string",
+    price: "string",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
@@ -23,11 +23,10 @@ export class chainlink_pair {
   static entity = "chainlink_pair";
   static schema = {
     id: { type: "String", index: true },
-    update_count: "Number",
-    transanction_hash: "String",
-    last_block_number: "Number",
-    round_id: "Number",
-    impl_update: "Number",
+    updateCount: "number",
+    transanctionHash: "string",
+    lastBlockNumber: "number",
+    roundId: "number",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
@@ -37,26 +36,25 @@ export class chainlink_pair {
 import { String, Array } from "@blockflow-labs/utils";
 
 export interface IPriceDB extends Document {
-  id: String;
-  contractAddress: String;
-  name: String;
-  symbol: String;
-  decimals: Number;
-  quote_currency: String;
-  raw_price: String;
-  price: String;
+  id: string;
+  contractAddress: string;
+  name: string;
+  symbol: string;
+  decimals: number;
+  quoteCurrency: string;
+  rawPrice: string;
+  price: string;
   blocknumber: String;
   entityId: String;
   chainId: String;
 }
 
 export interface Ichainlink_pair extends Document {
-  id: String;
-  update_count: Number;
-  transanction_hash: String;
-  last_block_number: Number;
-  round_id: Number;
-  impl_update: Number;
+  id: string;
+  updateCount: number;
+  transanctionHash: string;
+  lastBlockNumber: number;
+  roundId: number;
   blocknumber: String;
   entityId: String;
   chainId: String;
