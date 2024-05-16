@@ -1,0 +1,28 @@
+name: aave
+description: indexer for the aave protocol
+startBlock: latest
+userId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
+projectId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
+network: Ethereum
+user: nishim
+schema:
+  file: ./studio.schema.ts
+execution: parallel
+Resources:
+  - Name: lendingPool
+    Abi: src/abis/lendingPool.json
+    Type: contract/event
+    Address: "0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9"
+    Triggers:
+      - Event: >-
+          Borrow(address indexed,address,address
+          indexed,uint256,uint256,uint256,uint16 indexed)
+        Handler: src/handlers/lendingPool/borrow/index.BorrowHandler
+      - Event: >-
+          Deposit(address indexed,address,address indexed,uint256,uint16
+          indexed)
+        Handler: src/handlers/lendingPool/deposit/index.DepositHandler
+      - Event: Repay(address indexed,address indexed,address indexed,uint256)
+        Handler: src/handlers/lendingPool/repay/index.RepayHandler
+      - Event: Withdraw(address indexed,address indexed,address indexed,uint256)
+        Handler: src/handlers/lendingPool/withdraw/index.WithdrawHandler
