@@ -23,7 +23,7 @@ import {
 export const BorrowHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets,
+  secrets: ISecrets
 ) => {
   // Implement your event handler logic for Borrow here
 
@@ -38,6 +38,8 @@ export const BorrowHandler = async (
     referral,
   } = event;
 
+  let poolId: string;
+
   const txHash = transaction.transaction_hash.toString();
   const action = "Borrow";
   let contractAddress = log.log_address;
@@ -46,17 +48,12 @@ export const BorrowHandler = async (
   const userReserveDB = bind(UserReserve);
   const borrowDB = bind(Borrow);
 
-  console.log("test")
-
   const contractToPoolMapping: IContractToPoolMapping =
-  await contractToPoolMappingDB.findOne({ id: contractAddress });
-  console.log("test")
+    await contractToPoolMappingDB.findOne({ id: contractAddress });
 
-  let poolId = "not yet defined";
-  console.log("test")
-  console.log(contractToPoolMapping)
-  if(contractToPoolMapping)
-  poolId=contractToPoolMapping.pool
+  if (!contractToPoolMapping) poolId = "not yet defined";
+  else poolId = contractToPoolMapping.pool;
+
   let reserveId = getReserveId(reserve, poolId);
   const underlyingAsset = reserve;
 
@@ -137,51 +134,42 @@ export const BorrowHandler = async (
     });
   }
 
-  const userReserveId = getUserReserveId(
-    onBehalfOf,
-    underlyingAsset,
-    poolId,
-  );
-  const $userReserve: IUserReserve = await userReserveDB.findOne({
+  const userReserveId = getUserReserveId(onBehalfOf, underlyingAsset, poolId);
+  let userReserve: IUserReserve = await userReserveDB.findOne({
     id: userReserveId,
   });
 
-  if (!$userReserve) {
-    userReserveDB.create({
-      id: userReserveId,
-      pool: poolId,
-      usageAsCollateralEnabledOnUser: false,
-      scaledATokenBalance: "0",
-      scaledVariableDebt: "0",
-      principalStableDebt: "0",
-      currentATokenBalance: "0",
-      currentVariableDebt: "0",
-      currentStableDebt: "0",
-      stableBorrowRate: "0",
-      oldStableBorrowRate: "0",
-      currentTotalDebt: "0",
-      variableBorrowIndex: "0",
-      lastUpdateTimestamp: 0,
-      liquidityRate: "0",
-      stableBorrowLastUpdateTimestamp: 0,
-
-      // incentives
-      aTokenincentivesUserIndex: "0",
-      vTokenincentivesUserIndex: "0",
-      sTokenincentivesUserIndex: "0",
-      aIncentivesLastUpdateTimestamp: 0,
-      vIncentivesLastUpdateTimestamp: 0,
-      sIncentivesLastUpdateTimestamp: 0,
-      user: onBehalfOf,
-
-      reserve: reserveId,
-    });
-  }
-  const userReserve: IUserReserve = await userReserveDB.findOne({
+  userReserve ??= await userReserveDB.create({
     id: userReserveId,
+    pool: poolId,
+    usageAsCollateralEnabledOnUser: false,
+    scaledATokenBalance: "0",
+    scaledVariableDebt: "0",
+    principalStableDebt: "0",
+    currentATokenBalance: "0",
+    currentVariableDebt: "0",
+    currentStableDebt: "0",
+    stableBorrowRate: "0",
+    oldStableBorrowRate: "0",
+    currentTotalDebt: "0",
+    variableBorrowIndex: "0",
+    lastUpdateTimestamp: 0,
+    liquidityRate: "0",
+    stableBorrowLastUpdateTimestamp: 0,
+
+    // incentives
+    aTokenincentivesUserIndex: "0",
+    vTokenincentivesUserIndex: "0",
+    sTokenincentivesUserIndex: "0",
+    aIncentivesLastUpdateTimestamp: 0,
+    vIncentivesLastUpdateTimestamp: 0,
+    sIncentivesLastUpdateTimestamp: 0,
+    user: onBehalfOf,
+
+    reserve: reserveId,
   });
+
   const poolReserve: IReserve = await reserveDB.findOne({ id: reserveId });
-  console.log(poolReserve.pool)
 
   const borrowId =
     block.block_number.toString() +
@@ -194,12 +182,12 @@ export const BorrowHandler = async (
     ":" +
     log.log_transaction_index.toString();
 
-  const $borrow:IBorrow = await borrowDB.findOne({
+  const $borrow: IBorrow = await borrowDB.findOne({
     id: borrowId,
   });
 
-  if (!$borrow) {
-    borrowDB.create({
+  if (!$borrow)
+    await borrowDB.create({
       id: borrowId,
       txHash: txHash,
       action: action,
@@ -216,7 +204,6 @@ export const BorrowHandler = async (
       stableTokenDebt: userReserve.principalStableDebt.toString(),
       variableTokenDebt: userReserve.scaledATokenBalance.toString(),
     });
-  }
 };
 
 function getReserveId(underlyingAsset: string, poolId: string): string {
@@ -226,7 +213,7 @@ function getReserveId(underlyingAsset: string, poolId: string): string {
 function getUserReserveId(
   userAddress: string,
   underlyingAssetAddress: string,
-  poolId: string,
+  poolId: string
 ): string {
   return userAddress + underlyingAssetAddress + poolId;
 }
