@@ -22,6 +22,7 @@ export class Destination {
     usdValue: "String",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -44,6 +45,7 @@ export class Source {
     usdValue: "String",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -56,6 +58,7 @@ export class FeeInfo {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -70,6 +73,7 @@ export class DepositInfoUpdate {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -82,6 +86,7 @@ export class RefuelInfo {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -95,6 +100,7 @@ export class ExtraInfo {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -127,6 +133,7 @@ export interface IDestination extends Document {
   usdValue: String;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
 }
 
 export interface ISource extends Document {
@@ -146,6 +153,7 @@ export interface ISource extends Document {
   usdValue: String;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
 }
 
 // difference between src and destination
@@ -155,6 +163,7 @@ export interface IFeeInfo extends Document {
   usdValue: String;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -167,6 +176,7 @@ export interface IDepositInfoUpdate extends Document {
   refundOutboundId: String;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -177,6 +187,7 @@ export interface IRefuelInfo extends Document {
   nativeRecipient: String;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -199,5 +210,6 @@ export interface IExtraInfo extends Document {
   // expiry_timestamp: Number;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }

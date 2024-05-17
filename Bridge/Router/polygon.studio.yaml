@@ -1,0 +1,66 @@
+name: Router Nitro
+description: Indexing cross chain transfers on router nitro protocol
+startBlock: 51964818 # add - 0x1396f41d89b96eaf29a7ef9ee01ad36e452235ae, block - 51964818
+userId: auth0%7C65fb07c3cd606f2e14152b75
+projectId: b3292d12-dd35-4535-9650-3fa739175f65
+network: Polygon
+execution: parallel
+user: prady
+schema:
+  file: ./studio.schema.ts
+Resources:
+  - Name: iRelay
+    Abi: src/abis/assetForwarderEthereum.json
+    Type: contract/function
+    Address: "0x1396f41d89b96eaf29a7ef9ee01ad36e452235ae"
+    Triggers:
+      - Function: iRelay(tuple(uint256,bytes32,uint256,address,address))payable
+        Handler: src/receive/iRelay/index.iRelayHandler
+
+  - Name: iRelayMessage
+    Abi: src/abis/assetForwarderEthereum.json
+    Type: contract/function
+    Address: "0x1396f41d89b96eaf29a7ef9ee01ad36e452235ae"
+    Triggers:
+      - Function: iRelayMessage(tuple(uint256,bytes32,uint256,address,address,bytes))payable
+        Handler: src/receive/iRelayMessage/index.iRelayMessageHandler
+
+  - Name: fundsPaidWithMessage
+    Abi: src/abis/assetForwarderEthereum.json
+    Type: contract/event
+    Address: "0x1396f41d89b96eaf29a7ef9ee01ad36e452235ae"
+    Triggers:
+      - Event: FundsPaidWithMessage(bytes32,address,uint256,bool,bytes)
+        Handler: src/receive/fundsPaidWithMessage/index.FundsPaidWithMessageHandler
+
+  - Name: fundsPaid
+    Abi: src/abis/assetForwarderEthereum.json
+    Type: contract/event
+    Address: "0x1396f41d89b96eaf29a7ef9ee01ad36e452235ae"
+    Triggers:
+      - Event: FundsPaid(bytes32,address,uint256)
+        Handler: src/receive/fundsPaid/index.FundsPaidHandler
+
+  - Name: fundsDeposited
+    Abi: src/abis/assetForwarderEthereum.json
+    Type: contract/event
+    Address: "0x1396f41d89b96eaf29a7ef9ee01ad36e452235ae"
+    Triggers:
+      - Event: FundsDeposited(uint256,uint256,bytes32,uint256,uint256,address,address,bytes,bytes)
+        Handler: src/deposit/FundsDeposited/index.FundsDepositedHandler
+
+  - Name: fundsDepositedWithMessage
+    Abi: src/abis/assetForwarderEthereum.json
+    Type: contract/event
+    Address: "0x1396f41d89b96eaf29a7ef9ee01ad36e452235ae"
+    Triggers:
+      - Event: FundsDepositedWithMessage(uint256,uint256,bytes32,uint256,uint256,address,bytes,address,bytes,bytes)
+        Handler: src/deposit/FundsDepositedWithMessage/index.FundsDepositedWithMessageHandler
+
+  - Name: depositInfoUpdate
+    Abi: src/abis/assetForwarderEthereum.json
+    Type: contract/event
+    Address: "0x1396f41d89b96eaf29a7ef9ee01ad36e452235ae"
+    Triggers:
+      - Event: DepositInfoUpdate(address,uint256,uint256,uint256,bool,address)
+        Handler: src/deposit/DepositInfoUpdate/index.DepositInfoUpdate
