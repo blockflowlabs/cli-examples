@@ -43,6 +43,8 @@ export const BorrowHandler = async (
   const txHash = transaction.transaction_hash.toString();
   const action = "Borrow";
   let contractAddress = log.log_address;
+
+  
   const contractToPoolMappingDB = bind(ContractToPoolMapping);
   const reserveDB = bind(Reserve);
   const userReserveDB = bind(UserReserve);
