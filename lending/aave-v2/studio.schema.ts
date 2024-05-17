@@ -60,14 +60,14 @@ export interface PriceHistoryItem {
   id: string;
   asset: string;
   price: string;
-  timestamp: number;
+  timestamp: string;
 }
 
 export interface UsdEthPriceHistoryItem {
   id: string;
   oracle: string;
   price: string;
-  timestamp: number;
+  timestamp: string;
 }
 
 export interface PriceOracle {
@@ -142,7 +142,7 @@ export interface Deposit {
   userReserve: string;
   amount: string;
   referrer: string;
-  timestamp: number;
+  timestamp: string;
   assetPriceUSD: string;
 }
 
@@ -156,7 +156,7 @@ export interface RedeemUnderlying {
   reserve: string;
   userReserve: string;
   amount: string;
-  timestamp: number;
+  timestamp: string;
   assetPriceUSD: string;
 }
 
@@ -173,7 +173,7 @@ export interface Borrow {
   borrowRate: string;
   borrowRateMode: string;
   referrer: string;
-  timestamp: number;
+  timestamp: string;
   stableTokenDebt: string;
   variableTokenDebt: string;
   assetPriceUSD: string;
@@ -191,7 +191,7 @@ export interface Swap {
   borrowRateModeTo: string;
   stableBorrowRate: string;
   variableBorrowRate: string;
-  timestamp: number;
+  timestamp: string;
 }
 
 export interface UsageAsCollateral {
@@ -204,7 +204,7 @@ export interface UsageAsCollateral {
   userReserve: string;
   fromState: Boolean;
   toState: Boolean;
-  timestamp: number;
+  timestamp: string;
 }
 
 export interface RebalanceStableBorrowRate {
@@ -217,7 +217,7 @@ export interface RebalanceStableBorrowRate {
   userReserve: string;
   borrowRateFrom: string;
   borrowRateTo: string;
-  timestamp: number;
+  timestamp: string;
 }
 
 export interface Repay {
@@ -230,7 +230,7 @@ export interface Repay {
   reserve: string;
   userReserve: string;
   amount: string;
-  timestamp: number;
+  timestamp: string;
   assetPriceUSD: string;
 }
 
@@ -242,7 +242,7 @@ export interface FlashLoan {
   amount: string;
   totalFee: string;
   initiator: string;
-  timestamp: number;
+  timestamp: string;
   assetPriceUSD: string;
 }
 
@@ -259,7 +259,7 @@ export interface LiquidationCall {
   principalUserReserve: string;
   principalAmount: string;
   liquidator: string;
-  timestamp: number;
+  timestamp: string;
   collateralAssetPriceUSD: string;
   borrowAssetPriceUSD: string;
 }
@@ -276,7 +276,7 @@ export interface ReserveConfigurationHistoryItem {
   baseLTVasCollateral: string;
   reserveLiquidationThreshold: string;
   reserveLiquidationBonus: string;
-  timestamp: number;
+  timestamp: string;
 }
 
 export interface ReserveParamsHistoryItem {
@@ -295,7 +295,7 @@ export interface ReserveParamsHistoryItem {
   availableLiquidity: string;
   priceInEth: string;
   priceInUsd: string;
-  timestamp: number;
+  timestamp: string;
   totalScaledVariableDebt: string;
   totalCurrentVariableDebt: string;
   totalPrincipalStableDebt: string;
@@ -440,7 +440,7 @@ export interface WETHReserve {
 export interface ATokenBalanceHistoryItem {
   id: string;
   userReserve: string;
-  timestamp: number;
+  timestamp: string;
   scaledATokenBalance: string;
   currentATokenBalance: string;
   index: string;
@@ -451,7 +451,7 @@ export interface VTokenBalanceHistoryItem {
   userReserve: string;
   scaledVariableDebt: string;
   currentVariableDebt: string;
-  timestamp: number;
+  timestamp: string;
   index: string;
 }
 
@@ -460,7 +460,7 @@ export interface STokenBalanceHistoryItem {
   userReserve: string;
   principalStableDebt: string;
   currentStableDebt: string;
-  timestamp: number;
+  timestamp: string;
   avgStableBorrowRate: string;
 }
 

@@ -10,7 +10,6 @@ export class Protocol {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
-    instanceId: { type: "String", index: true },
   };
 }
 
@@ -22,7 +21,6 @@ export class ContractToPoolMapping {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
-    instanceId: { type: "String", index: true },
   };
 }
 
@@ -44,7 +42,6 @@ export class PoolConfigurationHistoryItem {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
-    instanceId: { type: "String", index: true },
   };
 }
 
@@ -80,7 +77,6 @@ export class Pool {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
-    instanceId: { type: "String", index: true },
   };
 }
 
@@ -90,11 +86,10 @@ export class PriceHistoryItem {
     id: { type: "String", index: true },
     asset: "string",
     price: "string",
-    timestamp: "number",
+    timestamp: "string",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
-    instanceId: { type: "String", index: true },
   };
 }
 
@@ -104,11 +99,10 @@ export class UsdEthPriceHistoryItem {
     id: { type: "String", index: true },
     oracle: "string",
     price: "string",
-    timestamp: "number",
+    timestamp: "string",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
-    instanceId: { type: "String", index: true },
   };
 }
 
@@ -132,7 +126,6 @@ export class PriceOracle {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
-    instanceId: { type: "String", index: true },
   };
 }
 
@@ -147,7 +140,6 @@ export class SToken {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
-    instanceId: { type: "String", index: true },
   };
 }
 
@@ -162,7 +154,6 @@ export class VToken {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
-    instanceId: { type: "String", index: true },
   };
 }
 
@@ -177,7 +168,6 @@ export class AToken {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
-    instanceId: { type: "String", index: true },
   };
 }
 
@@ -191,7 +181,6 @@ export class VariableDebtToken {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
-    instanceId: { type: "String", index: true },
   };
 }
 
@@ -205,7 +194,6 @@ export class StableDebtToken {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
-    instanceId: { type: "String", index: true },
   };
 }
 
@@ -218,7 +206,6 @@ export class Referrer {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
-    instanceId: { type: "String", index: true },
   };
 }
 
@@ -235,12 +222,11 @@ export class Deposit {
     userReserve: "string",
     amount: "string",
     referrer: "string",
-    timestamp: "number",
+    timestamp: "string",
     assetPriceUSD: "string",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
-    instanceId: { type: "String", index: true },
   };
 }
 
@@ -256,12 +242,11 @@ export class RedeemUnderlying {
     reserve: "string",
     userReserve: "string",
     amount: "string",
-    timestamp: "number",
+    timestamp: "string",
     assetPriceUSD: "string",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
-    instanceId: { type: "String", index: true },
   };
 }
 
@@ -280,14 +265,13 @@ export class Borrow {
     borrowRate: "string",
     borrowRateMode: "string",
     referrer: "string",
-    timestamp: "number",
+    timestamp: "string",
     stableTokenDebt: "string",
     variableTokenDebt: "string",
     assetPriceUSD: "string",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
-    instanceId: { type: "String", index: true },
   };
 }
 
@@ -305,11 +289,10 @@ export class Swap {
     borrowRateModeTo: "string",
     stableBorrowRate: "string",
     variableBorrowRate: "string",
-    timestamp: "number",
+    timestamp: "string",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
-    instanceId: { type: "String", index: true },
   };
 }
 
@@ -325,11 +308,10 @@ export class UsageAsCollateral {
     userReserve: "string",
     fromState: "Boolean",
     toState: "Boolean",
-    timestamp: "number",
+    timestamp: "string",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
-    instanceId: { type: "String", index: true },
   };
 }
 
@@ -345,11 +327,10 @@ export class RebalanceStableBorrowRate {
     userReserve: "string",
     borrowRateFrom: "string",
     borrowRateTo: "string",
-    timestamp: "number",
+    timestamp: "string",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
-    instanceId: { type: "String", index: true },
   };
 }
 
@@ -365,12 +346,11 @@ export class Repay {
     reserve: "string",
     userReserve: "string",
     amount: "string",
-    timestamp: "number",
+    timestamp: "string",
     assetPriceUSD: "string",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
-    instanceId: { type: "String", index: true },
   };
 }
 
@@ -384,12 +364,11 @@ export class FlashLoan {
     amount: "string",
     totalFee: "string",
     initiator: "string",
-    timestamp: "number",
+    timestamp: "string",
     assetPriceUSD: "string",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
-    instanceId: { type: "String", index: true },
   };
 }
 
@@ -408,13 +387,12 @@ export class LiquidationCall {
     principalUserReserve: "string",
     principalAmount: "string",
     liquidator: "string",
-    timestamp: "number",
+    timestamp: "string",
     collateralAssetPriceUSD: "string",
     borrowAssetPriceUSD: "string",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
-    instanceId: { type: "String", index: true },
   };
 }
 
@@ -432,11 +410,10 @@ export class ReserveConfigurationHistoryItem {
     baseLTVasCollateral: "string",
     reserveLiquidationThreshold: "string",
     reserveLiquidationBonus: "string",
-    timestamp: "number",
+    timestamp: "string",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
-    instanceId: { type: "String", index: true },
   };
 }
 
@@ -458,7 +435,7 @@ export class ReserveParamsHistoryItem {
     availableLiquidity: "string",
     priceInEth: "string",
     priceInUsd: "string",
-    timestamp: "number",
+    timestamp: "string",
     totalScaledVariableDebt: "string",
     totalCurrentVariableDebt: "string",
     totalPrincipalStableDebt: "string",
@@ -477,7 +454,6 @@ export class ReserveParamsHistoryItem {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
-    instanceId: { type: "String", index: true },
   };
 }
 
@@ -495,7 +471,6 @@ export class IncentivesController {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
-    instanceId: { type: "String", index: true },
   };
 }
 
@@ -509,7 +484,6 @@ export class IncentivizedAction {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
-    instanceId: { type: "String", index: true },
   };
 }
 
@@ -523,7 +497,6 @@ export class ClaimIncentiveCall {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
-    instanceId: { type: "String", index: true },
   };
 }
 
@@ -536,7 +509,6 @@ export class MapAssetPool {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
-    instanceId: { type: "String", index: true },
   };
 }
 
@@ -623,7 +595,6 @@ export class Reserve {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
-    instanceId: { type: "String", index: true },
   };
 }
 
@@ -640,7 +611,6 @@ export class WETHReserve {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
-    instanceId: { type: "String", index: true },
   };
 }
 
@@ -649,14 +619,13 @@ export class ATokenBalanceHistoryItem {
   static schema = {
     id: { type: "String", index: true },
     userReserve: "string",
-    timestamp: "number",
+    timestamp: "string",
     scaledATokenBalance: "string",
     currentATokenBalance: "string",
     index: "string",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
-    instanceId: { type: "String", index: true },
   };
 }
 
@@ -667,12 +636,11 @@ export class VTokenBalanceHistoryItem {
     userReserve: "string",
     scaledVariableDebt: "string",
     currentVariableDebt: "string",
-    timestamp: "number",
+    timestamp: "string",
     index: "string",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
-    instanceId: { type: "String", index: true },
   };
 }
 
@@ -683,12 +651,11 @@ export class STokenBalanceHistoryItem {
     userReserve: "string",
     principalStableDebt: "string",
     currentStableDebt: "string",
-    timestamp: "number",
+    timestamp: "string",
     avgStableBorrowRate: "string",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
-    instanceId: { type: "String", index: true },
   };
 }
 
@@ -703,7 +670,6 @@ export class StableTokenDelegatedAllowance {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
-    instanceId: { type: "String", index: true },
   };
 }
 
@@ -718,7 +684,6 @@ export class VariableTokenDelegatedAllowance {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
-    instanceId: { type: "String", index: true },
   };
 }
 
@@ -765,7 +730,6 @@ export class UserReserve {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
-    instanceId: { type: "String", index: true },
   };
 }
 
@@ -791,7 +755,6 @@ export class User {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
-    instanceId: { type: "String", index: true },
   };
 }
 
@@ -807,7 +770,6 @@ export class SwapHistory {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
-    instanceId: { type: "String", index: true },
   };
 }
 
@@ -818,7 +780,6 @@ export interface IProtocol extends Document {
   pools: [string];
   blocknumber: String;
   entityId: String;
-  instanceId: String;
   chainId: String;
 }
 
@@ -827,7 +788,6 @@ export interface IContractToPoolMapping extends Document {
   pool: string;
   blocknumber: String;
   entityId: String;
-  instanceId: String;
   chainId: String;
 }
 
@@ -846,7 +806,6 @@ export interface IPoolConfigurationHistoryItem extends Document {
   timestamp: string;
   blocknumber: String;
   entityId: String;
-  instanceId: String;
   chainId: String;
 }
 
@@ -881,7 +840,6 @@ export interface IPool extends Document {
   paused: Boolean;
   blocknumber: String;
   entityId: String;
-  instanceId: String;
   chainId: String;
 }
 
@@ -889,10 +847,9 @@ export interface IPriceHistoryItem extends Document {
   id: string;
   asset: string;
   price: string;
-  timestamp: number;
+  timestamp: string;
   blocknumber: String;
   entityId: String;
-  instanceId: String;
   chainId: String;
 }
 
@@ -900,10 +857,9 @@ export interface IUsdEthPriceHistoryItem extends Document {
   id: string;
   oracle: string;
   price: string;
-  timestamp: number;
+  timestamp: string;
   blocknumber: String;
   entityId: String;
-  instanceId: String;
   chainId: String;
 }
 
@@ -924,7 +880,6 @@ export interface IPriceOracle extends Document {
   baseCurrencyUnit: string;
   blocknumber: String;
   entityId: String;
-  instanceId: String;
   chainId: String;
 }
 
@@ -936,7 +891,6 @@ export interface ISToken extends Document {
   tokenContractImpl: string;
   blocknumber: String;
   entityId: String;
-  instanceId: String;
   chainId: String;
 }
 
@@ -948,7 +902,6 @@ export interface IVToken extends Document {
   tokenContractImpl: string;
   blocknumber: String;
   entityId: String;
-  instanceId: String;
   chainId: String;
 }
 
@@ -960,7 +913,6 @@ export interface IAToken extends Document {
   tokenContractImpl: string;
   blocknumber: String;
   entityId: String;
-  instanceId: String;
   chainId: String;
 }
 
@@ -971,7 +923,6 @@ export interface IVariableDebtToken extends Document {
   underlyingAssetDecimals: number;
   blocknumber: String;
   entityId: String;
-  instanceId: String;
   chainId: String;
 }
 
@@ -982,7 +933,6 @@ export interface IStableDebtToken extends Document {
   underlyingAssetDecimals: number;
   blocknumber: String;
   entityId: String;
-  instanceId: String;
   chainId: String;
 }
 
@@ -992,7 +942,6 @@ export interface IReferrer extends Document {
   borrows: [string];
   blocknumber: String;
   entityId: String;
-  instanceId: String;
   chainId: String;
 }
 
@@ -1007,11 +956,10 @@ export interface IDeposit extends Document {
   userReserve: string;
   amount: string;
   referrer: string;
-  timestamp: number;
+  timestamp: string;
   assetPriceUSD: string;
   blocknumber: String;
   entityId: String;
-  instanceId: String;
   chainId: String;
 }
 
@@ -1025,11 +973,10 @@ export interface IRedeemUnderlying extends Document {
   reserve: string;
   userReserve: string;
   amount: string;
-  timestamp: number;
+  timestamp: string;
   assetPriceUSD: string;
   blocknumber: String;
   entityId: String;
-  instanceId: String;
   chainId: String;
 }
 
@@ -1046,13 +993,12 @@ export interface IBorrow extends Document {
   borrowRate: string;
   borrowRateMode: string;
   referrer: string;
-  timestamp: number;
+  timestamp: string;
   stableTokenDebt: string;
   variableTokenDebt: string;
   assetPriceUSD: string;
   blocknumber: String;
   entityId: String;
-  instanceId: String;
   chainId: String;
 }
 
@@ -1068,10 +1014,9 @@ export interface ISwap extends Document {
   borrowRateModeTo: string;
   stableBorrowRate: string;
   variableBorrowRate: string;
-  timestamp: number;
+  timestamp: string;
   blocknumber: String;
   entityId: String;
-  instanceId: String;
   chainId: String;
 }
 
@@ -1085,10 +1030,9 @@ export interface IUsageAsCollateral extends Document {
   userReserve: string;
   fromState: Boolean;
   toState: Boolean;
-  timestamp: number;
+  timestamp: string;
   blocknumber: String;
   entityId: String;
-  instanceId: String;
   chainId: String;
 }
 
@@ -1102,10 +1046,9 @@ export interface IRebalanceStableBorrowRate extends Document {
   userReserve: string;
   borrowRateFrom: string;
   borrowRateTo: string;
-  timestamp: number;
+  timestamp: string;
   blocknumber: String;
   entityId: String;
-  instanceId: String;
   chainId: String;
 }
 
@@ -1119,11 +1062,10 @@ export interface IRepay extends Document {
   reserve: string;
   userReserve: string;
   amount: string;
-  timestamp: number;
+  timestamp: string;
   assetPriceUSD: string;
   blocknumber: String;
   entityId: String;
-  instanceId: String;
   chainId: String;
 }
 
@@ -1135,11 +1077,10 @@ export interface IFlashLoan extends Document {
   amount: string;
   totalFee: string;
   initiator: string;
-  timestamp: number;
+  timestamp: string;
   assetPriceUSD: string;
   blocknumber: String;
   entityId: String;
-  instanceId: String;
   chainId: String;
 }
 
@@ -1156,12 +1097,11 @@ export interface ILiquidationCall extends Document {
   principalUserReserve: string;
   principalAmount: string;
   liquidator: string;
-  timestamp: number;
+  timestamp: string;
   collateralAssetPriceUSD: string;
   borrowAssetPriceUSD: string;
   blocknumber: String;
   entityId: String;
-  instanceId: String;
   chainId: String;
 }
 
@@ -1177,10 +1117,9 @@ export interface IReserveConfigurationHistoryItem extends Document {
   baseLTVasCollateral: string;
   reserveLiquidationThreshold: string;
   reserveLiquidationBonus: string;
-  timestamp: number;
+  timestamp: string;
   blocknumber: String;
   entityId: String;
-  instanceId: String;
   chainId: String;
 }
 
@@ -1200,7 +1139,7 @@ export interface IReserveParamsHistoryItem extends Document {
   availableLiquidity: string;
   priceInEth: string;
   priceInUsd: string;
-  timestamp: number;
+  timestamp: string;
   totalScaledVariableDebt: string;
   totalCurrentVariableDebt: string;
   totalPrincipalStableDebt: string;
@@ -1218,7 +1157,6 @@ export interface IReserveParamsHistoryItem extends Document {
   lifetimeDepositorsInterestEarned: string;
   blocknumber: String;
   entityId: String;
-  instanceId: String;
   chainId: String;
 }
 
@@ -1234,7 +1172,6 @@ export interface IncentivesController extends Document {
   claimIncentives: [string];
   blocknumber: String;
   entityId: String;
-  instanceId: String;
   chainId: String;
 }
 
@@ -1245,7 +1182,6 @@ export interface IncentivizedAction extends Document {
   amount: string;
   blocknumber: String;
   entityId: String;
-  instanceId: String;
   chainId: String;
 }
 
@@ -1256,7 +1192,6 @@ export interface IClaimIncentiveCall extends Document {
   amount: string;
   blocknumber: String;
   entityId: String;
-  instanceId: String;
   chainId: String;
 }
 
@@ -1266,7 +1201,6 @@ export interface IMapAssetPool extends Document {
   underlyingAsset: string;
   blocknumber: String;
   entityId: String;
-  instanceId: String;
   chainId: String;
 }
 
@@ -1352,7 +1286,6 @@ export interface IReserve extends Document {
   deposits: [string];
   blocknumber: String;
   entityId: String;
-  instanceId: String;
   chainId: String;
 }
 
@@ -1366,20 +1299,18 @@ export interface IWETHReserve extends Document {
   updatedBlockNumber: string;
   blocknumber: String;
   entityId: String;
-  instanceId: String;
   chainId: String;
 }
 
 export interface IATokenBalanceHistoryItem extends Document {
   id: string;
   userReserve: string;
-  timestamp: number;
+  timestamp: string;
   scaledATokenBalance: string;
   currentATokenBalance: string;
   index: string;
   blocknumber: String;
   entityId: String;
-  instanceId: String;
   chainId: String;
 }
 
@@ -1388,11 +1319,10 @@ export interface IVTokenBalanceHistoryItem extends Document {
   userReserve: string;
   scaledVariableDebt: string;
   currentVariableDebt: string;
-  timestamp: number;
+  timestamp: string;
   index: string;
   blocknumber: String;
   entityId: String;
-  instanceId: String;
   chainId: String;
 }
 
@@ -1401,11 +1331,10 @@ export interface ISTokenBalanceHistoryItem extends Document {
   userReserve: string;
   principalStableDebt: string;
   currentStableDebt: string;
-  timestamp: number;
+  timestamp: string;
   avgStableBorrowRate: string;
   blocknumber: String;
   entityId: String;
-  instanceId: String;
   chainId: String;
 }
 
@@ -1417,7 +1346,6 @@ export interface IStableTokenDelegatedAllowance extends Document {
   userReserve: string;
   blocknumber: String;
   entityId: String;
-  instanceId: String;
   chainId: String;
 }
 
@@ -1429,7 +1357,6 @@ export interface IVariableTokenDelegatedAllowance extends Document {
   userReserve: string;
   blocknumber: String;
   entityId: String;
-  instanceId: String;
   chainId: String;
 }
 
@@ -1475,7 +1402,6 @@ export interface IUserReserve extends Document {
   liquidationCallHistory: [string];
   blocknumber: String;
   entityId: String;
-  instanceId: String;
   chainId: String;
 }
 
@@ -1500,7 +1426,6 @@ export interface IUser extends Document {
   claimIncentives: [string];
   blocknumber: String;
   entityId: String;
-  instanceId: String;
   chainId: String;
 }
 
@@ -1513,6 +1438,5 @@ export interface ISwapHistory extends Document {
   swapType: string;
   blocknumber: String;
   entityId: String;
-  instanceId: String;
   chainId: String;
 }
