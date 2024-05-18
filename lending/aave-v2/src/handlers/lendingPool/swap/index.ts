@@ -4,7 +4,6 @@ import {
   Instance,
   ISecrets,
 } from "@blockflow-labs/utils";
-
 import {
   ContractToPoolMapping,
   Reserve,
@@ -12,43 +11,34 @@ import {
   IReserve,
   UserReserve,
   IUserReserve,
-  Borrow,
-  IBorrow,
+  Swap,
+  ISwap,
 } from "../../../types/schema";
-
 /**
- * @dev Event::Borrow(address reserve, address user, address onBehalfOf, uint256 amount, uint256 borrowRateMode, uint256 borrowRate, uint16 referral)
- * @param context trigger object with contains {event: {reserve ,user ,onBehalfOf ,amount ,borrowRateMode ,borrowRate ,referral }, transaction, block, log}
+ * @dev Event::Swap(address reserve, address user, uint256 rateMode)
+ * @param context trigger object with contains {event: {reserve ,user ,rateMode }, transaction, block, log}
  * @param bind init function for database wrapper methods
  */
-export const BorrowHandler = async (
+export const SwapHandler = async (
   context: IEventContext,
   bind: IBind,
   secrets: ISecrets
 ) => {
-  // Implement your event handler logic for Borrow here
+  // Implement your event handler logic for Swap here
 
   const { event, transaction, block, log } = context;
-  let {
-    reserve,
-    user,
-    onBehalfOf,
-    amount,
-    borrowRateMode,
-    borrowRate,
-    referral,
-  } = event;
+  const { reserve, user, rateMode } = event;
 
   let poolId: string;
 
   const txHash = transaction.transaction_hash.toString();
-  const action = "Borrow";
+  const action = "Swap";
   let contractAddress = log.log_address;
 
   const contractToPoolMappingDB = bind(ContractToPoolMapping);
   const reserveDB = bind(Reserve);
   const userReserveDB = bind(UserReserve);
-  const borrowDB = bind(Borrow);
+  const swapDB = bind(Swap);
 
   const contractToPoolMapping: IContractToPoolMapping =
     await contractToPoolMappingDB.findOne({ id: contractAddress });
@@ -136,7 +126,7 @@ export const BorrowHandler = async (
     });
   }
 
-  const userReserveId = getUserReserveId(onBehalfOf, underlyingAsset, poolId);
+  const userReserveId = getUserReserveId(user, underlyingAsset, poolId);
   let userReserve: IUserReserve = await userReserveDB.findOne({
     id: userReserveId,
   });
@@ -166,14 +156,14 @@ export const BorrowHandler = async (
     aIncentivesLastUpdateTimestamp: 0,
     vIncentivesLastUpdateTimestamp: 0,
     sIncentivesLastUpdateTimestamp: 0,
-    user: onBehalfOf,
+    user: user,
 
     reserve: reserveId,
   });
 
   const poolReserve: IReserve = await reserveDB.findOne({ id: reserveId });
 
-  const borrowId =
+  const swapId =
     block.block_number.toString() +
     ":" +
     transaction.transaction_index.toString() +
@@ -184,28 +174,26 @@ export const BorrowHandler = async (
     ":" +
     log.log_transaction_index.toString();
 
-  const $borrow: IBorrow = await borrowDB.findOne({
-    id: borrowId,
-  });
-
-  if (!$borrow)
-    await borrowDB.create({
-      id: borrowId,
-      txHash: txHash,
+  const $swap: ISwap = await swapDB.findOne({});
+  if (!$swap) {
+    await swapDB.create({
+      id: swapId,
+      txHash: transaction.transaction_hash,
       action: action,
-      pool: poolReserve.pool.toString(),
-      user: userReserve.user.toString(),
-      caller: user.toString(),
-      reserve: poolReserve.pool.toString(),
-      userReserve: userReserve.id.toString(),
-      amount: amount.toString(),
-      borrowRate: borrowRate.toString(),
-      borrowRateMode: borrowRateMode.toString(),
-      referrer: referral.toString(),
-      timestamp: block.block_timestamp.toString(),
-      stableTokenDebt: userReserve.principalStableDebt.toString(),
-      variableTokenDebt: userReserve.scaledATokenBalance.toString(),
+      pool: poolReserve.pool,
+      borrowRateModeFrom: getBorrowRateMode(rateMode.toString()),
+      borrowRateModeTo:
+        getBorrowRateMode(rateMode) === "BORROW_MODE_STABLE"
+          ? "BORROW_MODE_VARIABLE"
+          : "BORROW_MODE_STABLE",
+      variableBorrowRate: poolReserve.variableBorrowRate,
+      stableBorrowRate: poolReserve.stableBorrowRate,
+      user: userReserve.user,
+      userReserve: userReserve.id,
+      reserve : poolReserve.id,
+      timestamp: block.block_timestamp
     });
+  }
 };
 
 function getReserveId(underlyingAsset: string, poolId: string): string {
@@ -218,4 +206,15 @@ function getUserReserveId(
   poolId: string
 ): string {
   return userAddress + underlyingAssetAddress + poolId;
+}
+
+function getBorrowRateMode(mode:string): string {
+  if (mode == "0") {
+    return "BORROW_MODE_NONE";
+  } else if (mode == "1") {
+    return "BORROW_MODE_STABLE";
+  } else if (mode == "2") {
+    return "BORROW_MODE_VARIABLE";
+  }
+  return "INVALID!";
 }

@@ -10,45 +10,37 @@ import {
   Reserve,
   IContractToPoolMapping,
   IReserve,
-  UserReserve,
-  IUserReserve,
-  Borrow,
-  IBorrow,
 } from "../../../types/schema";
 
 /**
- * @dev Event::Borrow(address reserve, address user, address onBehalfOf, uint256 amount, uint256 borrowRateMode, uint256 borrowRate, uint16 referral)
- * @param context trigger object with contains {event: {reserve ,user ,onBehalfOf ,amount ,borrowRateMode ,borrowRate ,referral }, transaction, block, log}
+ * @dev Event::ReserveDataUpdated(address reserve, uint256 liquidityRate, uint256 stableBorrowRate, uint256 variableBorrowRate, uint256 liquidityIndex, uint256 variableBorrowIndex)
+ * @param context trigger object with contains {event: {reserve ,liquidityRate ,stableBorrowRate ,variableBorrowRate ,liquidityIndex ,variableBorrowIndex }, transaction, block, log}
  * @param bind init function for database wrapper methods
  */
-export const BorrowHandler = async (
+export const ReserveDataUpdatedHandler = async (
   context: IEventContext,
   bind: IBind,
   secrets: ISecrets
 ) => {
-  // Implement your event handler logic for Borrow here
+  // Implement your event handler logic for ReserveDataUpdated here
 
   const { event, transaction, block, log } = context;
-  let {
+  const {
     reserve,
-    user,
-    onBehalfOf,
-    amount,
-    borrowRateMode,
-    borrowRate,
-    referral,
+    liquidityRate,
+    stableBorrowRate,
+    variableBorrowRate,
+    liquidityIndex,
+    variableBorrowIndex,
   } = event;
 
   let poolId: string;
 
   const txHash = transaction.transaction_hash.toString();
-  const action = "Borrow";
   let contractAddress = log.log_address;
 
   const contractToPoolMappingDB = bind(ContractToPoolMapping);
   const reserveDB = bind(Reserve);
-  const userReserveDB = bind(UserReserve);
-  const borrowDB = bind(Borrow);
 
   const contractToPoolMapping: IContractToPoolMapping =
     await contractToPoolMappingDB.findOne({ id: contractAddress });
@@ -135,87 +127,19 @@ export const BorrowHandler = async (
       lifetimeDepositorsInterestEarned: "0",
     });
   }
+  let reserveInstance: IReserve = await reserveDB.findOne({ id: reserveId });
 
-  const userReserveId = getUserReserveId(onBehalfOf, underlyingAsset, poolId);
-  let userReserve: IUserReserve = await userReserveDB.findOne({
-    id: userReserveId,
-  });
-
-  userReserve ??= await userReserveDB.create({
-    id: userReserveId,
-    pool: poolId,
-    usageAsCollateralEnabledOnUser: false,
-    scaledATokenBalance: "0",
-    scaledVariableDebt: "0",
-    principalStableDebt: "0",
-    currentATokenBalance: "0",
-    currentVariableDebt: "0",
-    currentStableDebt: "0",
-    stableBorrowRate: "0",
-    oldStableBorrowRate: "0",
-    currentTotalDebt: "0",
-    variableBorrowIndex: "0",
-    lastUpdateTimestamp: 0,
-    liquidityRate: "0",
-    stableBorrowLastUpdateTimestamp: 0,
-
-    // incentives
-    aTokenincentivesUserIndex: "0",
-    vTokenincentivesUserIndex: "0",
-    sTokenincentivesUserIndex: "0",
-    aIncentivesLastUpdateTimestamp: 0,
-    vIncentivesLastUpdateTimestamp: 0,
-    sIncentivesLastUpdateTimestamp: 0,
-    user: onBehalfOf,
-
-    reserve: reserveId,
-  });
-
-  const poolReserve: IReserve = await reserveDB.findOne({ id: reserveId });
-
-  const borrowId =
-    block.block_number.toString() +
-    ":" +
-    transaction.transaction_index.toString() +
-    ":" +
-    transaction.transaction_hash.toString() +
-    ":" +
-    log.log_index.toString() +
-    ":" +
-    log.log_transaction_index.toString();
-
-  const $borrow: IBorrow = await borrowDB.findOne({
-    id: borrowId,
-  });
-
-  if (!$borrow)
-    await borrowDB.create({
-      id: borrowId,
-      txHash: txHash,
-      action: action,
-      pool: poolReserve.pool.toString(),
-      user: userReserve.user.toString(),
-      caller: user.toString(),
-      reserve: poolReserve.pool.toString(),
-      userReserve: userReserve.id.toString(),
-      amount: amount.toString(),
-      borrowRate: borrowRate.toString(),
-      borrowRateMode: borrowRateMode.toString(),
-      referrer: referral.toString(),
-      timestamp: block.block_timestamp.toString(),
-      stableTokenDebt: userReserve.principalStableDebt.toString(),
-      variableTokenDebt: userReserve.scaledATokenBalance.toString(),
-    });
+  reserveInstance.stableBorrowRate = stableBorrowRate;
+  reserveInstance.variableBorrowRate = variableBorrowRate;
+  reserveInstance.variableBorrowIndex = variableBorrowIndex;
+  let timestamp = event.block.timestamp;
+  let prevTimestamp = reserve.lastUpdateTimestamp;
+  if(timestamp > prevTimestamp)
+  {
+    
+  }
 };
 
 function getReserveId(underlyingAsset: string, poolId: string): string {
   return underlyingAsset + poolId;
-}
-
-function getUserReserveId(
-  userAddress: string,
-  underlyingAssetAddress: string,
-  poolId: string
-): string {
-  return userAddress + underlyingAssetAddress + poolId;
 }

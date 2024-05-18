@@ -12,43 +12,33 @@ import {
   IReserve,
   UserReserve,
   IUserReserve,
-  Borrow,
-  IBorrow,
+  UsageAsCollateral,
+  IUsageAsCollateral,
 } from "../../../types/schema";
-
 /**
- * @dev Event::Borrow(address reserve, address user, address onBehalfOf, uint256 amount, uint256 borrowRateMode, uint256 borrowRate, uint16 referral)
- * @param context trigger object with contains {event: {reserve ,user ,onBehalfOf ,amount ,borrowRateMode ,borrowRate ,referral }, transaction, block, log}
+ * @dev Event::ReserveUsedAsCollateralDisabled(address reserve, address user)
+ * @param context trigger object with contains {event: {reserve ,user }, transaction, block, log}
  * @param bind init function for database wrapper methods
  */
-export const BorrowHandler = async (
+export const ReserveUsedAsCollateralDisabledHandler = async (
   context: IEventContext,
   bind: IBind,
   secrets: ISecrets
 ) => {
-  // Implement your event handler logic for Borrow here
+  // Implement your event handler logic for ReserveUsedAsCollateralDisabled here
 
   const { event, transaction, block, log } = context;
-  let {
-    reserve,
-    user,
-    onBehalfOf,
-    amount,
-    borrowRateMode,
-    borrowRate,
-    referral,
-  } = event;
+  const { reserve, user } = event;
 
   let poolId: string;
 
   const txHash = transaction.transaction_hash.toString();
-  const action = "Borrow";
   let contractAddress = log.log_address;
 
   const contractToPoolMappingDB = bind(ContractToPoolMapping);
   const reserveDB = bind(Reserve);
   const userReserveDB = bind(UserReserve);
-  const borrowDB = bind(Borrow);
+  const usageAsCollateralDB = bind(UsageAsCollateral);
 
   const contractToPoolMapping: IContractToPoolMapping =
     await contractToPoolMappingDB.findOne({ id: contractAddress });
@@ -136,7 +126,7 @@ export const BorrowHandler = async (
     });
   }
 
-  const userReserveId = getUserReserveId(onBehalfOf, underlyingAsset, poolId);
+  const userReserveId = getUserReserveId(user, underlyingAsset, poolId);
   let userReserve: IUserReserve = await userReserveDB.findOne({
     id: userReserveId,
   });
@@ -166,14 +156,17 @@ export const BorrowHandler = async (
     aIncentivesLastUpdateTimestamp: 0,
     vIncentivesLastUpdateTimestamp: 0,
     sIncentivesLastUpdateTimestamp: 0,
-    user: onBehalfOf,
+    user: user,
 
     reserve: reserveId,
   });
 
   const poolReserve: IReserve = await reserveDB.findOne({ id: reserveId });
+  userReserve = await userReserveDB.findOne({
+    id: userReserveId,
+  });
 
-  const borrowId =
+  const usageAsCollateralId =
     block.block_number.toString() +
     ":" +
     transaction.transaction_index.toString() +
@@ -184,28 +177,27 @@ export const BorrowHandler = async (
     ":" +
     log.log_transaction_index.toString();
 
-  const $borrow: IBorrow = await borrowDB.findOne({
-    id: borrowId,
+  const $usageAsCollateral = await usageAsCollateralDB.findOne({
+    id: usageAsCollateralId,
   });
-
-  if (!$borrow)
-    await borrowDB.create({
-      id: borrowId,
+  if (!$reserveInstance) {
+    await usageAsCollateralDB.create({
+      id: usageAsCollateralId,
       txHash: txHash,
-      action: action,
-      pool: poolReserve.pool.toString(),
-      user: userReserve.user.toString(),
-      caller: user.toString(),
-      reserve: poolReserve.pool.toString(),
-      userReserve: userReserve.id.toString(),
-      amount: amount.toString(),
-      borrowRate: borrowRate.toString(),
-      borrowRateMode: borrowRateMode.toString(),
-      referrer: referral.toString(),
-      timestamp: block.block_timestamp.toString(),
-      stableTokenDebt: userReserve.principalStableDebt.toString(),
-      variableTokenDebt: userReserve.scaledATokenBalance.toString(),
+      action: "UsageAsCollateral",
+      pool: poolReserve.pool,
+      fromState: userReserve.usageAsCollateralEnabledOnUser,
+      toState: true,
+      user: userReserve.user,
+      userReserve: userReserve.id,
+      reserve: poolReserve.id,
+      timestamp: block.block_timestamp,
     });
+  }
+
+  userReserve.lastUpdateTimestamp = Number(block.block_timestamp);
+  userReserve.usageAsCollateralEnabledOnUser = false;
+  await userReserveDB.save(userReserve);
 };
 
 function getReserveId(underlyingAsset: string, poolId: string): string {

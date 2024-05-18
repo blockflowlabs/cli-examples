@@ -22,3 +22,54 @@ Resources:
         Handler: src/handlers/lendingPool/repay/index.RepayHandler
       - Event: Withdraw(address indexed,address indexed,address indexed,uint256)
         Handler: src/handlers/lendingPool/withdraw/index.WithdrawHandler
+      - Event: Swap(indexed address,indexed address,uint256)
+        Handler: src/handlers/lendingPool/swap/index.SwapHandler
+      - Event: ReserveUsedAsCollateralEnabled(indexed address,indexed address)
+        Handler: src/handlers/lendingPool/ReserveUsedAsCollateralEnabled/index.ReserveUsedAsCollateralEnabledHandler
+      - Event: ReserveUsedAsCollateralDisabled(indexed address,indexed address)
+        Handler: src/handlers/lendingPool/ReserveUsedAsCollateralDisabled/index.ReserveUsedAsCollateralDisabledHandler
+      - Event: RebalanceStableBorrowRate(indexed address,indexed address)
+        Handler: src/handlers/lendingPool/RebalanceStableBorrowRate/index.RebalanceStableBorrowRateHandler
+      - Event: FlashLoan(indexed address,indexed address,indexed address,uint256,uint256,uint16)
+        Handler: src/handlers/lendingPool/FlashLoan/index.FlashLoanHandler
+      - Event: LiquidationCall(indexed address,indexed address,indexed address,uint256,uint256,address,bool)
+        Handler: src/handlers/lendingPool/LiquidationCall/index.LiquidationCallHandler
+      - Event: Paused()
+        Handler: src/handlers/lendingPool/Paused/index.PausedHandler
+      - Event: Unpaused()
+        Handler: src/handlers/lendingPool/Unpaused/index.UnpausedHandler
+      - Event: ReserveDataUpdated(indexed address,uint256,uint256,uint256,uint256,uint256)
+        Handler: src/handlers/lendingPool/ReserveDataUpdated/index.ReserveDataUpdatedHandler
+
+  - Name: aaveIncentivesController
+    Abi: src/abis/aaveIncentivesController.json
+    Type: contract/event
+    Address: "0xd784927Ff2f95ba542BfC824c8a8a98F3495f6b5"
+    Triggers:
+      - Event: AssetConfigUpdated(indexed address,uint256)
+        Handler: src/handlers/incentives-controller/AssetConfigUpdated/index.AssetConfigUpdatedHandler
+      - Event: Deposit(address indexed,address,address indexed,uint256,uint16 indexed)
+        Handler: src/handlers/lendingPool/deposit/index.DepositHandler
+      - Event: Repay(address indexed,address indexed,address indexed,uint256)
+        Handler: src/handlers/lendingPool/repay/index.RepayHandler
+      - Event: Withdraw(address indexed,address indexed,address indexed,uint256)
+        Handler: src/handlers/lendingPool/withdraw/index.WithdrawHandler
+      - Event: Swap(indexed address,indexed address,uint256)
+        Handler: src/handlers/lendingPool/swap/index.SwapHandler
+      - Event: ReserveUsedAsCollateralEnabled(indexed address,indexed address)
+        Handler: src/handlers/lendingPool/ReserveUsedAsCollateralEnabled/index.ReserveUsedAsCollateralEnabledHandler
+      - Event: ReserveUsedAsCollateralDisabled(indexed address,indexed address)
+        Handler: src/handlers/lendingPool/ReserveUsedAsCollateralDisabled/index.ReserveUsedAsCollateralDisabledHandler
+      - Event: RebalanceStableBorrowRate(indexed address,indexed address)
+        Handler: src/handlers/lendingPool/RebalanceStableBorrowRate/index.RebalanceStableBorrowRateHandler
+      - Event: FlashLoan(indexed address,indexed address,indexed address,uint256,uint256,uint16)
+        Handler: src/handlers/lendingPool/FlashLoan/index.FlashLoanHandler
+      - Event: LiquidationCall(indexed address,indexed address,indexed address,uint256,uint256,address,bool)
+        Handler: src/handlers/lendingPool/LiquidationCall/index.LiquidationCallHandler
+      - Event: Paused()
+        Handler: src/handlers/lendingPool/Paused/index.PausedHandler
+      - Event: Unpaused()
+        Handler: src/handlers/lendingPool/Unpaused/index.UnpausedHandler
+      - Event: ReserveDataUpdated(indexed address,uint256,uint256,uint256,uint256,uint256)
+        Handler: src/handlers/lendingPool/ReserveDataUpdated/index.ReserveDataUpdatedHandler
+

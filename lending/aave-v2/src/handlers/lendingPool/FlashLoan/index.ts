@@ -4,67 +4,51 @@ import {
   Instance,
   ISecrets,
 } from "@blockflow-labs/utils";
+var BigNumber = require("bignumber.js");
 
 import {
   ContractToPoolMapping,
   Reserve,
   IContractToPoolMapping,
   IReserve,
-  UserReserve,
-  IUserReserve,
-  Borrow,
-  IBorrow,
+  FlashLoan,
+  IFlashLoan,
 } from "../../../types/schema";
 
 /**
- * @dev Event::Borrow(address reserve, address user, address onBehalfOf, uint256 amount, uint256 borrowRateMode, uint256 borrowRate, uint16 referral)
- * @param context trigger object with contains {event: {reserve ,user ,onBehalfOf ,amount ,borrowRateMode ,borrowRate ,referral }, transaction, block, log}
+ * @dev Event::FlashLoan(address target, address initiator, address asset, uint256 amount, uint256 premium, uint16 referralCode)
+ * @param context trigger object with contains {event: {target ,initiator ,asset ,amount ,premium ,referralCode }, transaction, block, log}
  * @param bind init function for database wrapper methods
  */
-export const BorrowHandler = async (
+export const FlashLoanHandler = async (
   context: IEventContext,
   bind: IBind,
   secrets: ISecrets
 ) => {
-  // Implement your event handler logic for Borrow here
+  // Implement your event handler logic for FlashLoan here
 
   const { event, transaction, block, log } = context;
-  let {
-    reserve,
-    user,
-    onBehalfOf,
-    amount,
-    borrowRateMode,
-    borrowRate,
-    referral,
-  } = event;
+  const { target, initiator, asset, amount, premium, referralCode } = event;
+
+  const reserveDB = bind(Reserve);
+  const contractToPoolMappingDB = bind(ContractToPoolMapping);
+  const flashloanDB = bind(FlashLoan);
 
   let poolId: string;
 
-  const txHash = transaction.transaction_hash.toString();
-  const action = "Borrow";
-  let contractAddress = log.log_address;
-
-  const contractToPoolMappingDB = bind(ContractToPoolMapping);
-  const reserveDB = bind(Reserve);
-  const userReserveDB = bind(UserReserve);
-  const borrowDB = bind(Borrow);
-
   const contractToPoolMapping: IContractToPoolMapping =
-    await contractToPoolMappingDB.findOne({ id: contractAddress });
+    await contractToPoolMappingDB.findOne({ id: event.address });
 
   if (!contractToPoolMapping) poolId = "not yet defined";
   else poolId = contractToPoolMapping.pool;
 
-  let reserveId = getReserveId(reserve, poolId);
-  const underlyingAsset = reserve;
-
+  let reserveId = getReserveId(asset, poolId);
   let $reserveInstance: IReserve = await reserveDB.findOne({ id: reserveId });
 
   if (!$reserveInstance) {
     reserveDB.create({
       id: reserveId,
-      underlyingAsset: underlyingAsset,
+      underlyingAsset: asset,
       pool: poolId,
       symbol: "",
       name: "",
@@ -136,44 +120,27 @@ export const BorrowHandler = async (
     });
   }
 
-  const userReserveId = getUserReserveId(onBehalfOf, underlyingAsset, poolId);
-  let userReserve: IUserReserve = await userReserveDB.findOne({
-    id: userReserveId,
-  });
+  let poolReserve = await reserveDB.findOne({ id: reserveId });
+  poolReserve.availableLiquidity = new BigNumber(poolReserve.availableLiquidity)
+    .plus(premium)
+    .toString();
 
-  userReserve ??= await userReserveDB.create({
-    id: userReserveId,
-    pool: poolId,
-    usageAsCollateralEnabledOnUser: false,
-    scaledATokenBalance: "0",
-    scaledVariableDebt: "0",
-    principalStableDebt: "0",
-    currentATokenBalance: "0",
-    currentVariableDebt: "0",
-    currentStableDebt: "0",
-    stableBorrowRate: "0",
-    oldStableBorrowRate: "0",
-    currentTotalDebt: "0",
-    variableBorrowIndex: "0",
-    lastUpdateTimestamp: 0,
-    liquidityRate: "0",
-    stableBorrowLastUpdateTimestamp: 0,
+  poolReserve.lifetimeFlashLoans = new BigNumber(poolReserve.lifetimeFlashLoans)
+    .plus(amount)
+    .toString();
 
-    // incentives
-    aTokenincentivesUserIndex: "0",
-    vTokenincentivesUserIndex: "0",
-    sTokenincentivesUserIndex: "0",
-    aIncentivesLastUpdateTimestamp: 0,
-    vIncentivesLastUpdateTimestamp: 0,
-    sIncentivesLastUpdateTimestamp: 0,
-    user: onBehalfOf,
+  poolReserve.lifetimeFlashLoanPremium = new BigNumber(
+    poolReserve.lifetimeFlashLoanPremium
+  )
+    .plus(premium)
+    .toString();
+  poolReserve.totalATokenSupply = new BigNumber(poolReserve.totalATokenSupply)
+    .plus(premium)
+    .toString();
 
-    reserve: reserveId,
-  });
+  await reserveDB.save(poolReserve);
 
-  const poolReserve: IReserve = await reserveDB.findOne({ id: reserveId });
-
-  const borrowId =
+  const flashloanId =
     block.block_number.toString() +
     ":" +
     transaction.transaction_index.toString() +
@@ -184,38 +151,21 @@ export const BorrowHandler = async (
     ":" +
     log.log_transaction_index.toString();
 
-  const $borrow: IBorrow = await borrowDB.findOne({
-    id: borrowId,
-  });
-
-  if (!$borrow)
-    await borrowDB.create({
-      id: borrowId,
-      txHash: txHash,
-      action: action,
-      pool: poolReserve.pool.toString(),
-      user: userReserve.user.toString(),
-      caller: user.toString(),
-      reserve: poolReserve.pool.toString(),
-      userReserve: userReserve.id.toString(),
-      amount: amount.toString(),
-      borrowRate: borrowRate.toString(),
-      borrowRateMode: borrowRateMode.toString(),
-      referrer: referral.toString(),
-      timestamp: block.block_timestamp.toString(),
-      stableTokenDebt: userReserve.principalStableDebt.toString(),
-      variableTokenDebt: userReserve.scaledATokenBalance.toString(),
+  const $flashloan = await flashloanDB.findOne({ id: flashloanId });
+  if (!$flashloan) {
+    await flashloanDB.create({
+      id: flashloanId,
+      pool: poolReserve.pool,
+      reserve: poolReserve.id,
+      target: target,
+      initiator: initiator,
+      totalFee: premium,
+      amount: amount,
+      timestamp: block.block_timestamp,
     });
+  }
 };
 
 function getReserveId(underlyingAsset: string, poolId: string): string {
   return underlyingAsset + poolId;
-}
-
-function getUserReserveId(
-  userAddress: string,
-  underlyingAssetAddress: string,
-  poolId: string
-): string {
-  return userAddress + underlyingAssetAddress + poolId;
 }

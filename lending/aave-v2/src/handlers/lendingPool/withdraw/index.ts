@@ -24,7 +24,7 @@ import {
 export const WithdrawHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets
+  secrets: ISecrets,
 ) => {
   // Implement your event handler logic for Withdraw here
 
@@ -129,7 +129,7 @@ export const WithdrawHandler = async (
   const userReserveId = getUserReserveId(
     user.toString(),
     underlyingAsset,
-    poolId
+    poolId,
   );
   let userReserve: IUserReserve = await userReserveDB.findOne({
     id: userReserveId,
@@ -183,18 +183,18 @@ export const WithdrawHandler = async (
   });
 
   if (!$withdraw)
-  await redeemUnderlyingDB.create({
-    id: withdrawId,
-    txHash: txHash,
-    action: action,
-    pool: poolReserve.pool.toString(),
-    user: userReserve.user.toString(),
-    to: to.toString(),
-    reserve: poolReserve.pool.toString(),
-    userReserve: userReserve.id.toString(),
-    amount: amount.toString(),
-    timestamp: block.block_timestamp.toString(),
-  });
+    await redeemUnderlyingDB.create({
+      id: withdrawId,
+      txHash: txHash,
+      action: action,
+      pool: poolReserve.pool.toString(),
+      user: userReserve.user.toString(),
+      to: to.toString(),
+      reserve: poolReserve.pool.toString(),
+      userReserve: userReserve.id.toString(),
+      amount: amount.toString(),
+      timestamp: block.block_timestamp.toString(),
+    });
 };
 
 function getReserveId(underlyingAsset: string, poolId: string): string {
@@ -204,7 +204,7 @@ function getReserveId(underlyingAsset: string, poolId: string): string {
 function getUserReserveId(
   userAddress: string,
   underlyingAssetAddress: string,
-  poolId: string
+  poolId: string,
 ): string {
   return userAddress + underlyingAssetAddress + poolId;
 }

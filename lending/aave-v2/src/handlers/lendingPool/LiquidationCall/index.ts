@@ -12,43 +12,44 @@ import {
   IReserve,
   UserReserve,
   IUserReserve,
-  Borrow,
-  IBorrow,
+  LiquidationCall,
+  ILiquidationCall,
 } from "../../../types/schema";
+var BigNumber = require("bignumber.js");
 
 /**
- * @dev Event::Borrow(address reserve, address user, address onBehalfOf, uint256 amount, uint256 borrowRateMode, uint256 borrowRate, uint16 referral)
- * @param context trigger object with contains {event: {reserve ,user ,onBehalfOf ,amount ,borrowRateMode ,borrowRate ,referral }, transaction, block, log}
+ * @dev Event::LiquidationCall(address collateralAsset, address debtAsset, address user, uint256 debtToCover, uint256 liquidatedCollateralAmount, address liquidator, bool receiveAToken)
+ * @param context trigger object with contains {event: {collateralAsset ,debtAsset ,user ,debtToCover ,liquidatedCollateralAmount ,liquidator ,receiveAToken }, transaction, block, log}
  * @param bind init function for database wrapper methods
  */
-export const BorrowHandler = async (
+export const LiquidationCallHandler = async (
   context: IEventContext,
   bind: IBind,
   secrets: ISecrets
 ) => {
-  // Implement your event handler logic for Borrow here
+  // Implement your event handler logic for LiquidationCall here
 
   const { event, transaction, block, log } = context;
-  let {
-    reserve,
+  const {
+    collateralAsset,
+    debtAsset,
     user,
-    onBehalfOf,
-    amount,
-    borrowRateMode,
-    borrowRate,
-    referral,
+    debtToCover,
+    liquidatedCollateralAmount,
+    liquidator,
+    receiveAToken,
   } = event;
 
   let poolId: string;
 
   const txHash = transaction.transaction_hash.toString();
-  const action = "Borrow";
+  const action = "LiquidationCall";
   let contractAddress = log.log_address;
 
   const contractToPoolMappingDB = bind(ContractToPoolMapping);
   const reserveDB = bind(Reserve);
   const userReserveDB = bind(UserReserve);
-  const borrowDB = bind(Borrow);
+  const liquidationCallDB = bind(LiquidationCall);
 
   const contractToPoolMapping: IContractToPoolMapping =
     await contractToPoolMappingDB.findOne({ id: contractAddress });
@@ -56,15 +57,16 @@ export const BorrowHandler = async (
   if (!contractToPoolMapping) poolId = "not yet defined";
   else poolId = contractToPoolMapping.pool;
 
-  let reserveId = getReserveId(reserve, poolId);
-  const underlyingAsset = reserve;
+  let collateralreserveId = getReserveId(collateralAsset, poolId);
 
-  let $reserveInstance: IReserve = await reserveDB.findOne({ id: reserveId });
+  let $reserveInstance: IReserve = await reserveDB.findOne({
+    id: collateralreserveId,
+  });
 
   if (!$reserveInstance) {
     reserveDB.create({
-      id: reserveId,
-      underlyingAsset: underlyingAsset,
+      id: collateralreserveId,
+      underlyingAsset: collateralAsset,
       pool: poolId,
       symbol: "",
       name: "",
@@ -136,13 +138,17 @@ export const BorrowHandler = async (
     });
   }
 
-  const userReserveId = getUserReserveId(onBehalfOf, underlyingAsset, poolId);
+  const principaluserReserveId = getUserReserveId(
+    user,
+    collateralAsset,
+    poolId
+  );
   let userReserve: IUserReserve = await userReserveDB.findOne({
-    id: userReserveId,
+    id: principaluserReserveId,
   });
 
   userReserve ??= await userReserveDB.create({
-    id: userReserveId,
+    id: principaluserReserveId,
     pool: poolId,
     usageAsCollateralEnabledOnUser: false,
     scaledATokenBalance: "0",
@@ -166,14 +172,29 @@ export const BorrowHandler = async (
     aIncentivesLastUpdateTimestamp: 0,
     vIncentivesLastUpdateTimestamp: 0,
     sIncentivesLastUpdateTimestamp: 0,
-    user: onBehalfOf,
+    user: user,
 
-    reserve: reserveId,
+    reserve: collateralreserveId,
   });
 
-  const poolReserve: IReserve = await reserveDB.findOne({ id: reserveId });
+  const collateralPoolReserve: IReserve = await reserveDB.findOne({
+    id: collateralreserveId,
+  });
+  const collateralUserReserve: IUserReserve = await userReserveDB.findOne({
+    id: principaluserReserveId,
+  });
 
-  const borrowId =
+  collateralPoolReserve.lifetimeLiquidated = new BigNumber(
+    collateralPoolReserve.lifetimeLiquidated
+  )
+    .plus(liquidatedCollateralAmount)
+    .toString();
+  await reserveDB.save(collateralPoolReserve);
+
+  const principalUserReserveId = getUserReserveId(user, debtAsset, poolId);
+  const principalPoolReserveId = getReserveId(debtAsset, poolId);
+
+  const liquidationCallID =
     block.block_number.toString() +
     ":" +
     transaction.transaction_index.toString() +
@@ -184,28 +205,26 @@ export const BorrowHandler = async (
     ":" +
     log.log_transaction_index.toString();
 
-  const $borrow: IBorrow = await borrowDB.findOne({
-    id: borrowId,
+  const $liquidationCall = await liquidationCallDB.findOne({
+    id: liquidationCallID,
   });
-
-  if (!$borrow)
-    await borrowDB.create({
-      id: borrowId,
+  if (!$liquidationCall) {
+    await liquidationCallDB.create({
+      id: liquidationCallID,
       txHash: txHash,
-      action: action,
-      pool: poolReserve.pool.toString(),
-      user: userReserve.user.toString(),
-      caller: user.toString(),
-      reserve: poolReserve.pool.toString(),
-      userReserve: userReserve.id.toString(),
-      amount: amount.toString(),
-      borrowRate: borrowRate.toString(),
-      borrowRateMode: borrowRateMode.toString(),
-      referrer: referral.toString(),
-      timestamp: block.block_timestamp.toString(),
-      stableTokenDebt: userReserve.principalStableDebt.toString(),
-      variableTokenDebt: userReserve.scaledATokenBalance.toString(),
+      action: "string",
+      pool: poolId,
+      user: user,
+      collateralReserve: collateralPoolReserve.id,
+      collateralUserReserve: collateralUserReserve.id,
+      collateralAmount: liquidatedCollateralAmount,
+      principalReserve: principalPoolReserveId,
+      principalUserReserve: principalUserReserveId,
+      principalAmount: debtToCover,
+      liquidator: liquidator,
+      timestamp: block.block_timestamp,
     });
+  }
 };
 
 function getReserveId(underlyingAsset: string, poolId: string): string {
