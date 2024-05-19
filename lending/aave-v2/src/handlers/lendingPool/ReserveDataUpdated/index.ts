@@ -20,7 +20,7 @@ import {
 export const ReserveDataUpdatedHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets
+  secrets: ISecrets,
 ) => {
   // Implement your event handler logic for ReserveDataUpdated here
 
@@ -134,9 +134,7 @@ export const ReserveDataUpdatedHandler = async (
   reserveInstance.variableBorrowIndex = variableBorrowIndex;
   let timestamp = event.block.timestamp;
   let prevTimestamp = reserve.lastUpdateTimestamp;
-  if(timestamp > prevTimestamp)
-  {
-    
+  if (timestamp > prevTimestamp) {
   }
 };
 

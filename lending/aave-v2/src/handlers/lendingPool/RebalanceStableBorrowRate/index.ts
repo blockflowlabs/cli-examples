@@ -24,7 +24,7 @@ import {
 export const RebalanceStableBorrowRateHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets
+  secrets: ISecrets,
 ) => {
   // Implement your event handler logic for RebalanceStableBorrowRate here
 
@@ -198,7 +198,7 @@ function getReserveId(underlyingAsset: string, poolId: string): string {
 function getUserReserveId(
   userAddress: string,
   underlyingAssetAddress: string,
-  poolId: string
+  poolId: string,
 ): string {
   return userAddress + underlyingAssetAddress + poolId;
 }

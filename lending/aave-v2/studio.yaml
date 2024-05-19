@@ -48,28 +48,13 @@ Resources:
     Triggers:
       - Event: AssetConfigUpdated(indexed address,uint256)
         Handler: src/handlers/incentives-controller/AssetConfigUpdated/index.AssetConfigUpdatedHandler
-      - Event: Deposit(address indexed,address,address indexed,uint256,uint16 indexed)
-        Handler: src/handlers/lendingPool/deposit/index.DepositHandler
-      - Event: Repay(address indexed,address indexed,address indexed,uint256)
-        Handler: src/handlers/lendingPool/repay/index.RepayHandler
-      - Event: Withdraw(address indexed,address indexed,address indexed,uint256)
-        Handler: src/handlers/lendingPool/withdraw/index.WithdrawHandler
-      - Event: Swap(indexed address,indexed address,uint256)
-        Handler: src/handlers/lendingPool/swap/index.SwapHandler
-      - Event: ReserveUsedAsCollateralEnabled(indexed address,indexed address)
-        Handler: src/handlers/lendingPool/ReserveUsedAsCollateralEnabled/index.ReserveUsedAsCollateralEnabledHandler
-      - Event: ReserveUsedAsCollateralDisabled(indexed address,indexed address)
-        Handler: src/handlers/lendingPool/ReserveUsedAsCollateralDisabled/index.ReserveUsedAsCollateralDisabledHandler
-      - Event: RebalanceStableBorrowRate(indexed address,indexed address)
-        Handler: src/handlers/lendingPool/RebalanceStableBorrowRate/index.RebalanceStableBorrowRateHandler
-      - Event: FlashLoan(indexed address,indexed address,indexed address,uint256,uint256,uint16)
-        Handler: src/handlers/lendingPool/FlashLoan/index.FlashLoanHandler
-      - Event: LiquidationCall(indexed address,indexed address,indexed address,uint256,uint256,address,bool)
-        Handler: src/handlers/lendingPool/LiquidationCall/index.LiquidationCallHandler
-      - Event: Paused()
-        Handler: src/handlers/lendingPool/Paused/index.PausedHandler
-      - Event: Unpaused()
-        Handler: src/handlers/lendingPool/Unpaused/index.UnpausedHandler
-      - Event: ReserveDataUpdated(indexed address,uint256,uint256,uint256,uint256,uint256)
-        Handler: src/handlers/lendingPool/ReserveDataUpdated/index.ReserveDataUpdatedHandler
-
+      - Event: RewardsAccrued(indexed address,uint256)
+        Handler: src/handlers/incentives-controller/RewardsAccrued/index.RewardsAccruedHandler
+      - Event: RewardsClaimed(indexed address,indexed address,indexed address,uint256)
+        Handler: src/handlers/incentives-controller/RewardsClaimed/index.RewardsClaimedHandler
+      - Event: AssetIndexUpdated(indexed address,uint256)
+        Handler: src/handlers/incentives-controller/AssetIndexUpdated/index.AssetIndexUpdatedHandler
+      - Event: UserIndexUpdated(indexed address,indexed address,uint256)
+        Handler: src/handlers/incentives-controller/UserIndexUpdated/index.UserIndexUpdatedHandler
+      - Event: DistributionEndUpdated(uint256)
+        Handler: src/handlers/incentives-controller/DistributionEndUpdated/index.UserIndexUpdatedHandler

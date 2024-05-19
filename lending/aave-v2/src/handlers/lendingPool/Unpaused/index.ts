@@ -19,7 +19,7 @@ import {
 export const UnpausedHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets
+  secrets: ISecrets,
 ) => {
   // Implement your event handler logic for Unpaused here
 

@@ -25,7 +25,7 @@ var BigNumber = require("bignumber.js");
 export const LiquidationCallHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets
+  secrets: ISecrets,
 ) => {
   // Implement your event handler logic for LiquidationCall here
 
@@ -141,7 +141,7 @@ export const LiquidationCallHandler = async (
   const principaluserReserveId = getUserReserveId(
     user,
     collateralAsset,
-    poolId
+    poolId,
   );
   let userReserve: IUserReserve = await userReserveDB.findOne({
     id: principaluserReserveId,
@@ -185,7 +185,7 @@ export const LiquidationCallHandler = async (
   });
 
   collateralPoolReserve.lifetimeLiquidated = new BigNumber(
-    collateralPoolReserve.lifetimeLiquidated
+    collateralPoolReserve.lifetimeLiquidated,
   )
     .plus(liquidatedCollateralAmount)
     .toString();
@@ -234,7 +234,7 @@ function getReserveId(underlyingAsset: string, poolId: string): string {
 function getUserReserveId(
   userAddress: string,
   underlyingAssetAddress: string,
-  poolId: string
+  poolId: string,
 ): string {
   return userAddress + underlyingAssetAddress + poolId;
 }

@@ -4,6 +4,8 @@ import {
   Instance,
   ISecrets,
 } from "@blockflow-labs/utils";
+
+
 import {
   ContractToPoolMapping,
   Reserve,
@@ -22,7 +24,7 @@ import {
 export const SwapHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets
+  secrets: ISecrets,
 ) => {
   // Implement your event handler logic for Swap here
 
@@ -190,8 +192,8 @@ export const SwapHandler = async (
       stableBorrowRate: poolReserve.stableBorrowRate,
       user: userReserve.user,
       userReserve: userReserve.id,
-      reserve : poolReserve.id,
-      timestamp: block.block_timestamp
+      reserve: poolReserve.id,
+      timestamp: block.block_timestamp,
     });
   }
 };
@@ -203,12 +205,12 @@ function getReserveId(underlyingAsset: string, poolId: string): string {
 function getUserReserveId(
   userAddress: string,
   underlyingAssetAddress: string,
-  poolId: string
+  poolId: string,
 ): string {
   return userAddress + underlyingAssetAddress + poolId;
 }
 
-function getBorrowRateMode(mode:string): string {
+function getBorrowRateMode(mode: string): string {
   if (mode == "0") {
     return "BORROW_MODE_NONE";
   } else if (mode == "1") {

@@ -23,7 +23,7 @@ import {
 export const FlashLoanHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets
+  secrets: ISecrets,
 ) => {
   // Implement your event handler logic for FlashLoan here
 
@@ -130,7 +130,7 @@ export const FlashLoanHandler = async (
     .toString();
 
   poolReserve.lifetimeFlashLoanPremium = new BigNumber(
-    poolReserve.lifetimeFlashLoanPremium
+    poolReserve.lifetimeFlashLoanPremium,
   )
     .plus(premium)
     .toString();
