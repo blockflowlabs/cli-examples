@@ -4,6 +4,8 @@ import {
   Instance,
   ISecrets,
 } from "@blockflow-labs/utils";
+import { ILidoNodeOperator, LidoNodeOperator } from "../../../types/schema";
+import { _loadLidoNodeOperatorEntity } from "../../../helpers";
 
 /**
  * @dev Event::NodeOperatorActiveSet(uint256 id, bool active)
@@ -13,10 +15,21 @@ import {
 export const NodeOperatorActiveSetHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets,
+  secrets: ISecrets
 ) => {
   // Implement your event handler logic for NodeOperatorActiveSet here
 
   const { event, transaction, block, log } = context;
   const { id, active } = event;
+
+  const lidoNodeOperatorDB: Instance = bind(LidoNodeOperator);
+
+  let operator: ILidoNodeOperator = await _loadLidoNodeOperatorEntity(
+    lidoNodeOperatorDB,
+    id
+  );
+
+  operator.active = active;
+
+  await lidoNodeOperatorDB.save(operator);
 };

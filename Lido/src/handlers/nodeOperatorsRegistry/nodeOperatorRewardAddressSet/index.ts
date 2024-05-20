@@ -4,6 +4,8 @@ import {
   Instance,
   ISecrets,
 } from "@blockflow-labs/utils";
+import { ILidoNodeOperator, LidoNodeOperator } from "../../../types/schema";
+import { _loadLidoNodeOperatorEntity } from "../../../helpers";
 
 /**
  * @dev Event::NodeOperatorRewardAddressSet(uint256 id, address rewardAddress)
@@ -13,10 +15,19 @@ import {
 export const NodeOperatorRewardAddressSetHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets,
+  secrets: ISecrets
 ) => {
   // Implement your event handler logic for NodeOperatorRewardAddressSet here
 
   const { event, transaction, block, log } = context;
   const { id, rewardAddress } = event;
+  const lidoNodeOperatorDB: Instance = bind(LidoNodeOperator);
+
+  let operator: ILidoNodeOperator = await _loadLidoNodeOperatorEntity(
+    lidoNodeOperatorDB,
+    id
+  );
+  operator.reward_address = rewardAddress.toString().toLowerCase();
+
+  await lidoNodeOperatorDB.save(operator);
 };
