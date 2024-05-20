@@ -23,6 +23,7 @@ import {
   LidoShares,
   ILidoBeaconReport,
   ILidoOracleExpectedEpoch,
+  ILidoNodeOperator,
 } from "../types/schema";
 
 import {
@@ -598,3 +599,29 @@ export function _calcAPR_v1(
 
   return entity;
 }
+
+export const _loadLidoNodeOperatorEntity = async (
+  lidoNodeOperatorDB: Instance,
+  operatorId: string,
+  create: boolean = false
+): Promise<ILidoNodeOperator> => {
+  let entityId = operatorId.toString().toLowerCase();
+
+  let entity: ILidoNodeOperator = await lidoNodeOperatorDB.findOne({
+    id: entityId,
+  });
+
+  if (!entity && create) {
+    entity = await lidoNodeOperatorDB.create({ id: entityId });
+    entity.name = "";
+    entity.reward_address = ZERO_ADDRESS;
+    entity.staking_limit = ZERO;
+    entity.active = true;
+
+    entity.total_stopped_validators = ZERO;
+    entity.total_keys_trimmed = ZERO;
+    entity.nonce = ZERO;
+  }
+
+  return entity;
+};

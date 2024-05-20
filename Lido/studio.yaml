@@ -50,7 +50,9 @@ Resources:
       - Event: WithdrawalCredentialsSet(bytes32)
         Handler: >-
           src/handlers/lido/withdrawalCredentialsSet/index.WithdrawalCredentialsSetHandler
-      - Event: ETHDistributed(uint256 indexed,uint256,uint256,uint256,uint256,uint256)
+      - Event: >-
+          ETHDistributed(uint256
+          indexed,uint256,uint256,uint256,uint256,uint256)
         Handler: src/handlers/lido/ethDistributed/index.ETHDistributedHandler
   - Name: legacyOracle
     Abi: src/abis/legacyOracle.json
@@ -66,16 +68,54 @@ Resources:
       - Event: MemberRemoved(address)
         Handler: src/handlers/legacyOracle/memberRemoved/index.MemberRemovedHandler
       - Event: ContractVersionSet(uint256)
-        Handler: src/handlers/legacyOracle/contractVersionSet/index.ContractVersionSetHandler
+        Handler: >-
+          src/handlers/legacyOracle/contractVersionSet/index.ContractVersionSetHandler
       - Event: QuorumChanged(uint256)
         Handler: src/handlers/legacyOracle/quorumChanged/index.QuorumChangedHandler
       - Event: BeaconSpecSet(uint64,uint64,uint64,uint64)
         Handler: src/handlers/legacyOracle/beaconSpecSet/index.BeaconSpecSetHandler
       - Event: BeaconReportReceiverSet(address)
-        Handler: src/handlers/legacyOracle/beaconReportReceiverSet/index.BeaconReportReceiverSetHandler
+        Handler: >-
+          src/handlers/legacyOracle/beaconReportReceiverSet/index.BeaconReportReceiverSetHandler
       - Event: AllowedBeaconBalanceRelativeDecreaseSet(uint256)
         Handler: >-
           src/handlers/legacyOracle/allowedBeaconBalanceRelativeDecreaseSet/index.AllowedBeaconBalanceRelativeDecreaseSetHandler
       - Event: AllowedBeaconBalanceAnnualRelativeIncreaseSet(uint256)
         Handler: >-
           src/handlers/legacyOracle/allowedBeaconBalanceAnnualRelativeIncreaseSet/index.AllowedBeaconBalanceAnnualRelativeIncreaseSetHandler
+  - Name: lidoDao
+    Abi: src/abis/lidoDAO.json
+    Type: contract/event
+    Address: "0xb8FFC3Cd6e7Cf5a098A1c92F48009765B24088Dc"
+    Triggers:
+      - Event: SetApp(bytes32 indexed,bytes32 indexed,address)
+        Handler: src/handlers/lidoDAO/setApp/index.SetAppHandler
+  - Name: nodeOperatorsRegistry
+    Abi: src/abis/nodeOperatorsRegistry.json
+    Type: contract/event
+    Address: "0x55032650b14df07b85bF18A3a3eC8E0Af2e028d5"
+    Triggers:
+      - Event: NodeOperatorAdded(uint256,string,address,uint64)
+        Handler: src/handlers/nodeOperatorsRegistry/nodeOperatorAdded/index.NodeOperatorAddedHandler
+      - Event: NodeOperatorActiveSet(uint256 indexed,bool)
+        Handler: src/handlers/nodeOperatorsRegistry/nodeOperatorActiveSet/index.NodeOperatorActiveSetHandler
+      - Event: NodeOperatorNameSet(uint256 indexed,string)
+        Handler: src/handlers/nodeOperatorsRegistry/nodeOperatorNameSet/index.NodeOperatorNameSetHandler
+      - Event: NodeOperatorRewardAddressSet(uint256 indexed,address)
+        Handler: >-
+          src/handlers/nodeOperatorsRegistry/nodeOperatorRewardAddressSet/index.NodeOperatorRewardAddressSetHandler
+      - Event: NodeOperatorStakingLimitSet(uint256 indexed,uint64)
+        Handler: >-
+          src/handlers/nodeOperatorsRegistry/nodeOperatorStakingLimitSet/index.NodeOperatorStakingLimitSetHandler
+      - Event: NodeOperatorTotalStoppedValidatorsReported(uint256 indexed,uint64)
+        Handler: >-
+          src/handlers/nodeOperatorsRegistry/nodeOperatorTotalStoppedValidatorsReported/index.NodeOperatorTotalStoppedValidatorsReportedHandler
+      - Event: NodeOperatorTotalKeysTrimmed(uint256 indexed,uint64)
+        Handler: >-
+          src/handlers/nodeOperatorsRegistry/nodeOperatorTotalKeysTrimmed/index.NodeOperatorTotalKeysTrimmedHandler
+      - Event: SigningKeyAdded(uint256 indexed,bytes)
+        Handler: src/handlers/nodeOperatorsRegistry/signingKeyAdded/index.SigningKeyAddedHandler
+      - Event: SigningKeyRemoved(uint256 indexed,bytes)
+        Handler: src/handlers/nodeOperatorsRegistry/signingKeyRemoved/index.SigningKeyRemovedHandler
+      - Event: KeysOpIndexSet(uint256)
+        Handler: src/handlers/nodeOperatorsRegistry/keysOpIndexSet/index.KeysOpIndexSetHandler

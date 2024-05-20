@@ -245,3 +245,50 @@ export interface LidoOracleExpectedEpoch {
   id: String;
   epoch_id: string;
 }
+
+export interface LidoAppVersion {
+  id: String;
+  major: string;
+  minor: string;
+  patch: string;
+  impl: string;
+
+  block_timestamp: string;
+  transaction_hash: string;
+  log_index: string;
+}
+
+export interface LidoNodeOperatorSigningKey {
+  id: String;
+  operator_id: string;
+  pubkey: string;
+  removed: boolean;
+
+  operator: LidoNodeOperator;
+
+  block_timestamp: string;
+  transaction_hash: string;
+  log_index: string;
+}
+
+export interface LidoNodeOperator {
+  id: String;
+
+  name: string;
+  reward_address: string;
+  staking_limit: string;
+  active: boolean;
+  total_stopped_validators: string;
+  total_keys_trimmed: string;
+  nonce: string;
+
+  block_timestamp: string;
+  transaction_hash: string;
+  log_index: string;
+}
+
+export interface LidoNodeOperatorKeysOpIndex {
+  id: String;
+
+  index: string;
+}

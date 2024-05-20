@@ -318,6 +318,71 @@ export class LidoOracleExpectedEpoch {
   };
 }
 
+export class LidoAppVersion {
+  static entity = "LidoAppVersion";
+  static schema = {
+    id: { type: "String", index: true },
+    major: "string",
+    minor: "string",
+    patch: "string",
+    impl: "string",
+    block_timestamp: "string",
+    transaction_hash: "string",
+    log_index: "string",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+  };
+}
+
+export class LidoNodeOperatorSigningKey {
+  static entity = "LidoNodeOperatorSigningKey";
+  static schema = {
+    id: { type: "String", index: true },
+    operator_id: "string",
+    pubkey: "string",
+    removed: "boolean",
+    operator: "LidoNodeOperator",
+    block_timestamp: "string",
+    transaction_hash: "string",
+    log_index: "string",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+  };
+}
+
+export class LidoNodeOperator {
+  static entity = "LidoNodeOperator";
+  static schema = {
+    id: { type: "String", index: true },
+    name: "string",
+    reward_address: "string",
+    staking_limit: "string",
+    active: "boolean",
+    total_stopped_validators: "string",
+    total_keys_trimmed: "string",
+    nonce: "string",
+    block_timestamp: "string",
+    transaction_hash: "string",
+    log_index: "string",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+  };
+}
+
+export class LidoNodeOperatorKeysOpIndex {
+  static entity = "LidoNodeOperatorKeysOpIndex";
+  static schema = {
+    id: { type: "String", index: true },
+    index: "string",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+  };
+}
+
 import { String, Array } from "@blockflow-labs/utils";
 
 export interface ILidoSubmission extends Document {
@@ -618,6 +683,65 @@ export interface ILidoBeaconReport extends Document {
 export interface ILidoOracleExpectedEpoch extends Document {
   id: String;
   epoch_id: string;
+  blocknumber: String;
+  entityId: String;
+  chainId: String;
+}
+
+export interface ILidoAppVersion extends Document {
+  id: String;
+  major: string;
+  minor: string;
+  patch: string;
+  impl: string;
+
+  block_timestamp: string;
+  transaction_hash: string;
+  log_index: string;
+  blocknumber: String;
+  entityId: String;
+  chainId: String;
+}
+
+export interface ILidoNodeOperatorSigningKey extends Document {
+  id: String;
+  operator_id: string;
+  pubkey: string;
+  removed: boolean;
+
+  operator: LidoNodeOperator;
+
+  block_timestamp: string;
+  transaction_hash: string;
+  log_index: string;
+  blocknumber: String;
+  entityId: String;
+  chainId: String;
+}
+
+export interface ILidoNodeOperator extends Document {
+  id: String;
+
+  name: string;
+  reward_address: string;
+  staking_limit: string;
+  active: boolean;
+  total_stopped_validators: string;
+  total_keys_trimmed: string;
+  nonce: string;
+
+  block_timestamp: string;
+  transaction_hash: string;
+  log_index: string;
+  blocknumber: String;
+  entityId: String;
+  chainId: String;
+}
+
+export interface ILidoNodeOperatorKeysOpIndex extends Document {
+  id: String;
+
+  index: string;
   blocknumber: String;
   entityId: String;
   chainId: String;

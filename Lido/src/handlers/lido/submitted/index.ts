@@ -31,7 +31,7 @@ import BigNumber from "bignumber.js";
 export const SubmittedHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets
+  secrets: ISecrets,
 ) => {
   // Implement your event handler logic for Submitted here
 
@@ -42,21 +42,21 @@ export const SubmittedHandler = async (
 
   const submission: ILidoSubmission = await _loadLidoSubmissionEntity(
     lidoSubmissionDB,
-    context
+    context,
   );
 
   const lidoTotalsDB = bind(LidoTotals);
 
   const totals: ILidoTotals = await _loadLidoTotalsEntity(
     lidoTotalsDB,
-    context
+    context,
   );
 
   let shares: string;
 
   const isLidoTransferShares = transaction
     ? transaction.logs.find(
-        (log) => log.topics[0].toLowerCase() === TRANSFER_SHARES_TOPIC0
+        (log) => log.topics[0].toLowerCase() === TRANSFER_SHARES_TOPIC0,
       )
     : null;
 
@@ -82,7 +82,7 @@ export const SubmittedHandler = async (
 
   let userShares: ILidoShares = await _loadLidoSharesEntity(
     lidoSharesDB,
-    sender
+    sender,
   );
 
   submission.shares_before = userShares.shares;

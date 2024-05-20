@@ -43,6 +43,37 @@ const Mev_Tx_Fee_Received_ABI = [
   },
 ];
 
+const Token_Rebased_ABI = [
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, name: "reportTimestamp", type: "uint256" },
+      { indexed: false, name: "timeElapsed", type: "uint256" },
+      { indexed: false, name: "preTotalShares", type: "uint256" },
+      { indexed: false, name: "preTotalEther", type: "uint256" },
+      { indexed: false, name: "postTotalShares", type: "uint256" },
+      { indexed: false, name: "postTotalEther", type: "uint256" },
+      { indexed: false, name: "sharesMintedAsFees", type: "uint256" },
+    ],
+    name: "TokenRebased",
+    type: "event",
+  },
+];
+
+const Shares_Burnt_ABI = [
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, name: "account", type: "address" },
+      { indexed: false, name: "preRebaseTokenAmount", type: "uint256" },
+      { indexed: false, name: "postRebaseTokenAmount", type: "uint256" },
+      { indexed: false, name: "sharesAmount", type: "uint256" },
+    ],
+    name: "SharesBurnt",
+    type: "event",
+  },
+];
+
 export function decodeTransferShares(event: any) {
   const iface = new Interface(Transfer_Shares_ABI);
   return iface.parseLog({ topics: event.topics, data: event.log_data })?.args;
@@ -59,6 +90,11 @@ export function decodeMevTxFeeReceivedEvent(event: any) {
 }
 
 export function decodeTokenRebasedEvent(event: any) {
-  const iface = new Interface(Transfer_Shares_ABI);
-  return iface;
+  const iface = new Interface(Token_Rebased_ABI);
+  return iface.parseLog({ topics: event.topics, data: event.log_data })?.args;
+}
+
+export function decodeSharesBurntEvent(event: any) {
+  const iface = new Interface(Shares_Burnt_ABI);
+  return iface.parseLog({ topics: event.topics, data: event.log_data })?.args;
 }
