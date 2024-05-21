@@ -264,7 +264,7 @@ export interface LidoNodeOperatorSigningKey {
   pubkey: string;
   removed: boolean;
 
-  operator: LidoNodeOperator;
+  operator: string;
 
   block_timestamp: string;
   transaction_hash: string;
@@ -291,4 +291,46 @@ export interface LidoNodeOperatorKeysOpIndex {
   id: String;
 
   index: string;
+}
+
+export interface VotingConfig {
+  id: String;
+
+  support_required_pct: Number;
+  min_accept_quorum_pct: Number;
+  vote_time: Number;
+  objection_phase_time: Number;
+}
+
+export interface Voting {
+  id: String;
+
+  index: Number;
+  creator: string;
+  metadata: string;
+  executed: boolean;
+
+  votes: [string];
+  objections: [string];
+
+  block_timestamp: string;
+  transaction_hash: string;
+  log_index: string;
+}
+
+export interface Vote {
+  id: String;
+
+  voting: string;
+  voter: string;
+  supports: boolean;
+  stake: Number;
+}
+
+export interface VotingObjection {
+  id: String;
+
+  voting: string;
+  voter: string;
+  stake: Number;
 }

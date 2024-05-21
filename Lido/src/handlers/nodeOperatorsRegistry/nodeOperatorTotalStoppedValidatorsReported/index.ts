@@ -15,7 +15,7 @@ import { _loadLidoNodeOperatorEntity } from "../../../helpers";
 export const NodeOperatorTotalStoppedValidatorsReportedHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets
+  secrets: ISecrets,
 ) => {
   // Implement your event handler logic for NodeOperatorTotalStoppedValidatorsReported here
 
@@ -26,7 +26,7 @@ export const NodeOperatorTotalStoppedValidatorsReportedHandler = async (
 
   let operator: ILidoNodeOperator = await _loadLidoNodeOperatorEntity(
     lidoNodeOperatorDB,
-    id
+    id,
   );
 
   operator.staking_limit = totalStopped.toString();

@@ -15,7 +15,7 @@ import { _loadLidoNodeOperatorEntity } from "../../../helpers";
 export const NodeOperatorRewardAddressSetHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets
+  secrets: ISecrets,
 ) => {
   // Implement your event handler logic for NodeOperatorRewardAddressSet here
 
@@ -25,7 +25,7 @@ export const NodeOperatorRewardAddressSetHandler = async (
 
   let operator: ILidoNodeOperator = await _loadLidoNodeOperatorEntity(
     lidoNodeOperatorDB,
-    id
+    id,
   );
   operator.reward_address = rewardAddress.toString().toLowerCase();
 

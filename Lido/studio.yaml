@@ -96,11 +96,14 @@ Resources:
     Address: "0x55032650b14df07b85bF18A3a3eC8E0Af2e028d5"
     Triggers:
       - Event: NodeOperatorAdded(uint256,string,address,uint64)
-        Handler: src/handlers/nodeOperatorsRegistry/nodeOperatorAdded/index.NodeOperatorAddedHandler
+        Handler: >-
+          src/handlers/nodeOperatorsRegistry/nodeOperatorAdded/index.NodeOperatorAddedHandler
       - Event: NodeOperatorActiveSet(uint256 indexed,bool)
-        Handler: src/handlers/nodeOperatorsRegistry/nodeOperatorActiveSet/index.NodeOperatorActiveSetHandler
+        Handler: >-
+          src/handlers/nodeOperatorsRegistry/nodeOperatorActiveSet/index.NodeOperatorActiveSetHandler
       - Event: NodeOperatorNameSet(uint256 indexed,string)
-        Handler: src/handlers/nodeOperatorsRegistry/nodeOperatorNameSet/index.NodeOperatorNameSetHandler
+        Handler: >-
+          src/handlers/nodeOperatorsRegistry/nodeOperatorNameSet/index.NodeOperatorNameSetHandler
       - Event: NodeOperatorRewardAddressSet(uint256 indexed,address)
         Handler: >-
           src/handlers/nodeOperatorsRegistry/nodeOperatorRewardAddressSet/index.NodeOperatorRewardAddressSetHandler
@@ -114,8 +117,32 @@ Resources:
         Handler: >-
           src/handlers/nodeOperatorsRegistry/nodeOperatorTotalKeysTrimmed/index.NodeOperatorTotalKeysTrimmedHandler
       - Event: SigningKeyAdded(uint256 indexed,bytes)
-        Handler: src/handlers/nodeOperatorsRegistry/signingKeyAdded/index.SigningKeyAddedHandler
+        Handler: >-
+          src/handlers/nodeOperatorsRegistry/signingKeyAdded/index.SigningKeyAddedHandler
       - Event: SigningKeyRemoved(uint256 indexed,bytes)
-        Handler: src/handlers/nodeOperatorsRegistry/signingKeyRemoved/index.SigningKeyRemovedHandler
+        Handler: >-
+          src/handlers/nodeOperatorsRegistry/signingKeyRemoved/index.SigningKeyRemovedHandler
       - Event: KeysOpIndexSet(uint256)
-        Handler: src/handlers/nodeOperatorsRegistry/keysOpIndexSet/index.KeysOpIndexSetHandler
+        Handler: >-
+          src/handlers/nodeOperatorsRegistry/keysOpIndexSet/index.KeysOpIndexSetHandler
+  - Name: voting
+    Abi: src/abis/voting.json
+    Type: contract/event
+    Address: "0x2e59A20f205bB85a89C53f1936454680651E618e"
+    Triggers:
+      - Event: StartVote(uint256 indexed,address indexed,string)
+        Handler: src/handlers/voting/startVote/index.StartVoteHandler
+      - Event: CastVote(uint256 indexed,address indexed,bool,uint256)
+        Handler: src/handlers/voting/castVote/index.CastVoteHandler
+      - Event: CastObjection(uint256 indexed,address indexed,uint256)
+        Handler: src/handlers/voting/castObjection/index.CastObjectionHandler
+      - Event: ExecuteVote(uint256 indexed)
+        Handler: src/handlers/voting/executeVote/index.ExecuteVoteHandler
+      - Event: ChangeSupportRequired(uint64)
+        Handler: src/handlers/voting/changeSupportRequired/index.ChangeSupportRequiredHandler
+      - Event: ChangeMinQuorum(uint64)
+        Handler: src/handlers/voting/changeMinQuorum/index.ChangeMinQuorumHandler
+      - Event: ChangeVoteTime(uint64)
+        Handler: src/handlers/voting/changeVoteTime/index.ChangeVoteTimeHandler
+      - Event: ChangeObjectionPhaseTime(uint64)
+        Handler: src/handlers/voting/changeObjectionPhaseTime/index.ChangeObjectionPhaseTimeHandler

@@ -49,7 +49,7 @@ export const SigningKeyAddedHandler = async (
   }
 
   entity.operator_id = operatorId.toString();
-  entity.operator = operator;
+  entity.operator = operator.id;
   entity.pubkey = pubkey.toString();
   entity.removed = false;
   entity.block_timestamp = block.block_timestamp;

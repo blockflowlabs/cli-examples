@@ -48,7 +48,7 @@ export const SigningKeyRemovedHandler = async (
       id: pubkey.toString(),
     });
     entity.operator_id = operatorId.toString();
-    entity.operator = operator;
+    entity.operator = operator.id;
     entity.pubkey = pubkey.toString();
   }
 

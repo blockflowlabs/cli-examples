@@ -15,7 +15,7 @@ import { _loadLidoNodeOperatorEntity } from "../../../helpers";
 export const NodeOperatorTotalKeysTrimmedHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets
+  secrets: ISecrets,
 ) => {
   // Implement your event handler logic for NodeOperatorTotalKeysTrimmed here
 
@@ -26,7 +26,7 @@ export const NodeOperatorTotalKeysTrimmedHandler = async (
 
   let operator: ILidoNodeOperator = await _loadLidoNodeOperatorEntity(
     lidoNodeOperatorDB,
-    id
+    id,
   );
 
   operator.total_keys_trimmed = totalKeysTrimmed.toString();

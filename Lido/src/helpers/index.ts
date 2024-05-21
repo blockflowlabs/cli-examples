@@ -24,6 +24,7 @@ import {
   ILidoBeaconReport,
   ILidoOracleExpectedEpoch,
   ILidoNodeOperator,
+  IVotingConfig,
 } from "../types/schema";
 
 import {
@@ -621,6 +622,28 @@ export const _loadLidoNodeOperatorEntity = async (
     entity.total_stopped_validators = ZERO;
     entity.total_keys_trimmed = ZERO;
     entity.nonce = ZERO;
+  }
+
+  return entity;
+};
+
+export const _loadVotingConfigEntity = async (
+  votingConfigDB: Instance
+): Promise<IVotingConfig> => {
+  let entityId = "lido";
+
+  let entity: IVotingConfig = await votingConfigDB.findOne({
+    id: entityId,
+  });
+
+  if (!entity) {
+    entity = await votingConfigDB.create({ id: entityId });
+
+    entity.support_required_pct = Number(ZERO);
+    entity.min_accept_quorum_pct = Number(ZERO);
+    entity.vote_time = Number(ZERO);
+
+    entity.objection_phase_time = Number(ZERO);
   }
 
   return entity;

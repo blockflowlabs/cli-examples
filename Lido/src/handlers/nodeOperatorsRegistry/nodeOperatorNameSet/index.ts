@@ -15,7 +15,7 @@ import { _loadLidoNodeOperatorEntity } from "../../../helpers";
 export const NodeOperatorNameSetHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets
+  secrets: ISecrets,
 ) => {
   // Implement your event handler logic for NodeOperatorNameSet here
 
@@ -26,7 +26,7 @@ export const NodeOperatorNameSetHandler = async (
 
   let operator: ILidoNodeOperator = await _loadLidoNodeOperatorEntity(
     lidoNodeOperatorDB,
-    id
+    id,
   );
 
   operator.name = name.toString().toLowerCase();

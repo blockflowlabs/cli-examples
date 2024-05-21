@@ -342,7 +342,7 @@ export class LidoNodeOperatorSigningKey {
     operator_id: "string",
     pubkey: "string",
     removed: "boolean",
-    operator: "LidoNodeOperator",
+    operator: "string",
     block_timestamp: "string",
     transaction_hash: "string",
     log_index: "string",
@@ -377,6 +377,66 @@ export class LidoNodeOperatorKeysOpIndex {
   static schema = {
     id: { type: "String", index: true },
     index: "string",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+  };
+}
+
+export class VotingConfig {
+  static entity = "VotingConfig";
+  static schema = {
+    id: { type: "String", index: true },
+    support_required_pct: "Number",
+    min_accept_quorum_pct: "Number",
+    vote_time: "Number",
+    objection_phase_time: "Number",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+  };
+}
+
+export class Voting {
+  static entity = "Voting";
+  static schema = {
+    id: { type: "String", index: true },
+    index: "Number",
+    creator: "string",
+    metadata: "string",
+    executed: "boolean",
+    votes: ["string"],
+    objections: ["string"],
+    block_timestamp: "string",
+    transaction_hash: "string",
+    log_index: "string",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+  };
+}
+
+export class Vote {
+  static entity = "Vote";
+  static schema = {
+    id: { type: "String", index: true },
+    voting: "string",
+    voter: "string",
+    supports: "boolean",
+    stake: "Number",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+  };
+}
+
+export class VotingObjection {
+  static entity = "VotingObjection";
+  static schema = {
+    id: { type: "String", index: true },
+    voting: "string",
+    voter: "string",
+    stake: "Number",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
@@ -709,7 +769,7 @@ export interface ILidoNodeOperatorSigningKey extends Document {
   pubkey: string;
   removed: boolean;
 
-  operator: LidoNodeOperator;
+  operator: string;
 
   block_timestamp: string;
   transaction_hash: string;
@@ -742,6 +802,60 @@ export interface ILidoNodeOperatorKeysOpIndex extends Document {
   id: String;
 
   index: string;
+  blocknumber: String;
+  entityId: String;
+  chainId: String;
+}
+
+export interface IVotingConfig extends Document {
+  id: String;
+
+  support_required_pct: Number;
+  min_accept_quorum_pct: Number;
+  vote_time: Number;
+  objection_phase_time: Number;
+  blocknumber: String;
+  entityId: String;
+  chainId: String;
+}
+
+export interface IVoting extends Document {
+  id: String;
+
+  index: Number;
+  creator: string;
+  metadata: string;
+  executed: boolean;
+
+  votes: [string];
+  objections: [string];
+
+  block_timestamp: string;
+  transaction_hash: string;
+  log_index: string;
+  blocknumber: String;
+  entityId: String;
+  chainId: String;
+}
+
+export interface IVote extends Document {
+  id: String;
+
+  voting: string;
+  voter: string;
+  supports: boolean;
+  stake: Number;
+  blocknumber: String;
+  entityId: String;
+  chainId: String;
+}
+
+export interface IVotingObjection extends Document {
+  id: String;
+
+  voting: string;
+  voter: string;
+  stake: Number;
   blocknumber: String;
   entityId: String;
   chainId: String;
