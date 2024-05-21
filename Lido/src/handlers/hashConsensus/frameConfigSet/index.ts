@@ -15,7 +15,7 @@ import { _loadLidoOracleConfigEntity } from "../../../helpers";
 export const FrameConfigSetHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets
+  secrets: ISecrets,
 ) => {
   // Implement your event handler logic for FrameConfigSet here
 
