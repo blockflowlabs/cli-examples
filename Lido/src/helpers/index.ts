@@ -38,7 +38,7 @@ import BigNumber from "bignumber.js";
 
 export const _loadLidoSubmissionEntity = async (
   lidoSubmissionDB: Instance,
-  context: IEventContext
+  context: IEventContext,
 ): Promise<ILidoSubmission> => {
   const { event, transaction, block, log } = context;
   const { sender, amount, referral } = event;
@@ -70,7 +70,7 @@ export const _loadLidoSubmissionEntity = async (
 
 export const _loadLidoTransferEntity = async (
   lidoTransferDB: Instance,
-  context: IEventContext
+  context: IEventContext,
 ): Promise<ILidoTransfer> => {
   const { event, transaction, block, log } = context;
 
@@ -94,7 +94,7 @@ export const _loadLidoTransferEntity = async (
 
 export const _loadSharesBurnEntity = async (
   sharesBurnDB: Instance,
-  context: IEventContext
+  context: IEventContext,
 ): Promise<ISharesBurn> => {
   const { event, transaction, block, log } = context;
   const { account, preRebaseTokenAmount, postRebaseTokenAmount, sharesAmount } =
@@ -120,7 +120,7 @@ export const _loadSharesBurnEntity = async (
 
 export const _loadLidoApprovalEntity = async (
   lidoApprovalDB: Instance,
-  context: IEventContext
+  context: IEventContext,
 ): Promise<ILidoApproval> => {
   const { event, transaction, block, log } = context;
   const { owner, spender, value } = event;
@@ -143,7 +143,7 @@ export const _loadLidoApprovalEntity = async (
 
 export const _loadCurrentFeeEntity = async (
   currentFeeDB: Instance,
-  context: IEventContext
+  context: IEventContext,
 ): Promise<ICurrentFee> => {
   const { event, transaction, block, log } = context;
 
@@ -164,7 +164,7 @@ export const _loadCurrentFeeEntity = async (
 
 export const _loadLidoConfigEntity = async (
   lidoConfigDB: Instance,
-  context: IEventContext
+  context: IEventContext,
 ): Promise<ILidoConfig> => {
   const { event, transaction, block, log } = context;
 
@@ -199,7 +199,7 @@ export const _loadLidoConfigEntity = async (
 
 export const _loadLidoTotalsEntity = async (
   lidoTotalsDB: Instance,
-  context: IEventContext
+  context: IEventContext,
 ): Promise<ILidoTotals> => {
   const { event, transaction, block, log } = context;
 
@@ -218,7 +218,7 @@ export const _loadLidoTotalsEntity = async (
 
 export const _loadLidoSharesEntity = async (
   lidoSharesDB: Instance,
-  userId: string
+  userId: string,
 ): Promise<ILidoShares> => {
   let entityId = userId.toString().toLowerCase();
 
@@ -234,7 +234,7 @@ export const _loadLidoSharesEntity = async (
 
 export const _loadLidoStatsEntity = async (
   lidoStatsDB: Instance,
-  context: IEventContext
+  context: IEventContext,
 ): Promise<ILidoStats> => {
   const { event, transaction, block, log } = context;
 
@@ -255,7 +255,7 @@ export const _loadLidoStatsEntity = async (
 export const _loadLidoOracleCompletedEntity = async (
   lidoOracleCompletedDB: Instance,
   context: IEventContext,
-  oracleCompletedId: string
+  oracleCompletedId: string,
 ): Promise<ILidoOracleCompleted> => {
   const { event, transaction, block, log } = context;
   const { epochId, beaconBalance, beaconValidators } = event;
@@ -282,7 +282,7 @@ export const _loadLidoOracleCompletedEntity = async (
 
 export const _loadLidoOracleMemberEntity = async (
   lidoOracleMemberDB: Instance,
-  context: IEventContext
+  context: IEventContext,
 ): Promise<ILidoOracleMember> => {
   const { event, transaction, block, log } = context;
   const { member } = event;
@@ -306,7 +306,7 @@ export const _loadLidoOracleMemberEntity = async (
 };
 
 export const _loadLidoOracleConfigEntity = async (
-  lidoOracleConfigDB: Instance
+  lidoOracleConfigDB: Instance,
 ): Promise<ILidoOracleConfig> => {
   let entityId = "lido";
 
@@ -335,7 +335,7 @@ export const _loadLidoOracleConfigEntity = async (
 
 export const _loadLidoTotalRewardEntity = async (
   lidoTotalRewardDB: Instance,
-  context: IEventContext
+  context: IEventContext,
 ): Promise<ILidoTotalReward> => {
   const { event, transaction, block, log } = context;
   let entityId = `${transaction.transaction_hash}`.toLowerCase();
@@ -355,7 +355,7 @@ export const _loadLidoTotalRewardEntity = async (
 
 export const _loadLidoNodeOperatorFeesEntity = async (
   lidoNodeOperatorFeesDB: Instance,
-  context: IEventContext
+  context: IEventContext,
 ): Promise<ILidoNodeOperatorFees> => {
   const { event, transaction, block, log } = context;
   const { from, to, value } = event;
@@ -381,7 +381,7 @@ export const _loadLidoNodeOperatorFeesEntity = async (
 
 export const _loadLidoNodeOperatorsSharesEntity = async (
   lidoNodeOperatorsSharesDB: Instance,
-  context: IEventContext
+  context: IEventContext,
 ): Promise<ILidoNodeOperatorsShares> => {
   const { event, transaction, block, log } = context;
   const { from, to, value } = event;
@@ -406,7 +406,7 @@ export const _loadLidoNodeOperatorsSharesEntity = async (
 export const _updateHolders = async (
   transfer: ILidoTransfer,
   context: IEventContext,
-  bind: IBind
+  bind: IBind,
 ): Promise<void> => {
   const lidoStatsDB: Instance = bind(LidoStats);
   const lidoHoldersDB: Instance = bind(LidoHolder);
@@ -452,21 +452,21 @@ export const _updateHolders = async (
 };
 
 export const _updateTransferBalances = async (
-  transfer: ILidoTransfer
+  transfer: ILidoTransfer,
 ): Promise<ILidoTransfer> => {
   if (transfer.total_shares == "0") {
     transfer.balance_after_increase = transfer.value;
     transfer.balance_after_decrease = ZERO;
   } else {
     transfer.balance_after_increase = new BigNumber(
-      transfer.shares_after_increase
+      transfer.shares_after_increase,
     )
       .times(transfer.total_pooled_ether)
       .div(transfer.total_shares)
       .toString();
 
     transfer.balance_after_decrease = new BigNumber(
-      transfer.shares_after_decrease
+      transfer.shares_after_decrease,
     )
       .times(transfer.total_pooled_ether)
       .div(transfer.total_shares)
@@ -478,7 +478,7 @@ export const _updateTransferBalances = async (
 
 export const _updateTransferShares = async (
   transfer: ILidoTransfer,
-  bind: IBind
+  bind: IBind,
 ): Promise<ILidoTransfer> => {
   let lidoSharesDB: Instance = bind(LidoShares);
 
@@ -513,7 +513,7 @@ export const _updateTransferShares = async (
 
 export const _loadLidoBeaconReportEntity = async (
   lidoBeaconReportDB: Instance,
-  context: IEventContext
+  context: IEventContext,
 ): Promise<ILidoBeaconReport> => {
   const { event, transaction, block, log } = context;
   const { epochId, beaconBalance, beaconValidators } = event;
@@ -540,7 +540,7 @@ export const _loadLidoBeaconReportEntity = async (
 
 export const _loadLidoOracleExpectedEpochEntity = async (
   lidoOracleExpectedEpochDB: Instance,
-  context: IEventContext
+  context: IEventContext,
 ): Promise<ILidoOracleExpectedEpoch> => {
   const { event, transaction, block, log } = context;
   const { epochId, beaconBalance, beaconValidators } = event;
@@ -568,7 +568,7 @@ export function _calcAPR_v1(
   preTotalPooledEther: string,
   postTotalPooledEther: string,
   timeElapsed: string,
-  feeBasis: string
+  feeBasis: string,
 ): ILidoTotalReward {
   entity.apr_raw = new BigNumber(postTotalPooledEther)
     .div(preTotalPooledEther)
@@ -595,7 +595,7 @@ export function _calcAPR_v1(
       new BigNumber(entity.apr_before_fees)
         .times(CALCULATION_UNIT)
         .div(feeBasis)
-        .div("100")
+        .div("100"),
     )
     .toString();
 
@@ -605,7 +605,7 @@ export function _calcAPR_v1(
 export const _loadLidoNodeOperatorEntity = async (
   lidoNodeOperatorDB: Instance,
   operatorId: string,
-  create: boolean = false
+  create: boolean = false,
 ): Promise<ILidoNodeOperator> => {
   let entityId = operatorId.toString().toLowerCase();
 
@@ -629,7 +629,7 @@ export const _loadLidoNodeOperatorEntity = async (
 };
 
 export const _loadVotingConfigEntity = async (
-  votingConfigDB: Instance
+  votingConfigDB: Instance,
 ): Promise<IVotingConfig> => {
   let entityId = "lido";
 
@@ -653,7 +653,7 @@ export const _loadVotingConfigEntity = async (
 export const _loadLidoOracleReportEntity = async (
   lidoOracleReportDB: Instance,
   context: IEventContext,
-  create: boolean = false
+  create: boolean = false,
 ): Promise<ILidoOracleReport> => {
   const { event, transaction, block, log } = context;
   const { refSlot } = event;

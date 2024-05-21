@@ -161,6 +161,15 @@ Resources:
     Address: "0x852deD011285fe67063a08005c71a85690503Cee"
     Triggers:
       - Event: ExtraDataSubmitted(uint256 indexed,uint256,uint256)
-        Handler: src/handlers/accountingOracle/extraDataSubmitted/index.ExtraDataSubmittedHandler
+        Handler: >-
+          src/handlers/accountingOracle/extraDataSubmitted/index.ExtraDataSubmittedHandler
       - Event: ProcessingStarted(uint256 indexed,bytes32)
-        Handler: src/handlers/accountingOracle/processingStarted/index.ProcessingStartedHandler
+        Handler: >-
+          src/handlers/accountingOracle/processingStarted/index.ProcessingStartedHandler
+  - Name: stakingRouter
+    Abi: src/abis/stakingRouter.json
+    Type: contract/event
+    Address: "0xFdDf38947aFB03C621C71b06C9C70bce73f12999"
+    Triggers:
+      - Event: WithdrawalCredentialsSet(bytes32,address)
+        Handler: src/handlers/stakingRouter/withdrawalCredentialsSet/index.WithdrawalCredentialsSetHandler
