@@ -14,7 +14,7 @@ import { IVotingObjection, VotingObjection } from "../../../types/schema";
 export const CastObjectionHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets
+  secrets: ISecrets,
 ) => {
   // Implement your event handler logic for CastObjection here
 

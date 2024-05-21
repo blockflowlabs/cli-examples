@@ -14,7 +14,7 @@ import { IVote, Vote } from "../../../types/schema";
 export const CastVoteHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets
+  secrets: ISecrets,
 ) => {
   // Implement your event handler logic for CastVote here
 

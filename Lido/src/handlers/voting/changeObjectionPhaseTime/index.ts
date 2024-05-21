@@ -15,7 +15,7 @@ import { _loadVotingConfigEntity } from "../../../helpers";
 export const ChangeObjectionPhaseTimeHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets
+  secrets: ISecrets,
 ) => {
   // Implement your event handler logic for ChangeObjectionPhaseTime here
 

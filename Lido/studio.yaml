@@ -139,10 +139,19 @@ Resources:
       - Event: ExecuteVote(uint256 indexed)
         Handler: src/handlers/voting/executeVote/index.ExecuteVoteHandler
       - Event: ChangeSupportRequired(uint64)
-        Handler: src/handlers/voting/changeSupportRequired/index.ChangeSupportRequiredHandler
+        Handler: >-
+          src/handlers/voting/changeSupportRequired/index.ChangeSupportRequiredHandler
       - Event: ChangeMinQuorum(uint64)
         Handler: src/handlers/voting/changeMinQuorum/index.ChangeMinQuorumHandler
       - Event: ChangeVoteTime(uint64)
         Handler: src/handlers/voting/changeVoteTime/index.ChangeVoteTimeHandler
       - Event: ChangeObjectionPhaseTime(uint64)
-        Handler: src/handlers/voting/changeObjectionPhaseTime/index.ChangeObjectionPhaseTimeHandler
+        Handler: >-
+          src/handlers/voting/changeObjectionPhaseTime/index.ChangeObjectionPhaseTimeHandler
+  - Name: hashConsensus
+    Abi: src/abis/hashConsensus.json
+    Type: contract/event
+    Address: "0xD624B08C83bAECF0807Dd2c6880C3154a5F0B288"
+    Triggers:
+      - Event: FrameConfigSet(uint256,uint256)
+        Handler: src/handlers/hashConsensus/frameConfigSet/index.FrameConfigSetHandler

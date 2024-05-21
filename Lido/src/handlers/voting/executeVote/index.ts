@@ -24,7 +24,7 @@ import BigNumber from "bignumber.js";
 export const ExecuteVoteHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets
+  secrets: ISecrets,
 ) => {
   // Implement your event handler logic for ExecuteVote here
 
@@ -48,7 +48,7 @@ export const ExecuteVoteHandler = async (
 
     let shares: ILidoShares = await _loadLidoSharesEntity(
       lidoSharesDB,
-      accToBurn
+      accToBurn,
     );
 
     shares.shares = new BigNumber(shares.shares)
@@ -61,7 +61,7 @@ export const ExecuteVoteHandler = async (
 
     const totals: ILidoTotals = await _loadLidoTotalsEntity(
       lidoTotalsDB,
-      context
+      context,
     );
 
     totals.total_shares = new BigNumber(totals.total_shares)
