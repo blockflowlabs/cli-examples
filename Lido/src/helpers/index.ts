@@ -27,6 +27,7 @@ import {
   IVotingConfig,
   ILidoOracleReport,
   IWithdrawalQueueConfig,
+  IEasyTrackConfig,
 } from "../types/schema";
 
 import {
@@ -690,6 +691,27 @@ export const _loadWithdrawalQueueConfigEntity = async (
     entity.contract_version = Number(ZERO);
     entity.is_paused = true;
     entity.pause_duration = Number(ZERO);
+  }
+
+  return entity;
+};
+
+export const _loadEasyTrackConfigEntity = async (
+  easyTrackConfigDB: Instance
+): Promise<IEasyTrackConfig> => {
+  let entityId = "lido";
+
+  let entity: IEasyTrackConfig = await easyTrackConfigDB.findOne({
+    id: entityId,
+  });
+
+  if (!entity) {
+    entity = await easyTrackConfigDB.create({ id: entityId });
+    entity.evm_script_executor = ZERO_ADDRESS;
+    entity.motion_duration = Number(ZERO);
+    entity.motions_count_limit = Number(ZERO);
+    entity.objections_threshold = Number(ZERO);
+    entity.is_paused = false;
   }
 
   return entity;

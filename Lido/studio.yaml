@@ -180,11 +180,14 @@ Resources:
     Address: "0x889edC2eDab5f40e902b864aD4d7AdE8E412F9B1"
     Triggers:
       - Event: BunkerModeDisabled()
-        Handler: src/handlers/withdrawalQueue/bunkerModeDisabled/index.BunkerModeDisabledHandler
+        Handler: >-
+          src/handlers/withdrawalQueue/bunkerModeDisabled/index.BunkerModeDisabledHandler
       - Event: BunkerModeEnabled(uint256)
-        Handler: src/handlers/withdrawalQueue/bunkerModeEnabled/index.BunkerModeEnabledHandler
+        Handler: >-
+          src/handlers/withdrawalQueue/bunkerModeEnabled/index.BunkerModeEnabledHandler
       - Event: ContractVersionSet(uint256)
-        Handler: src/handlers/withdrawalQueue/contractVersionSet/index.ContractVersionSetHandler
+        Handler: >-
+          src/handlers/withdrawalQueue/contractVersionSet/index.ContractVersionSetHandler
       - Event: Paused(uint256)
         Handler: src/handlers/withdrawalQueue/paused/index.PausedHandler
       - Event: Resumed()
@@ -192,12 +195,48 @@ Resources:
       - Event: >-
           WithdrawalClaimed(uint256 indexed,address indexed,address
           indexed,uint256)
-        Handler: src/handlers/withdrawalQueue/withdrawalClaimed/index.WithdrawalClaimedHandler
+        Handler: >-
+          src/handlers/withdrawalQueue/withdrawalClaimed/index.WithdrawalClaimedHandler
       - Event: >-
           WithdrawalRequested(uint256 indexed,address indexed,address
           indexed,uint256,uint256)
-        Handler: src/handlers/withdrawalQueue/withdrawalRequested/index.WithdrawalRequestedHandler
+        Handler: >-
+          src/handlers/withdrawalQueue/withdrawalRequested/index.WithdrawalRequestedHandler
       - Event: >-
           WithdrawalsFinalized(uint256 indexed,uint256
           indexed,uint256,uint256,uint256)
-        Handler: src/handlers/withdrawalQueue/withdrawalsFinalized/index.WithdrawalsFinalizedHandler
+        Handler: >-
+          src/handlers/withdrawalQueue/withdrawalsFinalized/index.WithdrawalsFinalizedHandler
+  - Name: easyTrack
+    Abi: src/abis/easyTrack.json
+    Type: contract/event
+    Address: "0xF0211b7660680B49De1A7E9f25C65660F0a13Fea"
+    Triggers:
+      - Event: EVMScriptExecutorChanged(address indexed)
+        Handler: src/handlers/easyTrack/evmScriptExecutorChanged/index.EVMScriptExecutorChangedHandler
+      - Event: EVMScriptFactoryAdded(address indexed,bytes)
+        Handler: src/handlers/easyTrack/evmScriptFactoryAdded/index.EVMScriptFactoryAddedHandler
+      - Event: EVMScriptFactoryRemoved(address indexed)
+        Handler: src/handlers/easyTrack/evmScriptFactoryRemoved/index.EVMScriptFactoryRemovedHandler
+      - Event: MotionCanceled(uint256 indexed)
+        Handler: src/handlers/easyTrack/motionCanceled/index.MotionCanceledHandler
+      - Event: MotionCreated(uint256 indexed,address,address indexed,bytes,bytes)
+        Handler: src/handlers/easyTrack/motionCreated/index.MotionCreatedHandler
+      - Event: MotionDurationChanged(uint256)
+        Handler: src/handlers/easyTrack/motionDurationChanged/index.MotionDurationChangedHandler
+      - Event: MotionEnacted(uint256 indexed)
+        Handler: src/handlers/easyTrack/motionEnacted/index.MotionEnactedHandler
+      - Event: >-
+          MotionObjected(uint256 indexed,address
+          indexed,uint256,uint256,uint256)
+        Handler: src/handlers/easyTrack/motionObjected/index.MotionObjectedHandler
+      - Event: MotionRejected(uint256 indexed)
+        Handler: src/handlers/easyTrack/motionRejected/index.MotionRejectedHandler
+      - Event: MotionsCountLimitChanged(uint256)
+        Handler: src/handlers/easyTrack/motionsCountLimitChanged/index.MotionsCountLimitChangedHandler
+      - Event: ObjectionsThresholdChanged(uint256)
+        Handler: src/handlers/easyTrack/objectionsThresholdChanged/index.ObjectionsThresholdChangedHandler
+      - Event: Paused(address)
+        Handler: src/handlers/easyTrack/paused/index.PausedHandler
+      - Event: Unpaused(address)
+        Handler: src/handlers/easyTrack/unpaused/index.UnpausedHandler

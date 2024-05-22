@@ -385,3 +385,69 @@ export interface WithdrawalsFinalized {
   transaction_hash: string;
   log_index: string;
 }
+
+export interface Motion {
+  id: String;
+
+  creator: string;
+  evm_script_factory: string;
+  duration: Number;
+  start_date: string;
+  snapshot_block: Number;
+  objections_amount: Number;
+  objections_amount_pct: Number;
+  objections_threshold: Number;
+  evm_script_hash: string;
+  evm_script_calldata: string;
+  status: string;
+  enacted_at: string;
+  cancelled_at: string;
+  rejected_at: string;
+
+  objections: [string];
+
+  block_timestamp: string;
+  transaction_hash: string;
+  log_index: string;
+}
+
+export interface EasyTrackConfig {
+  id: String;
+
+  evm_script_executor: string;
+  motion_duration: Number;
+  motions_count_limit: Number;
+  objections_threshold: Number;
+  is_paused: boolean;
+}
+
+export interface Role {
+  id: String;
+
+  role: string;
+  address: string;
+  creator: string;
+  is_active: boolean;
+}
+
+export interface EVMScriptFactory {
+  id: String;
+
+  address: string;
+  permissions: string;
+  is_active: boolean;
+}
+
+export interface Objection {
+  id: String;
+
+  motionId: Number;
+  objector: string;
+  weight: Number;
+
+  motion: string;
+
+  block_timestamp: string;
+  transaction_hash: string;
+  log_index: string;
+}

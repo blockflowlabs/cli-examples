@@ -18,7 +18,7 @@ import { _loadWithdrawalQueueConfigEntity } from "../../../helpers";
 export const PausedHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets
+  secrets: ISecrets,
 ) => {
   // Implement your event handler logic for Paused here
 
@@ -28,7 +28,7 @@ export const PausedHandler = async (
   const withdrawalQueueConfigDB: Instance = bind(WithdrawalQueueConfig);
 
   let entity: IWithdrawalQueueConfig = await _loadWithdrawalQueueConfigEntity(
-    withdrawalQueueConfigDB
+    withdrawalQueueConfigDB,
   );
 
   entity.is_paused = true;

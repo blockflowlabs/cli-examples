@@ -17,7 +17,7 @@ import {
 export const WithdrawalRequestedHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets
+  secrets: ISecrets,
 ) => {
   // Implement your event handler logic for WithdrawalRequested here
 

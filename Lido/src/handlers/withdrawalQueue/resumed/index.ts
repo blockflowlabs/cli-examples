@@ -20,7 +20,7 @@ import { ZERO } from "../../../constants";
 export const ResumedHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets
+  secrets: ISecrets,
 ) => {
   // Implement your event handler logic for Resumed here
 
@@ -30,7 +30,7 @@ export const ResumedHandler = async (
   const withdrawalQueueConfigDB: Instance = bind(WithdrawalQueueConfig);
 
   let entity: IWithdrawalQueueConfig = await _loadWithdrawalQueueConfigEntity(
-    withdrawalQueueConfigDB
+    withdrawalQueueConfigDB,
   );
 
   entity.is_paused = false;

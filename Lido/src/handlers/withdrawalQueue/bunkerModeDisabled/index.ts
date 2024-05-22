@@ -19,7 +19,7 @@ import { ZERO } from "../../../constants";
 export const BunkerModeDisabledHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets
+  secrets: ISecrets,
 ) => {
   // Implement your event handler logic for BunkerModeDisabled here
 
@@ -29,7 +29,7 @@ export const BunkerModeDisabledHandler = async (
   const withdrawalQueueConfigDB: Instance = bind(WithdrawalQueueConfig);
 
   let entity: IWithdrawalQueueConfig = await _loadWithdrawalQueueConfigEntity(
-    withdrawalQueueConfigDB
+    withdrawalQueueConfigDB,
   );
 
   entity.is_bunker_mode = false;

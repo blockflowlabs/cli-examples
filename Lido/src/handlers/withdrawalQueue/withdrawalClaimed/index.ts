@@ -14,7 +14,7 @@ import { IWithdrawalClaimed, WithdrawalClaimed } from "../../../types/schema";
 export const WithdrawalClaimedHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets
+  secrets: ISecrets,
 ) => {
   // Implement your event handler logic for WithdrawalClaimed here
 

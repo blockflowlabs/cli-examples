@@ -511,6 +511,93 @@ export class WithdrawalsFinalized {
   };
 }
 
+export class Motion {
+  static entity = "Motion";
+  static schema = {
+    id: { type: "String", index: true },
+    creator: "string",
+    evm_script_factory: "string",
+    duration: "Number",
+    start_date: "string",
+    snapshot_block: "Number",
+    objections_amount: "Number",
+    objections_amount_pct: "Number",
+    objections_threshold: "Number",
+    evm_script_hash: "string",
+    evm_script_calldata: "string",
+    status: "string",
+    enacted_at: "string",
+    cancelled_at: "string",
+    rejected_at: "string",
+    objections: ["string"],
+    block_timestamp: "string",
+    transaction_hash: "string",
+    log_index: "string",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+  };
+}
+
+export class EasyTrackConfig {
+  static entity = "EasyTrackConfig";
+  static schema = {
+    id: { type: "String", index: true },
+    evm_script_executor: "string",
+    motion_duration: "Number",
+    motions_count_limit: "Number",
+    objections_threshold: "Number",
+    is_paused: "boolean",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+  };
+}
+
+export class Role {
+  static entity = "Role";
+  static schema = {
+    id: { type: "String", index: true },
+    role: "string",
+    address: "string",
+    creator: "string",
+    is_active: "boolean",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+  };
+}
+
+export class EVMScriptFactory {
+  static entity = "EVMScriptFactory";
+  static schema = {
+    id: { type: "String", index: true },
+    address: "string",
+    permissions: "string",
+    is_active: "boolean",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+  };
+}
+
+export class Objection {
+  static entity = "Objection";
+  static schema = {
+    id: { type: "String", index: true },
+    motionId: "Number",
+    objector: "string",
+    weight: "Number",
+    motion: "string",
+    block_timestamp: "string",
+    transaction_hash: "string",
+    log_index: "string",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+  };
+}
+
 import { String, Array } from "@blockflow-labs/utils";
 
 export interface ILidoSubmission extends Document {
@@ -983,6 +1070,87 @@ export interface IWithdrawalsFinalized extends Document {
   amount_of_eth_locked: string;
   shares_to_burn: string;
   timestamp: string;
+
+  block_timestamp: string;
+  transaction_hash: string;
+  log_index: string;
+  blocknumber: String;
+  entityId: String;
+  chainId: String;
+}
+
+export interface IMotion extends Document {
+  id: String;
+
+  creator: string;
+  evm_script_factory: string;
+  duration: Number;
+  start_date: string;
+  snapshot_block: Number;
+  objections_amount: Number;
+  objections_amount_pct: Number;
+  objections_threshold: Number;
+  evm_script_hash: string;
+  evm_script_calldata: string;
+  status: string;
+  enacted_at: string;
+  cancelled_at: string;
+  rejected_at: string;
+
+  objections: [string];
+
+  block_timestamp: string;
+  transaction_hash: string;
+  log_index: string;
+  blocknumber: String;
+  entityId: String;
+  chainId: String;
+}
+
+export interface IEasyTrackConfig extends Document {
+  id: String;
+
+  evm_script_executor: string;
+  motion_duration: Number;
+  motions_count_limit: Number;
+  objections_threshold: Number;
+  is_paused: boolean;
+  blocknumber: String;
+  entityId: String;
+  chainId: String;
+}
+
+export interface IRole extends Document {
+  id: String;
+
+  role: string;
+  address: string;
+  creator: string;
+  is_active: boolean;
+  blocknumber: String;
+  entityId: String;
+  chainId: String;
+}
+
+export interface IEVMScriptFactory extends Document {
+  id: String;
+
+  address: string;
+  permissions: string;
+  is_active: boolean;
+  blocknumber: String;
+  entityId: String;
+  chainId: String;
+}
+
+export interface IObjection extends Document {
+  id: String;
+
+  motionId: Number;
+  objector: string;
+  weight: Number;
+
+  motion: string;
 
   block_timestamp: string;
   transaction_hash: string;

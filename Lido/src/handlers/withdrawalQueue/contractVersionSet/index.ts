@@ -19,7 +19,7 @@ import { _loadWithdrawalQueueConfigEntity } from "../../../helpers";
 export const ContractVersionSetHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets
+  secrets: ISecrets,
 ) => {
   // Implement your event handler logic for ContractVersionSet here
 
@@ -29,7 +29,7 @@ export const ContractVersionSetHandler = async (
   const withdrawalQueueConfigDB: Instance = bind(WithdrawalQueueConfig);
 
   let entity: IWithdrawalQueueConfig = await _loadWithdrawalQueueConfigEntity(
-    withdrawalQueueConfigDB
+    withdrawalQueueConfigDB,
   );
 
   entity.contract_version = version;
