@@ -23,7 +23,6 @@ export class CollectionERC721 {
     id: { type: "String", index: true },
     name: "string",
     symbol: "string",
-    supportsERC721Metadata: "boolean",
     tokenCount: "number",
     ownerCount: "number",
     transferCount: "number",
@@ -88,7 +87,7 @@ export class AccountBalance {
     CollectionERC721: "string",
     tokenCount: "number",
     blockNumber: "number",
-    timestamp: "number",
+    timestamp: "string",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
@@ -138,7 +137,6 @@ export interface ICollectionERC721 extends Document {
   id: String;
   name: string;
   symbol: string;
-  supportsERC721Metadata: boolean;
   tokenCount: number;
   ownerCount: number;
   transferCount: number;
@@ -192,7 +190,7 @@ export interface IAccountBalance extends Document {
   CollectionERC721: string;
   tokenCount: number;
   blockNumber: number;
-  timestamp: number;
+  timestamp: string;
   blocknumber: String;
   entityId: String;
   chainId: String;

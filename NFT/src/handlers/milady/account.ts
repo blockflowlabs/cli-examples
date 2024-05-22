@@ -17,6 +17,7 @@ import { BigNumber } from "bignumber.js";
 import { AccountBalance, IAccountBalance } from "../../types/schema";
 import { Account, IAccount } from "../../types/schema";
 import { AccountDailySnapshot, IAccountDailySnapshot } from "../../types/schema";
+import { getAccountMetadata } from "../../utils/account";
 
 export const TransferHandler = async (
   context: IEventContext,
@@ -26,23 +27,26 @@ export const TransferHandler = async (
   const { event, transaction, block, log } = context;
   const { from, to, tokenId } = event;
   
-  const accountId = log.log_address.toLowerCase();
-  //is the balanceId uinqueness okay over here ? Mesaari have used collection over there
-  const balanceId = `${log.log_index.toString()}-${block.block_timestamp.toString()}`;
-  const snapshotId = `${log.log_index.toString()}-${block.block_timestamp.toString()}-${block.block_number.toString()}`;
+  const accountMetadata = getAccountMetadata(from);
+
+  const accountId = accountMetadata.address;
+  const balanceId = `${log.log_index}-${block.block_timestamp}`;
+  const snapshotId = `${log.log_index}-${block.block_timestamp}-${block.block_number.toString()}`;
 
   //connections
   const accountDB: Instance = bind(Account);
   const accountBalanceDB: Instance = bind(AccountBalance);
   const accountDailySnapshotDB: Instance = bind(AccountDailySnapshot);
 
+
   let account: IAccount = await accountDB.findOne({
-    id: accountId
+    id: accountId,
   });
   account ??= await accountDB.create({
     id: accountId,
     tokenCount: "0",
   });
+
 
   let accountBalance: IAccountBalance = await accountBalanceDB.findOne({
     id: balanceId

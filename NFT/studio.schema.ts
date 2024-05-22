@@ -13,7 +13,6 @@ export interface CollectionERC721{
   id: String;
   name: string;
   symbol: string;
-  supportsERC721Metadata: boolean;
   tokenCount: number;
   ownerCount: number;
   transferCount: number;
@@ -55,7 +54,7 @@ export interface AccountBalance {
   CollectionERC721: string;
   tokenCount: number;
   blockNumber: number;
-  timestamp: number;
+  timestamp: string;
 }
 
 export interface AccountDailySnapshot {

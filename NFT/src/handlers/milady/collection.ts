@@ -23,6 +23,7 @@ import { AccountDailySnapshot, IAccountDailySnapshot } from "../../types/schema"
 import { NonERC721Collection, INonERC721Collection } from "../../types/schema";
 import { AccountBalance, IAccountBalance } from "../../types/schema";
 import { getTokenMetadata } from "../../utils/tokens";
+import { getAccountMetadata } from "../../utils/account";
 
 
 
@@ -45,6 +46,8 @@ export const TransferHandler = async (
   const value = "1";
   const snapshotId = `${event.from.toLowerCase().toString()}-${block.block_timestamp.toString()}`.toLowerCase();
   const transactionId =`${transaction.transaction_hash.toString()}:${log.log_index.toString()}`.toLowerCase();
+  const accountMetadata = getAccountMetadata(fromAddress);
+  let accountAddress = accountMetadata.address;
 
   //declare a metdata one here
   const tokenMetadata = getTokenMetadata(tokenAddress);
@@ -60,13 +63,51 @@ export const TransferHandler = async (
 
   //const updateAccountBalance = async()
   
-  //let tokenCollection : CollectionERC721 = await tokencollectionDB.findOne({id: id})
+  let tokenCollection : ICollectionERC721 = await tokencollectionDB.findOne({id:event.address});
+  //minted a new token
+  if( accountAddress == GENESIS_ADDRESS ){
+    tokenCollection.tokenCount+=1 ;
+  }
+  else{
+    //transferring an existing token from non-zero address
+   let balanceId = `${log.log_index.toString()}-${block.block_timestamp.toString()}`;
+   let currentAccountBalance : IAccountBalance = await accountbalanceDB.findOne({id:balanceId});
+   if(currentAccountBalance){
+     currentAccountBalance.tokenCount-=1 ;
+   
+   currentAccountBalance.blockNumber = block.block_number;
+   currentAccountBalance.timestamp = block.block_timestamp;
+   await accountbalanceDB.save(currentAccountBalance);
 
-   //tokenCollection ??= await tokencollectionDB.create({
+   if(currentAccountBalance.tokenCount==0){
+     tokenCollection.ownerCount-=1; 
+   }
+   //update accountbalancedailysnapshot over here 
+  }
+  if (accountAddress!= null){
+    tokenMetadata.tokenCount -=1;
+  }
+  
+}
 
   // });
   //if(fromAddress==)
+  
 
+
+
+
+  //getorcreatecollectionDB
+  let getorcreatecollectionDB: ICollectionERC721 = await tokencollectionDB.findOne({id: event.address.toString()});
+
+  getorcreatecollectionDB ??= await tokencollectionDB.create({
+    id: event.address.toString(),
+    name: tokenMetadata.name,
+    symbol: tokenMetadata.tokenURI,
+    tokenCount: tokenMetadata.tokenCount,
+    ownerCount: tokenMetadata.ownerCount,
+    transferCount: 0,
+  });
 
 
   //Construct CollectiondailysnapshitDb part 
