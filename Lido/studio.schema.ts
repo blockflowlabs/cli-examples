@@ -334,3 +334,54 @@ export interface VotingObjection {
   voter: string;
   stake: Number;
 }
+
+export interface WithdrawalQueueConfig {
+  id: String;
+
+  is_bunker_mode: boolean;
+  bunker_mode_since: Number;
+  contract_version: Number;
+  is_paused: boolean;
+  pause_duration: Number;
+}
+
+export interface WithdrawalClaimed {
+  id: String;
+
+  request_id: Number;
+  owner: string;
+  receiver: string;
+  amount_of_eth: Number;
+
+  block_timestamp: string;
+  transaction_hash: string;
+  log_index: string;
+}
+
+export interface WithdrawalRequested {
+  id: String;
+
+  request_id: Number;
+  requestor: string;
+  owner: string;
+  amount_of_StETH: Number;
+  amount_of_shares: Number;
+
+  block_timestamp: string;
+  transaction_hash: string;
+  log_index: string;
+}
+
+export interface WithdrawalsFinalized {
+  id: String;
+
+  from: string;
+  to: string;
+  amount_of_eth_locked: string;
+  shares_to_burn: string;
+  timestamp: string;
+
+  block_timestamp: string;
+  transaction_hash: string;
+  log_index: string;
+}

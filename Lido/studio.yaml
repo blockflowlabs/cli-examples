@@ -172,4 +172,32 @@ Resources:
     Address: "0xFdDf38947aFB03C621C71b06C9C70bce73f12999"
     Triggers:
       - Event: WithdrawalCredentialsSet(bytes32,address)
-        Handler: src/handlers/stakingRouter/withdrawalCredentialsSet/index.WithdrawalCredentialsSetHandler
+        Handler: >-
+          src/handlers/stakingRouter/withdrawalCredentialsSet/index.WithdrawalCredentialsSetHandler
+  - Name: withdrawalQueue
+    Abi: src/abis/withdrawalQueue.json
+    Type: contract/event
+    Address: "0x889edC2eDab5f40e902b864aD4d7AdE8E412F9B1"
+    Triggers:
+      - Event: BunkerModeDisabled()
+        Handler: src/handlers/withdrawalQueue/bunkerModeDisabled/index.BunkerModeDisabledHandler
+      - Event: BunkerModeEnabled(uint256)
+        Handler: src/handlers/withdrawalQueue/bunkerModeEnabled/index.BunkerModeEnabledHandler
+      - Event: ContractVersionSet(uint256)
+        Handler: src/handlers/withdrawalQueue/contractVersionSet/index.ContractVersionSetHandler
+      - Event: Paused(uint256)
+        Handler: src/handlers/withdrawalQueue/paused/index.PausedHandler
+      - Event: Resumed()
+        Handler: src/handlers/withdrawalQueue/resumed/index.ResumedHandler
+      - Event: >-
+          WithdrawalClaimed(uint256 indexed,address indexed,address
+          indexed,uint256)
+        Handler: src/handlers/withdrawalQueue/withdrawalClaimed/index.WithdrawalClaimedHandler
+      - Event: >-
+          WithdrawalRequested(uint256 indexed,address indexed,address
+          indexed,uint256,uint256)
+        Handler: src/handlers/withdrawalQueue/withdrawalRequested/index.WithdrawalRequestedHandler
+      - Event: >-
+          WithdrawalsFinalized(uint256 indexed,uint256
+          indexed,uint256,uint256,uint256)
+        Handler: src/handlers/withdrawalQueue/withdrawalsFinalized/index.WithdrawalsFinalizedHandler

@@ -443,6 +443,74 @@ export class VotingObjection {
   };
 }
 
+export class WithdrawalQueueConfig {
+  static entity = "WithdrawalQueueConfig";
+  static schema = {
+    id: { type: "String", index: true },
+    is_bunker_mode: "boolean",
+    bunker_mode_since: "Number",
+    contract_version: "Number",
+    is_paused: "boolean",
+    pause_duration: "Number",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+  };
+}
+
+export class WithdrawalClaimed {
+  static entity = "WithdrawalClaimed";
+  static schema = {
+    id: { type: "String", index: true },
+    request_id: "Number",
+    owner: "string",
+    receiver: "string",
+    amount_of_eth: "Number",
+    block_timestamp: "string",
+    transaction_hash: "string",
+    log_index: "string",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+  };
+}
+
+export class WithdrawalRequested {
+  static entity = "WithdrawalRequested";
+  static schema = {
+    id: { type: "String", index: true },
+    request_id: "Number",
+    requestor: "string",
+    owner: "string",
+    amount_of_StETH: "Number",
+    amount_of_shares: "Number",
+    block_timestamp: "string",
+    transaction_hash: "string",
+    log_index: "string",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+  };
+}
+
+export class WithdrawalsFinalized {
+  static entity = "WithdrawalsFinalized";
+  static schema = {
+    id: { type: "String", index: true },
+    from: "string",
+    to: "string",
+    amount_of_eth_locked: "string",
+    shares_to_burn: "string",
+    timestamp: "string",
+    block_timestamp: "string",
+    transaction_hash: "string",
+    log_index: "string",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+  };
+}
+
 import { String, Array } from "@blockflow-labs/utils";
 
 export interface ILidoSubmission extends Document {
@@ -856,6 +924,69 @@ export interface IVotingObjection extends Document {
   voting: string;
   voter: string;
   stake: Number;
+  blocknumber: String;
+  entityId: String;
+  chainId: String;
+}
+
+export interface IWithdrawalQueueConfig extends Document {
+  id: String;
+
+  is_bunker_mode: boolean;
+  bunker_mode_since: Number;
+  contract_version: Number;
+  is_paused: boolean;
+  pause_duration: Number;
+  blocknumber: String;
+  entityId: String;
+  chainId: String;
+}
+
+export interface IWithdrawalClaimed extends Document {
+  id: String;
+
+  request_id: Number;
+  owner: string;
+  receiver: string;
+  amount_of_eth: Number;
+
+  block_timestamp: string;
+  transaction_hash: string;
+  log_index: string;
+  blocknumber: String;
+  entityId: String;
+  chainId: String;
+}
+
+export interface IWithdrawalRequested extends Document {
+  id: String;
+
+  request_id: Number;
+  requestor: string;
+  owner: string;
+  amount_of_StETH: Number;
+  amount_of_shares: Number;
+
+  block_timestamp: string;
+  transaction_hash: string;
+  log_index: string;
+  blocknumber: String;
+  entityId: String;
+  chainId: String;
+}
+
+export interface IWithdrawalsFinalized extends Document {
+  id: String;
+
+  from: string;
+  to: string;
+  amount_of_eth_locked: string;
+  shares_to_burn: string;
+  timestamp: string;
+
+  block_timestamp: string;
+  transaction_hash: string;
+  log_index: string;
   blocknumber: String;
   entityId: String;
   chainId: String;
