@@ -17,7 +17,6 @@ import { BigNumber } from "bignumber.js";
 import { AccountBalance, IAccountBalance } from "../../types/schema";
 import { Account, IAccount } from "../../types/schema";
 import { AccountDailySnapshot, IAccountDailySnapshot } from "../../types/schema";
-import { getAccountMetadata } from "../../utils/account";
 
 export const TransferHandler = async (
   context: IEventContext,
@@ -27,9 +26,8 @@ export const TransferHandler = async (
   const { event, transaction, block, log } = context;
   const { from, to, tokenId } = event;
   
-  const accountMetadata = getAccountMetadata(from);
-
-  const accountId = accountMetadata.address;
+  //check these addresses mp the accountId could be the from_address
+  const accountId = log.log_address;
   const balanceId = `${log.log_index}-${block.block_timestamp}`;
   const snapshotId = `${log.log_index}-${block.block_timestamp}-${block.block_number.toString()}`;
 

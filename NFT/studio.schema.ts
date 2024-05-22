@@ -25,7 +25,7 @@ export interface CollectionDailySnapshot {
   ownerCount: number;
   dailyTransferCount: number;
   blockNumber: number;
-  timestamp: number;
+  timestamp: string;
 }
 
 export interface Transfer {
@@ -63,7 +63,7 @@ export interface AccountDailySnapshot {
   CollectionERC721: string;
   tokenCount: number;
   blockNumber: number;
-  timestamp: number;
+  timestamp: string;
 }
 
 export interface NonERC721Collection {

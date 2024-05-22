@@ -20,12 +20,8 @@ import { CollectionERC721, ICollectionERC721 } from "../../types/schema";
 import { Transfer, ITransfer } from "../../types/schema";
 import { Account, IAccount } from "../../types/schema";
 import { AccountDailySnapshot, IAccountDailySnapshot } from "../../types/schema";
-import { NonERC721Collection, INonERC721Collection } from "../../types/schema";
 import { AccountBalance, IAccountBalance } from "../../types/schema";
 import { getTokenMetadata } from "../../utils/tokens";
-import { getAccountMetadata } from "../../utils/account";
-
-
 
 export const TransferHandler = async (
   context: IEventContext,
@@ -44,10 +40,10 @@ export const TransferHandler = async (
   const GENESIS_ADDRESS = "0x0000000000000000000000000000000000000000";
   const SECONDS_PER_DAY = 60 * 60 * 24;
   const value = "1";
-  const snapshotId = `${event.from.toLowerCase().toString()}-${block.block_timestamp.toString()}`.toLowerCase();
+  const snapshotId = `${log.log_index}-${block.block_timestamp}-${block.block_number.toString()}`;
   const transactionId =`${transaction.transaction_hash.toString()}:${log.log_index.toString()}`.toLowerCase();
-  const accountMetadata = getAccountMetadata(fromAddress);
-  let accountAddress = accountMetadata.address;
+  const balanceId = `${log.log_index}-${block.block_timestamp}`;
+  let accountAddress = log.log_address;
 
   //declare a metdata one here
   const tokenMetadata = getTokenMetadata(tokenAddress);
@@ -57,21 +53,23 @@ export const TransferHandler = async (
   const accountbalanceDB: Instance = bind(AccountBalance);
   const collectiondailysnapshotDB: Instance = bind(CollectionDailySnapshot);
   const tokencollectionDB: Instance = bind(CollectionERC721);
+  const tokenDB: Instance = bind(Token);
+  const accountDailySnapshotDB: Instance = bind(AccountDailySnapshot);
 
   //get or create collection
-  let id = log.log_address.toString() + "-" + event.tokenId.toString();
+  //let id = log.log_address.toString() + "-" + event.tokenId.toString();
 
   //const updateAccountBalance = async()
   
-  let tokenCollection : ICollectionERC721 = await tokencollectionDB.findOne({id:event.address});
+  let tokenCollection : ICollectionERC721 = await tokencollectionDB.findOne({id:fromAddress});
   //minted a new token
-  if( accountAddress == GENESIS_ADDRESS ){
+  if( fromAddress == GENESIS_ADDRESS ){
     tokenCollection.tokenCount+=1 ;
   }
   else{
     //transferring an existing token from non-zero address
-   let balanceId = `${log.log_index.toString()}-${block.block_timestamp.toString()}`;
-   let currentAccountBalance : IAccountBalance = await accountbalanceDB.findOne({id:balanceId});
+   let currentbalanceId = `${event.from.toString()}-${log.log_index.toString()}-${block.block_timestamp.toString()}`;
+   let currentAccountBalance : IAccountBalance = await accountbalanceDB.findOne({id:currentbalanceId});
    if(currentAccountBalance){
      currentAccountBalance.tokenCount-=1 ;
    
@@ -82,20 +80,52 @@ export const TransferHandler = async (
    if(currentAccountBalance.tokenCount==0){
      tokenCollection.ownerCount-=1; 
    }
-   //update accountbalancedailysnapshot over here 
+    let currentsnapshotdata : ICollectionDailySnapshot = await collectiondailysnapshotDB.findOne({id:snapshotId});
+    if(currentsnapshotdata){
+      currentsnapshotdata.blockNumber = block.block_number;
+      currentsnapshotdata.timestamp = block.block_timestamp;
+    }
+   await collectiondailysnapshotDB.save(currentsnapshotdata);
   }
-  if (accountAddress!= null){
-    tokenMetadata.tokenCount -=1;
+  // statement to reduce a token of the owner 
+  //
+  if(fromAddress!= null){
+  tokenCollection.tokenCount-=1;
+  await tokencollectionDB.save(tokenCollection);
+  };
+
+};
+  
+  if(toAddress == GENESIS_ADDRESS){
+    tokenCollection.tokenCount-=1;
   }
-  
-}
+  else{
+    let tokenCollection : ICollectionERC721 = await tokencollectionDB.findOne({id:toAddress});
+    tokenCollection.tokenCount+=1;
+    await tokencollectionDB.save(tokenCollection); 
+    
+    let transferredtoken: IToken = await tokenDB.findOne({id: event.tokenId});
+    transferredtoken.owner = toAddress;
+    await tokenDB.save(transferredtoken);
 
-  // });
-  //if(fromAddress==)
-  
+    let newAccountBalance: IAccountBalance = await accountbalanceDB.findOne({id:balanceId});
+     newAccountBalance.tokenCount+=1;
+     newAccountBalance.blockNumber = block.block_number;
+     newAccountBalance.timestamp = block.block_timestamp;
+     await accountbalanceDB.save(newAccountBalance);
 
+     if(newAccountBalance.tokenCount ==1){
+      tokenCollection.ownerCount+=1;
+     }
 
-
+     let accountsnapshotdata : IAccountDailySnapshot = await accountDailySnapshotDB.findOne({id:snapshotId});
+     if(accountsnapshotdata){
+       accountsnapshotdata.blockNumber = block.block_number;
+       accountsnapshotdata.timestamp = block.block_timestamp;
+     }; 
+  }
+   tokenCollection.transferCount+=1;
+   tokencollectionDB.save(tokenCollection);
 
   //getorcreatecollectionDB
   let getorcreatecollectionDB: ICollectionERC721 = await tokencollectionDB.findOne({id: event.address.toString()});

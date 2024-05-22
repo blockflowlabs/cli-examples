@@ -40,7 +40,7 @@ export class CollectionDailySnapshot {
     ownerCount: "number",
     dailyTransferCount: "number",
     blockNumber: "number",
-    timestamp: "number",
+    timestamp: "string",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
@@ -102,7 +102,7 @@ export class AccountDailySnapshot {
     CollectionERC721: "string",
     tokenCount: "number",
     blockNumber: "number",
-    timestamp: "number",
+    timestamp: "string",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
@@ -152,7 +152,7 @@ export interface ICollectionDailySnapshot extends Document {
   ownerCount: number;
   dailyTransferCount: number;
   blockNumber: number;
-  timestamp: number;
+  timestamp: string;
   blocknumber: String;
   entityId: String;
   chainId: String;
@@ -202,7 +202,7 @@ export interface IAccountDailySnapshot extends Document {
   CollectionERC721: string;
   tokenCount: number;
   blockNumber: number;
-  timestamp: number;
+  timestamp: string;
   blocknumber: String;
   entityId: String;
   chainId: String;
