@@ -195,7 +195,7 @@ export const ReserveUsedAsCollateralEnabledHandler = async (
     });
   }
 
-  userReserve.lastUpdateTimestamp = Number(block.block_timestamp);
+  userReserve.lastUpdateTimestamp = Date.parse(block.block_timestamp) / 1000; //@prady
   userReserve.usageAsCollateralEnabledOnUser = true;
   await userReserveDB.save(userReserve);
 };

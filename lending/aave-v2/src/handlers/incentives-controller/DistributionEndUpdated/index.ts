@@ -15,7 +15,7 @@ import { IncentivesController } from "../../../types/schema";
 export const UserIndexUpdatedHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets
+  secrets: ISecrets,
 ) => {
   // Implement your event handler logic for DistributionEndUpdated here
 
@@ -23,7 +23,7 @@ export const UserIndexUpdatedHandler = async (
   const { newDistributionEnd } = event;
 
   let incentiveControllerDB = bind(IncentivesController);
-  let iController:IncentivesController = await incentiveControllerDB.findOne({
+  let iController: IncentivesController = await incentiveControllerDB.findOne({
     id: event.address,
   });
   if (iController) {

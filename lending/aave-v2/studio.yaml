@@ -14,9 +14,13 @@ Resources:
     Type: contract/event
     Address: "0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9"
     Triggers:
-      - Event: Borrow(address indexed,address,address indexed,uint256,uint256,uint256,uint16 indexed)
+      - Event: >-
+          Borrow(address indexed,address,address
+          indexed,uint256,uint256,uint256,uint16 indexed)
         Handler: src/handlers/lendingPool/borrow/index.BorrowHandler
-      - Event: Deposit(address indexed,address,address indexed,uint256,uint16 indexed)
+      - Event: >-
+          Deposit(address indexed,address,address indexed,uint256,uint16
+          indexed)
         Handler: src/handlers/lendingPool/deposit/index.DepositHandler
       - Event: Repay(address indexed,address indexed,address indexed,uint256)
         Handler: src/handlers/lendingPool/repay/index.RepayHandler
@@ -25,36 +29,145 @@ Resources:
       - Event: Swap(indexed address,indexed address,uint256)
         Handler: src/handlers/lendingPool/swap/index.SwapHandler
       - Event: ReserveUsedAsCollateralEnabled(indexed address,indexed address)
-        Handler: src/handlers/lendingPool/ReserveUsedAsCollateralEnabled/index.ReserveUsedAsCollateralEnabledHandler
+        Handler: >-
+          src/handlers/lendingPool/ReserveUsedAsCollateralEnabled/index.ReserveUsedAsCollateralEnabledHandler
       - Event: ReserveUsedAsCollateralDisabled(indexed address,indexed address)
-        Handler: src/handlers/lendingPool/ReserveUsedAsCollateralDisabled/index.ReserveUsedAsCollateralDisabledHandler
+        Handler: >-
+          src/handlers/lendingPool/ReserveUsedAsCollateralDisabled/index.ReserveUsedAsCollateralDisabledHandler
       - Event: RebalanceStableBorrowRate(indexed address,indexed address)
-        Handler: src/handlers/lendingPool/RebalanceStableBorrowRate/index.RebalanceStableBorrowRateHandler
-      - Event: FlashLoan(indexed address,indexed address,indexed address,uint256,uint256,uint16)
+        Handler: >-
+          src/handlers/lendingPool/RebalanceStableBorrowRate/index.RebalanceStableBorrowRateHandler
+      - Event: >-
+          FlashLoan(indexed address,indexed address,indexed
+          address,uint256,uint256,uint16)
         Handler: src/handlers/lendingPool/FlashLoan/index.FlashLoanHandler
-      - Event: LiquidationCall(indexed address,indexed address,indexed address,uint256,uint256,address,bool)
+      - Event: >-
+          LiquidationCall(indexed address,indexed address,indexed
+          address,uint256,uint256,address,bool)
         Handler: src/handlers/lendingPool/LiquidationCall/index.LiquidationCallHandler
       - Event: Paused()
         Handler: src/handlers/lendingPool/Paused/index.PausedHandler
       - Event: Unpaused()
         Handler: src/handlers/lendingPool/Unpaused/index.UnpausedHandler
-      - Event: ReserveDataUpdated(indexed address,uint256,uint256,uint256,uint256,uint256)
-        Handler: src/handlers/lendingPool/ReserveDataUpdated/index.ReserveDataUpdatedHandler
-
+      - Event: >-
+          ReserveDataUpdated(indexed
+          address,uint256,uint256,uint256,uint256,uint256)
+        Handler: >-
+          src/handlers/lendingPool/ReserveDataUpdated/index.ReserveDataUpdatedHandler
   - Name: aaveIncentivesController
     Abi: src/abis/aaveIncentivesController.json
     Type: contract/event
     Address: "0xd784927Ff2f95ba542BfC824c8a8a98F3495f6b5"
     Triggers:
       - Event: AssetConfigUpdated(indexed address,uint256)
-        Handler: src/handlers/incentives-controller/AssetConfigUpdated/index.AssetConfigUpdatedHandler
+        Handler: >-
+          src/handlers/incentives-controller/AssetConfigUpdated/index.AssetConfigUpdatedHandler
       - Event: RewardsAccrued(indexed address,uint256)
-        Handler: src/handlers/incentives-controller/RewardsAccrued/index.RewardsAccruedHandler
-      - Event: RewardsClaimed(indexed address,indexed address,indexed address,uint256)
-        Handler: src/handlers/incentives-controller/RewardsClaimed/index.RewardsClaimedHandler
+        Handler: >-
+          src/handlers/incentives-controller/RewardsAccrued/index.RewardsAccruedHandler
+      - Event: >-
+          RewardsClaimed(indexed address,indexed address,indexed
+          address,uint256)
+        Handler: >-
+          src/handlers/incentives-controller/RewardsClaimed/index.RewardsClaimedHandler
       - Event: AssetIndexUpdated(indexed address,uint256)
-        Handler: src/handlers/incentives-controller/AssetIndexUpdated/index.AssetIndexUpdatedHandler
+        Handler: >-
+          src/handlers/incentives-controller/AssetIndexUpdated/index.AssetIndexUpdatedHandler
       - Event: UserIndexUpdated(indexed address,indexed address,uint256)
-        Handler: src/handlers/incentives-controller/UserIndexUpdated/index.UserIndexUpdatedHandler
+        Handler: >-
+          src/handlers/incentives-controller/UserIndexUpdated/index.UserIndexUpdatedHandler
       - Event: DistributionEndUpdated(uint256)
-        Handler: src/handlers/incentives-controller/DistributionEndUpdated/index.UserIndexUpdatedHandler
+        Handler: >-
+          src/handlers/incentives-controller/DistributionEndUpdated/index.UserIndexUpdatedHandler
+  - Name: aToken
+    Abi: src/abis/AToken.json
+    Type: contract/event
+    Address: "0xFFC97d72E13E01096502Cb8Eb52dEe56f74DAD7B"
+    Triggers:
+      - Event: Burn(indexed address,indexed address,uint256,uint256)
+        Handler: src/handlers/AToken/Burn/index.BurnHandler
+      - Event: BalanceTransfer(indexed address,indexed address,uint256,uint256)
+        Handler: src/handlers/AToken/BalanceTransfer/index.BalanceTransferHandler
+      - Event: Mint(indexed address,uint256,uint256)
+        Handler: src/handlers/AToken/Mint/index.MintHandler
+      - Event: >-
+          Initialized(indexed address,indexed
+          address,address,address,uint8,string,string,bytes)
+        Handler: src/handlers/AToken/Initialized/index.InitializedHandler
+  - Name: lendingPoolAddressesProviderRegistry
+    Abi: src/abis/lendingPoolAddressesProviderRegistry.json
+    Type: contract/event
+    Address: "0x52D306e36E3B6B02c153d0266ff0f85d18BCD413"
+    Triggers:
+      - Event: AddressesProviderRegistered(address indexed)
+        Handler: >-
+          src/handlers/lendingPoolAddressesProviderRegistry/AddressesProviderRegistered/index.AddressesProviderRegisteredHandler
+      - Event: AddressesProviderUnregistered(address indexed)
+        Handler: >-
+          src/handlers/lendingPoolAddressesProviderRegistry/AddressesProviderUnregistered/index.AddressesProviderUnregisteredHandler
+  - Name: lendingPoolAddressesProvider
+    Abi: src/abis/LendingPoolAddressesProvider.json
+    Type: contract/event
+    Address: "0xB53C1a33016B2DC2fF3653530bfF1848a515c8c5"
+    Triggers:
+      - Event: AddressSet(bytes32,address indexed,bool)
+        Handler: >-
+          src/handlers/lendingPoolAddressesProvider/AddressSet/index.AddressSetHandler
+      - Event: ConfigurationAdminUpdated(address indexed)
+        Handler: >-
+          src/handlers/lendingPoolAddressesProvider/ConfigurationAdminUpdated/index.ConfigurationAdminUpdatedHandler
+      - Event: EmergencyAdminUpdated(address indexed)
+        Handler: >-
+          src/handlers/lendingPoolAddressesProvider/EmergencyAdminUpdated/index.EmergencyAdminUpdatedHandler
+      - Event: LendingPoolCollateralManagerUpdated(address indexed)
+        Handler: >-
+          src/handlers/lendingPoolAddressesProvider/LendingPoolCollateralManagerUpdated/index.LendingPoolCollateralManagerUpdatedHandler
+      - Event: LendingPoolConfiguratorUpdated(address indexed)
+        Handler: >-
+          src/handlers/lendingPoolAddressesProvider/LendingPoolConfiguratorUpdated/index.LendingPoolConfiguratorUpdatedHandler
+      - Event: LendingPoolUpdated(address indexed)
+        Handler: >-
+          src/handlers/lendingPoolAddressesProvider/LendingPoolUpdated/index.LendingPoolUpdatedHandler
+      - Event: LendingRateOracleUpdated(address indexed)
+        Handler: >-
+          src/handlers/lendingPoolAddressesProvider/LendingRateOracleUpdated/index.LendingRateOracleUpdatedHandler
+      - Event: PriceOracleUpdated(address indexed)
+        Handler: >-
+          src/handlers/lendingPoolAddressesProvider/PriceOracleUpdated/index.PriceOracleUpdatedHandler
+      - Event: ProxyCreated(bytes32,address indexed)
+        Handler: >-
+          src/handlers/lendingPoolAddressesProvider/ProxyCreated/index.ProxyCreatedHandler
+  - Name: sToken
+    Abi: src/abis/sToken.json
+    Type: contract/event
+    Address: "0x079D6a3E844BcECf5720478A718Edb6575362C5f"
+    Triggers:
+      - Event: >-
+          BorrowAllowanceDelegated(address indexed,address
+          indexed,address,uint256)
+        Handler: >-
+          src/handlers/sToken/BorrowAllowanceDelegated/BorrowAllowanceDelegated.BorrowAllowanceDelegatedHandler
+      - Event: Burn(address indexed,uint256,uint256,uint256,uint256,uint256)
+        Handler: src/handlers/sToken/Burn/Burn.BurnHandler
+      - Event: >-
+          Mint(address indexed,address
+          indexed,uint256,uint256,uint256,uint256,uint256,uint256)
+        Handler: src/handlers/sToken/Mint/Mint.MintHandler
+      - Event: Transfer(address indexed,address indexed,uint256)
+        Handler: src/handlers/sToken/Transfer/Transfer.TransferHandler
+  - Name: vToken
+    Abi: src/abis/vToken.json
+    Type: contract/event
+    Address: "0xF7DBA49d571745D9d7fcb56225B05BEA803EBf3C"
+    Triggers:
+      - Event: >-
+          BorrowAllowanceDelegated(address indexed,address
+          indexed,address,uint256)
+        Handler: >-
+          src/handlers/vToken/BorrowAllowanceDelegated/BorrowAllowanceDelegated.BorrowAllowanceDelegatedHandler
+      - Event: Burn(address indexed,uint256,uint256)
+        Handler: src/handlers/vToken/Burn/Burn.BurnHandler
+      - Event: Mint(address indexed,address indexed,uint256,uint256)
+        Handler: src/handlers/vToken/Mint/Mint.MintHandler
+      - Event: Transfer(address indexed,address indexed,uint256)
+        Handler: src/handlers/vToken/Transfer/Transfer.TransferHandler

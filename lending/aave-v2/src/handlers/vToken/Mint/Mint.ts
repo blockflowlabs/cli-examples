@@ -6,46 +6,59 @@ import {
 } from "@blockflow-labs/utils";
 
 import {
-  ContractToPoolMapping,
-  Reserve,
-  IContractToPoolMapping,
-  IReserve,
-  UserReserve,
   IUserReserve,
-  UsageAsCollateral,
-  IUsageAsCollateral,
+  UserReserve,
+  Reserve,
+  IReserve,
+  ContractToPoolMapping,
+  IContractToPoolMapping,
+  VToken,
+  IVToken,
 } from "../../../types/schema";
+var BigNumber = require("bignumber.js");
+
 /**
- * @dev Event::ReserveUsedAsCollateralDisabled(address reserve, address user)
- * @param context trigger object with contains {event: {reserve ,user }, transaction, block, log}
+ * @dev Event::Mint(address from, address onBehalfOf, uint256 value, uint256 index)
+ * @param context trigger object with contains {event: {from ,onBehalfOf ,value ,index }, transaction, block, log}
  * @param bind init function for database wrapper methods
  */
-export const ReserveUsedAsCollateralDisabledHandler = async (
+export const MintHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets,
+  secrets: ISecrets
 ) => {
-  // Implement your event handler logic for ReserveUsedAsCollateralDisabled here
+  // Implement your event handler logic for Mint here
 
   const { event, transaction, block, log } = context;
-  const { reserve, user } = event;
+  let { from, onBehalfOf, value, index } = event;
+  const vtokenDB = bind(VToken);
+  let vtoken: IVToken = await vtokenDB.findOne({
+    id: event.address.toString(),
+  });
+  vtoken ??= await vtokenDB.create({
+    id: event.address,
+    underlyingAssetAddress: "1",
+    tokenContractImpl: "0x0000000000000000000000000000000000000000",
+    pool: "",
+    underlyingAssetDecimals: 18,
+  });
+
+  from = from.toString();
+  if (from != onBehalfOf.toString()) from = onBehalfOf.toString();
+  value = value.toString();
+  index = index.toString();
 
   let poolId: string;
-
-  const txHash = transaction.transaction_hash.toString();
-  let contractAddress = log.log_address;
-
-  const contractToPoolMappingDB = bind(ContractToPoolMapping);
   const reserveDB = bind(Reserve);
   const userReserveDB = bind(UserReserve);
-  const usageAsCollateralDB = bind(UsageAsCollateral);
-
+  const contractToPoolMappingDB = bind(ContractToPoolMapping);
   const contractToPoolMapping: IContractToPoolMapping =
-    await contractToPoolMappingDB.findOne({ id: contractAddress });
+    await contractToPoolMappingDB.findOne({ id: event.address });
 
   if (!contractToPoolMapping) poolId = "not yet defined";
   else poolId = contractToPoolMapping.pool;
 
+  const reserve = vtoken.underlyingAssetAddress;
   let reserveId = getReserveId(reserve, poolId);
   const underlyingAsset = reserve;
 
@@ -54,7 +67,7 @@ export const ReserveUsedAsCollateralDisabledHandler = async (
   if (!$reserveInstance) {
     reserveDB.create({
       id: reserveId,
-      underlyingAsset: underlyingAsset,
+      underlyingAsset: underlyingAsset.toString(),
       pool: poolId,
       symbol: "",
       name: "",
@@ -125,8 +138,11 @@ export const ReserveUsedAsCollateralDisabledHandler = async (
       lifetimeDepositorsInterestEarned: "0",
     });
   }
-
-  const userReserveId = getUserReserveId(user, underlyingAsset, poolId);
+  const userReserveId = getUserReserveId(
+    from.toString(),
+    underlyingAsset,
+    poolId
+  );
   let userReserve: IUserReserve = await userReserveDB.findOne({
     id: userReserveId,
   });
@@ -156,48 +172,62 @@ export const ReserveUsedAsCollateralDisabledHandler = async (
     aIncentivesLastUpdateTimestamp: 0,
     vIncentivesLastUpdateTimestamp: 0,
     sIncentivesLastUpdateTimestamp: 0,
-    user: user,
+    user: from,
 
     reserve: reserveId,
   });
 
-  const poolReserve: IReserve = await reserveDB.findOne({ id: reserveId });
+  let poolReserve: IReserve = await reserveDB.findOne({ id: reserveId });
   userReserve = await userReserveDB.findOne({
     id: userReserveId,
   });
 
-  const usageAsCollateralId =
-    block.block_number.toString() +
-    ":" +
-    transaction.transaction_index.toString() +
-    ":" +
-    transaction.transaction_hash.toString() +
-    ":" +
-    log.log_index.toString() +
-    ":" +
-    log.log_transaction_index.toString();
+  let calculatedAmount = rayDiv(value, index);
+  userReserve.scaledVariableDebt = new BigNumber(userReserve.scaledVariableDebt)
+    .plus(calculatedAmount)
+    .toString();
+  userReserve.currentVariableDebt = rayMul(
+    userReserve.scaledVariableDebt,
+    index
+  );
 
-  const $usageAsCollateral = await usageAsCollateralDB.findOne({
-    id: usageAsCollateralId,
-  });
-  if (!$reserveInstance) {
-    await usageAsCollateralDB.create({
-      id: usageAsCollateralId,
-      txHash: txHash,
-      action: "UsageAsCollateral",
-      pool: poolReserve.pool,
-      fromState: userReserve.usageAsCollateralEnabledOnUser,
-      toState: true,
-      user: userReserve.user,
-      userReserve: userReserve.id,
-      reserve: poolReserve.id,
-      timestamp: block.block_timestamp,
-    });
-  }
+  userReserve.currentTotalDebt = new BigNumber(userReserve.currentStableDebt)
+    .plus(userReserve.currentVariableDebt)
+    .toString();
 
+  userReserve.liquidityRate = poolReserve.liquidityRate;
+  userReserve.variableBorrowIndex = poolReserve.variableBorrowIndex;
   userReserve.lastUpdateTimestamp = Date.parse(block.block_timestamp) / 1000; //@prady
-  userReserve.usageAsCollateralEnabledOnUser = false;
   await userReserveDB.save(userReserve);
+
+  poolReserve.totalScaledVariableDebt = new BigNumber(
+    poolReserve.totalScaledVariableDebt
+  )
+    .plus(calculatedAmount)
+    .toString();
+  poolReserve.totalCurrentVariableDebt = rayMul(
+    poolReserve.totalScaledVariableDebt,
+    index
+  );
+
+  poolReserve.lifetimeScaledVariableDebt = new BigNumber(
+    poolReserve.lifetimeScaledVariableDebt
+  )
+    .plus(calculatedAmount)
+    .toString();
+  poolReserve.lifetimeCurrentVariableDebt = rayMul(
+    poolReserve.lifetimeScaledVariableDebt,
+    index
+  );
+
+  poolReserve.availableLiquidity = new BigNumber(poolReserve.availableLiquidity)
+    .minus(value.toString())
+    .toString();
+  poolReserve.lifetimeBorrows = new BigNumber(poolReserve.lifetimeBorrows)
+    .plus(value.toString())
+    .toString();
+
+  await reserveDB.save(poolReserve);
 };
 
 function getReserveId(underlyingAsset: string, poolId: string): string {
@@ -207,7 +237,28 @@ function getReserveId(underlyingAsset: string, poolId: string): string {
 function getUserReserveId(
   userAddress: string,
   underlyingAssetAddress: string,
-  poolId: string,
+  poolId: string
 ): string {
   return userAddress + underlyingAssetAddress + poolId;
+}
+
+function rayDiv(_a: String, _b: String): String {
+  let a = new BigNumber(_a);
+  let b = new BigNumber(_b);
+  let halfB = b.div(2);
+  let result = a.mul(new BigNumber("1000000000000000000000000000"));
+  result = result.add(halfB);
+  let division = result.div(b);
+  return division.toString();
+}
+
+function rayMul(_a: string, _b: string): string {
+  let a = new BigNumber(_a);
+  let b = new BigNumber(_b);
+  const RAY = BigNumber.from("1000000000000000000000000000");
+  const halfRAY = RAY.div(2);
+  let result = a.mul(b);
+  result = result.add(halfRAY);
+  let mult = result.div(RAY);
+  return mult;
 }

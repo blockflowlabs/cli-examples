@@ -20,7 +20,7 @@ import {
 export const AssetConfigUpdatedHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets
+  secrets: ISecrets,
 ) => {
   // Implement your event handler logic for AssetConfigUpdated here
 
@@ -30,7 +30,7 @@ export const AssetConfigUpdatedHandler = async (
   const reserveDB = bind(Reserve);
   const mapAssetDB = bind(MapAssetPool);
 
-  const $mapAsset:IMapAssetPool = await mapAssetDB.findOne({
+  const $mapAsset: IMapAssetPool = await mapAssetDB.findOne({
     id: asset,
   });
   if (!$mapAsset) {
@@ -47,20 +47,26 @@ export const AssetConfigUpdatedHandler = async (
   if (!$reserveInstance) {
     console.log(
       "Handle asset config updated reserve not created. pool: {} | underlying: {}",
-      [pool, underlyingAsset]
+      [pool, underlyingAsset],
     );
     return;
   }
 
   if (asset == $reserveInstance.aToken) {
     $reserveInstance.aEmissionPerSecond = emission;
-    $reserveInstance.aIncentivesLastUpdateTimestamp = Number(block.block_timestamp);
+    $reserveInstance.aIncentivesLastUpdateTimestamp = Number(
+      block.block_timestamp,
+    );
   } else if (asset == $reserveInstance.vToken) {
     $reserveInstance.vEmissionPerSecond = emission;
-    $reserveInstance.vIncentivesLastUpdateTimestamp = Number(block.block_timestamp);
+    $reserveInstance.vIncentivesLastUpdateTimestamp = Number(
+      block.block_timestamp,
+    );
   } else if (asset == $reserveInstance.sToken) {
     $reserveInstance.sEmissionPerSecond = emission;
-    $reserveInstance.sIncentivesLastUpdateTimestamp = Number(block.block_timestamp);
+    $reserveInstance.sIncentivesLastUpdateTimestamp = Number(
+      block.block_timestamp,
+    );
   }
 
   await reserveDB.save($reserveInstance);

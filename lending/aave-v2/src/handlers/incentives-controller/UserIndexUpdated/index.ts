@@ -21,7 +21,7 @@ import {
 export const UserIndexUpdatedHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets
+  secrets: ISecrets,
 ) => {
   // Implement your event handler logic for UserIndexUpdated here
 
@@ -48,7 +48,7 @@ export const UserIndexUpdatedHandler = async (
   if (!$reserveInstance) {
     console.log(
       "UserIndex updated reserve not created. user: {} | pool: {} | underlying: {} | asset: {} ",
-      [user, pool, underlyingAsset, asset]
+      [user, pool, underlyingAsset, asset],
     );
     return;
   }
@@ -96,17 +96,17 @@ export const UserIndexUpdatedHandler = async (
     if (asset == $reserveInstance.aToken) {
       userReserve.aTokenincentivesUserIndex = index;
       userReserve.aIncentivesLastUpdateTimestamp = Number(
-        block.block_timestamp
+        block.block_timestamp,
       );
     } else if (asset == $reserveInstance.vToken) {
       userReserve.vTokenincentivesUserIndex = index;
       userReserve.vIncentivesLastUpdateTimestamp = Number(
-        block.block_timestamp
+        block.block_timestamp,
       );
     } else if (asset == $reserveInstance.sToken) {
       userReserve.sTokenincentivesUserIndex = index;
       userReserve.sIncentivesLastUpdateTimestamp = Number(
-        block.block_timestamp
+        block.block_timestamp,
       );
     }
 
@@ -121,7 +121,7 @@ function getReserveId(underlyingAsset: string, poolId: string): string {
 function getUserReserveId(
   userAddress: string,
   underlyingAssetAddress: string,
-  poolId: string
+  poolId: string,
 ): string {
   return userAddress + underlyingAssetAddress + poolId;
 }

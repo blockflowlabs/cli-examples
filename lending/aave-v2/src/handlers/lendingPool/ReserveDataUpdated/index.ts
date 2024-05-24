@@ -130,10 +130,10 @@ export const ReserveDataUpdatedHandler = async (
   }
   let reserveInstance: IReserve = await reserveDB.findOne({ id: reserveId });
 
-  reserveInstance.stableBorrowRate = stableBorrowRate;
-  reserveInstance.variableBorrowRate = variableBorrowRate;
-  reserveInstance.variableBorrowIndex = variableBorrowIndex;
-  let timestamp = event.block.timestamp;
+  reserveInstance.stableBorrowRate = stableBorrowRate.toString();
+  reserveInstance.variableBorrowRate = variableBorrowRate.toString();
+  reserveInstance.variableBorrowIndex = variableBorrowIndex.toString();
+  let timestamp = Date.parse(block.block_timestamp) / 1000; //@prady
   let prevTimestamp = reserve.lastUpdateTimestamp;
   if (timestamp > prevTimestamp) {
   }

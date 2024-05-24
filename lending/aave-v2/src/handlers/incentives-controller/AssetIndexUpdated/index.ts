@@ -20,7 +20,7 @@ import {
 export const AssetIndexUpdatedHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets
+  secrets: ISecrets,
 ) => {
   // Implement your event handler logic for AssetIndexUpdated here
 
@@ -46,24 +46,24 @@ export const AssetIndexUpdatedHandler = async (
   if (!$reserveInstance) {
     console.log(
       "Handle asset index updated reserve not created. pool: {} | underlying: {}",
-      [pool, underlyingAsset]
+      [pool, underlyingAsset],
     );
     return;
   }
   if (asset == $reserveInstance.aToken) {
     $reserveInstance.aTokenIncentivesIndex = index;
     $reserveInstance.aIncentivesLastUpdateTimestamp = Number(
-      block.block_timestamp
+      block.block_timestamp,
     );
   } else if (asset == $reserveInstance.vToken) {
     $reserveInstance.vTokenIncentivesIndex = index;
     $reserveInstance.vIncentivesLastUpdateTimestamp = Number(
-      block.block_timestamp
+      block.block_timestamp,
     );
   } else if (asset == $reserveInstance.sToken) {
     $reserveInstance.sTokenIncentivesIndex = index;
     $reserveInstance.sIncentivesLastUpdateTimestamp = Number(
-      block.block_timestamp
+      block.block_timestamp,
     );
   }
 

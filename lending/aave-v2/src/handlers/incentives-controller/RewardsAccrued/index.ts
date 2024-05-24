@@ -15,7 +15,7 @@ import { IncentivizedAction } from "../../../types/schema";
 export const RewardsAccruedHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets
+  secrets: ISecrets,
 ) => {
   // Implement your event handler logic for RewardsAccrued here
 
