@@ -33,6 +33,5 @@ export interface DomainsTable {
   domainName: string;
   chainId: string;
   tokenAddress: string;
-  minterAllowance: number;
   permessageburnlimit: number;
 }

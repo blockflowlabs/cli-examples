@@ -58,7 +58,6 @@ export class DomainsTable {
     domainName: "string",
     chainId: { type: "String", index: true },
     tokenAddress: "string",
-    minterAllowance: "number",
     permessageburnlimit: "number",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
@@ -113,7 +112,6 @@ export interface IDomainsTable extends Document {
   domainName: string;
   chainId: string;
   tokenAddress: string;
-  minterAllowance: number;
   permessageburnlimit: number;
   blocknumber: String;
   entityId: String;
