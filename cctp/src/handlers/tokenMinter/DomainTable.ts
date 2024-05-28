@@ -1,0 +1,47 @@
+import {
+  IEventContext,
+  IBind,
+  Instance,
+  ISecrets,
+} from "@blockflow-labs/utils";
+
+import { DomainsTable, IDomainsTable } from "../../types/schema";
+import { getDomainMetadata } from "../../utils/domains";
+
+
+/**
+ * @dev Event::SetBurnLimitPerMessage(address token, uint256 burnLimitPerMessage)
+ * @param context trigger object with contains {event: {token ,burnLimitPerMessage }, transaction, block, log}
+ * @param bind init function for database wrapper methods
+ */
+export const SetBurnLimitPerMessageHandler = async (
+  context: IEventContext,
+  bind: IBind,
+  secrets: ISecrets,
+) => {
+  // Implement your event handler logic for SetBurnLimitPerMessage here
+
+  const { event, transaction, block, log } = context;
+  const { token, burnLimitPerMessage } = event;
+
+   // import data from domain.js as domainmetadata 
+  //lookout for its id
+  let id = block.chain_id.toString();
+
+  const domainmetadata = getDomainMetadata(id);
+  const domainDB: Instance = bind(DomainsTable);
+
+   
+  let domain: IDomainsTable = await domainDB.findOne({
+    id: id,
+  });
+   domain ??= await domainDB.create({
+    id: id,
+    domainName : domainmetadata.domainName.toString() ,
+    chainId : domainmetadata.chainId,
+    tokenAddress : token.toString(),
+    minterAllowance :  ,
+    permessageburnlimit : burnLimitPerMessage.toString(),
+    
+   });
+};
