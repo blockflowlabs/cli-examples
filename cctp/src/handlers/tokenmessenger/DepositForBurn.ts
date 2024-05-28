@@ -18,7 +18,7 @@ export const DepositForBurnHandler = async (
   bind: IBind,
   secrets: ISecrets,
 ) => {
-  // Implement your event handler logic for DepositForBurn here
+
   const { event, transaction, block, log } = context;
   const {
     nonce,
@@ -33,7 +33,6 @@ export const DepositForBurnHandler = async (
 
   let id = block.chain_id.toString();
 
-  //create an object (key,value)of source domain and chain id 
   const sourceDomainMap: { [key: string]: string } = {
     '0': 'Ethereum',
     '1': 'Avalanche',

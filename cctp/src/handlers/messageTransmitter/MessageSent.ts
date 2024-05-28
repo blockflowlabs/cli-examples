@@ -16,12 +16,10 @@ export const MessageSentHandler = async (
   bind: IBind,
   secrets: ISecrets,
 ) => {
-  // Implement your event handler logic for MessageSent here
 
   const { event, transaction, block, log } = context;
   const { message } = event;
 
-  //id check
   let id = block.chain_id.toString();
 
   const attestationDB: Instance = bind(attestationTable);
@@ -30,7 +28,6 @@ export const MessageSentHandler = async (
     id: id,
   });
 
-  //attesatationhash remains
   attestation ??= await attestationDB.create({
     id: id,
     messageHash: message.toString(),
