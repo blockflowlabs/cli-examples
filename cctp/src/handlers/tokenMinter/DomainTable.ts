@@ -7,7 +7,7 @@ import {
 
 import { DomainsTable, IDomainsTable } from "../../types/schema";
 import { getDomainMetadata } from "../../utils/domains";
-import { hashNonceAndSourceDomain, getBlockchainName} from "../../utils/helper";
+import { getBlockchainName} from "../../utils/helper";
 /**
  * @dev Event::SetBurnLimitPerMessage(address token, uint256 burnLimitPerMessage)
  * @param context trigger object with contains {event: {token ,burnLimitPerMessage }, transaction, block, log}
@@ -22,12 +22,11 @@ export const SetBurnLimitPerMessageHandler = async (
   const { event, transaction, block, log } = context;
   const { token, burnLimitPerMessage,nonce } = event;
 
-  let id = block.chain_id.toString();
+  let domainsource = block.chain_id.toString();
 
-const source_domain: string = getBlockchainName(id);
+const source_domain: string = getBlockchainName(domainsource);
+let Id = `${block.chain_id.toString()}-${source_domain}`
 
-  let Id = hashNonceAndSourceDomain(nonce, source_domain)
-  
   const domainmetadata = getDomainMetadata(Id);
   const domainDB: Instance = bind(DomainsTable);
 
@@ -36,14 +35,14 @@ const source_domain: string = getBlockchainName(id);
   });
   if(domain){
   domain.domainName = domainmetadata.domainName.toString();
-  domain.chainId = domainmetadata.chainId;
+  domain.chainid = domainmetadata.chainId;
   domain.tokenAddress = token.toString();
   domain.permessageburnlimit = burnLimitPerMessage.toString();
   }
     domain ??= await domainDB.create({
     id: Id,
     domainName : domainmetadata.domainName.toString() ,
-    chainId : domainmetadata.chainId,
+    chainid : domainmetadata.chainId,
     tokenAddress : token.toString(),
     permessageburnlimit : burnLimitPerMessage.toString(),
     
