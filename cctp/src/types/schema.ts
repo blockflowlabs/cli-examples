@@ -110,10 +110,11 @@ export interface IattestationTable extends Document {
 export interface IDomainsTable extends Document {
   id: String;
   domainName: string;
-  chainId: string;
+  chainId: number;
   tokenAddress: string;
   permessageburnlimit: number;
   blocknumber: String;
   entityId: String;
   instanceId: String;
+  chainId: String;
 }

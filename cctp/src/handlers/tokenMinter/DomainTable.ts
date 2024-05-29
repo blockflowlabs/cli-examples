@@ -34,7 +34,13 @@ const source_domain: string = getBlockchainName(id);
   let domain: IDomainsTable = await domainDB.findOne({
     id: Id,
   });
-   domain ??= await domainDB.create({
+  if(domain){
+  domain.domainName = domainmetadata.domainName.toString();
+  domain.chainId = domainmetadata.chainId;
+  domain.tokenAddress = token.toString();
+  domain.permessageburnlimit = burnLimitPerMessage.toString();
+  }
+    domain ??= await domainDB.create({
     id: Id,
     domainName : domainmetadata.domainName.toString() ,
     chainId : domainmetadata.chainId,

@@ -17,25 +17,26 @@ export const MessageSentHandler = async (
   bind: IBind,
   secrets: ISecrets,
 ) => {
-
-  const { event, transaction, block, log } = context;
-  const { message , nonce} = event;
+const { event, transaction, block, log } = context;
+const { message , nonce} = event;
   
-  let id = block.chain_id.toString();
+let id = block.chain_id.toString();
 
 const source_domain: string = getBlockchainName(id);
 let Id = hashNonceAndSourceDomain(nonce, source_domain)
 
-  const attestationDB: Instance = bind(attestationTable);
+const attestationDB: Instance = bind(attestationTable);
 
-  let attestation: IattestationTable = await attestationDB.findOne({
+let attestation: IattestationTable = await attestationDB.findOne({
     id: Id,
   });
-
+  if(attestation){
+  attestation.messageHash = message.toString();
+  attestation.timeStamp = block.block_timestamp;
+  }
   attestation ??= await attestationDB.create({
     id: Id,
     messageHash: message.toString(),
     timeStamp: block.block_timestamp,
   });
-
 };

@@ -31,7 +31,7 @@ export interface attestationTable {
 export interface DomainsTable {
   id: String;
   domainName: string;
-  chainId: string;
+  chainId: number;
   tokenAddress: string;
   permessageburnlimit: number;
 }
