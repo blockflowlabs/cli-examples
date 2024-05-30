@@ -4,7 +4,9 @@
   "description": "BlockFlow Studio Project",
   "scripts": {
     "prettier": "prettier --write .",
-    "compile": "tsc -b"
+    "compile": "tsc -b",
+    "test-src": "blockflow instance-test --path ethereum.studio.yaml --startBlock 19260948 --range 1",
+    "test-dst": "blockflow instance-test --path polygon.studio.yaml --startBlock 53702451 --range 1"
   },
   "dependencies": {
     "@blockflow-labs/utils": "latest"
