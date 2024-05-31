@@ -112,6 +112,7 @@ export const ETHDistributedHandler = async (
       log: log,
       block: block,
     };
+    console.log(event);
     await SharesBurntHandler(sharesBurntContext, bind, secrets);
   }
 

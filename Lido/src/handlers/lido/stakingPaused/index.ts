@@ -24,7 +24,7 @@ export const StakingPausedHandler = async (
 
   const lidoConfigDB: Instance = bind(LidoConfig);
 
-  let entity: ILidoConfig = await _loadLidoConfigEntity(lidoConfigDB, context);
+  let entity: ILidoConfig = await _loadLidoConfigEntity(lidoConfigDB);
 
   entity.is_staking_paused = true;
 

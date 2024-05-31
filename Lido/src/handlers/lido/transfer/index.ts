@@ -61,6 +61,14 @@ export const TransferHandler = async (
 
   const lidoTotalsDB: Instance = bind(LidoTotals);
 
+  const totals = await _loadLidoTotalsEntity(lidoTotalsDB);
+
+  //assert keyword
+  if (Number(totals.total_pooled_ether) <= 0) {
+    //throw new Error("transfer with zero totalPooledEther");
+    return;
+  }
+
   let transfer: ILidoTransfer = await _loadLidoTransferEntity(
     lidoTransferDB,
     context
@@ -69,14 +77,6 @@ export const TransferHandler = async (
   transfer.from = from.toString().toLowerCase();
   transfer.to = to.toString().toLowerCase();
   transfer.value = value.toString();
-
-  const totals = await _loadLidoTotalsEntity(lidoTotalsDB);
-
-  //assert keyword
-  if (Number(totals.total_pooled_ether) <= 0) {
-    //throw new Error("transfer with zero totalPooledEther");
-    return;
-  }
 
   transfer.total_pooled_ether = totals.total_pooled_ether;
   transfer.total_shares = totals.total_shares;
