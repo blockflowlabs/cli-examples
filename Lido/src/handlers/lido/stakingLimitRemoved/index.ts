@@ -15,7 +15,7 @@ import { _loadLidoConfigEntity } from "../../../helpers";
 export const StakingLimitRemovedHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets,
+  secrets: ISecrets
 ) => {
   // Implement your event handler logic for StakingLimitRemoved here
 
@@ -24,12 +24,9 @@ export const StakingLimitRemovedHandler = async (
 
   const lidoConfigDB: Instance = bind(LidoConfig);
 
-  let lidoConfig: ILidoConfig = await _loadLidoConfigEntity(
-    lidoConfigDB,
-    context,
-  );
+  let entity: ILidoConfig = await _loadLidoConfigEntity(lidoConfigDB);
 
-  lidoConfig.max_stake_limit = "0";
+  entity.max_stake_limit = "0";
 
-  await lidoConfigDB.save(lidoConfig);
+  await lidoConfigDB.save(entity);
 };

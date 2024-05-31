@@ -21,7 +21,7 @@ import { _loadLidoNodeOperatorEntity } from "../../../helpers";
 export const SigningKeyRemovedHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets,
+  secrets: ISecrets
 ) => {
   // Implement your event handler logic for SigningKeyRemoved here
 
@@ -30,12 +30,12 @@ export const SigningKeyRemovedHandler = async (
 
   const lidoNodeOperatorDB: Instance = bind(LidoNodeOperator);
   const lidoNodeOperatorSigningKeyDB: Instance = bind(
-    LidoNodeOperatorSigningKey,
+    LidoNodeOperatorSigningKey
   );
 
   let operator: ILidoNodeOperator = await _loadLidoNodeOperatorEntity(
     lidoNodeOperatorDB,
-    operatorId,
+    operatorId
   );
 
   let entity: ILidoNodeOperatorSigningKey =
@@ -48,7 +48,7 @@ export const SigningKeyRemovedHandler = async (
       id: pubkey.toString(),
     });
     entity.operator_id = operatorId.toString();
-    entity.operator = operator.id;
+    entity.operator = operator.id.toString();
     entity.pubkey = pubkey.toString();
   }
 

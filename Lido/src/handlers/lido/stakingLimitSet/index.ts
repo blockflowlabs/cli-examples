@@ -15,7 +15,7 @@ import { _loadLidoConfigEntity } from "../../../helpers";
 export const StakingLimitSetHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets,
+  secrets: ISecrets
 ) => {
   // Implement your event handler logic for StakingLimitSet here
 
@@ -24,14 +24,10 @@ export const StakingLimitSetHandler = async (
 
   const lidoConfigDB: Instance = bind(LidoConfig);
 
-  let lidoConfig: ILidoConfig = await _loadLidoConfigEntity(
-    lidoConfigDB,
-    context,
-  );
+  let entity: ILidoConfig = await _loadLidoConfigEntity(lidoConfigDB);
 
-  lidoConfig.max_stake_limit = maxStakeLimit.toLowerCase();
-  lidoConfig.stake_limit_increase_per_block =
-    stakeLimitIncreasePerBlock.toLowerCase();
+  entity.max_stake_limit = maxStakeLimit.toString();
+  entity.stake_limit_increase_per_block = stakeLimitIncreasePerBlock.toString();
 
-  await lidoConfigDB.save(lidoConfig);
+  await lidoConfigDB.save(entity);
 };

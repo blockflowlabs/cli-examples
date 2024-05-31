@@ -15,7 +15,7 @@ import { _loadLidoOracleConfigEntity } from "../../../helpers";
 export const FrameConfigSetHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets,
+  secrets: ISecrets
 ) => {
   // Implement your event handler logic for FrameConfigSet here
 
@@ -27,9 +27,10 @@ export const FrameConfigSetHandler = async (
   let entity: ILidoOracleConfig =
     await _loadLidoOracleConfigEntity(lidoOracleConfigDB);
 
-  //require some correction-----> help
-
   entity.epochs_per_frame = newEpochsPerFrame;
+  entity.slots_per_epoch = "32"; //hardcoded
+  entity.seconds_per_slot = "12"; //hardcoded
+  entity.genesis_time = "1606824023"; //hardcoded
 
   await lidoOracleConfigDB.save(entity);
 };

@@ -1,6 +1,6 @@
 {
   "name": "blockflow-studio",
-  "version": "1.0.4",
+  "version": "1.0.6",
   "description": "BlockFlow Studio Project",
   "scripts": {
     "compile": "tsc -b"

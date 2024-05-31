@@ -15,7 +15,7 @@ import { _loadLidoConfigEntity } from "../../../helpers";
 export const StakingResumedHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets,
+  secrets: ISecrets
 ) => {
   // Implement your event handler logic for StakingResumed here
 
@@ -24,12 +24,9 @@ export const StakingResumedHandler = async (
 
   const lidoConfigDB: Instance = bind(LidoConfig);
 
-  let lidoConfig: ILidoConfig = await _loadLidoConfigEntity(
-    lidoConfigDB,
-    context,
-  );
+  let entity: ILidoConfig = await _loadLidoConfigEntity(lidoConfigDB);
 
-  lidoConfig.is_staking_paused = false;
+  entity.is_staking_paused = false;
 
-  await lidoConfigDB.save(lidoConfig);
+  await lidoConfigDB.save(entity);
 };

@@ -21,7 +21,7 @@ import {
   _updateTransferBalances,
 } from "../../../helpers";
 import BigNumber from "bignumber.js";
-import { ZERO, ZERO_ADDRESS } from "../../../constants";
+import { ZeroAddress } from "ethers";
 
 /**
  * @dev Event::SharesBurnt(address account, uint256 preRebaseTokenAmount, uint256 postRebaseTokenAmount, uint256 sharesAmount)
@@ -31,7 +31,7 @@ import { ZERO, ZERO_ADDRESS } from "../../../constants";
 export const SharesBurntHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets,
+  secrets: ISecrets
 ) => {
   // Implement your event handler logic for SharesBurnt here
 
@@ -43,29 +43,35 @@ export const SharesBurntHandler = async (
 
   let sharesBurn: ISharesBurn = await _loadSharesBurnEntity(
     sharesBurnDB,
-    context,
+    context
   );
 
   await sharesBurnDB.save(sharesBurn);
 
   const lidoTotalsDB: Instance = bind(LidoTotals);
-  let totals: ILidoTotals = await _loadLidoTotalsEntity(lidoTotalsDB, context);
+  let totals: ILidoTotals = await _loadLidoTotalsEntity(lidoTotalsDB);
 
-  totals.total_shares = new BigNumber(totals.total_shares || "0")
+  totals.total_shares = new BigNumber(totals.total_shares)
     .minus(sharesAmount.toString())
     .toString();
+
+  if (Number(totals.total_shares) < Number("0")) {
+    //throw new Error("'negative totalShares after shares burn'");
+    return;
+  }
 
   await lidoTotalsDB.save(totals);
 
   const lidoTransferDB: Instance = bind(LidoTransfer);
+
   let transfer: ILidoTransfer = await _loadLidoTransferEntity(
     lidoTransferDB,
-    context,
+    context
   );
 
   transfer.from = account.toString().toLowerCase();
 
-  transfer.to = ZERO_ADDRESS;
+  transfer.to = ZeroAddress;
 
   transfer.value = postRebaseTokenAmount.toString();
   transfer.shares = sharesAmount.toString();
@@ -73,13 +79,13 @@ export const SharesBurntHandler = async (
   transfer.total_pooled_ether = totals.total_pooled_ether;
   transfer.total_shares = totals.total_shares;
 
-  transfer.shares_before_decrease = ZERO;
-  transfer.shares_after_decrease = ZERO;
-  transfer.balance_after_decrease = ZERO;
+  transfer.shares_before_decrease = "0";
+  transfer.shares_after_decrease = "0";
+  transfer.balance_after_decrease = "0";
 
-  transfer.shares_before_increase = ZERO;
-  transfer.shares_after_increase = ZERO;
-  transfer.balance_after_increase = ZERO;
+  transfer.shares_before_increase = "0";
+  transfer.shares_after_increase = "0";
+  transfer.balance_after_increase = "0";
 
   transfer = await _updateTransferShares(transfer, bind);
   transfer = await _updateTransferBalances(transfer);

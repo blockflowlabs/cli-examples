@@ -19,7 +19,7 @@ import { ILidoAppVersion, LidoAppVersion } from "../../../types/schema";
 export const SetAppHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets,
+  secrets: ISecrets
 ) => {
   // Implement your event handler logic for SetApp here
 
@@ -27,7 +27,7 @@ export const SetAppHandler = async (
   const { namespace, appId, app } = event;
 
   if (namespace == KERNEL_APP_BASES_NAMESPACE) {
-    const repoAddr: any = "";
+    const repoAddr: string = APP_REPOS[appId.toString().toLowerCase()];
 
     if (repoAddr) {
       const lidoAppVersionDB = bind(LidoAppVersion);

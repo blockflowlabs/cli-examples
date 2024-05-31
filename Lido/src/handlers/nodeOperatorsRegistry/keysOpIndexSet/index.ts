@@ -17,7 +17,7 @@ import {
 export const KeysOpIndexSetHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets,
+  secrets: ISecrets
 ) => {
   // Implement your event handler logic for KeysOpIndexSet here
 
@@ -32,10 +32,9 @@ export const KeysOpIndexSetHandler = async (
   let entity: ILidoNodeOperatorKeysOpIndex = await lidoKeysOpsIndexSetDB.create(
     {
       id: entityId,
-    },
+      index: keysOpIndex.toString(),
+    }
   );
-
-  entity.index = keysOpIndex.toString();
 
   await lidoKeysOpsIndexSetDB.save(entity);
 };

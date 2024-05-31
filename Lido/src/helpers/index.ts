@@ -37,6 +37,7 @@ import {
   ZERO_ADDRESS,
 } from "../constants";
 import BigNumber from "bignumber.js";
+import { ZeroAddress } from "ethers";
 
 export const _loadLidoSubmissionEntity = async (
   lidoSubmissionDB: Instance,
@@ -55,16 +56,27 @@ export const _loadLidoSubmissionEntity = async (
   if (!entity) {
     entity = await lidoSubmissionDB.create({
       id: entityId,
+      sender: sender.toString().toLowerCase(),
+      amount: amount.toString(),
+      referral: referral.toString().toLowerCase(),
+
+      shares: "0",
+      shares_before: "0",
+      shares_after: "0",
+
+      total_pooled_ether_before: "0",
+      total_pooled_ether_after: "0",
+
+      total_shares_before: "0",
+      total_shares_after: "0",
+
+      balance_after: "0",
+
+      block_timestamp: block.block_timestamp,
+      transaction_hash: transaction.transaction_hash,
+      transaction_index: transaction.transaction_index,
+      log_index: log.log_index,
     });
-
-    entity.sender = sender.toString().toLowerCase();
-    entity.amount = amount.toString();
-    entity.referral = referral.toString().toLowerCase();
-
-    entity.block_timestamp = block.block_timestamp;
-    entity.transaction_hash = transaction.transaction_hash;
-    entity.transaction_index = transaction.transaction_index;
-    entity.log_index = log.log_index;
   }
 
   return entity;
@@ -84,11 +96,28 @@ export const _loadLidoTransferEntity = async (
   });
 
   if (!entity) {
-    entity = await lidoTransferDB.create({ id: entityId });
-    entity.block_timestamp = block.block_timestamp;
-    entity.transaction_hash = transaction.transaction_hash;
-    entity.transaction_index = transaction.transaction_index;
-    entity.log_index = log.log_index;
+    entity = await lidoTransferDB.create({
+      id: entityId,
+      from: ZeroAddress,
+      to: ZeroAddress,
+      value: "0",
+
+      shares: "0",
+      shares_before_decrease: "0",
+      shares_after_decrease: "0",
+      shares_before_increase: "0",
+      shares_after_increase: "0",
+
+      total_pooled_ether: "0",
+      total_shares: "0",
+
+      balance_after_decrease: "0",
+      balance_after_increase: "0",
+      block_timestamp: block.block_timestamp,
+      transaction_hash: transaction.transaction_hash,
+      transaction_index: transaction.transaction_index,
+      log_index: log.log_index,
+    });
   }
 
   return entity;
@@ -110,11 +139,13 @@ export const _loadSharesBurnEntity = async (
   });
 
   if (!entity) {
-    entity = await sharesBurnDB.create({ id: entityId });
-
-    entity.account = account.toString().toLowerCase();
-    entity.pre_rebase_token_amount = preRebaseTokenAmount.toString();
-    entity.post_rebase_token_amount = postRebaseTokenAmount.toString();
+    entity = await sharesBurnDB.create({
+      id: entityId,
+      account: account.toString().toLowerCase(),
+      post_rebase_token_amount: preRebaseTokenAmount.toString(),
+      pre_rebase_token_amount: postRebaseTokenAmount.toString(),
+      shares_amount: sharesAmount.toString(),
+    });
   }
 
   return entity;
@@ -133,86 +164,82 @@ export const _loadLidoApprovalEntity = async (
   let entity: ILidoApproval = await lidoApprovalDB.findOne({ id: entityId });
 
   if (!entity) {
-    entity = await lidoApprovalDB.create({ id: entityId });
-
-    entity.owner = owner.toString().toLowerCase();
-    entity.spender = spender.toString().toLowerCase();
-    entity.value = value.toString();
+    entity = await lidoApprovalDB.create({
+      id: entityId,
+      owner: owner.toString().toLowerCase(),
+      spender: spender.toString().toLowerCase(),
+      value: value.toString(),
+    });
   }
 
   return entity;
 };
 
 export const _loadCurrentFeeEntity = async (
-  currentFeeDB: Instance,
-  context: IEventContext
+  currentFeeDB: Instance
 ): Promise<ICurrentFee> => {
-  const { event, transaction, block, log } = context;
-
-  let entityId = `lido`;
+  let entityId = `lidocurrentfee`;
 
   let entity: ICurrentFee = await currentFeeDB.findOne({ id: entityId });
 
   if (!entity) {
-    entity = await currentFeeDB.create({ id: entityId });
-    entity.fee_basis_points = ZERO;
-    entity.treasury_fee_basis_points = ZERO;
-    entity.insurance_fee_basis_points = ZERO;
-    entity.operators_fee_basis_points = ZERO;
+    entity = await currentFeeDB.create({
+      id: entityId,
+      fee_basis_points: "0",
+      treasury_fee_basis_points: "0",
+      insurance_fee_basis_points: "0",
+      operators_fee_basis_points: "0",
+    });
   }
 
   return entity;
 };
 
 export const _loadLidoConfigEntity = async (
-  lidoConfigDB: Instance,
-  context: IEventContext
+  lidoConfigDB: Instance
 ): Promise<ILidoConfig> => {
-  const { event, transaction, block, log } = context;
-
-  let entityId = `lido`;
+  let entityId = `lidoconfig`;
 
   let entity: ILidoConfig = await lidoConfigDB.findOne({ id: entityId });
 
   if (!entity) {
-    entity = await lidoConfigDB.create({ id: entityId });
+    entity = await lidoConfigDB.create({
+      id: entityId,
+      insurance_fund: ZeroAddress,
+      oracle: ZeroAddress,
+      treasury: ZeroAddress,
 
-    // entity.insurance_fund= ZERO_ADDRESS;
-    // entity.oracle= ZERO_ADDRESS;
-    // entity.treasury= ZERO_ADDRESS;
+      is_stopped: true,
+      is_staking_paused: true,
 
-    entity.is_stopped = true;
-    entity.is_staking_paused = true;
+      max_stake_limit: "0",
+      stake_limit_increase_per_block: "0",
 
-    entity.max_stake_limit = ZERO;
-    entity.stake_limit_increase_per_block = ZERO;
+      el_rewards_vault: ZeroAddress,
+      el_rewards_withdrawal_limit_points: "0",
 
-    entity.el_rewards_vault = ZERO_ADDRESS;
-    entity.el_rewards_withdrawal_limit_points = ZERO;
-
-    entity.withdrawal_credentials = ZERO_ADDRESS;
-    entity.wc_set_by = ZERO_ADDRESS;
-
-    entity.lido_locator = ZERO_ADDRESS;
+      withdrawal_credentials: ZeroAddress,
+      wc_set_by: ZeroAddress,
+      lido_locator: ZeroAddress,
+    });
   }
 
   return entity;
 };
 
 export const _loadLidoTotalsEntity = async (
-  lidoTotalsDB: Instance,
-  context: IEventContext
+  lidoTotalsDB: Instance
 ): Promise<ILidoTotals> => {
-  const { event, transaction, block, log } = context;
-
-  let entityId = `lido`;
+  let entityId = `lidototal`;
 
   let entity: ILidoTotals = await lidoTotalsDB.findOne({ id: entityId });
 
   if (!entity) {
-    entity = await lidoTotalsDB.create({ id: entityId });
-    entity.total_pooled_ether = ZERO;
-    entity.total_shares = ZERO;
+    entity = await lidoTotalsDB.create({
+      id: entityId,
+      total_pooled_ether: "0",
+      total_shares: "0",
+    });
   }
 
   return entity;
@@ -227,28 +254,26 @@ export const _loadLidoSharesEntity = async (
   let entity: ILidoShares = await lidoSharesDB.findOne({ id: entityId });
 
   if (!entity) {
-    entity = await lidoSharesDB.create({ id: entityId });
-    entity.shares = ZERO;
+    entity = await lidoSharesDB.create({ id: entityId, shares: "0" });
   }
 
   return entity;
 };
 
 export const _loadLidoStatsEntity = async (
-  lidoStatsDB: Instance,
-  context: IEventContext
+  lidoStatsDB: Instance
 ): Promise<ILidoStats> => {
-  const { event, transaction, block, log } = context;
-
-  let entityId = `lido`;
+  let entityId = `lidostats`;
 
   let entity: ILidoStats = await lidoStatsDB.findOne({ id: entityId });
 
   if (!entity) {
-    entity = await lidoStatsDB.create({ id: entityId });
-    entity.unique_holders = ZERO;
-    entity.unique_anytime_holders = ZERO;
-    entity.last_oracle_completed_id = ZERO;
+    entity = await lidoStatsDB.create({
+      id: entityId,
+      unique_holders: "0",
+      unique_anytime_holders: "0",
+      last_oracle_completed_id: "0",
+    });
   }
 
   return entity;
@@ -269,14 +294,16 @@ export const _loadLidoOracleCompletedEntity = async (
   });
 
   if (!entity) {
-    entity = await lidoOracleCompletedDB.create({ id: entityId });
-    entity.epoch_id = epochId.toString().toLowerCase();
-    entity.beacon_balance = beaconBalance.toString();
-    entity.beacon_validators = beaconValidators.toString();
+    entity = await lidoOracleCompletedDB.create({
+      id: entityId,
+      epoch_id: epochId.toString().toLowerCase(),
+      beacon_balance: beaconBalance.toString(),
+      beacon_validators: beaconValidators.toString(),
 
-    entity.block_timestamp = block.block_timestamp;
-    entity.transaction_hash = transaction.transaction_hash;
-    entity.log_index = log.log_index;
+      block_timestamp: block.block_timestamp,
+      transaction_hash: transaction.transaction_hash,
+      log_index: log.log_index,
+    });
   }
 
   return entity;
@@ -296,12 +323,15 @@ export const _loadLidoOracleMemberEntity = async (
   });
 
   if (!entity) {
-    entity = await lidoOracleMemberDB.create({ id: entityId });
-    entity.member = member.toString().toLowerCase();
-    entity.removed = true;
-    entity.block_timestamp = block.block_timestamp;
-    entity.transaction_hash = transaction.transaction_hash;
-    entity.log_index = log.log_index;
+    entity = await lidoOracleMemberDB.create({
+      id: entityId,
+      member: member.toString().toLowerCase(),
+      removed: true,
+
+      block_timestamp: block.block_timestamp,
+      transaction_hash: transaction.transaction_hash,
+      log_index: log.log_index,
+    });
   }
 
   return entity;
@@ -310,27 +340,27 @@ export const _loadLidoOracleMemberEntity = async (
 export const _loadLidoOracleConfigEntity = async (
   lidoOracleConfigDB: Instance
 ): Promise<ILidoOracleConfig> => {
-  let entityId = "lido";
+  let entityId = "lidooracleconfig";
 
   let entity: ILidoOracleConfig = await lidoOracleConfigDB.findOne({
     id: entityId,
   });
 
   if (!entity) {
-    entity = await lidoOracleConfigDB.create({ id: entityId });
+    entity = await lidoOracleConfigDB.create({
+      id: entityId,
+      quorum: "0",
+      contract_version: "0",
+      allowed_beacon_balance_annual_relative_increase: "0",
+      allowed_beacon_balance_relative_decrease: "0",
 
-    entity.quorum = ZERO;
-    entity.contract_version = ZERO;
+      epochs_per_frame: "0",
+      slots_per_epoch: "0",
+      seconds_per_slot: "0",
+      genesis_time: "0",
 
-    entity.allowed_beacon_balance_annual_relative_increase = ZERO;
-    entity.allowed_beacon_balance_relative_decrease = ZERO;
-
-    entity.epochs_per_frame = ZERO;
-    entity.slots_per_epoch = ZERO;
-    entity.seconds_per_slot = ZERO;
-    entity.genesis_time = ZERO;
-
-    entity.beacon_report_receiver = ZERO_ADDRESS;
+      beacon_report_receiver: ZeroAddress,
+    });
   }
   return entity;
 };
@@ -349,6 +379,46 @@ export const _loadLidoTotalRewardEntity = async (
   if (!entity) {
     entity = await lidoTotalRewardDB.create({
       id: entityId,
+
+      total_rewards: "0",
+      total_rewards_with_fees: "0",
+
+      mev_fee: "0",
+
+      fee_basis: "0",
+      treasury_fee_basis_points: "0",
+      insurance_fee_basis_points: "0",
+      operators_fee_basis_points: "0",
+
+      total_fee: "0",
+      node_operator_fee: "0",
+      insurance_fee: "0",
+      operators_fee: "0",
+      treasury_fee: "0",
+      dust: "0",
+
+      shares_to_mint: "0",
+
+      shares_to_treasury: "0",
+      shares_to_insurance_fund: "0",
+      shares_to_operators: "0",
+      dust_shares_to_treasury: "0",
+
+      total_pooled_ether_before: "0",
+      total_pooled_ether_after: "0",
+      total_shares_before: "0",
+      total_shares_after: "0",
+
+      time_elapsed: "0",
+
+      apr_raw: "0",
+      apr_before_fees: "0",
+      apr: "0",
+
+      block_timestamp: block.block_timestamp,
+      transaction_hash: transaction.transaction_hash,
+      transaction_index: transaction.transaction_index,
+      log_index: log.log_index,
     });
   }
 
@@ -372,10 +442,10 @@ export const _loadLidoNodeOperatorFeesEntity = async (
   if (!entity) {
     entity = await lidoNodeOperatorFeesDB.create({
       id: entityId,
+      total_reward: `${transaction.transaction_hash}`.toLowerCase(),
+      address: to.toString().toLowerCase(),
+      fee: value.toString(),
     });
-    entity.total_reward = `${transaction.transaction_hash}`.toLowerCase();
-    entity.address = to.toString().toLowerCase();
-    entity.fee = value.toString();
   }
 
   return entity;
@@ -399,6 +469,9 @@ export const _loadLidoNodeOperatorsSharesEntity = async (
   if (!entity) {
     entity = await lidoNodeOperatorsSharesDB.create({
       id: entityId,
+      total_reward: "0",
+      address: ZeroAddress,
+      shares: "0",
     });
   }
 
@@ -413,14 +486,20 @@ export const _updateHolders = async (
   const lidoStatsDB: Instance = bind(LidoStats);
   const lidoHoldersDB: Instance = bind(LidoHolder);
 
-  let stats: ILidoStats = await _loadLidoStatsEntity(lidoStatsDB, context);
+  let stats: ILidoStats = await _loadLidoStatsEntity(lidoStatsDB);
 
   if (transfer.to != ZERO_ADDRESS) {
-    let holder: ILidoHolder = await lidoHoldersDB.findOne({ id: transfer.to });
+    let holder: ILidoHolder = await lidoHoldersDB.findOne({
+      id: transfer.to.toString().toLowerCase(),
+    });
+
     if (!holder) {
-      holder = await lidoHoldersDB.create({ id: transfer.to });
-      holder.address = transfer.to;
-      holder.has_balance = false;
+      holder = await lidoHoldersDB.create({
+        id: transfer.to.toString().toLowerCase(),
+        address: transfer.to.toString().toLowerCase(),
+        has_balance: false,
+      });
+
       stats.unique_anytime_holders = new BigNumber(stats.unique_anytime_holders)
         .plus("1")
         .toString();
@@ -431,12 +510,12 @@ export const _updateHolders = async (
         .plus("1")
         .toString();
     }
-    lidoHoldersDB.save(holder);
+    await lidoHoldersDB.save(holder);
   }
 
   if (transfer.from != ZERO_ADDRESS) {
     let holder: ILidoHolder = await lidoHoldersDB.findOne({
-      id: transfer.from,
+      id: transfer.from.toString().toLowerCase(),
     });
 
     if (holder) {
@@ -447,7 +526,7 @@ export const _updateHolders = async (
           .minus("1")
           .toString();
       }
-      lidoHoldersDB.save(holder);
+      await lidoHoldersDB.save(holder);
     }
   }
   await lidoStatsDB.save(stats);
@@ -492,7 +571,7 @@ export const _updateTransferShares = async (
       shares.shares = new BigNumber(shares.shares)
         .minus(transfer.shares)
         .toString();
-      lidoSharesDB.save(shares);
+      await lidoSharesDB.save(shares);
     }
     transfer.shares_after_decrease = shares.shares;
   }
@@ -505,7 +584,7 @@ export const _updateTransferShares = async (
       shares.shares = new BigNumber(shares.shares)
         .plus(transfer.shares)
         .toString();
-      lidoSharesDB.save(shares);
+      await lidoSharesDB.save(shares);
     }
     transfer.shares_after_increase = shares.shares;
   }
@@ -530,11 +609,11 @@ export const _loadLidoBeaconReportEntity = async (
   if (!entity) {
     entity = await lidoBeaconReportDB.create({
       id: entityId,
+      epoch_id: epochId.toString(),
+      beacon_balance: beaconBalance.toString(),
+      beacon_validators: beaconValidators.toString(),
+      caller: transaction.transaction_from_address.toLowerCase(),
     });
-    entity.epoch_id = epochId.toString();
-    entity.beacon_balance = beaconBalance.toString();
-    entity.beacon_validators = beaconValidators.toString();
-    entity.caller = transaction.transaction_from_address.toLowerCase();
   }
 
   return entity;
@@ -559,7 +638,6 @@ export const _loadLidoOracleExpectedEpochEntity = async (
     entity = await lidoOracleExpectedEpochDB.create({
       id: entityId,
     });
-    entity.epoch_id = epochId.toString();
   }
 
   return entity;
@@ -616,15 +694,16 @@ export const _loadLidoNodeOperatorEntity = async (
   });
 
   if (!entity && create) {
-    entity = await lidoNodeOperatorDB.create({ id: entityId });
-    entity.name = "";
-    entity.reward_address = ZERO_ADDRESS;
-    entity.staking_limit = ZERO;
-    entity.active = true;
-
-    entity.total_stopped_validators = ZERO;
-    entity.total_keys_trimmed = ZERO;
-    entity.nonce = ZERO;
+    entity = await lidoNodeOperatorDB.create({
+      id: entityId,
+      name: "",
+      reward_address: ZeroAddress,
+      staking_limit: "0",
+      active: true,
+      total_stopped_validators: "0",
+      total_keys_trimmed: "0",
+      nonce: "0",
+    });
   }
 
   return entity;
@@ -667,9 +746,13 @@ export const _loadLidoOracleReportEntity = async (
   });
 
   if (!entity && create) {
-    entity = await lidoOracleReportDB.create({ id: entityId });
-    entity.items_processed = ZERO;
-    entity.items_count = ZERO;
+    entity = await lidoOracleReportDB.create({
+      id: entityId,
+      total_reward: "",
+      hash: "",
+      items_processed: "0",
+      items_count: "0",
+    });
   }
 
   return entity;
@@ -699,19 +782,21 @@ export const _loadWithdrawalQueueConfigEntity = async (
 export const _loadEasyTrackConfigEntity = async (
   easyTrackConfigDB: Instance
 ): Promise<IEasyTrackConfig> => {
-  let entityId = "lido";
+  let entityId = "lidoeasytrackconfig";
 
   let entity: IEasyTrackConfig = await easyTrackConfigDB.findOne({
     id: entityId,
   });
 
   if (!entity) {
-    entity = await easyTrackConfigDB.create({ id: entityId });
-    entity.evm_script_executor = ZERO_ADDRESS;
-    entity.motion_duration = Number(ZERO);
-    entity.motions_count_limit = Number(ZERO);
-    entity.objections_threshold = Number(ZERO);
-    entity.is_paused = false;
+    entity = await easyTrackConfigDB.create({
+      id: entityId,
+      evm_script_executor: ZeroAddress,
+      motion_duration: 0,
+      motions_count_limit: 0,
+      objections_threshold: 0,
+      is_paused: false,
+    });
   }
 
   return entity;

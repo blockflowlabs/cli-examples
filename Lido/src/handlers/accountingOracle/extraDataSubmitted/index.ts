@@ -15,7 +15,7 @@ import { _loadLidoOracleReportEntity } from "../../../helpers";
 export const ExtraDataSubmittedHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets,
+  secrets: ISecrets
 ) => {
   // Implement your event handler logic for ExtraDataSubmitted here
 
@@ -26,7 +26,7 @@ export const ExtraDataSubmittedHandler = async (
 
   let entity: ILidoOracleReport = await _loadLidoOracleReportEntity(
     lidoOracleReportDB,
-    context,
+    context
   );
 
   entity.items_processed = itemsProcessed.toString();
@@ -34,5 +34,5 @@ export const ExtraDataSubmittedHandler = async (
 
   await lidoOracleReportDB.save(entity);
 
-  //to do
+  //SR Modules,
 };

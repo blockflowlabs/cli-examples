@@ -176,6 +176,7 @@ export interface LidoTotalReward {
   operators_fee_basis_points: string;
 
   total_fee: string;
+  node_operator_fee: string;
   insurance_fee: string;
   operators_fee: string;
   treasury_fee: string;

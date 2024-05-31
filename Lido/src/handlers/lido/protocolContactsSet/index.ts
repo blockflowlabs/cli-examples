@@ -15,7 +15,7 @@ import { _loadLidoConfigEntity } from "../../../helpers";
 export const ProtocolContactsSetHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets,
+  secrets: ISecrets
 ) => {
   // Implement your event handler logic for ProtocolContactsSet here
 
@@ -24,14 +24,11 @@ export const ProtocolContactsSetHandler = async (
 
   const lidoConfigDB: Instance = bind(LidoConfig);
 
-  let lidoConfig: ILidoConfig = await _loadLidoConfigEntity(
-    lidoConfigDB,
-    context,
-  );
+  let entity: ILidoConfig = await _loadLidoConfigEntity(lidoConfigDB);
 
-  lidoConfig.insurance_fund = insuranceFund.toLowerCase();
-  lidoConfig.oracle = oracle.toLowerCase();
-  lidoConfig.treasury = treasury.toLowerCase();
+  entity.insurance_fund = insuranceFund.toString().toLowerCase();
+  entity.oracle = oracle.toString().toLowerCase();
+  entity.treasury = treasury.toString().toLowerCase();
 
-  await lidoConfigDB.save(lidoConfig);
+  await lidoConfigDB.save(entity);
 };

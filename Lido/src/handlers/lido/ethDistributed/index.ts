@@ -4,10 +4,12 @@ import {
   Instance,
   ISecrets,
 } from "@blockflow-labs/utils";
+
 import {
   decodeSharesBurntEvent,
   decodeTokenRebasedEvent,
 } from "../../../utils";
+
 import {
   CALCULATION_UNIT,
   E27_PRECISION_BASE,
@@ -17,18 +19,21 @@ import {
   TOKEN_REBASE_EVENT_TOPIC0,
   ZERO,
 } from "../../../constants";
+
 import {
   ILidoTotalReward,
   ILidoTotals,
   LidoTotalReward,
   LidoTotals,
 } from "../../../types/schema";
+
 import {
   _loadLidoTotalRewardEntity,
   _loadLidoTotalsEntity,
 } from "../../../helpers";
 
 import { SharesBurntHandler } from "../sharesBurnt";
+
 import BigNumber from "bignumber.js";
 
 /**
@@ -39,7 +44,7 @@ import BigNumber from "bignumber.js";
 export const ETHDistributedHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets,
+  secrets: ISecrets
 ) => {
   // Implement your event handler logic for ETHDistributed here
 
@@ -56,7 +61,7 @@ export const ETHDistributedHandler = async (
 
   const isTokenRebasedEvent = transaction
     ? transaction.logs.find(
-        (log) => log.topics[0].toLowerCase() === TOKEN_REBASE_EVENT_TOPIC0,
+        (log) => log.topics[0].toLowerCase() === TOKEN_REBASE_EVENT_TOPIC0
       )
     : null;
 
@@ -69,16 +74,26 @@ export const ETHDistributedHandler = async (
 
   const lidoTotalsDB: Instance = bind(LidoTotals);
 
-  const totals: ILidoTotals = await _loadLidoTotalsEntity(
-    lidoTotalsDB,
-    context,
-  );
+  const totals: ILidoTotals = await _loadLidoTotalsEntity(lidoTotalsDB);
 
+  if (
+    Number(totals.total_pooled_ether) != Number(decodeTokenRebasedEventTx[3])
+  ) {
+    //throw new Error(""totalPooledEther mismatch report's preTotalEther"");
+    return;
+  }
+
+  if (Number(totals.total_shares) != Number(decodeTokenRebasedEventTx[2])) {
+    //throw new Error(""totalShares mismatch report's preTotalShares"");
+    return;
+  }
+
+  totals.total_pooled_ether = decodeTokenRebasedEventTx[5];
   await lidoTotalsDB.save(totals);
 
   const isSharesBurntEvent = transaction
     ? transaction.logs.find(
-        (log) => log.topics[0].toLowerCase() === SHARES_BURNT_EVENT_TOPIC0,
+        (log) => log.topics[0].toLowerCase() === SHARES_BURNT_EVENT_TOPIC0
       )
     : null;
 
@@ -86,21 +101,28 @@ export const ETHDistributedHandler = async (
     decodeSharesBurntEvent(isSharesBurntEvent);
 
   if (isSharesBurntEvent) {
-    console.log(decodeSharesBurntEventTx);
-    console.log(context);
-    //fix this here
-    await SharesBurntHandler(context, bind, secrets);
+    const sharesBurntContext: IEventContext = {
+      event: {
+        account: decodeSharesBurntEventTx[0],
+        preRebaseTokenAmount: decodeSharesBurntEventTx[1],
+        postRebaseTokenAmount: decodeSharesBurntEventTx[2],
+        sharesAmount: decodeSharesBurntEventTx[3],
+      },
+      transaction: transaction,
+      log: log,
+      block: block,
+    };
+    await SharesBurntHandler(sharesBurntContext, bind, secrets);
   }
 
   totals.total_shares = decodeTokenRebasedEventTx[4];
-
   await lidoTotalsDB.save(totals);
 
   const postCLTotalBalance = new BigNumber(postCLBalance).plus(
-    withdrawalsWithdrawn,
+    withdrawalsWithdrawn
   );
 
-  if (postCLTotalBalance < preCLBalance) {
+  if (postCLTotalBalance <= preCLBalance) {
     return;
   }
 
@@ -112,7 +134,7 @@ export const ETHDistributedHandler = async (
 
   let totalRewardEntity: ILidoTotalReward = await _loadLidoTotalRewardEntity(
     lidoTotalRewardDB,
-    context,
+    context
   );
 
   totalRewardEntity.total_rewards = totalRewards.toString();
@@ -122,7 +144,6 @@ export const ETHDistributedHandler = async (
   totalRewardEntity.mev_fee = executionLayerRewardsWithdrawn.toString();
 
   //process token rebase
-
   totalRewardEntity.total_pooled_ether_before = decodeTokenRebasedEventTx[3]; //pre total ether;
   totalRewardEntity.total_shares_before = decodeTokenRebasedEventTx[2]; //pre total shares;
   totalRewardEntity.total_pooled_ether_after = decodeTokenRebasedEventTx[5]; //post total ether;
@@ -146,9 +167,8 @@ export const ETHDistributedHandler = async (
   totalRewardEntity.total_fee = new BigNumber(treasuryFee)
     .plus(operatorsFee)
     .toString();
-
   totalRewardEntity.total_rewards = new BigNumber(
-    totalRewardEntity.total_rewards_with_fees,
+    totalRewardEntity.total_rewards_with_fees
   )
     .minus(totalRewardEntity.total_fee)
     .toString();
@@ -170,13 +190,13 @@ export const ETHDistributedHandler = async (
 
   //calculate APR
   const preShareRate = new BigNumber(
-    totalRewardEntity.total_pooled_ether_before,
+    totalRewardEntity.total_pooled_ether_before
   )
     .times(E27_PRECISION_BASE)
     .div(totalRewardEntity.total_shares_before);
 
   const postShareRate = new BigNumber(
-    totalRewardEntity.total_pooled_ether_after,
+    totalRewardEntity.total_pooled_ether_after
   )
     .times(E27_PRECISION_BASE)
     .div(totalRewardEntity.total_shares_after);

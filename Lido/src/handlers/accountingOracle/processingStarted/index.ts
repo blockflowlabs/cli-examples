@@ -5,7 +5,10 @@ import {
   ISecrets,
 } from "@blockflow-labs/utils";
 import { ILidoOracleReport, LidoOracleReport } from "../../../types/schema";
-import { _loadLidoOracleReportEntity } from "../../../helpers";
+import {
+  _loadLidoOracleReportEntity,
+  _loadLidoTotalRewardEntity,
+} from "../../../helpers";
 
 /**
  * @dev Event::ProcessingStarted(uint256 refSlot, bytes32 hash)
@@ -15,7 +18,7 @@ import { _loadLidoOracleReportEntity } from "../../../helpers";
 export const ProcessingStartedHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets,
+  secrets: ISecrets
 ) => {
   // Implement your event handler logic for ProcessingStarted here
 
@@ -27,11 +30,10 @@ export const ProcessingStartedHandler = async (
   let entity: ILidoOracleReport = await _loadLidoOracleReportEntity(
     lidoOracleReportDB,
     context,
-    true,
+    true
   );
 
-  //need to be changed
-  entity.total_reward = transaction.transaction_hash;
+  entity.total_reward = transaction.transaction_hash; //link total reward have same id
 
   entity.hash = hash;
 

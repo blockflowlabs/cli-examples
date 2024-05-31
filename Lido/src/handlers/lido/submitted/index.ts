@@ -4,7 +4,6 @@ import {
   Instance,
   ISecrets,
 } from "@blockflow-labs/utils";
-
 import {
   ILidoShares,
   ILidoSubmission,
@@ -13,7 +12,6 @@ import {
   LidoSubmission,
   LidoTotals,
 } from "../../../types/schema";
-
 import {
   _loadLidoSharesEntity,
   _loadLidoSubmissionEntity,
@@ -31,35 +29,28 @@ import BigNumber from "bignumber.js";
 export const SubmittedHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets,
+  secrets: ISecrets
 ) => {
-  // Implement your event handler logic for Submitted here
-
+  // Extracting event data from the context
   const { event, transaction, block, log } = context;
   const { sender, amount, referral } = event;
 
+  // Initializing database instances
   const lidoSubmissionDB: Instance = bind(LidoSubmission);
-
   const submission: ILidoSubmission = await _loadLidoSubmissionEntity(
     lidoSubmissionDB,
-    context,
+    context
   );
-
   const lidoTotalsDB = bind(LidoTotals);
+  const totals: ILidoTotals = await _loadLidoTotalsEntity(lidoTotalsDB);
 
-  const totals: ILidoTotals = await _loadLidoTotalsEntity(
-    lidoTotalsDB,
-    context,
-  );
-
+  // Calculating the shares based on the transaction logs
   let shares: string;
-
   const isLidoTransferShares = transaction
     ? transaction.logs.find(
-        (log) => log.topics[0].toLowerCase() === TRANSFER_SHARES_TOPIC0,
+        (log) => log.topics[0].toLowerCase() === TRANSFER_SHARES_TOPIC0
       )
     : null;
-
   if (isLidoTransferShares) {
     const decodeTx: any = decodeTransferShares(isLidoTransferShares);
     shares = decodeTx[2].toString();
@@ -76,31 +67,27 @@ export const SubmittedHandler = async (
     }
   }
 
+  // Updating the submission entity
   submission.shares = shares;
-
-  let lidoSharesDB: Instance = bind(LidoShares);
-
+  const lidoSharesDB: Instance = bind(LidoShares);
   let userShares: ILidoShares = await _loadLidoSharesEntity(
     lidoSharesDB,
-    sender,
+    sender
   );
-
   submission.shares_before = userShares.shares;
   submission.shares_after = new BigNumber(submission.shares_before)
     .plus(shares)
     .toString();
-
   submission.total_pooled_ether_before = totals.total_pooled_ether;
   submission.total_shares_before = totals.total_shares;
 
-  totals.total_pooled_ether = new BigNumber(totals.total_pooled_ether || "0")
+  // Updating the totals entity
+  totals.total_pooled_ether = new BigNumber(totals.total_pooled_ether)
     .plus(amount.toString())
     .toString();
-
-  totals.total_shares = new BigNumber(totals.total_shares || "0")
+  totals.total_shares = new BigNumber(totals.total_shares)
     .plus(shares)
     .toString();
-
   await lidoTotalsDB.save(totals);
 
   submission.total_pooled_ether_after = totals.total_pooled_ether;
@@ -111,5 +98,6 @@ export const SubmittedHandler = async (
     .div(totals.total_shares)
     .toString();
 
+  // Saving the updated submission entity
   await lidoSubmissionDB.save(submission);
 };

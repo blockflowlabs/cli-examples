@@ -53,9 +53,9 @@ export const MotionCreatedHandler = async (
     entity.duration = config.motion_duration;
     entity.evm_script_hash = _evmScript.toString();
     entity.evm_script_factory = _evmScriptFactory.toString();
-    entity.objections_amount_pct = Number(ZERO);
+    entity.objections_amount_pct = 0;
     entity.objections_threshold = config.objections_threshold;
-    entity.objections_amount = Number(ZERO);
+    entity.objections_amount = 0;
     entity.evm_script_calldata = _evmScriptCallData.toString();
     entity.status = "ACTIVE";
 

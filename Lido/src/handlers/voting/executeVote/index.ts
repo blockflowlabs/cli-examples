@@ -24,7 +24,7 @@ import BigNumber from "bignumber.js";
 export const ExecuteVoteHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets,
+  secrets: ISecrets
 ) => {
   // Implement your event handler logic for ExecuteVote here
 
@@ -48,25 +48,32 @@ export const ExecuteVoteHandler = async (
 
     let shares: ILidoShares = await _loadLidoSharesEntity(
       lidoSharesDB,
-      accToBurn,
+      accToBurn
     );
 
     shares.shares = new BigNumber(shares.shares)
       .minus(sharesToSubtract)
       .toString();
 
+    if (Number(shares.shares) < 0) {
+      //throw new Error(""Negative shares.hares!"");
+      return;
+    }
+
     await lidoSharesDB.save(shares);
 
     const lidoTotalsDB: Instance = bind(LidoTotals);
 
-    const totals: ILidoTotals = await _loadLidoTotalsEntity(
-      lidoTotalsDB,
-      context,
-    );
+    const totals: ILidoTotals = await _loadLidoTotalsEntity(lidoTotalsDB);
 
     totals.total_shares = new BigNumber(totals.total_shares)
       .minus(sharesToSubtract)
       .toString();
+
+    if (Number(totals.total_shares) < 0) {
+      //throw new Error(""Negative shares.hares!"");
+      return;
+    }
 
     await lidoTotalsDB.save(totals);
   }

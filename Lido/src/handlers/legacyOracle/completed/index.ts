@@ -6,11 +6,9 @@ import {
 } from "@blockflow-labs/utils";
 
 import {
-  ILidoConfig,
   ILidoOracleCompleted,
   ILidoStats,
   ILidoBeaconReport,
-  LidoConfig,
   LidoOracleCompleted,
   LidoStats,
   LidoBeaconReport,
@@ -22,10 +20,11 @@ import {
   ILidoTotalReward,
   CurrentFee,
   ICurrentFee,
+  ILidoOracleConfig,
+  LidoOracleConfig,
 } from "../../../types/schema";
 
 import {
-  _loadLidoConfigEntity,
   _loadLidoOracleCompletedEntity,
   _loadLidoStatsEntity,
   _loadLidoBeaconReportEntity,
@@ -34,6 +33,7 @@ import {
   _loadLidoTotalRewardEntity,
   _loadCurrentFeeEntity,
   _calcAPR_v1,
+  _loadLidoOracleConfigEntity,
 } from "../../../helpers";
 
 import BigNumber from "bignumber.js";
@@ -58,7 +58,7 @@ import {
 export const CompletedHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets,
+  secrets: ISecrets
 ) => {
   // Implement your event handler logic for Completed here
 
@@ -68,7 +68,7 @@ export const CompletedHandler = async (
   const lidoStatsDB = bind(LidoStats);
   const lidoOracleCompletedDB = bind(LidoOracleCompleted);
 
-  const stats: ILidoStats = await _loadLidoStatsEntity(lidoStatsDB, context);
+  const stats: ILidoStats = await _loadLidoStatsEntity(lidoStatsDB);
 
   let previousCompletedOracleId = stats.last_oracle_completed_id.toString();
 
@@ -82,29 +82,30 @@ export const CompletedHandler = async (
     await _loadLidoOracleCompletedEntity(
       lidoOracleCompletedDB,
       context,
-      previousCompletedOracleId,
+      previousCompletedOracleId
     );
 
   const newCompletedOracle: ILidoOracleCompleted =
     await _loadLidoOracleCompletedEntity(
       lidoOracleCompletedDB,
       context,
-      newCompletedOracleId,
+      newCompletedOracleId
     );
 
   await lidoStatsDB.save(stats);
 
   await lidoOracleCompletedDB.save(newCompletedOracle);
 
-  const lidoConfigDB: Instance = bind(LidoConfig);
+  const lidoOracleConfigDB: Instance = bind(LidoOracleConfig);
 
-  let config: ILidoConfig = await _loadLidoConfigEntity(lidoConfigDB, context);
+  let config: ILidoOracleConfig =
+    await _loadLidoOracleConfigEntity(lidoOracleConfigDB);
 
   const lidoBeaconReportDB: Instance = bind(LidoBeaconReport);
 
   let beaconReport: ILidoBeaconReport = await _loadLidoBeaconReportEntity(
-    lidoConfigDB,
-    context,
+    lidoBeaconReportDB,
+    context
   );
 
   await lidoBeaconReportDB.save(beaconReport);
@@ -112,7 +113,13 @@ export const CompletedHandler = async (
   const lidoOracleExpectedEpochDB: Instance = bind(LidoOracleExpectedEpoch);
 
   let oracleExpectedEpoch: ILidoOracleExpectedEpoch =
-    await _loadLidoOracleExpectedEpochEntity(lidoConfigDB, context);
+    await _loadLidoOracleExpectedEpochEntity(
+      lidoOracleExpectedEpochDB,
+      context
+    );
+  oracleExpectedEpoch.epoch_id = new BigNumber(epochId)
+    .plus(config.epochs_per_frame)
+    .toString();
 
   await lidoOracleExpectedEpochDB.save(oracleExpectedEpoch);
 
@@ -124,11 +131,11 @@ export const CompletedHandler = async (
 
   const oldBeaconValidators = previousCompletedOracle
     ? previousCompletedOracle.beacon_validators
-    : ZERO;
+    : "0";
 
   const oldBeaconBalance = previousCompletedOracle
     ? previousCompletedOracle.beacon_balance
-    : ZERO;
+    : "0";
 
   const newBeaconValidators = beaconValidators.toString();
 
@@ -139,9 +146,9 @@ export const CompletedHandler = async (
     .toString();
 
   const appearedValidatorsDeposits =
-    appearedValidators > ZERO
+    Number(appearedValidators) > 0
       ? new BigNumber(appearedValidators).times(DEPOSIT_AMOUNT).toString()
-      : ZERO;
+      : "0";
 
   const rewardBase = new BigNumber(appearedValidatorsDeposits)
     .plus(oldBeaconBalance)
@@ -149,13 +156,13 @@ export const CompletedHandler = async (
 
   const isELRewardsEvent = transaction
     ? transaction.logs.find(
-        (log) => log.topics[0].toLowerCase() === EL_REWARDS_TOPIC0,
+        (log) => log.topics[0].toLowerCase() === EL_REWARDS_TOPIC0
       )
     : null;
 
   const isMevTxFeeEvent = transaction
     ? transaction.logs.find(
-        (log) => log.topics[0].toLowerCase() === MEV_TX_FEE_RECIEVED_TOPIC0,
+        (log) => log.topics[0].toLowerCase() === MEV_TX_FEE_RECIEVED_TOPIC0
       )
     : null;
 
@@ -176,10 +183,7 @@ export const CompletedHandler = async (
 
   const lidoTotalsDB: Instance = bind(LidoTotals);
 
-  const totals: ILidoTotals = await _loadLidoTotalsEntity(
-    lidoTotalsDB,
-    context,
-  );
+  const totals: ILidoTotals = await _loadLidoTotalsEntity(lidoTotalsDB);
 
   let totalPooledEtherBefore = totals.total_pooled_ether;
   // pre-calculation
@@ -189,8 +193,8 @@ export const CompletedHandler = async (
 
   totals.total_pooled_ether = totalPooledEtherAfter;
 
-  if (newBeaconBalance <= rewardBase) {
-    lidoTotalsDB.save(totals);
+  if (Number(newBeaconBalance) <= Number(rewardBase)) {
+    await lidoTotalsDB.save(totals);
     return;
   }
 
@@ -198,7 +202,7 @@ export const CompletedHandler = async (
 
   let totalReward: ILidoTotalReward = await _loadLidoTotalRewardEntity(
     lidoTotalRewardDB,
-    context,
+    context
   );
 
   totalReward.total_shares_before = totals.total_shares;
@@ -212,10 +216,7 @@ export const CompletedHandler = async (
 
   const currentFeeDB: Instance = bind(CurrentFee);
 
-  let currentFee: ICurrentFee = await _loadCurrentFeeEntity(
-    currentFeeDB,
-    context,
-  );
+  let currentFee: ICurrentFee = await _loadCurrentFeeEntity(currentFeeDB);
 
   const shares2mint = new BigNumber(rewards)
     .times(currentFee.fee_basis_points)
@@ -223,14 +224,15 @@ export const CompletedHandler = async (
     .div(
       new BigNumber(totalPooledEtherAfter)
         .times(CALCULATION_UNIT)
-        .minus(new BigNumber(currentFee.fee_basis_points).times(rewards)),
+        .minus(new BigNumber(currentFee.fee_basis_points).times(rewards))
     )
     .toString();
 
   totals.total_shares = new BigNumber(totals.total_shares)
     .plus(shares2mint)
     .toString();
-  lidoTotalsDB.save(totals);
+
+  await lidoTotalsDB.save(totals);
 
   totalReward.total_shares_after = totals.total_shares;
 
@@ -271,7 +273,7 @@ export const CompletedHandler = async (
 
   const timeElapsed = previousCompletedOracle
     ? new BigNumber(newCompletedOracle.block_timestamp).minus(
-        previousCompletedOracle.block_timestamp,
+        previousCompletedOracle.block_timestamp
       )
     : ZERO;
 
@@ -282,8 +284,8 @@ export const CompletedHandler = async (
     totalReward.total_pooled_ether_before,
     totalReward.total_pooled_ether_after,
     totalReward.time_elapsed,
-    totalReward.fee_basis,
+    totalReward.fee_basis
   );
 
-  lidoTotalRewardDB.save(updatedTotalReward);
+  await lidoTotalRewardDB.save(updatedTotalReward);
 };

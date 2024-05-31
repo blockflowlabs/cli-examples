@@ -24,6 +24,7 @@ export class LidoSubmission {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -50,6 +51,7 @@ export class LidoTransfer {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -64,6 +66,7 @@ export class SharesBurn {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -77,6 +80,7 @@ export class LidoApproval {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -91,6 +95,7 @@ export class CurrentFee {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -113,6 +118,7 @@ export class LidoConfig {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -125,6 +131,7 @@ export class LidoTotals {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -138,6 +145,7 @@ export class LidoStats {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -150,6 +158,7 @@ export class LidoHolder {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -161,6 +170,7 @@ export class LidoShares {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -180,6 +190,7 @@ export class LidoOracleConfig {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -194,6 +205,7 @@ export class LidoOracleReport {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -210,6 +222,7 @@ export class LidoOracleCompleted {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -225,6 +238,7 @@ export class LidoTotalReward {
     insurance_fee_basis_points: "string",
     operators_fee_basis_points: "string",
     total_fee: "string",
+    node_operator_fee: "string",
     insurance_fee: "string",
     operators_fee: "string",
     treasury_fee: "string",
@@ -249,6 +263,7 @@ export class LidoTotalReward {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -264,6 +279,7 @@ export class LidoOracleMember {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -277,6 +293,7 @@ export class LidoNodeOperatorFees {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -290,6 +307,7 @@ export class LidoNodeOperatorsShares {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -304,6 +322,7 @@ export class LidoBeaconReport {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -315,6 +334,7 @@ export class LidoOracleExpectedEpoch {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -332,6 +352,7 @@ export class LidoAppVersion {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -349,6 +370,7 @@ export class LidoNodeOperatorSigningKey {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -369,6 +391,7 @@ export class LidoNodeOperator {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -380,6 +403,7 @@ export class LidoNodeOperatorKeysOpIndex {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -394,6 +418,7 @@ export class VotingConfig {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -413,6 +438,7 @@ export class Voting {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -427,6 +453,7 @@ export class Vote {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -440,6 +467,7 @@ export class VotingObjection {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -455,6 +483,7 @@ export class WithdrawalQueueConfig {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -472,6 +501,7 @@ export class WithdrawalClaimed {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -490,6 +520,7 @@ export class WithdrawalRequested {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -508,6 +539,7 @@ export class WithdrawalsFinalized {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -536,6 +568,7 @@ export class Motion {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -551,6 +584,7 @@ export class EasyTrackConfig {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -565,6 +599,7 @@ export class Role {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -578,6 +613,7 @@ export class EVMScriptFactory {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -595,6 +631,7 @@ export class Objection {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -625,6 +662,7 @@ export interface ILidoSubmission extends Document {
   log_index: string;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -653,6 +691,7 @@ export interface ILidoTransfer extends Document {
   log_index: string;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -665,6 +704,7 @@ export interface ISharesBurn extends Document {
   shares_amount: string;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -676,6 +716,7 @@ export interface ILidoApproval extends Document {
   value: string;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -688,6 +729,7 @@ export interface ICurrentFee extends Document {
   operators_fee_basis_points: string;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -712,6 +754,7 @@ export interface ILidoConfig extends Document {
   lido_locator: string;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -722,6 +765,7 @@ export interface ILidoTotals extends Document {
   total_shares: string;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -733,6 +777,7 @@ export interface ILidoStats extends Document {
   last_oracle_completed_id: string;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -743,6 +788,7 @@ export interface ILidoHolder extends Document {
   has_balance: boolean;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -752,6 +798,7 @@ export interface ILidoShares extends Document {
   shares: string;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -771,6 +818,7 @@ export interface ILidoOracleConfig extends Document {
   beacon_report_receiver: string;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -783,6 +831,7 @@ export interface ILidoOracleReport extends Document {
   items_count: string;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -798,6 +847,7 @@ export interface ILidoOracleCompleted extends Document {
   log_index: string;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -815,6 +865,7 @@ export interface ILidoTotalReward extends Document {
   operators_fee_basis_points: string;
 
   total_fee: string;
+  node_operator_fee: string;
   insurance_fee: string;
   operators_fee: string;
   treasury_fee: string;
@@ -844,6 +895,7 @@ export interface ILidoTotalReward extends Document {
   log_index: string;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -858,6 +910,7 @@ export interface ILidoOracleMember extends Document {
   log_index: string;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -870,6 +923,7 @@ export interface ILidoNodeOperatorFees extends Document {
   fee: string;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -880,6 +934,7 @@ export interface ILidoNodeOperatorsShares extends Document {
   shares: string;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -892,6 +947,7 @@ export interface ILidoBeaconReport extends Document {
   caller: string;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -900,6 +956,7 @@ export interface ILidoOracleExpectedEpoch extends Document {
   epoch_id: string;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -915,6 +972,7 @@ export interface ILidoAppVersion extends Document {
   log_index: string;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -931,6 +989,7 @@ export interface ILidoNodeOperatorSigningKey extends Document {
   log_index: string;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -950,6 +1009,7 @@ export interface ILidoNodeOperator extends Document {
   log_index: string;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -959,6 +1019,7 @@ export interface ILidoNodeOperatorKeysOpIndex extends Document {
   index: string;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -971,6 +1032,7 @@ export interface IVotingConfig extends Document {
   objection_phase_time: Number;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -990,6 +1052,7 @@ export interface IVoting extends Document {
   log_index: string;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -1002,6 +1065,7 @@ export interface IVote extends Document {
   stake: Number;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -1013,6 +1077,7 @@ export interface IVotingObjection extends Document {
   stake: Number;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -1026,6 +1091,7 @@ export interface IWithdrawalQueueConfig extends Document {
   pause_duration: Number;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -1042,6 +1108,7 @@ export interface IWithdrawalClaimed extends Document {
   log_index: string;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -1059,6 +1126,7 @@ export interface IWithdrawalRequested extends Document {
   log_index: string;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -1076,6 +1144,7 @@ export interface IWithdrawalsFinalized extends Document {
   log_index: string;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -1104,6 +1173,7 @@ export interface IMotion extends Document {
   log_index: string;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -1117,6 +1187,7 @@ export interface IEasyTrackConfig extends Document {
   is_paused: boolean;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -1129,6 +1200,7 @@ export interface IRole extends Document {
   is_active: boolean;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -1140,6 +1212,7 @@ export interface IEVMScriptFactory extends Document {
   is_active: boolean;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -1157,5 +1230,6 @@ export interface IObjection extends Document {
   log_index: string;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
