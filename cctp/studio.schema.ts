@@ -2,6 +2,7 @@ import { String, Array } from "@blockflow-labs/utils";
 
 export interface burnTransactionsTable {
   id: String;
+  burnToken: string;
   transactionHash: string;
   sourceDomain: string;
   destinationDomain: string;
@@ -9,14 +10,16 @@ export interface burnTransactionsTable {
   mintRecipient: string;
   messageSender: string;
   timeStamp: string;
+  destinationTokenMessenger: string;
+  destinationCaller: string;
 }
 
 export interface mintTransactionsTable {
   id: String;
+  amount: number;
   transactionHash: string;
   sourceDomain: string;
   destinationDomain: string;
-  amount: number;
   mintRecipient: string;
   timeStamp: string;
 }
@@ -31,7 +34,12 @@ export interface attestationTable {
 export interface DomainsTable {
   id: String;
   domainName: string;
-  chainId: string;
+  chainid: number;
   tokenAddress: string;
   permessageburnlimit: number;
+}
+
+export interface FeeInfo {
+  id: String;
+  feeInUSDC: number;
 }
