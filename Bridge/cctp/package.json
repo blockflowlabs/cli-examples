@@ -1,0 +1,23 @@
+{
+  "name": "blockflow-studio",
+  "version": "1.0.6",
+  "description": "BlockFlow Studio Project",
+  "scripts": {
+    "prettier": "prettier --write .",
+    "compile": "tsc -b",
+    "test-src": "blockflow instance-test --path ethereum.studio.yaml --startBlock 19260948 --range 1 --clean",
+    "test-dst": "blockflow instance-test --path polygon.studio.yaml --startBlock 53702451 --range 1"
+  },
+  "dependencies": {
+    "@blockflow-labs/utils": "latest",
+    "ethers": "^6.12.1"
+  },
+  "devDependencies": {
+    "bignumber.js": "^9.1.1",
+    "prettier": "^3.2.5",
+    "ts-loader": "^9.5.0",
+    "typescript": "^5.1.6",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4"
+  }
+}
