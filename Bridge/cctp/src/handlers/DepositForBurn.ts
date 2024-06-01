@@ -46,15 +46,17 @@ export const DepositForBurnHandler = async (
     }
   );
 
-  // As the nonce is unique, there can only be single entry for this nonce in database
   burntransaction ??= await burntransactionDB.create({
     id: burnId,
+    burnToken: burnToken.toString(),
     transactionHash: transaction.transaction_hash,
-    sourceDomain: chainIdToDomain[block.chain_id],
+    sourceDomain: dstChainId,
     destinationDomain: destinationDomain.toString(),
     amount: amount,
     mintRecipient: mintRecipient.toString(),
     messageSender: depositor.toString(),
     timeStamp: block.block_timestamp,
+    destinationTokenMessenger: destinationTokenMessenger.toString(),
+    destinationCaller: destinationCaller.toString(),
   });
 };

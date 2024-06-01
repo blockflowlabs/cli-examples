@@ -5,11 +5,12 @@
   "scripts": {
     "prettier": "prettier --write .",
     "compile": "tsc -b",
-    "test-src": "blockflow instance-test --path ethereum.studio.yaml --startBlock 19260948 --range 1",
+    "test-src": "blockflow instance-test --path ethereum.studio.yaml --startBlock 19260948 --range 1 --clean",
     "test-dst": "blockflow instance-test --path polygon.studio.yaml --startBlock 53702451 --range 1"
   },
   "dependencies": {
-    "@blockflow-labs/utils": "latest"
+    "@blockflow-labs/utils": "latest",
+    "ethers": "^6.12.1"
   },
   "devDependencies": {
     "bignumber.js": "^9.1.1",
