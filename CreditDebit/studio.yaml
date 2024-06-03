@@ -14,17 +14,5 @@ Resources:
     Type: contract/event
     Address: "0x4c9EDD5852cd905f086C759E8383e09bff1E68B3"
     Triggers:
-      - Event: Approval(address indexed,address indexed,uint256)
-        Handler: src/handlers/blockflow/Approval.ApprovalHandler
-      - Event: EIP712DomainChanged()
-        Handler: src/handlers/blockflow/EIP712DomainChanged.EIP712DomainChangedHandler
-      - Event: MinterUpdated(address indexed,address indexed)
-        Handler: src/handlers/blockflow/MinterUpdated.MinterUpdatedHandler
-      - Event: OwnershipTransferStarted(address indexed,address indexed)
-        Handler: >-
-          src/handlers/blockflow/OwnershipTransferStarted.OwnershipTransferStartedHandler
-      - Event: OwnershipTransferred(address indexed,address indexed)
-        Handler: >-
-          src/handlers/blockflow/OwnershipTransferred.OwnershipTransferredHandler
       - Event: Transfer(address indexed,address indexed,uint256)
         Handler: src/handlers/blockflow/Transfer.TransferHandler
