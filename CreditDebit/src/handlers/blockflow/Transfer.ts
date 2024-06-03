@@ -21,21 +21,23 @@ export const TransferHandler = async (
   const { event, transaction, block, log } = context;
   const { from, to, value } = event;
   const tokenMetadata = getTokenMetadata(log.log_address);
-  //credit or debit
-  const uniqueId = `${transaction.transaction_hash}-${log.log_index}-`;
+  
+  const uniqueIdcredit = `${transaction.transaction_hash}-${log.log_index}-"credit"`;
+  const uniqueIddebit = `${transaction.transaction_hash}-${log.log_index}-"debit"`;
   const address = from.toString();
   const counterPartyAddress = to.toString();
   const divisionValue = Math.pow(10, tokenMetadata.decimals);
   const amount = value / divisionValue;
+  const debitamount =  amount * -1;
 
   const erc20CreditDebitDB: Instance = bind(ERC20Table);
 
   let erc20Table: IERC20Table = await erc20CreditDebitDB.findOne({
-    id: uniqueId,
+    id: uniqueIdcredit,
   });
 
   erc20Table ??= await erc20CreditDebitDB.create({
-    id: uniqueId,
+    id: uniqueIdcredit,
     address: address,
     counterPartyAddress: counterPartyAddress,
     tokenAddress: log.log_address,
@@ -51,4 +53,24 @@ export const TransferHandler = async (
     blockNumber: block.block_number,
     blockHash: block.block_hash,
   });
+
+   let erc20TableDebit: IERC20Table = await erc20CreditDebitDB.findOne({
+     id: uniqueIddebit,
+   });
+
+  erc20TableDebit ??= await erc20CreditDebitDB.create({
+    id: uniqueIddebit,
+    address: counterPartyAddress,
+    counterPartyAddress: address,
+    tokenMetadata: log.log_address,
+    tokenName: tokenMetadata.tokenName,
+    tokenSymbol: tokenMetadata.tokenSymbol,
+    amount: debitamount,
+    amountString: debitamount.toString(),
+    transactionHash: transaction.transaction_hash, 
+    logIndex: log.log_index,
+    blockTimestamp: block.block_timestamp,
+    blockNumber: block.block_number,
+    blockHash: block.block_hash,
+  })
 };
