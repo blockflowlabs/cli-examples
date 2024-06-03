@@ -26,9 +26,14 @@ export const TransferHandler = async (
   const uniqueIddebit = `${transaction.transaction_hash}-${log.log_index}-"debit"`;
   const address = from.toString();
   const counterPartyAddress = to.toString();
-  const divisionValue = Math.pow(10, tokenMetadata.decimals);
-  const amount = value / divisionValue;
-  const debitamount =  amount * -1;
+  // const divisionValue = Math.pow(10, tokenMetadata.decimals);
+  // const amount = value / divisionValue;
+  // const debitamount =  amount * -1;
+  const decimalsBigNumber = new BigNumber(tokenMetadata.decimals);
+  const divisionValue = new BigNumber(10).pow(decimalsBigNumber);
+  const valueBigNumber = new BigNumber(value);
+  const amount = valueBigNumber.dividedBy(divisionValue).toString();
+  const debitAmount = valueBigNumber.dividedBy(divisionValue).times(-1).toString();
 
   const erc20CreditDebitDB: Instance = bind(ERC20Table);
 
@@ -65,8 +70,8 @@ export const TransferHandler = async (
     tokenMetadata: log.log_address,
     tokenName: tokenMetadata.tokenName,
     tokenSymbol: tokenMetadata.tokenSymbol,
-    amount: debitamount,
-    amountString: debitamount.toString(),
+    amount: debitAmount,
+    amountString: debitAmount.toString(),
     transactionHash: transaction.transaction_hash, 
     logIndex: log.log_index,
     blockTimestamp: block.block_timestamp,
