@@ -31,7 +31,7 @@ export const TransferHandler = async (
   // const debitamount =  amount * -1;
   const decimalsBigNumber = new BigNumber(tokenMetadata.decimals);
   const divisionValue = new BigNumber(10).pow(decimalsBigNumber);
-  const valueBigNumber = new BigNumber(value);
+  const valueBigNumber = new BigNumber(value.toString());
   const amount = valueBigNumber.dividedBy(divisionValue).toString();
   const debitAmount = valueBigNumber.dividedBy(divisionValue).times(-1).toString();
 
