@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@blockflow-labs/utils": "latest",
-    "ethers": "^6.12.1"
+    "ethers": "^6.13.0"
   },
   "devDependencies": {
     "bignumber.js": "^9.1.1",

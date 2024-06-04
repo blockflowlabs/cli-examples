@@ -29,3 +29,10 @@ export const DOMAINS: Record<string, DomainInfo> = {
     chainId: 137,
   },
 };
+
+export const getDomainMetadata = (domain: string) => {
+  const findedDomain = Object.keys(DOMAINS).filter(
+    (tokenAddr) => tokenAddr.toLowerCase() === domain.toLowerCase()
+  );
+  return DOMAINS[findedDomain[0]];
+};

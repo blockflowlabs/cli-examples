@@ -40,7 +40,6 @@ export const SetBurnLimitPerMessageHandler = async (
   }
 
   domain.domainName = domainmetadata.domainName.toString();
-  domain.chainid = domainmetadata.chainId;
   domain.tokenAddress = token.toString();
   domain.permessageburnlimit = burnLimitPerMessage.toString();
 
