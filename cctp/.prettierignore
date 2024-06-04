@@ -1,0 +1,5 @@
+.gitignore
+.prettierignore
+.prettierrc.js
+.studioignore
+domains.json
