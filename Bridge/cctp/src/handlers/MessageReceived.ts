@@ -10,7 +10,17 @@ import {
   IattestationTable,
   mintTransactionsTable,
   ImintTransactionsTable,
+  burnTransactionsTable,
+  FeeInfo,
+  IFeeInfo,
+  IburnTransactionsTable,
 } from "../types/schema";
+import {
+  MESSAGE_RECEIVE_SIG,
+  decodeReceiveMessage,
+  decodeMintAndWithdraw,
+  MINT_AND_WITHDRAW_TOPIC0,
+} from "../utils/helper";
 import { chainIdToDomain, domainToChainId } from "../utils/helper";
 
 /**
@@ -28,11 +38,30 @@ export const MessageReceivedHandler = async (
   const { caller, sourceDomain, nonce, sender, messageBody } = event;
 
   const srcChainId = domainToChainId[sourceDomain];
+  const feeinUSDId = block.chain_id;
 
-  const mintId = `${nonce.toString()}_${srcChainId}_${block.chain_id.toString()}`;
+  let amountDestination = "";
+  let attestationdata = "";
+
+  const isMintAndWithdraw = transaction.logs
+    ? transaction.logs.find(
+        (log) =>
+          log.topics[0].toLowerCase() === MINT_AND_WITHDRAW_TOPIC0.toLowerCase()
+      )
+    : null;
+
+  if (isMintAndWithdraw) {
+    const decodeEvent: any = decodeMintAndWithdraw(
+      isMintAndWithdraw.topics,
+      isMintAndWithdraw.log_data
+    );
+    amountDestination = decodeEvent[1].toString();
+  }
+
+  const amount = parseInt(amountDestination, 10);
+  const mintId = `${nonce}_${srcChainId}_${block.chain_id}`;
 
   const minttransactionDB: Instance = bind(mintTransactionsTable);
-
   let minttransaction: ImintTransactionsTable = await minttransactionDB.findOne(
     {
       id: mintId,
@@ -41,12 +70,25 @@ export const MessageReceivedHandler = async (
 
   minttransaction ??= await minttransactionDB.create({
     id: mintId,
+    amount: amount,
     transactionHash: transaction.transaction_hash,
     sourceDomain: sourceDomain,
     destinationDomain: chainIdToDomain[block.chain_id],
     mintRecipient: caller,
     timeStamp: block.block_timestamp,
   });
+
+  const messagereceivesig = MESSAGE_RECEIVE_SIG.includes(
+    transaction.transaction_input.slice(0, 10)
+  );
+
+  if (messagereceivesig) {
+    const decodeTx: any = decodeReceiveMessage(
+      transaction.transaction_input,
+      transaction.transaction_value
+    );
+    attestationdata = decodeTx[1];
+  }
 
   const attestationDB: Instance = bind(attestationTable);
 
@@ -56,7 +98,29 @@ export const MessageReceivedHandler = async (
 
   attestation ??= await attestationDB.create({
     id: mintId,
+    attestation: attestationdata.toString(),
     messageHash: messageBody.toString(),
     timeStamp: block.block_timestamp,
   });
+
+  const burnDB: Instance = bind(burnTransactionsTable);
+  const srcTx: IburnTransactionsTable = await burnDB.findOne({});
+  const amountSource = srcTx.amount;
+
+  const feeamount = amountSource - amount;
+
+  const FeeInfoDB: Instance = bind(FeeInfo);
+  let feeinfo: IFeeInfo = await FeeInfoDB.findOne({
+    id: feeinUSDId,
+  });
+
+  if (feeinfo) {
+    feeinfo.feeInUSDC += feeamount;
+
+    await FeeInfoDB.save(feeinfo);
+  } else
+    feeinfo = await FeeInfoDB.create({
+      id: feeinUSDId,
+      feeInUSDC: feeamount,
+    });
 };

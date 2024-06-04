@@ -16,6 +16,7 @@ export interface mintTransactionsTable {
   transactionHash: string;
   sourceDomain: string;
   destinationDomain: string;
+  amount: number;
   mintRecipient: string;
   timeStamp: string;
 }
@@ -30,7 +31,7 @@ export interface attestationTable {
 export interface DomainsTable {
   id: String;
   domainName: string;
-  chainid: number;
+  chainId: string;
   tokenAddress: string;
   permessageburnlimit: number;
 }

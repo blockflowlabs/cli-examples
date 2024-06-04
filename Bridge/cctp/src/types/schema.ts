@@ -27,6 +27,7 @@ export class mintTransactionsTable {
     transactionHash: "string",
     sourceDomain: "string",
     destinationDomain: "string",
+    amount: "number",
     mintRecipient: "string",
     timeStamp: "string",
     entityId: { type: "String", index: true },
@@ -55,12 +56,11 @@ export class DomainsTable {
   static schema = {
     id: { type: "String", index: true },
     domainName: "string",
-    chainid: "number",
+    chainId: { type: "String", index: true },
     tokenAddress: "string",
     permessageburnlimit: "number",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
-    chainId: { type: "String", index: true },
     instanceId: { type: "String", index: true },
   };
 }
@@ -87,6 +87,7 @@ export interface ImintTransactionsTable extends Document {
   transactionHash: string;
   sourceDomain: string;
   destinationDomain: string;
+  amount: number;
   mintRecipient: string;
   timeStamp: string;
   blocknumber: String;
@@ -109,11 +110,10 @@ export interface IattestationTable extends Document {
 export interface IDomainsTable extends Document {
   id: String;
   domainName: string;
-  chainid: number;
+  chainId: string;
   tokenAddress: string;
   permessageburnlimit: number;
   blocknumber: String;
   entityId: String;
   instanceId: String;
-  chainId: String;
 }
