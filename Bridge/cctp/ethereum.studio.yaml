@@ -1,0 +1,32 @@
+name: cctp
+description: A top-secret research project to the moon
+startBlock: latest
+userId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
+projectId: cctp-explorer-instance
+network: Ethereum
+user: Jane-doe
+schema:
+  file: ./studio.schema.ts
+execution: parallel
+Resources:
+  - Name: tokenmessenger
+    Abi: src/abis/tokenmessenger.json
+    Type: contract/event
+    Address: "0xBd3fa81B58Ba92a82136038B25aDec7066af3155"
+    Triggers:
+      - Event: DepositForBurn(uint64 indexed,address indexed,uint256,address indexed,bytes32,uint32,bytes32,bytes32)
+        Handler: src/handlers/DepositForBurn.DepositForBurnHandler
+  - Name: messageTransmitter
+    Abi: src/abis/messageTransmitter.json
+    Type: contract/event
+    Address: "0x0a992d191DEeC32aFe36203Ad87D7d289a738F81"
+    Triggers:
+      - Event: MessageReceived(address indexed,uint32,uint64 indexed,bytes32,bytes)
+        Handler: src/handlers/MessageReceived.MessageReceivedHandler
+  - Name: tokenMinter
+    Abi: src/abis/tokenMinter.json
+    Type: contract/event
+    Address: "0xc4922d64a24675E16e1586e3e3Aa56C06fABe907"
+    Triggers:
+      - Event: SetBurnLimitPerMessage(address indexed,uint256)
+        Handler: src/handlers/SetBurnLimitPerMessage.SetBurnLimitPerMessageHandler
