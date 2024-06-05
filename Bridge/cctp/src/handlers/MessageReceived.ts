@@ -3,7 +3,7 @@ import {
   IBind,
   Instance,
   ISecrets,
-} from "@blockflow-labs/utils";
+} from '@blockflow-labs/utils';
 
 import {
   attestationTable,
@@ -14,14 +14,31 @@ import {
   FeeInfo,
   IFeeInfo,
   IburnTransactionsTable,
-} from "../types/schema";
+  cctpDayDataDB,
+  IcctpDayDataDB,
+  cctpWeekDataDB,
+  IcctpWeekDataDB,
+  cctpMonthDataDB,
+  IcctpMonthDataDB,
+  cctpYearDataDB,
+  IcctpYearDataDB,
+  cctpAllTimeDB,
+  IcctpAllTimeDB,
+} from '../types/schema';
 import {
   MESSAGE_RECEIVE_SIG,
   decodeReceiveMessage,
   decodeMintAndWithdraw,
   MINT_AND_WITHDRAW_TOPIC0,
-} from "../utils/helper";
-import { chainIdToDomain, domainToChainId } from "../utils/helper";
+} from '../utils/helper';
+import { chainIdToDomain, domainToChainId } from '../utils/helper';
+import {
+  getTodayEntry,
+  getWeeklyEntry,
+  getMonthlyEntry,
+  getYearlyEntry,
+  getAllTimeEntry,
+} from '../utils/tracking';
 
 /**
  * @dev Event::MessageReceived(address caller, uint32 sourceDomain, uint64 nonce, bytes32 sender, bytes messageBody)
@@ -40,8 +57,14 @@ export const MessageReceivedHandler = async (
   const srcChainId = domainToChainId[sourceDomain];
   const feeinUSDId = block.chain_id;
 
-  let amountDestination = "";
-  let attestationdata = "";
+  const todayEntryDB: Instance = bind(cctpDayDataDB);
+  const weekEntryDB: Instance = bind(cctpWeekDataDB);
+  const monthEntryDB: Instance = bind(cctpMonthDataDB);
+  const yearEntryDB: Instance = bind(cctpYearDataDB);
+  const allTimeEntryDB: Instance = bind(cctpAllTimeDB);
+
+  let amountDestination = '';
+  let attestationdata = '';
 
   const isMintAndWithdraw = transaction.logs
     ? transaction.logs.find(
@@ -123,4 +146,10 @@ export const MessageReceivedHandler = async (
       id: feeinUSDId,
       feeInUSDC: feeamount,
     });
+
+  getTodayEntry(block.chain_id, todayEntryDB, amount, feeamount);
+  getWeeklyEntry(block.chain_id, weekEntryDB, amount, feeamount);
+  getMonthlyEntry(block.chain_id, monthEntryDB, amount, feeamount);
+  getYearlyEntry(block.chain_id, yearEntryDB, amount, feeamount);
+  getAllTimeEntry(block.chain_id, allTimeEntryDB, amount, feeamount);
 };

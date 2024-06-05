@@ -3,10 +3,30 @@ import {
   IBind,
   Instance,
   ISecrets,
-} from "@blockflow-labs/utils";
+} from '@blockflow-labs/utils';
 
-import { burnTransactionsTable, IburnTransactionsTable } from "../types/schema";
-import { chainIdToDomain, domainToChainId } from "../utils/helper";
+import {
+  burnTransactionsTable,
+  IburnTransactionsTable,
+  cctpDayDataDB,
+  IcctpDayDataDB,
+  cctpWeekDataDB,
+  IcctpWeekDataDB,
+  cctpMonthDataDB,
+  IcctpMonthDataDB,
+  cctpYearDataDB,
+  IcctpYearDataDB,
+  cctpAllTimeDB,
+  IcctpAllTimeDB,
+} from '../types/schema';
+import { chainIdToDomain, domainToChainId } from '../utils/helper';
+import {
+  getMonthlyEntry,
+  getTodayEntry,
+  getYearlyEntry,
+  getWeeklyEntry,
+  getAllTimeEntry,
+} from '../utils/tracking';
 
 /**
  * @dev Event::DepositForBurn(uint64 nonce, address burnToken, uint256 amount, address depositor, bytes32 mintRecipient, uint32 destinationDomain, bytes32 destinationTokenMessenger, bytes32 destinationCaller)
@@ -33,12 +53,21 @@ export const DepositForBurnHandler = async (
   amount = parseInt(amount.toString(), 10);
 
   const dstChainId: string = domainToChainId[destinationDomain];
-
-  // prettier-ignore
-  // ID creation is nonce_src_destination
-  const burnId = `${nonce.toString()}_${block.chain_id}_${dstChainId}`.toLowerCase()
+  const burnId =
+    `${nonce.toString()}_${block.chain_id}_${dstChainId}`.toLowerCase();
 
   const burntransactionDB: Instance = bind(burnTransactionsTable);
+  const todayEntryDB: Instance = bind(cctpDayDataDB);
+  const weekEntryDB: Instance = bind(cctpWeekDataDB);
+  const monthEntryDB: Instance = bind(cctpMonthDataDB);
+  const yearEntryDB: Instance = bind(cctpYearDataDB);
+  const allTimeEntryDB: Instance = bind(cctpAllTimeDB);
+
+  getTodayEntry(block.chain_id, todayEntryDB, amount, 0);
+  getWeeklyEntry(block.chain_id, weekEntryDB, amount, 0);
+  getMonthlyEntry(block.chain_id, monthEntryDB, amount, 0);
+  getYearlyEntry(block.chain_id, yearEntryDB, amount, 0);
+  getAllTimeEntry(block.chain_id, allTimeEntryDB, amount, 0);
 
   let burntransaction: IburnTransactionsTable = await burntransactionDB.findOne(
     {
