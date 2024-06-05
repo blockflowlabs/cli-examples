@@ -3,7 +3,7 @@ import {
   IBind,
   Instance,
   ISecrets,
-} from '@blockflow-labs/utils';
+} from "@blockflow-labs/utils";
 
 import {
   attestationTable,
@@ -24,21 +24,21 @@ import {
   IcctpYearDataDB,
   cctpAllTimeDB,
   IcctpAllTimeDB,
-} from '../types/schema';
+} from "../types/schema";
 import {
   MESSAGE_RECEIVE_SIG,
   decodeReceiveMessage,
   decodeMintAndWithdraw,
   MINT_AND_WITHDRAW_TOPIC0,
-} from '../utils/helper';
-import { chainIdToDomain, domainToChainId } from '../utils/helper';
+} from "../utils/helper";
+import { chainIdToDomain, domainToChainId } from "../utils/helper";
 import {
   getTodayEntry,
   getWeeklyEntry,
   getMonthlyEntry,
   getYearlyEntry,
   getAllTimeEntry,
-} from '../utils/tracking';
+} from "../utils/tracking";
 
 /**
  * @dev Event::MessageReceived(address caller, uint32 sourceDomain, uint64 nonce, bytes32 sender, bytes messageBody)
@@ -63,8 +63,8 @@ export const MessageReceivedHandler = async (
   const yearEntryDB: Instance = bind(cctpYearDataDB);
   const allTimeEntryDB: Instance = bind(cctpAllTimeDB);
 
-  let amountDestination = '';
-  let attestationdata = '';
+  let amountDestination = "";
+  let attestationdata = "";
 
   const isMintAndWithdraw = transaction.logs
     ? transaction.logs.find(

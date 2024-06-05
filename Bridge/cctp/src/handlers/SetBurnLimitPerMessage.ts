@@ -3,11 +3,11 @@ import {
   IBind,
   Instance,
   ISecrets,
-} from '@blockflow-labs/utils';
+} from "@blockflow-labs/utils";
 
-import { DOMAINS } from '../utils/domains';
-import { chainIdToDomain } from '../utils/helper';
-import { DomainsTable, IDomainsTable } from '../types/schema';
+import { DOMAINS } from "../utils/domains";
+import { chainIdToDomain } from "../utils/helper";
+import { DomainsTable, IDomainsTable } from "../types/schema";
 
 /**
  * @dev Event::SetBurnLimitPerMessage(address token, uint256 burnLimitPerMessage)

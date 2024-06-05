@@ -3,7 +3,7 @@ import {
   IBind,
   Instance,
   ISecrets,
-} from '@blockflow-labs/utils';
+} from "@blockflow-labs/utils";
 
 import {
   burnTransactionsTable,
@@ -18,15 +18,15 @@ import {
   IcctpYearDataDB,
   cctpAllTimeDB,
   IcctpAllTimeDB,
-} from '../types/schema';
-import { chainIdToDomain, domainToChainId } from '../utils/helper';
+} from "../types/schema";
+import { chainIdToDomain, domainToChainId } from "../utils/helper";
 import {
   getMonthlyEntry,
   getTodayEntry,
   getYearlyEntry,
   getWeeklyEntry,
   getAllTimeEntry,
-} from '../utils/tracking';
+} from "../utils/tracking";
 
 /**
  * @dev Event::DepositForBurn(uint64 nonce, address burnToken, uint256 amount, address depositor, bytes32 mintRecipient, uint32 destinationDomain, bytes32 destinationTokenMessenger, bytes32 destinationCaller)
