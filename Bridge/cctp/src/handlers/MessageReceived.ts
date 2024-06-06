@@ -15,29 +15,25 @@ import {
   IFeeInfo,
   IburnTransactionsTable,
   cctpDayDataDB,
-  IcctpDayDataDB,
   cctpWeekDataDB,
-  IcctpWeekDataDB,
   cctpMonthDataDB,
-  IcctpMonthDataDB,
   cctpYearDataDB,
-  IcctpYearDataDB,
   cctpAllTimeDB,
-  IcctpAllTimeDB,
 } from "../types/schema";
 import {
   MESSAGE_RECEIVE_SIG,
   decodeReceiveMessage,
   decodeMintAndWithdraw,
   MINT_AND_WITHDRAW_TOPIC0,
+  chainIdToDomain,
+  domainToChainId,
 } from "../utils/helper";
-import { chainIdToDomain, domainToChainId } from "../utils/helper";
 import {
-  getTodayEntry,
-  getWeeklyEntry,
-  getMonthlyEntry,
-  getYearlyEntry,
-  getAllTimeEntry,
+  updateDailyData,
+  updateWeeklyData,
+  updateMonthlyData,
+  updateYearlyData,
+  updateAllTimeData,
 } from "../utils/tracking";
 
 /**
@@ -147,13 +143,14 @@ export const MessageReceivedHandler = async (
       feeInUSDC: feeamount,
     });
 
+  // prettier-ignore
   try {
-  await getTodayEntry(block.chain_id, todayEntryDB, amount, feeamount, block.block_timestamp);
-  await getWeeklyEntry(block.chain_id, weekEntryDB, amount, feeamount,block.block_timestamp );
-  await getMonthlyEntry(block.chain_id, monthEntryDB, amount, feeamount, block.block_timestamp );
-  await getYearlyEntry(block.chain_id, yearEntryDB, amount, feeamount, block.block_timestamp);
-  await getAllTimeEntry(block.chain_id, allTimeEntryDB, amount, feeamount);
-  }catch(error){
+    await updateDailyData( block.chain_id, todayEntryDB, amount, feeamount, block.block_timestamp);
+    await updateWeeklyData( block.chain_id, weekEntryDB, amount, feeamount, block.block_timestamp);
+    await updateMonthlyData( block.chain_id, monthEntryDB, amount, feeamount, block.block_timestamp);
+    await updateYearlyData( block.chain_id, yearEntryDB, amount, feeamount, block.block_timestamp);
+    await updateAllTimeData(block.chain_id, allTimeEntryDB, amount, feeamount);
+  } catch (error) {
     console.log(error);
   }
 };

@@ -9,23 +9,18 @@ import {
   burnTransactionsTable,
   IburnTransactionsTable,
   cctpDayDataDB,
-  IcctpDayDataDB,
   cctpWeekDataDB,
-  IcctpWeekDataDB,
   cctpMonthDataDB,
-  IcctpMonthDataDB,
   cctpYearDataDB,
-  IcctpYearDataDB,
   cctpAllTimeDB,
-  IcctpAllTimeDB,
 } from "../types/schema";
 import { chainIdToDomain, domainToChainId } from "../utils/helper";
 import {
-  getMonthlyEntry,
-  getTodayEntry,
-  getYearlyEntry,
-  getWeeklyEntry,
-  getAllTimeEntry,
+  updateMonthlyData,
+  updateDailyData,
+  updateYearlyData,
+  updateWeeklyData,
+  updateAllTimeData,
 } from "../utils/tracking";
 
 /**
@@ -63,13 +58,14 @@ export const DepositForBurnHandler = async (
   const yearEntryDB: Instance = bind(cctpYearDataDB);
   const allTimeEntryDB: Instance = bind(cctpAllTimeDB);
 
-  try{
-  await getTodayEntry(block.chain_id, todayEntryDB, amount, 0, block.block_timestamp);
-  await getWeeklyEntry(block.chain_id, weekEntryDB, amount, 0, block.block_timestamp);
-  await getMonthlyEntry(block.chain_id, monthEntryDB, amount, 0, block.block_timestamp);
-  await getYearlyEntry(block.chain_id, yearEntryDB, amount, 0, block.block_timestamp);
-  await getAllTimeEntry(block.chain_id, allTimeEntryDB, amount, 0);
-  }catch(error){
+  //prettier-ignore
+  try {
+    await updateDailyData(block.chain_id, todayEntryDB, amount, 0, block.block_timestamp);
+    await updateWeeklyData(block.chain_id, weekEntryDB, amount, 0, block.block_timestamp);
+    await updateMonthlyData( block.chain_id, monthEntryDB, amount, 0, block.block_timestamp);
+    await updateYearlyData( block.chain_id, yearEntryDB, amount, 0, block.block_timestamp);
+    await updateAllTimeData(block.chain_id, allTimeEntryDB, amount, 0);
+  } catch (error) {
     console.log(error);
   }
 

@@ -1,50 +1,86 @@
-import { Instance } from "@blockflow-labs/utils";
 import BigNumber from "bignumber.js";
+import { Instance } from "@blockflow-labs/utils";
 
-export async function getTodayEntry(
+import {
+  IcctpAllTimeDB,
+  IcctpDayDataDB,
+  IcctpMonthDataDB,
+  IcctpWeekDataDB,
+  IcctpYearDataDB,
+} from "../types/schema";
+
+function _getDate(blockTimestamp: string): string {
+  const BlockTimestamp = Number(blockTimestamp);
+  const dateFromTimestamp = new Date(BlockTimestamp * 1000);
+  return dateFromTimestamp.toISOString().split("T")[0];
+}
+
+function _getWeek(blockTimestamp: string): number {
+  const BlockTimestamp = Number(blockTimestamp);
+  const dateFromTimestamp = new Date(BlockTimestamp * 1000);
+  return Math.floor(dateFromTimestamp.getTime() / 604800000);
+}
+
+function _getMonth(blockTimestamp: string): number {
+  const BlockTimestamp = Number(blockTimestamp);
+  const dateFromTimestamp = new Date(BlockTimestamp * 1000);
+  return dateFromTimestamp.getMonth() + 1;
+}
+
+function _getYear(blockTimestamp: string): number {
+  const BlockTimestamp = Number(blockTimestamp);
+  const dateFromTimestamp = new Date(BlockTimestamp * 1000);
+  return dateFromTimestamp.getFullYear();
+}
+
+export async function updateDailyData(
   chainId: string,
   cctpDayDataDB: Instance,
   amount: number,
   totalFee: number,
-  blockTimestamp: string 
+  blockTimestamp: string
 ) {
-  const BlockTimestamp = Number(blockTimestamp);
-  const dateFromTimestamp = new Date(BlockTimestamp* 1000);
-  const date = dateFromTimestamp.toISOString().split("T")[0];
+  const date = _getDate(blockTimestamp);
   let id = chainId.concat("_").concat(date);
-  let entry = await cctpDayDataDB.findOne({ id: id.toLowerCase() });
+
+  let entry: IcctpDayDataDB = await cctpDayDataDB.findOne({
+    id,
+  });
   entry ??= await cctpDayDataDB.create({
-    id: chainId.concat("_").concat(date),
+    id,
     date: date,
     txCount: "0",
     dailyVolume: "0",
     deposited: "0",
     withdrawal: "0",
-    feeTotal: "0",
+    totalFee: "0",
   });
+
   entry.txCount = new BigNumber(entry.txCount).plus(1).toString();
   entry.dailyVolume = new BigNumber(entry.dailyVolume).plus(amount).toString();
+
   if (totalFee) {
     entry.deposited = new BigNumber(entry.deposited).plus(amount).toString();
-    entry.feeTotal = new BigNumber(entry.feeTotal).plus(totalFee).toString();
-  } else {
+    entry.totalFee = new BigNumber(entry.totalFee).plus(totalFee).toString();
+  } else
     entry.withdrawal = new BigNumber(entry.withdrawal).plus(amount).toString();
-  }
+
   await cctpDayDataDB.save(entry);
 }
 
-export async function getWeeklyEntry(
+export async function updateWeeklyData(
   chainId: string,
   cctpWeekDataDB: Instance,
   amount: number,
   totalFee: number,
   blockTimestamp: string
 ) {
-  const BlockTimestamp = Number(blockTimestamp);
-  const dateFromTimestamp = new Date(BlockTimestamp* 1000);
-  const week = Math.floor(dateFromTimestamp.getTime() / 604800000);
+  const week = _getWeek(blockTimestamp);
   let id = chainId.concat("_").concat(week.toString());
-  let entry = await cctpWeekDataDB.findOne({ id: id.toLowerCase() });
+
+  let entry: IcctpWeekDataDB = await cctpWeekDataDB.findOne({
+    id: id,
+  });
   entry ??= await cctpWeekDataDB.create({
     id: id,
     week: week.toString(),
@@ -52,38 +88,41 @@ export async function getWeeklyEntry(
     weeklyVolume: "0",
     deposited: "0",
     withdrawal: "0",
-    feeTotal: "0",
+    totalFee: "0",
   });
+
   entry.txCount = new BigNumber(entry.txCount).plus(1).toString();
   entry.weeklyVolume = new BigNumber(entry.weeklyVolume)
     .plus(amount)
     .toString();
+
   if (totalFee) {
     entry.deposited = new BigNumber(entry.deposited).plus(amount).toString();
-    entry.feeTotal = new BigNumber(entry.feeTotal).plus(totalFee).toString();
-  } else {
+    entry.totalFee = new BigNumber(entry.totalFee).plus(totalFee).toString();
+  } else
     entry.withdrawal = new BigNumber(entry.withdrawal).plus(amount).toString();
-  }
+
   await cctpWeekDataDB.save(entry);
 }
 
-export async function getMonthlyEntry(
+export async function updateMonthlyData(
   chainId: string,
   cctpMonthDataDB: Instance,
   amount: number,
   totalFee: number,
   blockTimestamp: string
 ) {
-  const BlockTimestamp = Number(blockTimestamp);
-  const dateFromTimestamp = new Date(BlockTimestamp* 1000);
-  const month = dateFromTimestamp.getMonth() + 1; 
-  const year = dateFromTimestamp.getFullYear();
+  const month = _getMonth(blockTimestamp);
+  const year = _getYear(blockTimestamp);
   let id = chainId
     .concat("_")
     .concat(month.toString())
     .concat("_")
     .concat(year.toString());
-  let entry = await cctpMonthDataDB.findOne({ id: id.toLowerCase() });
+
+  let entry: IcctpMonthDataDB = await cctpMonthDataDB.findOne({
+    id: id.toLowerCase(),
+  });
   entry ??= await cctpMonthDataDB.create({
     id: id,
     month: month.toString(),
@@ -91,33 +130,36 @@ export async function getMonthlyEntry(
     monthlyVolume: "0",
     deposited: "0",
     withdrawal: "0",
-    feeTotal: "0",
+    totalFee: "0",
   });
+
   entry.txCount = new BigNumber(entry.txCount).plus(1).toString();
   entry.monthlyVolume = new BigNumber(entry.monthlyVolume)
     .plus(amount)
     .toString();
+
   if (totalFee) {
     entry.deposited = new BigNumber(entry.deposited).plus(amount).toString();
-    entry.feeTotal = new BigNumber(entry.feeTotal).plus(totalFee).toString();
-  } else {
+    entry.totalFee = new BigNumber(entry.totalFee).plus(totalFee).toString();
+  } else
     entry.withdrawal = new BigNumber(entry.withdrawal).plus(amount).toString();
-  }
+
   await cctpMonthDataDB.save(entry);
 }
 
-export async function getYearlyEntry(
+export async function updateYearlyData(
   chainId: string,
   cctpYearDataDB: Instance,
   amount: number,
   totalFee: number,
   blockTimestamp: string
 ) {
-  const BlockTimestamp = Number(blockTimestamp);
-  const dateFromTimestamp = new Date(BlockTimestamp* 1000);
-  const year = dateFromTimestamp.getFullYear();
+  const year = _getYear(blockTimestamp);
   let id = chainId.concat("_").concat(year.toString());
-  let entry = await cctpYearDataDB.findOne({ id: id.toLowerCase() });
+
+  let entry: IcctpYearDataDB = await cctpYearDataDB.findOne({
+    id: id.toLowerCase(),
+  });
   entry ??= await cctpYearDataDB.create({
     id: id,
     year: year.toString(),
@@ -125,46 +167,49 @@ export async function getYearlyEntry(
     yearlyVolume: "0",
     deposited: "0",
     withdrawal: "0",
-    feeTotal: "0",
+    totalFee: "0",
   });
+
   entry.txCount = new BigNumber(entry.txCount).plus(1).toString();
   entry.yearlyVolume = new BigNumber(entry.yearlyVolume)
     .plus(amount)
     .toString();
+
   if (totalFee) {
     entry.deposited = new BigNumber(entry.deposited).plus(amount).toString();
-    entry.feeTotal = new BigNumber(entry.feeTotal).plus(totalFee).toString();
-  } else {
+    entry.totalFee = new BigNumber(entry.totalFee).plus(totalFee).toString();
+  } else
     entry.withdrawal = new BigNumber(entry.withdrawal).plus(amount).toString();
-  }
+
   await cctpYearDataDB.save(entry);
 }
 
-export async function getAllTimeEntry(
+export async function updateAllTimeData(
   chainId: string,
   cctpAllTimeDB: Instance,
   amount: number,
-  totalFee: number,
+  totalFee: number
 ) {
-  let id = chainId;
-  let entry = await cctpAllTimeDB.findOne({ id: id.toLowerCase() });
+  let entry: IcctpAllTimeDB = await cctpAllTimeDB.findOne({ id: chainId });
   entry ??= await cctpAllTimeDB.create({
-    id: id,
+    id: chainId,
     txCount: "0",
     allTimeVolume: "0",
     deposited: "0",
     withdrawal: "0",
-    feeTotal: "0",
+    totalFee: "0",
   });
+
   entry.txCount = new BigNumber(entry.txCount).plus(1).toString();
   entry.allTimeVolume = new BigNumber(entry.allTimeVolume)
     .plus(amount)
     .toString();
+
   if (totalFee) {
     entry.deposited = new BigNumber(entry.deposited).plus(amount).toString();
-    entry.feeTotal = new BigNumber(entry.feeTotal).plus(totalFee).toString();
-  } else {
+    entry.totalFee = new BigNumber(entry.totalFee).plus(totalFee).toString();
+  } else
     entry.withdrawal = new BigNumber(entry.withdrawal).plus(amount).toString();
-  }
+
   await cctpAllTimeDB.save(entry);
 }

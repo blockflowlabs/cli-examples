@@ -42,17 +42,17 @@ export interface FeeInfo {
 }
 
 export interface cctpDayDataDB {
-  id: String; 
+  id: String;
   date: string;
   txCount: string;
-  dailyVolume: string; 
-  deposited: string; 
-  withdrawal: string; 
+  dailyVolume: string;
+  deposited: string;
+  withdrawal: string;
   totalFee: string;
 }
 
 export interface cctpWeekDataDB {
-  id: String; 
+  id: String;
   week: string;
   txCount: string;
   weeklyVolume: string;
@@ -89,4 +89,3 @@ export interface cctpAllTimeDB {
   withdrawal: string;
   totalFee: string;
 }
-
