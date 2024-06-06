@@ -224,12 +224,12 @@ export interface IFeeInfo extends Document {
 }
 
 export interface IcctpDayDataDB extends Document {
-  id: String; // chainId_date
+  id: String;
   date: string;
   txCount: string;
-  dailyVolume: string; // summation of deposited and withdrawl
-  deposited: string; // messageReceived
-  withdrawal: string; // depositForBurn
+  dailyVolume: string;
+  deposited: string;
+  withdrawal: string;
   totalFee: string;
   blocknumber: String;
   entityId: String;
@@ -238,7 +238,7 @@ export interface IcctpDayDataDB extends Document {
 }
 
 export interface IcctpWeekDataDB extends Document {
-  id: String; // chainId_week -> week since epoch
+  id: String;
   week: string;
   txCount: string;
   weeklyVolume: string;

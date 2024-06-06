@@ -1,17 +1,12 @@
 import { Instance } from "@blockflow-labs/utils";
 import BigNumber from "bignumber.js";
 
-const today = new Date();
-const date = today.toISOString().split("T")[0];
-const week = Math.floor(Date.now() / 604800000);
-const month = new Date().getMonth();
-const year = new Date().getFullYear();
-
 export async function getTodayEntry(
   chainId: string,
   cctpDayDataDB: Instance,
   amount: number,
-  totalFee: number
+  totalFee: number,
+  date: string
 ) {
   let id = chainId.concat("_").concat(date);
   let entry = await cctpDayDataDB.findOne({ id: id.toLowerCase() });
@@ -39,7 +34,8 @@ export async function getWeeklyEntry(
   chainId: string,
   cctpWeekDataDB: Instance,
   amount: number,
-  totalFee: number
+  totalFee: number,
+  week: number
 ) {
   let id = chainId.concat("_").concat(week.toString());
   let entry = await cctpWeekDataDB.findOne({ id: id.toLowerCase() });
@@ -69,7 +65,9 @@ export async function getMonthlyEntry(
   chainId: string,
   cctpMonthDataDB: Instance,
   amount: number,
-  totalFee: number
+  totalFee: number,
+  month: number,
+  year: number
 ) {
   let id = chainId
     .concat("_")
@@ -103,7 +101,8 @@ export async function getYearlyEntry(
   chainId: string,
   cctpYearDataDB: Instance,
   amount: number,
-  totalFee: number
+  totalFee: number,
+  year: number
 ) {
   let id = chainId.concat("_").concat(year.toString());
   let entry = await cctpYearDataDB.findOne({ id: id.toLowerCase() });
@@ -133,7 +132,7 @@ export async function getAllTimeEntry(
   chainId: string,
   cctpAllTimeDB: Instance,
   amount: number,
-  totalFee: number
+  totalFee: number,
 ) {
   let id = chainId;
   let entry = await cctpAllTimeDB.findOne({ id: id.toLowerCase() });

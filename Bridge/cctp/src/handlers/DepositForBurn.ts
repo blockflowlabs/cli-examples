@@ -63,11 +63,18 @@ export const DepositForBurnHandler = async (
   const yearEntryDB: Instance = bind(cctpYearDataDB);
   const allTimeEntryDB: Instance = bind(cctpAllTimeDB);
 
+  const blockTimestamp = Number(block.block_timestamp);
+  const dateFromTimestamp = new Date(blockTimestamp* 1000);
+  const date = dateFromTimestamp.toISOString().split("T")[0];
+  const week = Math.floor(dateFromTimestamp.getTime() / 604800000);
+  const month = dateFromTimestamp.getMonth() + 1; 
+  const year = dateFromTimestamp.getFullYear();
+
   try{
-  await getTodayEntry(block.chain_id, todayEntryDB, amount, 0);
-  await getWeeklyEntry(block.chain_id, weekEntryDB, amount, 0);
-  await getMonthlyEntry(block.chain_id, monthEntryDB, amount, 0);
-  await getYearlyEntry(block.chain_id, yearEntryDB, amount, 0);
+  await getTodayEntry(block.chain_id, todayEntryDB, amount, 0, date);
+  await getWeeklyEntry(block.chain_id, weekEntryDB, amount, 0, week);
+  await getMonthlyEntry(block.chain_id, monthEntryDB, amount, 0, month, year);
+  await getYearlyEntry(block.chain_id, yearEntryDB, amount, 0, year);
   await getAllTimeEntry(block.chain_id, allTimeEntryDB, amount, 0);
   }catch(error){
     console.log(error);
