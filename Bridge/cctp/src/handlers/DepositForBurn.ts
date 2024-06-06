@@ -63,11 +63,15 @@ export const DepositForBurnHandler = async (
   const yearEntryDB: Instance = bind(cctpYearDataDB);
   const allTimeEntryDB: Instance = bind(cctpAllTimeDB);
 
-  getTodayEntry(block.chain_id, todayEntryDB, amount, 0);
-  getWeeklyEntry(block.chain_id, weekEntryDB, amount, 0);
-  getMonthlyEntry(block.chain_id, monthEntryDB, amount, 0);
-  getYearlyEntry(block.chain_id, yearEntryDB, amount, 0);
-  getAllTimeEntry(block.chain_id, allTimeEntryDB, amount, 0);
+  try{
+  await getTodayEntry(block.chain_id, todayEntryDB, amount, 0);
+  await getWeeklyEntry(block.chain_id, weekEntryDB, amount, 0);
+  await getMonthlyEntry(block.chain_id, monthEntryDB, amount, 0);
+  await getYearlyEntry(block.chain_id, yearEntryDB, amount, 0);
+  await getAllTimeEntry(block.chain_id, allTimeEntryDB, amount, 0);
+  }catch(error){
+    console.log(error);
+  }
 
   let burntransaction: IburnTransactionsTable = await burntransactionDB.findOne(
     {

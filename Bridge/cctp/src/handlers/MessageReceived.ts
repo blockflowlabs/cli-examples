@@ -147,9 +147,13 @@ export const MessageReceivedHandler = async (
       feeInUSDC: feeamount,
     });
 
-  getTodayEntry(block.chain_id, todayEntryDB, amount, feeamount);
-  getWeeklyEntry(block.chain_id, weekEntryDB, amount, feeamount);
-  getMonthlyEntry(block.chain_id, monthEntryDB, amount, feeamount);
-  getYearlyEntry(block.chain_id, yearEntryDB, amount, feeamount);
-  getAllTimeEntry(block.chain_id, allTimeEntryDB, amount, feeamount);
+  try {
+  await getTodayEntry(block.chain_id, todayEntryDB, amount, feeamount);
+  await getWeeklyEntry(block.chain_id, weekEntryDB, amount, feeamount);
+  await getMonthlyEntry(block.chain_id, monthEntryDB, amount, feeamount);
+  await getYearlyEntry(block.chain_id, yearEntryDB, amount, feeamount);
+  await getAllTimeEntry(block.chain_id, allTimeEntryDB, amount, feeamount);
+  }catch(error){
+    console.log(error);
+  }
 };
