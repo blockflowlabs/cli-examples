@@ -147,18 +147,11 @@ export const MessageReceivedHandler = async (
       feeInUSDC: feeamount,
     });
 
-  const blockTimestamp = Number(block.block_timestamp);
-  const dateFromTimestamp = new Date(blockTimestamp* 1000);
-  const date = dateFromTimestamp.toISOString().split("T")[0];
-  const week = Math.floor(dateFromTimestamp.getTime() / 604800000);
-  const month = dateFromTimestamp.getMonth() + 1; 
-  const year = dateFromTimestamp.getFullYear();
-  
   try {
-  await getTodayEntry(block.chain_id, todayEntryDB, amount, feeamount, date);
-  await getWeeklyEntry(block.chain_id, weekEntryDB, amount, feeamount, week);
-  await getMonthlyEntry(block.chain_id, monthEntryDB, amount, feeamount, month, year);
-  await getYearlyEntry(block.chain_id, yearEntryDB, amount, feeamount, year);
+  await getTodayEntry(block.chain_id, todayEntryDB, amount, feeamount, block.block_timestamp);
+  await getWeeklyEntry(block.chain_id, weekEntryDB, amount, feeamount,block.block_timestamp );
+  await getMonthlyEntry(block.chain_id, monthEntryDB, amount, feeamount, block.block_timestamp );
+  await getYearlyEntry(block.chain_id, yearEntryDB, amount, feeamount, block.block_timestamp);
   await getAllTimeEntry(block.chain_id, allTimeEntryDB, amount, feeamount);
   }catch(error){
     console.log(error);

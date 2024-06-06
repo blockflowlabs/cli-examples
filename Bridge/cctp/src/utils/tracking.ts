@@ -6,8 +6,11 @@ export async function getTodayEntry(
   cctpDayDataDB: Instance,
   amount: number,
   totalFee: number,
-  date: string
+  blockTimestamp: string 
 ) {
+  const BlockTimestamp = Number(blockTimestamp);
+  const dateFromTimestamp = new Date(BlockTimestamp* 1000);
+  const date = dateFromTimestamp.toISOString().split("T")[0];
   let id = chainId.concat("_").concat(date);
   let entry = await cctpDayDataDB.findOne({ id: id.toLowerCase() });
   entry ??= await cctpDayDataDB.create({
@@ -35,8 +38,11 @@ export async function getWeeklyEntry(
   cctpWeekDataDB: Instance,
   amount: number,
   totalFee: number,
-  week: number
+  blockTimestamp: string
 ) {
+  const BlockTimestamp = Number(blockTimestamp);
+  const dateFromTimestamp = new Date(BlockTimestamp* 1000);
+  const week = Math.floor(dateFromTimestamp.getTime() / 604800000);
   let id = chainId.concat("_").concat(week.toString());
   let entry = await cctpWeekDataDB.findOne({ id: id.toLowerCase() });
   entry ??= await cctpWeekDataDB.create({
@@ -66,9 +72,12 @@ export async function getMonthlyEntry(
   cctpMonthDataDB: Instance,
   amount: number,
   totalFee: number,
-  month: number,
-  year: number
+  blockTimestamp: string
 ) {
+  const BlockTimestamp = Number(blockTimestamp);
+  const dateFromTimestamp = new Date(BlockTimestamp* 1000);
+  const month = dateFromTimestamp.getMonth() + 1; 
+  const year = dateFromTimestamp.getFullYear();
   let id = chainId
     .concat("_")
     .concat(month.toString())
@@ -102,8 +111,11 @@ export async function getYearlyEntry(
   cctpYearDataDB: Instance,
   amount: number,
   totalFee: number,
-  year: number
+  blockTimestamp: string
 ) {
+  const BlockTimestamp = Number(blockTimestamp);
+  const dateFromTimestamp = new Date(BlockTimestamp* 1000);
+  const year = dateFromTimestamp.getFullYear();
   let id = chainId.concat("_").concat(year.toString());
   let entry = await cctpYearDataDB.findOne({ id: id.toLowerCase() });
   entry ??= await cctpYearDataDB.create({
