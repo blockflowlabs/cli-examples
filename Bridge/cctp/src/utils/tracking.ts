@@ -28,6 +28,7 @@ export async function getTodayEntry(
   entry.dailyVolume = new BigNumber(entry.dailyVolume).plus(amount).toString();
   if (totalFee) {
     entry.deposited = new BigNumber(entry.deposited).plus(amount).toString();
+    entry.feeTotal = new BigNumber(entry.feeTotal).plus(totalFee).toString();
   } else {
     entry.withdrawal = new BigNumber(entry.withdrawal).plus(amount).toString();
   }
@@ -57,6 +58,7 @@ export async function getWeeklyEntry(
     .toString();
   if (totalFee) {
     entry.deposited = new BigNumber(entry.deposited).plus(amount).toString();
+    entry.feeTotal = new BigNumber(entry.feeTotal).plus(totalFee).toString();
   } else {
     entry.withdrawal = new BigNumber(entry.withdrawal).plus(amount).toString();
   }
@@ -90,6 +92,7 @@ export async function getMonthlyEntry(
     .toString();
   if (totalFee) {
     entry.deposited = new BigNumber(entry.deposited).plus(amount).toString();
+    entry.feeTotal = new BigNumber(entry.feeTotal).plus(totalFee).toString();
   } else {
     entry.withdrawal = new BigNumber(entry.withdrawal).plus(amount).toString();
   }
@@ -119,6 +122,7 @@ export async function getYearlyEntry(
     .toString();
   if (totalFee) {
     entry.deposited = new BigNumber(entry.deposited).plus(amount).toString();
+    entry.feeTotal = new BigNumber(entry.feeTotal).plus(totalFee).toString();
   } else {
     entry.withdrawal = new BigNumber(entry.withdrawal).plus(amount).toString();
   }
@@ -147,6 +151,7 @@ export async function getAllTimeEntry(
     .toString();
   if (totalFee) {
     entry.deposited = new BigNumber(entry.deposited).plus(amount).toString();
+    entry.feeTotal = new BigNumber(entry.feeTotal).plus(totalFee).toString();
   } else {
     entry.withdrawal = new BigNumber(entry.withdrawal).plus(amount).toString();
   }
