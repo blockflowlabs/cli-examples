@@ -14,14 +14,27 @@ import {
   FeeInfo,
   IFeeInfo,
   IburnTransactionsTable,
+  cctpDayDataDB,
+  cctpWeekDataDB,
+  cctpMonthDataDB,
+  cctpYearDataDB,
+  cctpAllTimeDB,
 } from "../types/schema";
 import {
   MESSAGE_RECEIVE_SIG,
   decodeReceiveMessage,
   decodeMintAndWithdraw,
   MINT_AND_WITHDRAW_TOPIC0,
+  chainIdToDomain,
+  domainToChainId,
 } from "../utils/helper";
-import { chainIdToDomain, domainToChainId } from "../utils/helper";
+import {
+  updateDailyData,
+  updateWeeklyData,
+  updateMonthlyData,
+  updateYearlyData,
+  updateAllTimeData,
+} from "../utils/tracking";
 
 /**
  * @dev Event::MessageReceived(address caller, uint32 sourceDomain, uint64 nonce, bytes32 sender, bytes messageBody)
@@ -39,6 +52,12 @@ export const MessageReceivedHandler = async (
 
   const srcChainId = domainToChainId[sourceDomain];
   const feeinUSDId = block.chain_id;
+
+  const todayEntryDB: Instance = bind(cctpDayDataDB);
+  const weekEntryDB: Instance = bind(cctpWeekDataDB);
+  const monthEntryDB: Instance = bind(cctpMonthDataDB);
+  const yearEntryDB: Instance = bind(cctpYearDataDB);
+  const allTimeEntryDB: Instance = bind(cctpAllTimeDB);
 
   let amountDestination = "";
   let attestationdata = "";
@@ -123,4 +142,15 @@ export const MessageReceivedHandler = async (
       id: feeinUSDId,
       feeInUSDC: feeamount,
     });
+
+  // prettier-ignore
+  try {
+    await updateDailyData( block.chain_id, todayEntryDB, amount, feeamount, block.block_timestamp);
+    await updateWeeklyData( block.chain_id, weekEntryDB, amount, feeamount, block.block_timestamp);
+    await updateMonthlyData( block.chain_id, monthEntryDB, amount, feeamount, block.block_timestamp);
+    await updateYearlyData( block.chain_id, yearEntryDB, amount, feeamount, block.block_timestamp);
+    await updateAllTimeData(block.chain_id, allTimeEntryDB, amount, feeamount);
+  } catch (error) {
+    console.log(error);
+  }
 };

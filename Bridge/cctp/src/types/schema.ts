@@ -77,6 +77,90 @@ export class FeeInfo {
   };
 }
 
+export class cctpDayDataDB {
+  static entity = "cctpDayDataDB";
+  static schema = {
+    id: { type: "String", index: true },
+    date: "string",
+    txCount: "string",
+    dailyVolume: "string",
+    deposited: "string",
+    withdrawal: "string",
+    totalFee: "string",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
+  };
+}
+
+export class cctpWeekDataDB {
+  static entity = "cctpWeekDataDB";
+  static schema = {
+    id: { type: "String", index: true },
+    week: "string",
+    txCount: "string",
+    weeklyVolume: "string",
+    deposited: "string",
+    withdrawal: "string",
+    totalFee: "string",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
+  };
+}
+
+export class cctpMonthDataDB {
+  static entity = "cctpMonthDataDB";
+  static schema = {
+    id: { type: "String", index: true },
+    month: "string",
+    txCount: "string",
+    monthlyVolume: "string",
+    deposited: "string",
+    withdrawal: "string",
+    totalFee: "string",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
+  };
+}
+
+export class cctpYearDataDB {
+  static entity = "cctpYearDataDB";
+  static schema = {
+    id: { type: "String", index: true },
+    year: "string",
+    txCount: "string",
+    yearlyVolume: "string",
+    deposited: "string",
+    withdrawal: "string",
+    totalFee: "string",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
+  };
+}
+
+export class cctpAllTimeDB {
+  static entity = "cctpAllTimeDB";
+  static schema = {
+    id: { type: "String", index: true },
+    txCount: "string",
+    allTimeVolume: "string",
+    deposited: "string",
+    withdrawal: "string",
+    totalFee: "string",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
+  };
+}
+
 import { String, Array } from "@blockflow-labs/utils";
 
 export interface IburnTransactionsTable extends Document {
@@ -133,6 +217,75 @@ export interface IDomainsTable extends Document {
 export interface IFeeInfo extends Document {
   id: String;
   feeInUSDC: number;
+  blocknumber: String;
+  entityId: String;
+  instanceId: String;
+  chainId: String;
+}
+
+export interface IcctpDayDataDB extends Document {
+  id: String;
+  date: string;
+  txCount: string;
+  dailyVolume: string;
+  deposited: string;
+  withdrawal: string;
+  totalFee: string;
+  blocknumber: String;
+  entityId: String;
+  instanceId: String;
+  chainId: String;
+}
+
+export interface IcctpWeekDataDB extends Document {
+  id: String;
+  week: string;
+  txCount: string;
+  weeklyVolume: string;
+  deposited: string;
+  withdrawal: string;
+  totalFee: string;
+  blocknumber: String;
+  entityId: String;
+  instanceId: String;
+  chainId: String;
+}
+
+export interface IcctpMonthDataDB extends Document {
+  id: String;
+  month: string;
+  txCount: string;
+  monthlyVolume: string;
+  deposited: string;
+  withdrawal: string;
+  totalFee: string;
+  blocknumber: String;
+  entityId: String;
+  instanceId: String;
+  chainId: String;
+}
+
+export interface IcctpYearDataDB extends Document {
+  id: String;
+  year: string;
+  txCount: string;
+  yearlyVolume: string;
+  deposited: string;
+  withdrawal: string;
+  totalFee: string;
+  blocknumber: String;
+  entityId: String;
+  instanceId: String;
+  chainId: String;
+}
+
+export interface IcctpAllTimeDB extends Document {
+  id: String;
+  txCount: string;
+  allTimeVolume: string;
+  deposited: string;
+  withdrawal: string;
+  totalFee: string;
   blocknumber: String;
   entityId: String;
   instanceId: String;
