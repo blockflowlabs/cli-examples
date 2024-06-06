@@ -1,0 +1,242 @@
+name: Lido Finance
+description: A top-secret research project to the moon
+startBlock: 11473216
+userId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
+projectId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
+network: Ethereum
+user: Jane-doe
+schema:
+  file: ./studio.schema.ts
+execution: parallel
+Resources:
+  - Name: lido
+    Abi: src/abis/lido.json
+    Type: contract/event
+    Address: "0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84"
+    Triggers:
+      - Event: Submitted(address indexed,uint256,address)
+        Handler: src/handlers/lido/submitted/index.SubmittedHandler
+      - Event: Transfer(address indexed,address indexed,uint256)
+        Handler: src/handlers/lido/transfer/index.TransferHandler
+      - Event: SharesBurnt(address indexed,uint256,uint256,uint256)
+        Handler: src/handlers/lido/sharesBurnt/index.SharesBurntHandler
+      - Event: Approval(address indexed,address indexed,uint256)
+        Handler: src/handlers/lido/approval/index.ApprovalHandler
+      - Event: FeeSet(uint16)
+        Handler: src/handlers/lido/feeSet/index.FeeSetHandler
+      - Event: FeeDistributionSet(uint16,uint16,uint16)
+        Handler: src/handlers/lido/feeDistributionSet/index.FeeDistributionSetHandler
+      - Event: LidoLocatorSet(address)
+        Handler: src/handlers/lido/lidoLocatorSet/index.LidoLocatorSetHandler
+      - Event: Resumed()
+        Handler: src/handlers/lido/resumed/index.ResumedHandler
+      - Event: Stopped()
+        Handler: src/handlers/lido/stopped/index.StoppedHandler
+      - Event: ELRewardsVaultSet(address)
+        Handler: src/handlers/lido/elRewardsVaultSet/index.ELRewardsVaultSetHandler
+      - Event: ELRewardsWithdrawalLimitSet(uint256)
+        Handler: >-
+          src/handlers/lido/elRewardsWithdrawalLimitSet/index.ELRewardsWithdrawalLimitSetHandler
+      - Event: ProtocolContactsSet(address,address,address)
+        Handler: src/handlers/lido/protocolContactsSet/index.ProtocolContactsSetHandler
+      - Event: StakingLimitRemoved()
+        Handler: src/handlers/lido/stakingLimitRemoved/index.StakingLimitRemovedHandler
+      - Event: StakingLimitSet(uint256,uint256)
+        Handler: src/handlers/lido/stakingLimitSet/index.StakingLimitSetHandler
+      - Event: StakingPaused()
+        Handler: src/handlers/lido/stakingPaused/index.StakingPausedHandler
+      - Event: StakingResumed()
+        Handler: src/handlers/lido/stakingResumed/index.StakingResumedHandler
+      - Event: WithdrawalCredentialsSet(bytes32)
+        Handler: >-
+          src/handlers/lido/withdrawalCredentialsSet/index.WithdrawalCredentialsSetHandler
+      - Event: >-
+          ETHDistributed(uint256
+          indexed,uint256,uint256,uint256,uint256,uint256)
+        Handler: src/handlers/lido/ethDistributed/index.ETHDistributedHandler
+  - Name: legacyOracle
+    Abi: src/abis/legacyOracle.json
+    Type: contract/event
+    Address: "0x442af784A788A5bd6F42A01Ebe9F287a871243fb"
+    Triggers:
+      - Event: Completed(uint256,uint128,uint128)
+        Handler: src/handlers/legacyOracle/completed/index.CompletedHandler
+      - Event: PostTotalShares(uint256,uint256,uint256,uint256)
+        Handler: src/handlers/legacyOracle/postTotalShares/index.PostTotalSharesHandler
+      - Event: MemberAdded(address)
+        Handler: src/handlers/legacyOracle/memberAdded/index.MemberAddedHandler
+      - Event: MemberRemoved(address)
+        Handler: src/handlers/legacyOracle/memberRemoved/index.MemberRemovedHandler
+      - Event: ContractVersionSet(uint256)
+        Handler: >-
+          src/handlers/legacyOracle/contractVersionSet/index.ContractVersionSetHandler
+      - Event: QuorumChanged(uint256)
+        Handler: src/handlers/legacyOracle/quorumChanged/index.QuorumChangedHandler
+      - Event: BeaconSpecSet(uint64,uint64,uint64,uint64)
+        Handler: src/handlers/legacyOracle/beaconSpecSet/index.BeaconSpecSetHandler
+      - Event: BeaconReportReceiverSet(address)
+        Handler: >-
+          src/handlers/legacyOracle/beaconReportReceiverSet/index.BeaconReportReceiverSetHandler
+      - Event: AllowedBeaconBalanceRelativeDecreaseSet(uint256)
+        Handler: >-
+          src/handlers/legacyOracle/allowedBeaconBalanceRelativeDecreaseSet/index.AllowedBeaconBalanceRelativeDecreaseSetHandler
+      - Event: AllowedBeaconBalanceAnnualRelativeIncreaseSet(uint256)
+        Handler: >-
+          src/handlers/legacyOracle/allowedBeaconBalanceAnnualRelativeIncreaseSet/index.AllowedBeaconBalanceAnnualRelativeIncreaseSetHandler
+  - Name: lidoDao
+    Abi: src/abis/lidoDAO.json
+    Type: contract/event
+    Address: "0xb8FFC3Cd6e7Cf5a098A1c92F48009765B24088Dc"
+    Triggers:
+      - Event: SetApp(bytes32 indexed,bytes32 indexed,address)
+        Handler: src/handlers/lidoDAO/setApp/index.SetAppHandler
+  - Name: nodeOperatorsRegistry
+    Abi: src/abis/nodeOperatorsRegistry.json
+    Type: contract/event
+    Address: "0x55032650b14df07b85bF18A3a3eC8E0Af2e028d5"
+    Triggers:
+      - Event: NodeOperatorAdded(uint256,string,address,uint64)
+        Handler: >-
+          src/handlers/nodeOperatorsRegistry/nodeOperatorAdded/index.NodeOperatorAddedHandler
+      - Event: NodeOperatorActiveSet(uint256 indexed,bool)
+        Handler: >-
+          src/handlers/nodeOperatorsRegistry/nodeOperatorActiveSet/index.NodeOperatorActiveSetHandler
+      - Event: NodeOperatorNameSet(uint256 indexed,string)
+        Handler: >-
+          src/handlers/nodeOperatorsRegistry/nodeOperatorNameSet/index.NodeOperatorNameSetHandler
+      - Event: NodeOperatorRewardAddressSet(uint256 indexed,address)
+        Handler: >-
+          src/handlers/nodeOperatorsRegistry/nodeOperatorRewardAddressSet/index.NodeOperatorRewardAddressSetHandler
+      - Event: NodeOperatorStakingLimitSet(uint256 indexed,uint64)
+        Handler: >-
+          src/handlers/nodeOperatorsRegistry/nodeOperatorStakingLimitSet/index.NodeOperatorStakingLimitSetHandler
+      - Event: NodeOperatorTotalStoppedValidatorsReported(uint256 indexed,uint64)
+        Handler: >-
+          src/handlers/nodeOperatorsRegistry/nodeOperatorTotalStoppedValidatorsReported/index.NodeOperatorTotalStoppedValidatorsReportedHandler
+      - Event: NodeOperatorTotalKeysTrimmed(uint256 indexed,uint64)
+        Handler: >-
+          src/handlers/nodeOperatorsRegistry/nodeOperatorTotalKeysTrimmed/index.NodeOperatorTotalKeysTrimmedHandler
+      - Event: SigningKeyAdded(uint256 indexed,bytes)
+        Handler: >-
+          src/handlers/nodeOperatorsRegistry/signingKeyAdded/index.SigningKeyAddedHandler
+      - Event: SigningKeyRemoved(uint256 indexed,bytes)
+        Handler: >-
+          src/handlers/nodeOperatorsRegistry/signingKeyRemoved/index.SigningKeyRemovedHandler
+      - Event: KeysOpIndexSet(uint256)
+        Handler: >-
+          src/handlers/nodeOperatorsRegistry/keysOpIndexSet/index.KeysOpIndexSetHandler
+  - Name: voting
+    Abi: src/abis/voting.json
+    Type: contract/event
+    Address: "0x2e59A20f205bB85a89C53f1936454680651E618e"
+    Triggers:
+      - Event: StartVote(uint256 indexed,address indexed,string)
+        Handler: src/handlers/voting/startVote/index.StartVoteHandler
+      - Event: CastVote(uint256 indexed,address indexed,bool,uint256)
+        Handler: src/handlers/voting/castVote/index.CastVoteHandler
+      - Event: CastObjection(uint256 indexed,address indexed,uint256)
+        Handler: src/handlers/voting/castObjection/index.CastObjectionHandler
+      - Event: ExecuteVote(uint256 indexed)
+        Handler: src/handlers/voting/executeVote/index.ExecuteVoteHandler
+      - Event: ChangeSupportRequired(uint64)
+        Handler: >-
+          src/handlers/voting/changeSupportRequired/index.ChangeSupportRequiredHandler
+      - Event: ChangeMinQuorum(uint64)
+        Handler: src/handlers/voting/changeMinQuorum/index.ChangeMinQuorumHandler
+      - Event: ChangeVoteTime(uint64)
+        Handler: src/handlers/voting/changeVoteTime/index.ChangeVoteTimeHandler
+      - Event: ChangeObjectionPhaseTime(uint64)
+        Handler: >-
+          src/handlers/voting/changeObjectionPhaseTime/index.ChangeObjectionPhaseTimeHandler
+  - Name: hashConsensus
+    Abi: src/abis/hashConsensus.json
+    Type: contract/event
+    Address: "0xD624B08C83bAECF0807Dd2c6880C3154a5F0B288"
+    Triggers:
+      - Event: FrameConfigSet(uint256,uint256)
+        Handler: src/handlers/hashConsensus/frameConfigSet/index.FrameConfigSetHandler
+  - Name: accountingOracle
+    Abi: src/abis/accountingOracle.json
+    Type: contract/event
+    Address: "0x852deD011285fe67063a08005c71a85690503Cee"
+    Triggers:
+      - Event: ExtraDataSubmitted(uint256 indexed,uint256,uint256)
+        Handler: >-
+          src/handlers/accountingOracle/extraDataSubmitted/index.ExtraDataSubmittedHandler
+      - Event: ProcessingStarted(uint256 indexed,bytes32)
+        Handler: >-
+          src/handlers/accountingOracle/processingStarted/index.ProcessingStartedHandler
+  - Name: stakingRouter
+    Abi: src/abis/stakingRouter.json
+    Type: contract/event
+    Address: "0xFdDf38947aFB03C621C71b06C9C70bce73f12999"
+    Triggers:
+      - Event: WithdrawalCredentialsSet(bytes32,address)
+        Handler: >-
+          src/handlers/stakingRouter/withdrawalCredentialsSet/index.WithdrawalCredentialsSetHandler
+  - Name: withdrawalQueue
+    Abi: src/abis/withdrawalQueue.json
+    Type: contract/event
+    Address: "0x889edC2eDab5f40e902b864aD4d7AdE8E412F9B1"
+    Triggers:
+      - Event: BunkerModeDisabled()
+        Handler: >-
+          src/handlers/withdrawalQueue/bunkerModeDisabled/index.BunkerModeDisabledHandler
+      - Event: BunkerModeEnabled(uint256)
+        Handler: >-
+          src/handlers/withdrawalQueue/bunkerModeEnabled/index.BunkerModeEnabledHandler
+      - Event: ContractVersionSet(uint256)
+        Handler: >-
+          src/handlers/withdrawalQueue/contractVersionSet/index.ContractVersionSetHandler
+      - Event: Paused(uint256)
+        Handler: src/handlers/withdrawalQueue/paused/index.PausedHandler
+      - Event: Resumed()
+        Handler: src/handlers/withdrawalQueue/resumed/index.ResumedHandler
+      - Event: >-
+          WithdrawalClaimed(uint256 indexed,address indexed,address
+          indexed,uint256)
+        Handler: >-
+          src/handlers/withdrawalQueue/withdrawalClaimed/index.WithdrawalClaimedHandler
+      - Event: >-
+          WithdrawalRequested(uint256 indexed,address indexed,address
+          indexed,uint256,uint256)
+        Handler: >-
+          src/handlers/withdrawalQueue/withdrawalRequested/index.WithdrawalRequestedHandler
+      - Event: >-
+          WithdrawalsFinalized(uint256 indexed,uint256
+          indexed,uint256,uint256,uint256)
+        Handler: >-
+          src/handlers/withdrawalQueue/withdrawalsFinalized/index.WithdrawalsFinalizedHandler
+  - Name: easyTrack
+    Abi: src/abis/easyTrack.json
+    Type: contract/event
+    Address: "0xF0211b7660680B49De1A7E9f25C65660F0a13Fea"
+    Triggers:
+      - Event: EVMScriptExecutorChanged(address indexed)
+        Handler: src/handlers/easyTrack/evmScriptExecutorChanged/index.EVMScriptExecutorChangedHandler
+      - Event: EVMScriptFactoryAdded(address indexed,bytes)
+        Handler: src/handlers/easyTrack/evmScriptFactoryAdded/index.EVMScriptFactoryAddedHandler
+      - Event: EVMScriptFactoryRemoved(address indexed)
+        Handler: src/handlers/easyTrack/evmScriptFactoryRemoved/index.EVMScriptFactoryRemovedHandler
+      - Event: MotionCanceled(uint256 indexed)
+        Handler: src/handlers/easyTrack/motionCanceled/index.MotionCanceledHandler
+      - Event: MotionCreated(uint256 indexed,address,address indexed,bytes,bytes)
+        Handler: src/handlers/easyTrack/motionCreated/index.MotionCreatedHandler
+      - Event: MotionDurationChanged(uint256)
+        Handler: src/handlers/easyTrack/motionDurationChanged/index.MotionDurationChangedHandler
+      - Event: MotionEnacted(uint256 indexed)
+        Handler: src/handlers/easyTrack/motionEnacted/index.MotionEnactedHandler
+      - Event: >-
+          MotionObjected(uint256 indexed,address
+          indexed,uint256,uint256,uint256)
+        Handler: src/handlers/easyTrack/motionObjected/index.MotionObjectedHandler
+      - Event: MotionRejected(uint256 indexed)
+        Handler: src/handlers/easyTrack/motionRejected/index.MotionRejectedHandler
+      - Event: MotionsCountLimitChanged(uint256)
+        Handler: src/handlers/easyTrack/motionsCountLimitChanged/index.MotionsCountLimitChangedHandler
+      - Event: ObjectionsThresholdChanged(uint256)
+        Handler: src/handlers/easyTrack/objectionsThresholdChanged/index.ObjectionsThresholdChangedHandler
+      - Event: Paused(address)
+        Handler: src/handlers/easyTrack/paused/index.PausedHandler
+      - Event: Unpaused(address)
+        Handler: src/handlers/easyTrack/unpaused/index.UnpausedHandler
