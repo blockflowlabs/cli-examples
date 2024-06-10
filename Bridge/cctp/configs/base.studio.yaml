@@ -1,10 +1,10 @@
 name: cctp
-description: A top-secret research project to the moon
-startBlock: latest
-userId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
-projectId: cctp-explorer-instance
-network: Polygon
-user: Jane-doe
+description: Indexing circle etheruem cctp contracts
+startBlock: 4131742
+userId: google-oauth2%7C113106604109449522744
+projectId: 9b8821f7-0942-4afa-b739-6d2560166cb2
+network: Base
+user: prady-cctp
 schema:
   file: ./studio.schema.ts
 execution: parallel
@@ -12,21 +12,21 @@ Resources:
   - Name: tokenmessenger
     Abi: src/abis/tokenmessenger.json
     Type: contract/event
-    Address: "0x9daF8c91AEFAE50b9c0E69629D3F6Ca40cA3B3FE"
+    Address: "0x1682Ae6375C4E4A97e4B583BC394c861A46D8962"
     Triggers:
       - Event: DepositForBurn(uint64 indexed,address indexed,uint256,address indexed,bytes32,uint32,bytes32,bytes32)
         Handler: src/handlers/DepositForBurn.DepositForBurnHandler
   - Name: messageTransmitter
     Abi: src/abis/messageTransmitter.json
     Type: contract/event
-    Address: "0xF3be9355363857F3e001be68856A2f96b4C39Ba9"
+    Address: "0xAD09780d193884d503182aD4588450C416D6F9D4"
     Triggers:
       - Event: MessageReceived(address indexed,uint32,uint64 indexed,bytes32,bytes)
         Handler: src/handlers/MessageReceived.MessageReceivedHandler
   - Name: tokenMinter
     Abi: src/abis/tokenMinter.json
     Type: contract/event
-    Address: "0x10f7835F827D6Cf035115E10c50A853d7FB2D2EC"
+    Address: "0xe45B133ddc64bE80252b0e9c75A8E74EF280eEd6"
     Triggers:
       - Event: SetBurnLimitPerMessage(address indexed,uint256)
         Handler: src/handlers/SetBurnLimitPerMessage.SetBurnLimitPerMessageHandler
