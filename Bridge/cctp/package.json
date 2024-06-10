@@ -6,7 +6,13 @@
     "prettier": "prettier --write .",
     "compile": "tsc -b",
     "test-src": "blockflow instance-test --path ethereum.studio.yaml --startBlock 19260948 --range 1 --clean",
-    "test-dst": "blockflow instance-test --path polygon.studio.yaml --startBlock 53702451 --range 1"
+    "test-dst": "blockflow instance-test --path polygon.studio.yaml --startBlock 53702451 --range 1",
+    "deploy-eth": "blockflow instance-deploy --path configs/ethereum.studio.yaml",
+    "deploy-pol": "blockflow instance-deploy --path configs/polygon.studio.yaml",
+    "deploy-op": "blockflow instance-deploy --path configs/op.studio.yaml",
+    "deploy-avax": "blockflow instance-deploy --path configs/avalanche.studio.yaml",
+    "deploy-arb": "blockflow instance-deploy --path configs/arbitrum.studio.yaml",
+    "deploy-base": "blockflow instance-deploy --path configs/base.studio.yaml"
   },
   "dependencies": {
     "@blockflow-labs/utils": "latest",
