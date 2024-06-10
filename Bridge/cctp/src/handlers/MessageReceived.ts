@@ -59,7 +59,7 @@ export const MessageReceivedHandler = async (
   const yearEntryDB: Instance = bind(cctpYearDataDB);
   const allTimeEntryDB: Instance = bind(cctpAllTimeDB);
 
-  let amountDestination = "";
+  let amountDestination = "0";
   let attestationdata = "";
 
   const isMintAndWithdraw = transaction.logs
