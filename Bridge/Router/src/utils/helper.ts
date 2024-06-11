@@ -75,6 +75,23 @@ export function getChainId(network: string): string | null {
   }
 }
 
+export function getNetworkName(chainId: string): string {
+  switch (chainId) {
+    case "1":
+      return "ethereum";
+    case "59144":
+      return "linea";
+    case "10":
+      return "optimism";
+    case "43114":
+      return "avalanche";
+    case "137":
+      return "polygon";
+    default:
+      return "";
+  }
+}
+
 export function stringToHex(str: string): string {
   let hex = "";
   for (let i = 0; i < str.length; i++) {

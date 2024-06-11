@@ -3,6 +3,20 @@ type native = {
   symbol: String;
 };
 
+interface TokensInfo {
+  id: string;
+  synmbol: string;
+  name: string;
+  decimals: number;
+}
+
+interface Oracle {
+  id: string; // Token name
+  price: string;
+  decimals: number;
+  timestamp: number;
+}
+
 type Token = {
   address: String;
   amount: String;

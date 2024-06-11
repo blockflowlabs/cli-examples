@@ -11,8 +11,10 @@ import {
   hashDepositData,
   stringToHex,
   getTokenInfo,
+  getNetworkName,
 } from "../../utils/helper";
-import { Destination } from "../../types/schema";
+import { Destination, TokensInfo } from "../../types/schema";
+import { fetchTokenInfo } from "../../utils/node";
 
 /**
  * @dev Function::iRelay(tuple relayData)
@@ -36,6 +38,26 @@ export const iRelayHandler = async (
 
   const dstChain = block.chain_id;
   const transferDB: Instance = bind(Destination);
+  const tokendb: Instance = bind(TokensInfo);
+
+  // from database @mayank
+  // timestamp - Date.now() = fetch it from apis and update it in the db
+
+  const token = await tokendb.findOne({
+    id: `${dstChain}_${destToken}`.toLowerCase(),
+  });
+
+  if (!token) {
+    // @mayank
+    const info = await fetchTokenInfo(destToken, getNetworkName(dstChain));
+
+    token.decimals = info.decimals;
+    token.name = info.name;
+    token.symbol = info.symbol;
+
+    await tokendb.save(token);
+  }
+
   const tokenInfo = getTokenInfo(dstChain, destToken);
 
   let messageHash = "0x";

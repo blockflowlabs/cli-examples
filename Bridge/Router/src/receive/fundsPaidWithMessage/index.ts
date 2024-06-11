@@ -3,6 +3,7 @@ import {
   GASLEAKED_TOPIC0,
   decodeGasLeaked,
   getTokenInfo,
+  getNetworkName,
 } from "../../utils/helper";
 import { Destination, IDestination, RefuelInfo } from "../../types/schema";
 
@@ -37,6 +38,7 @@ export const FundsPaidWithMessageHandler = async (
 
   if (isGasLeaked) {
     // https://basescan.org/tx/0x6da3e396dca98cb736db6ee824ddffc74e0a4fde8b723a71ab84c5adfa4e3842#eventlog
+
     const refuelDB: Instance = bind(RefuelInfo);
     const decodeEvent: any = decodeGasLeaked(isGasLeaked);
     await refuelDB.create({

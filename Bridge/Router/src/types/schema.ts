@@ -2,6 +2,20 @@
 
 import { Document } from "@blockflow-labs/utils";
 
+export class TokensInfo {
+  static entity = "TokensInfo";
+  static schema = {
+    id: { type: "String", index: true },
+    synmbol: "string",
+    name: "string",
+    decimals: "number",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
+  };
+}
+
 export class Destination {
   static entity = "Destination";
   static schema = {
@@ -108,6 +122,17 @@ type native = {
   amount: String;
   symbol: String;
 };
+
+export interface ITokensInfo extends Document {
+  id: string;
+  synmbol: string;
+  name: string;
+  decimals: number;
+  blocknumber: String;
+  entityId: String;
+  instanceId: String;
+  chainId: String;
+}
 
 type Token = {
   address: String;
