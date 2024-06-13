@@ -14,8 +14,6 @@ Resources:
     Type: contract/event
     Address: "0x754e6134872d7a501ffeba6c186e187dbfdf6f4a"
     Triggers:
-      - Event: BeaconUpgraded(address indexed)
-        Handler: src/handlers/blockflow/BeaconUpgraded.BeaconUpgradedHandler
       - Event: Deposit(address indexed,address indexed,uint256,uint256)
         Handler: src/handlers/blockflow/Deposit.DepositHandler
       - Event: MinimumLockUpdated(uint256)
