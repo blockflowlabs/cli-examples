@@ -1,0 +1,28 @@
+name: Project Apollo
+description: A top-secret research project to the moon
+startBlock: latest
+userId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
+projectId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
+network: Optimism
+user: Jane-doe
+schema:
+  file: ./studio.schema.ts
+execution: parallel
+Resources:
+  - Name: blockflow
+    Abi: src/abis/blockflow.json
+    Type: contract/event
+    Address: "0x754e6134872d7a501ffeba6c186e187dbfdf6f4a"
+    Triggers:
+      - Event: BeaconUpgraded(address indexed)
+        Handler: src/handlers/blockflow/BeaconUpgraded.BeaconUpgradedHandler
+      - Event: Deposit(address indexed,address indexed,uint256,uint256)
+        Handler: src/handlers/blockflow/Deposit.DepositHandler
+      - Event: MinimumLockUpdated(uint256)
+        Handler: src/handlers/blockflow/MinimumLockUpdated.MinimumLockUpdatedHandler
+      - Event: PeripheryUpdated(address)
+        Handler: src/handlers/blockflow/PeripheryUpdated.PeripheryUpdatedHandler
+      - Event: Transfer(address indexed,address indexed,uint256)
+        Handler: src/handlers/blockflow/Transfer.TransferHandler
+      - Event: Withdraw(address indexed,address indexed,uint256,uint256)
+        Handler: src/handlers/blockflow/Withdraw.WithdrawHandler
