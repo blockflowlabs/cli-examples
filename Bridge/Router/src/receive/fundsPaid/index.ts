@@ -1,18 +1,15 @@
 import { IEventContext, IBind, Instance } from "@blockflow-labs/utils";
-import { Destination, IDestination } from "../../types/schema";
+import { Destination } from "../../types/schema";
+import { EventNameEnum } from "../../utils/helper";
 
 /**
  * @dev Event::FundsPaid(bytes32 messageHash, address forwarder, uint256 nonce)
  * @param context trigger object with contains {event: {messageHash ,forwarder ,nonce }, transaction, block, log}
  * @param bind init function for database wrapper methods
  */
-export const FundsPaidHandler = async (
-  context: IEventContext,
-  bind: IBind,
-  secrets: Record<string, string>
-) => {
+export const FundsPaidHandler = async (context: IEventContext, bind: IBind) => {
   // Implement your event handler logic for FundsPaid here
-  const { event, block } = context;
+  const { event, block, transaction } = context;
   let { messageHash, forwarder, nonce } = event;
 
   messageHash = messageHash.toString();
@@ -20,12 +17,23 @@ export const FundsPaidHandler = async (
 
   const transferDB: Instance = bind(Destination);
 
-  const dstEntry: IDestination = await transferDB.findOne({
-    messageHash: messageHash.toLowerCase(),
+  let dstEntry: any = await transferDB.findOne({
+    id: `${block.chain_id}_${transaction.transaction_hash}`,
   });
 
-  if (dstEntry) {
-    dstEntry.paidId = nonce;
-    await transferDB.save(dstEntry);
+  if (!dstEntry) {
+    dstEntry = {};
+    dstEntry.id = `${block.chain_id}_${transaction.transaction_hash}`;
+    dstEntry.blockTimestamp = parseInt(block.block_timestamp.toString(), 10);
+    dstEntry.blockNumber = block.block_number;
+    dstEntry.chainId = block.chain_id;
+    dstEntry.transactionHash = transaction.transaction_hash;
+    dstEntry.recipientAddress = transaction.transaction_to_address;
+    dstEntry.receiverAddress = transaction.transaction_to_address;
   }
+  dstEntry.eventName = EventNameEnum.FundsPaid;
+  dstEntry.forwarderAddress = forwarder;
+  dstEntry.messageHash = messageHash;
+  dstEntry.paidId = nonce;
+  await transferDB.save(dstEntry);
 };

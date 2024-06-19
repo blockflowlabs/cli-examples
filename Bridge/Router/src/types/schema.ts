@@ -6,9 +6,25 @@ export class TokensInfo {
   static entity = "TokensInfo";
   static schema = {
     id: { type: "String", index: true },
-    synmbol: "string",
-    name: "string",
+    chainId: { type: "String", index: true },
+    address: "string",
+    symbol: "string",
+    decimals: "string",
+    priceUsd: "number",
+    priceRecordTimestamp: "number",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    instanceId: { type: "String", index: true },
+  };
+}
+
+export class Oracle {
+  static entity = "Oracle";
+  static schema = {
+    id: { type: "String", index: true },
+    price: "string",
     decimals: "number",
+    timestamp: "number",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
@@ -20,12 +36,13 @@ export class Destination {
   static entity = "Destination";
   static schema = {
     id: { type: "String", index: true },
-    blocktimestamp: "Number",
+    eventName: "String",
+    blockTimestamp: "Number",
     blockNumber: "Number",
     chainId: { type: "String", index: true },
     transactionHash: "String",
-    destnationtoken: { address: "String", amount: "String", symbol: "String" },
-    stableToken: { address: "String", amount: "String", symbol: "String" },
+    destinationToken: { tokenRef: "ObjectId", amount: "String" },
+    stableToken: { tokenRef: "ObjectId", amount: "String" },
     recipientAddress: "String",
     receiverAddress: "String",
     paidId: "String",
@@ -33,7 +50,10 @@ export class Destination {
     messageHash: "String",
     execFlag: "Boolean",
     execData: "String",
-    usdValue: "String",
+    nativeTokenAmount: "String",
+    depositId: "String",
+    srcChainId: "String",
+    srcRef: { record: "ObjectId" },
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     instanceId: { type: "String", index: true },
@@ -44,34 +64,26 @@ export class Source {
   static entity = "Source";
   static schema = {
     id: { type: "String", index: true },
-    blocktimestamp: "Number",
+    eventName: "String",
+    blockTimestamp: "Number",
     blockNumber: "Number",
     chainId: { type: "String", index: true },
+    destChainId: "String",
     transactionHash: "String",
-    sourcetoken: { address: "String", amount: "String", symbol: "String" },
-    stableToken: { address: "String", amount: "String", symbol: "String" },
+    sourceToken: { tokenRef: "ObjectId", amount: "String" },
+    stableToken: { tokenRef: "ObjectId", amount: "String" },
     depositorAddress: "String",
     senderAddress: "String",
     depositId: "String",
-    messageHash: "String",
     partnerId: "String",
     message: "String",
-    usdValue: "String",
+    usdValue: "Number",
+    fee: { tokenRef: "ObjectId", amount: "String" },
+    stableDestToken: { tokenRef: "ObjectId", amount: "String" },
+    recipientAddress: "String",
+    destRef: { record: "ObjectId" },
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
-    instanceId: { type: "String", index: true },
-  };
-}
-
-export class FeeInfo {
-  static entity = "FeeInfo";
-  static schema = {
-    id: { type: "String", index: true },
-    feeToken: { address: "String", amount: "String", symbol: "String" },
-    usdValue: "String",
-    entityId: { type: "String", index: true },
-    blocknumber: { type: "Number", index: true },
-    chainId: { type: "String", index: true },
     instanceId: { type: "String", index: true },
   };
 }
@@ -80,6 +92,7 @@ export class DepositInfoUpdate {
   static entity = "DepositInfoUpdate";
   static schema = {
     id: { type: "String", index: true },
+    eventName: "String",
     updateId: "String",
     isWithdraw: "Boolean",
     transactionHash: "String",
@@ -110,13 +123,17 @@ export class ExtraInfo {
     id: { type: "String", index: true },
     flowType: "String",
     gasFeeUsd: "String",
+    bridgeFee: "String",
     bridgeFeeUsd: "String",
+    nativeRecipientAddress: "String",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
     instanceId: { type: "String", index: true },
   };
 }
+
+import { ObjectId } from "@blockflow-labs/utils";
 
 type native = {
   amount: String;
@@ -125,9 +142,22 @@ type native = {
 
 export interface ITokensInfo extends Document {
   id: string;
-  synmbol: string;
-  name: string;
+  chainId: string;
+  address: string;
+  symbol: string;
+  decimals: string;
+  priceUsd: number;
+  priceRecordTimestamp: number;
+  blocknumber: String;
+  entityId: String;
+  instanceId: String;
+}
+
+export interface IOracle extends Document {
+  id: string; // Token name
+  price: string;
   decimals: number;
+  timestamp: number;
   blocknumber: String;
   entityId: String;
   instanceId: String;
@@ -135,18 +165,22 @@ export interface ITokensInfo extends Document {
 }
 
 type Token = {
-  address: String;
+  tokenRef: ObjectId;
   amount: String;
-  symbol: String;
+};
+
+type RecordRef = {
+  record: ObjectId;
 };
 
 export interface IDestination extends Document {
   id: String;
-  blocktimestamp: Number;
+  eventName: String;
+  blockTimestamp: Number;
   blockNumber: Number;
   chainId: String;
   transactionHash: String;
-  destnationtoken: Token;
+  destinationToken: Token;
   stableToken: Token;
   recipientAddress: String;
   receiverAddress: String;
@@ -155,7 +189,10 @@ export interface IDestination extends Document {
   messageHash: String;
   execFlag: Boolean;
   execData: String;
-  usdValue: String;
+  nativeTokenAmount: String;
+  depositId: String;
+  srcChainId: String;
+  srcRef: RecordRef;
   blocknumber: String;
   entityId: String;
   instanceId: String;
@@ -163,38 +200,33 @@ export interface IDestination extends Document {
 
 export interface ISource extends Document {
   id: String;
-  blocktimestamp: Number;
+  eventName: String;
+  blockTimestamp: Number;
   blockNumber: Number;
   chainId: String;
+  destChainId: String;
   transactionHash: String;
-  sourcetoken: Token;
+  sourceToken: Token;
   stableToken: Token;
   depositorAddress: String;
   senderAddress: String;
   depositId: String;
-  messageHash: String;
   partnerId: String;
   message: String;
-  usdValue: String;
+  usdValue: Number;
+  fee: Token;
+  stableDestToken: Token;
+  recipientAddress: String;
+  destRef: RecordRef;
   blocknumber: String;
   entityId: String;
   instanceId: String;
-}
-
-// difference between src and destination
-export interface IFeeInfo extends Document {
-  id: String;
-  feeToken: Token;
-  usdValue: String;
-  blocknumber: String;
-  entityId: String;
-  instanceId: String;
-  chainId: String;
 }
 
 //DepositInfoUpdate
 export interface IDepositInfoUpdate extends Document {
   id: String;
+  eventName: String;
   updateId: String;
   isWithdraw: Boolean;
   transactionHash: String;
@@ -226,7 +258,9 @@ export interface IExtraInfo extends Document {
   id: String;
   flowType: String;
   gasFeeUsd: String;
+  bridgeFee: String;
   bridgeFeeUsd: String;
+  nativeRecipientAddress: String;
   // competitorData: competitorData;
   // Partner info from middle-ware contract
   // sys_fee: String;

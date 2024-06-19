@@ -1,13 +1,18 @@
+import { ObjectId } from "@blockflow-labs/utils";
+
 type native = {
   amount: String;
   symbol: String;
 };
 
-interface TokensInfo {
+export interface TokensInfo {
   id: string;
-  synmbol: string;
-  name: string;
-  decimals: number;
+  chainId: string;
+  address: string;
+  symbol: string;
+  decimals: string;
+  priceUsd: number;
+  priceRecordTimestamp: number;
 }
 
 interface Oracle {
@@ -18,18 +23,22 @@ interface Oracle {
 }
 
 type Token = {
-  address: String;
+  tokenRef: ObjectId;
   amount: String;
-  symbol: String;
+};
+
+type RecordRef = {
+  record: ObjectId;
 };
 
 export interface Destination {
   id: String;
-  blocktimestamp: Number;
+  eventName: String;
+  blockTimestamp: Number;
   blockNumber: Number;
   chainId: String;
   transactionHash: String;
-  destnationtoken: Token;
+  destinationToken: Token;
   stableToken: Token;
   recipientAddress: String;
   receiverAddress: String;
@@ -38,36 +47,38 @@ export interface Destination {
   messageHash: String;
   execFlag: Boolean;
   execData: String;
-  usdValue: String;
+  nativeTokenAmount: String;
+  depositId: String;
+  srcChainId: String;
+  srcRef: RecordRef;
 }
 
 export interface Source {
   id: String;
-  blocktimestamp: Number;
+  eventName: String;
+  blockTimestamp: Number;
   blockNumber: Number;
   chainId: String;
+  destChainId: String;
   transactionHash: String;
-  sourcetoken: Token;
+  sourceToken: Token;
   stableToken: Token;
   depositorAddress: String;
   senderAddress: String;
   depositId: String;
-  messageHash: String;
   partnerId: String;
   message: String;
-  usdValue: String;
-}
-
-// difference between src and destination
-export interface FeeInfo {
-  id: String;
-  feeToken: Token;
-  usdValue: String;
+  usdValue: Number;
+  fee: Token;
+  stableDestToken: Token;
+  recipientAddress: String;
+  destRef: RecordRef;
 }
 
 //DepositInfoUpdate
 export interface DepositInfoUpdate {
   id: String;
+  eventName: String;
   updateId: String;
   isWithdraw: Boolean;
   transactionHash: String;
@@ -91,7 +102,9 @@ export interface ExtraInfo {
   id: String;
   flowType: String;
   gasFeeUsd: String;
+  bridgeFee: String;
   bridgeFeeUsd: String;
+  nativeRecipientAddress: String;
   // competitorData: competitorData;
   // Partner info from middle-ware contract
   // sys_fee: String;

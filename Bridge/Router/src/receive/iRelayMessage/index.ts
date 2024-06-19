@@ -2,25 +2,21 @@ import { IBind, Instance, IFunctionContext } from "@blockflow-labs/utils";
 
 import {
   hexToString,
-  chainToContract,
-  stringToHex,
-  getTokenInfo,
-  hashDepositDataWithMessage,
   SWAP_WITH_RECIPIENT_TOPIC0,
   decodeSwapWithRecipient,
+  decodeGasLeaked,
+  GASLEAKED_TOPIC0,
 } from "../../utils/helper";
-import { Destination } from "../../types/schema";
+import { Destination, Source } from "../../types/schema";
+import { formatDecimals } from "../../utils/formatting";
+import { fetchTokenDetails } from "../../utils/token";
 
 /**
  * @dev Function::iRelayMessage(tuple relayData)
  * @param context trigger object with contains {functionParams: {relayData }, transaction, block}
  * @param bind init function for database wrapper methods
  */
-export const iRelayMessageHandler = async (
-  context: IFunctionContext,
-  bind: IBind,
-  secrets: Record<string, string>
-) => {
+export const iRelayMessageHandler = async (context: IFunctionContext, bind: IBind) => {
   // Implement your function handler logic for iRelayMessage here
   const { functionParams, transaction, block } = context;
   const { relayData } = functionParams;
@@ -30,40 +26,26 @@ export const iRelayMessageHandler = async (
   const depositId = relayData.depositId.toString();
   const destToken = relayData.destToken.toString();
   const recipient = relayData.recipient.toString();
-  const message = relayData.message.toString();
 
   const dstChain = block.chain_id;
   const transferDB: Instance = bind(Destination);
-  const tokenInfo = getTokenInfo(dstChain, destToken);
-
-  let messageHash = "0x";
-
-  try {
-    messageHash = hashDepositDataWithMessage({
-      amount,
-      srcChainId: stringToHex(srcChain),
-      depositId,
-      destToken,
-      recipient,
-      contract: chainToContract(dstChain),
-      message,
-    });
-  } catch (error) {}
+  const stableTokenInfo = await fetchTokenDetails(bind, dstChain, destToken);
 
   let tokenPath = {
-    destnationtoken: {
-      address: destToken,
-      amount: amount,
-      symbol: tokenInfo.symbol,
-    },
     stableToken: {
-      address: destToken,
-      amount: amount,
-      symbol: tokenInfo.symbol,
+      tokenRef: stableTokenInfo._id,
+      amount: formatDecimals(amount, stableTokenInfo.decimals),
+    },
+    destinationToken: {
+      tokenRef: stableTokenInfo._id,
+      amount: formatDecimals(amount, stableTokenInfo.decimals),
     },
   };
 
-  const id = `${srcChain}_${dstChain}_${depositId}_${chainToContract(srcChain)}_${chainToContract(dstChain)}`; // messageHash.toLowerCase()
+  let receiverAddress = null,
+    nativeTokenAmount = null;
+
+  const id = `${dstChain}_${transaction.transaction_hash}`;
 
   const isSwapWithReceiptRelay = transaction.logs
     ? transaction.logs.find(
@@ -80,37 +62,73 @@ export const iRelayMessageHandler = async (
 
     const decodeEvent: any = decodeSwapWithRecipient(isSwapWithReceiptRelay);
     const [stableToken, destToken] = decodeEvent[1];
+    const destTokenInfo = await fetchTokenDetails(bind, dstChain, destToken);
+    receiverAddress = decodeEvent[4];
     // prettier-ignore
     const [amountIn, amountOut] = [decodeEvent[2].toString(), decodeEvent[5].toString()]
     tokenPath = {
       stableToken: {
-        address: stableToken,
-        amount: amountIn,
-        symbol: getTokenInfo(dstChain, stableToken).symbol,
+        tokenRef: stableToken._id,
+        amount: formatDecimals(amountIn, stableTokenInfo.decimals),
       },
-      destnationtoken: {
-        address: destToken,
-        amount: amountOut,
-        symbol: getTokenInfo(dstChain, destToken).symbol,
+      destinationToken: {
+        tokenRef: destToken._id,
+        amount: formatDecimals(amountOut, destTokenInfo.decimals),
       },
     };
   }
 
-  await transferDB.create({
+  const isGasLeaked = transaction.logs
+    ? transaction.logs.find(
+        (log) => log.topics[0].toLowerCase() === GASLEAKED_TOPIC0
+      )
+    : null;
+
+  if (isGasLeaked) {
+    // https://basescan.org/tx/0x6da3e396dca98cb736db6ee824ddffc74e0a4fde8b723a71ab84c5adfa4e3842#eventlog
+    const decodeEvent: any = decodeGasLeaked(isGasLeaked);
+    const destTokenInfo = await fetchTokenDetails(
+      bind,
+      dstChain,
+      decodeEvent[0].toString()
+    );
+    nativeTokenAmount = formatDecimals(
+      decodeEvent[2].toString(),
+      destTokenInfo.decimals
+    );
+    receiverAddress = decodeEvent[3].toString();
+  }
+  const destObj: any = {
     id: id.toLowerCase(),
-    blocktimestamp: parseInt(block.block_timestamp.toString(), 10),
+    //@ts-ignore
+    blockTimestamp: parseInt(block.block_timestamp.toString(), 10),
     blockNumber: block.block_number,
-    chainId: srcChain,
+    chainId: dstChain,
     transactionHash: transaction.transaction_hash,
-    destnationtoken: tokenPath.destnationtoken,
+    destinationToken: tokenPath.destinationToken,
     stableToken: tokenPath.stableToken,
-    recipientAddress: transaction.transaction_to_address, // Contract from where txn came
-    receiverAddress: recipient, // Who received the funds
-    paidId: "", // can get this from event
-    forwarderAddress: transaction.transaction_from_address,
-    messageHash: messageHash,
-    execFlag: false, // only for fund
-    execData: "", //
-    usdValue: "",
+    recipientAddress: recipient, // Contract from where txn came
+    receiverAddress: receiverAddress ?? recipient, // Who received the funds
+    nativeTokenAmount: nativeTokenAmount ?? "",
+    depositId: depositId,
+    srcChainId: srcChain,
+  };
+  const sourceDB: Instance = bind(Source);
+  const srcRecord: any = await sourceDB.findOne({
+    id: `${srcChain}_${dstChain}_${depositId}`,
   });
+  console.log("srcRecord", srcRecord);
+  if (srcRecord) {
+    destObj["srcRef"] = { record: srcRecord._id };
+  }
+  await transferDB.save(destObj);
+
+  if (srcRecord) {
+    const savedDest = await transferDB.findOne({
+      id,
+    });
+    console.log("savedDest", savedDest);
+    srcRecord["destRef"] = { record: savedDest._id };
+    await sourceDB.save(srcRecord);
+  }
 };

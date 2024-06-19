@@ -1,14 +1,32 @@
 export const list = {
+  "1---0x1151cb3d861920e07a38e03eead12c32178567f6": [
+    "1",
+    "0x1151cb3d861920e07a38e03eead12c32178567f6",
+    "BONK",
+    5,
+  ],
   "1---0x16eccfdbb4ee1a85a33f3a9b21175cd7ae753db4": [
     "1",
     "0x16eccfdbb4ee1a85a33f3a9b21175cd7ae753db4",
     "ROUTE",
     18,
   ],
+  "1---0x6982508145454ce325ddbe47a25d4ec3d2311933": [
+    "1",
+    "0x6982508145454ce325ddbe47a25d4ec3d2311933",
+    "PEPE",
+    18,
+  ],
   "1---0x9695e0114e12c0d3a3636fab5a18e6b737529023": [
     "1",
     "0x9695e0114e12c0d3a3636fab5a18e6b737529023",
     "DFYN",
+    18,
+  ],
+  "1---0x9d36f8f62347538440a212e9162f534f797542df": [
+    "1",
+    "0x9d36f8f62347538440a212e9162f534f797542df",
+    "SATS",
     18,
   ],
   "1---0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48": [
@@ -29,6 +47,12 @@ export const list = {
     "USDT",
     6,
   ],
+  "1---0xe2dca969624795985f2f083bcd0b674337ba130a": [
+    "1",
+    "0xe2dca969624795985f2f083bcd0b674337ba130a",
+    "SKR",
+    18,
+  ],
   "1---0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee": [
     "1",
     "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
@@ -47,11 +71,35 @@ export const list = {
     "ETH",
     18,
   ],
+  "10---0x8413041a7702603d9d991f2c4add29e4e8a241f8": [
+    "10",
+    "0x8413041a7702603d9d991f2c4add29e4e8a241f8",
+    "ROUTE",
+    18,
+  ],
+  "10---0x8f69ee043d52161fd29137aedf63f5e70cd504d5": [
+    "10",
+    "0x8f69ee043d52161fd29137aedf63f5e70cd504d5",
+    "DOG",
+    18,
+  ],
   "10---0x94b008aa00579c1307b0ef2c499ad98a8ce58e58": [
     "10",
     "0x94b008aa00579c1307b0ef2c499ad98a8ce58e58",
     "USDT",
     6,
+  ],
+  "10---0x9d36f8f62347538440a212e9162f534f797542df": [
+    "10",
+    "0x9d36f8f62347538440a212e9162f534f797542df",
+    "SATS",
+    18,
+  ],
+  "10---0xe2dca969624795985f2f083bcd0b674337ba130a": [
+    "10",
+    "0xe2dca969624795985f2f083bcd0b674337ba130a",
+    "SKR",
+    18,
   ],
   "10---0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee": [
     "10",
@@ -59,10 +107,34 @@ export const list = {
     "ETH",
     18,
   ],
+  "10---0xf44ff799ea2bbfec96f9a50498209aac3c2b3b8b": [
+    "10",
+    "0xf44ff799ea2bbfec96f9a50498209aac3c2b3b8b",
+    "DFYN",
+    18,
+  ],
   "30---0xef213441a85df4d7acbdae0cf78004e1e486bb96": [
     "30",
     "0xef213441a85df4d7acbdae0cf78004e1e486bb96",
     "USDT",
+    18,
+  ],
+  "56---0x222e0974365b3b06cb1ad473c542991ed888fde1": [
+    "56",
+    "0x222e0974365b3b06cb1ad473c542991ed888fde1",
+    null,
+    18,
+  ],
+  "56---0x24fc769b9107980b2b9c0e1d9e80dc565b0f6f13": [
+    "56",
+    "0x24fc769b9107980b2b9c0e1d9e80dc565b0f6f13",
+    "NSDX",
+    18,
+  ],
+  "56---0x25d887ce7a35172c62febfd67a1856f20faebb00": [
+    "56",
+    "0x25d887ce7a35172c62febfd67a1856f20faebb00",
+    "PEPE",
     18,
   ],
   "56---0x55d398326f99059ff775485246999027b3197955": [
@@ -77,11 +149,47 @@ export const list = {
     "USDC",
     18,
   ],
+  "56---0x9c08941465eb16982fa8385a7bbd74f7972c5a27": [
+    "56",
+    "0x9c08941465eb16982fa8385a7bbd74f7972c5a27",
+    "DFYN",
+    18,
+  ],
+  "56---0xaa88c603d142c371ea0eac8756123c5805edee03": [
+    "56",
+    "0xaa88c603d142c371ea0eac8756123c5805edee03",
+    "DOG",
+    18,
+  ],
+  "56---0xba2ae424d960c26247dd6c32edc70b295c744c43": [
+    "56",
+    "0xba2ae424d960c26247dd6c32edc70b295c744c43",
+    "DOGE",
+    8,
+  ],
+  "56---0xe2dca969624795985f2f083bcd0b674337ba130a": [
+    "56",
+    "0xe2dca969624795985f2f083bcd0b674337ba130a",
+    "SKR",
+    18,
+  ],
+  "56---0xfd2700c51812753215754de9ec51cdd42bf725b9": [
+    "56",
+    "0xfd2700c51812753215754de9ec51cdd42bf725b9",
+    "ROUTE",
+    18,
+  ],
   "137---0x16eccfdbb4ee1a85a33f3a9b21175cd7ae753db4": [
     "137",
     "0x16eccfdbb4ee1a85a33f3a9b21175cd7ae753db4",
     "ROUTE",
     18,
+  ],
+  "137---0x2791bca1f2de4661ed88a30c99a7a9449aa84174": [
+    "137",
+    "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
+    "USDC",
+    6,
   ],
   "137---0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": [
     "137",
@@ -95,6 +203,12 @@ export const list = {
     "ETH",
     18,
   ],
+  "137---0x9d36f8f62347538440a212e9162f534f797542df": [
+    "137",
+    "0x9d36f8f62347538440a212e9162f534f797542df",
+    "SATS",
+    18,
+  ],
   "137---0xc168e40227e4ebd8c1cae80f7a55a4f0e6d66c97": [
     "137",
     "0xc168e40227e4ebd8c1cae80f7a55a4f0e6d66c97",
@@ -106,6 +220,30 @@ export const list = {
     "0xc2132d05d31c914a87c6611c10748aeb04b58e8f",
     "USDT",
     6,
+  ],
+  "137---0xe2dca969624795985f2f083bcd0b674337ba130a": [
+    "137",
+    "0xe2dca969624795985f2f083bcd0b674337ba130a",
+    "SKR",
+    18,
+  ],
+  "137---0xe5b49820e5a1063f6f4ddf851327b5e8b2301048": [
+    "137",
+    "0xe5b49820e5a1063f6f4ddf851327b5e8b2301048",
+    "BONK",
+    5,
+  ],
+  "137---0xe8d17b127ba8b9899a160d9a07b69bca8e08bfc6": [
+    "137",
+    "0xe8d17b127ba8b9899a160d9a07b69bca8e08bfc6",
+    "NSDX",
+    18,
+  ],
+  "137---0xeee3371b89fc43ea970e908536fcddd975135d8a": [
+    "137",
+    "0xeee3371b89fc43ea970e908536fcddd975135d8a",
+    "DOG",
+    18,
   ],
   "169---0x0dc808adce2099a9f62aa87d9670745aba741746": [
     "169",
@@ -245,6 +383,24 @@ export const list = {
     "USDC",
     6,
   ],
+  "8453---0x9d36f8f62347538440a212e9162f534f797542df": [
+    "8453",
+    "0x9d36f8f62347538440a212e9162f534f797542df",
+    "SATS",
+    18,
+  ],
+  "8453---0xafb89a09d82fbde58f18ac6437b3fc81724e4df6": [
+    "8453",
+    "0xafb89a09d82fbde58f18ac6437b3fc81724e4df6",
+    "DOG",
+    18,
+  ],
+  "8453---0xe2dca969624795985f2f083bcd0b674337ba130a": [
+    "8453",
+    "0xe2dca969624795985f2f083bcd0b674337ba130a",
+    "SKR",
+    18,
+  ],
   "8453---0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee": [
     "8453",
     "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
@@ -255,6 +411,24 @@ export const list = {
     "near",
     "usdt.tether-token.near",
     "USDT",
+    6,
+  ],
+  "10242---0x29ae05c93549bb93827cd651c6ee1c25960db847": [
+    "10242",
+    "0x29ae05c93549bb93827cd651c6ee1c25960db847",
+    "ETH",
+    18,
+  ],
+  "10242---0x6c45e28a76977a96e263f84f95912b47f927b687": [
+    "10242",
+    "0x6c45e28a76977a96e263f84f95912b47f927b687",
+    "USDT",
+    6,
+  ],
+  "10242---0x8c4acd74ff4385f3b7911432fa6787aa14406f8b": [
+    "10242",
+    "0x8c4acd74ff4385f3b7911432fa6787aa14406f8b",
+    "USDC",
     6,
   ],
   "34443---0x4200000000000000000000000000000000000006": [
@@ -281,6 +455,12 @@ export const list = {
     "USDT",
     6,
   ],
+  "42161---0x09199d9a5f4448d0848e4395d065e1ad9c4a1f74": [
+    "42161",
+    "0x09199d9a5f4448d0848e4395d065e1ad9c4a1f74",
+    "BONK",
+    5,
+  ],
   "42161---0x11bbf12363dc8375b78d2719395d505f52a02f68": [
     "42161",
     "0x11bbf12363dc8375b78d2719395d505f52a02f68",
@@ -293,10 +473,28 @@ export const list = {
     "DFYN",
     18,
   ],
+  "42161---0x25d887ce7a35172c62febfd67a1856f20faebb00": [
+    "42161",
+    "0x25d887ce7a35172c62febfd67a1856f20faebb00",
+    "PEPE",
+    18,
+  ],
+  "42161---0x4425742f1ec8d98779690b5a3a6276db85ddc01a": [
+    "42161",
+    "0x4425742f1ec8d98779690b5a3a6276db85ddc01a",
+    "DOG",
+    18,
+  ],
   "42161---0x82af49447d8a07e3bd95bd0d56f35241523fbab1": [
     "42161",
     "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
     "ETH",
+    18,
+  ],
+  "42161---0x9d36f8f62347538440a212e9162f534f797542df": [
+    "42161",
+    "0x9d36f8f62347538440a212e9162f534f797542df",
+    "SATS",
     18,
   ],
   "42161---0xaf88d065e77c8cc2239327c5edb3a432268e5831": [
@@ -304,6 +502,18 @@ export const list = {
     "0xaf88d065e77c8cc2239327c5edb3a432268e5831",
     "USDC",
     6,
+  ],
+  "42161---0xb88a5ac00917a02d82c7cd6cebd73e2852d43574": [
+    "42161",
+    "0xb88a5ac00917a02d82c7cd6cebd73e2852d43574",
+    null,
+    18,
+  ],
+  "42161---0xe2dca969624795985f2f083bcd0b674337ba130a": [
+    "42161",
+    "0xe2dca969624795985f2f083bcd0b674337ba130a",
+    "SKR",
+    18,
   ],
   "42161---0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee": [
     "42161",
@@ -317,6 +527,12 @@ export const list = {
     "USDT",
     6,
   ],
+  "43114---0x2b6b20ceac439042edc6efd3d41b11af66013e58": [
+    "43114",
+    "0x2b6b20ceac439042edc6efd3d41b11af66013e58",
+    "DFYN",
+    18,
+  ],
   "43114---0x9702230a8ea53601f5cd2dc00fdbc13d4df4a8c7": [
     "43114",
     "0x9702230a8ea53601f5cd2dc00fdbc13d4df4a8c7",
@@ -328,6 +544,18 @@ export const list = {
     "0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e",
     "USDC",
     6,
+  ],
+  "43114---0xe2dca969624795985f2f083bcd0b674337ba130a": [
+    "43114",
+    "0xe2dca969624795985f2f083bcd0b674337ba130a",
+    "SKR",
+    18,
+  ],
+  "43114---0xf44ff799ea2bbfec96f9a50498209aac3c2b3b8b": [
+    "43114",
+    "0xf44ff799ea2bbfec96f9a50498209aac3c2b3b8b",
+    "ROUTE",
+    18,
   ],
   "59144---0x176211869ca2b568f2a7d4ee941e073a821ee1ff": [
     "59144",
@@ -365,6 +593,36 @@ export const list = {
     "ETH",
     18,
   ],
+  "167000---0xa51894664a773981c6c112c43ce576f315d5b1b6": [
+    "167000",
+    "0xa51894664a773981c6c112c43ce576f315d5b1b6",
+    "ETH",
+    18,
+  ],
+  "167000---0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee": [
+    "167000",
+    "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "ETH",
+    18,
+  ],
+  "200901---0x9827431e8b77e87c9894bd50b055d6be56be0030": [
+    "200901",
+    "0x9827431e8b77e87c9894bd50b055d6be56be0030",
+    "USDC",
+    6,
+  ],
+  "200901---0xef63d4e178b3180beec9b0e143e0f37f4c93f4c2": [
+    "200901",
+    "0xef63d4e178b3180beec9b0e143e0f37f4c93f4c2",
+    "ETH",
+    18,
+  ],
+  "200901---0xfe9f969faf8ad72a83b761138bf25de87eff9dd2": [
+    "200901",
+    "0xfe9f969faf8ad72a83b761138bf25de87eff9dd2",
+    "USDT",
+    6,
+  ],
   "534352---0x06efdbff2a14a7c8e15944d1f4a48f9f95f663a4": [
     "534352",
     "0x06efdbff2a14a7c8e15944d1f4a48f9f95f663a4",
@@ -389,11 +647,71 @@ export const list = {
     "USDT",
     6,
   ],
+  "7225878---0x02d728b9c1513478a6b6de77a92648e1d8f801e7": [
+    "7225878",
+    "0x02d728b9c1513478a6b6de77a92648e1d8f801e7",
+    "DOG",
+    18,
+  ],
+  "7225878---0x222e0974365b3b06cb1ad473c542991ed888fde1": [
+    "7225878",
+    "0x222e0974365b3b06cb1ad473c542991ed888fde1",
+    null,
+    18,
+  ],
+  "7225878---0x44d4691bb6fe61491e4e00bab78c56a545820097": [
+    "7225878",
+    "0x44d4691bb6fe61491e4e00bab78c56a545820097",
+    "BONK",
+    5,
+  ],
+  "7225878---0x6446c9f678764c8b69a75aedd5b505e239dffb63": [
+    "7225878",
+    "0x6446c9f678764c8b69a75aedd5b505e239dffb63",
+    "DOGE",
+    8,
+  ],
+  "7225878---0x739222d8a9179fe05129c77a8fa354049c088caa": [
+    "7225878",
+    "0x739222d8a9179fe05129c77a8fa354049c088caa",
+    "USDC",
+    6,
+  ],
+  "7225878---0x9a77fbc3b3ce45f43275677053e5d60272d326f3": [
+    "7225878",
+    "0x9a77fbc3b3ce45f43275677053e5d60272d326f3",
+    "PEPE",
+    18,
+  ],
+  "7225878---0xd457de2ebce0d70f571718ad66a28273b5956105": [
+    "7225878",
+    "0xd457de2ebce0d70f571718ad66a28273b5956105",
+    "USDT",
+    6,
+  ],
+  "7225878---0xe2dca969624795985f2f083bcd0b674337ba130a": [
+    "7225878",
+    "0xe2dca969624795985f2f083bcd0b674337ba130a",
+    "SKR",
+    18,
+  ],
+  "7225878---0xf3ad01cf8e4d3ef95f5d480ec534dd98caa0555f": [
+    "7225878",
+    "0xf3ad01cf8e4d3ef95f5d480ec534dd98caa0555f",
+    "SATS",
+    18,
+  ],
   "728126428---0xa614f803b6fd780986a42c78ec9c7f77e6ded13c": [
     "728126428",
     "0xa614f803b6fd780986a42c78ec9c7f77e6ded13c",
     "USDT",
     6,
+  ],
+  "728126428---0xcbf0a663e5d7657792a7094fa5fb6d07d3704a10": [
+    "728126428",
+    "0xcbf0a663e5d7657792a7094fa5fb6d07d3704a10",
+    null,
+    18,
   ],
   "1313161554---0x4988a896b1227218e4a686fde5eabdcabd91571f": [
     "1313161554",

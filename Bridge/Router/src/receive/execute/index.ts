@@ -1,7 +1,12 @@
-import { IBind, Instance, IFunctionContext } from "@blockflow-labs/utils";
+import {
+  IBind,
+  Instance,
+  IFunctionContext,
+  IEventContext,
+} from "@blockflow-labs/utils";
 
-import { hexToString } from "../../utils/helper";
-import { Destination, Source } from "../../types/schema";
+import { EventNameEnum, hexToString } from "../../utils/helper";
+import { Destination } from "../../types/schema";
 import { formatDecimals } from "../../utils/formatting";
 import { fetchTokenDetails } from "../../utils/token";
 
@@ -10,16 +15,21 @@ import { fetchTokenDetails } from "../../utils/token";
  * @param context trigger object with contains {functionParams: {relayData }, transaction, block}
  * @param bind init function for database wrapper methods
  */
-export const iRelayHandler = async (context: IFunctionContext, bind: IBind) => {
+export const executeHandler = async (context: IEventContext, bind: IBind) => {
   // Implement your function handler logic for iRelay here
-  const { functionParams, transaction, block } = context;
-  const { relayData } = functionParams;
-
-  const amount = relayData.amount.toString();
-  const srcChain = hexToString(relayData.srcChainId.toString());
-  const depositId = relayData.depositId.toString();
-  const destToken = relayData.destToken.toString();
-  const recipient = relayData.recipient.toString();
+  const { event, transaction, block } = context;
+  let {
+    sourceChainIdBytes,
+    depositNonce,
+    settlementToken,
+    settlementAmount,
+    recipient,
+  } = event;
+  const amount = settlementAmount.toString();
+  const srcChain = hexToString(sourceChainIdBytes.toString());
+  const depositId = depositNonce.toString();
+  const destToken = settlementToken.toString();
+  recipient = recipient.toString();
 
   const dstChain = block.chain_id;
   const transferDB: Instance = bind(Destination);
@@ -39,11 +49,13 @@ export const iRelayHandler = async (context: IFunctionContext, bind: IBind) => {
 
   const id = `${dstChain}_${transaction.transaction_hash}`;
 
-  const destObj: any = {
+  await transferDB.save({
     id: id.toLowerCase(),
+    //@ts-ignore
     blockTimestamp: parseInt(block.block_timestamp.toString(), 10),
     blockNumber: block.block_number,
     chainId: dstChain,
+    eventName: EventNameEnum.Execute,
     transactionHash: transaction.transaction_hash,
     destinationToken: tokenPath.destinationToken,
     stableToken: tokenPath.stableToken,
@@ -51,23 +63,5 @@ export const iRelayHandler = async (context: IFunctionContext, bind: IBind) => {
     receiverAddress: recipient,
     depositId: depositId,
     srcChainId: srcChain,
-  };
-  const sourceDB: Instance = bind(Source);
-  const srcRecord: any = await sourceDB.findOne({
-    id: `${srcChain}_${dstChain}_${depositId}`,
   });
-  console.log("srcRecord", srcRecord);
-  if (srcRecord) {
-    destObj["srcRef"] = { record: srcRecord._id };
-  }
-  await transferDB.save(destObj);
-
-  if (srcRecord) {
-    const savedDest = await transferDB.findOne({
-      id,
-    });
-    console.log("savedDest", savedDest);
-    srcRecord["destRef"] = { record: savedDest._id };
-    await sourceDB.save(srcRecord);
-  }
 };

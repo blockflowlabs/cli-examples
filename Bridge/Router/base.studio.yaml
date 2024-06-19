@@ -1,9 +1,9 @@
 name: Router Nitro
 description: Indexing cross chain transfers on router nitro protocol
-startBlock: 19062096 # add - 0xc21e4ebd1d92036cb467b53fe3258f219d909eb9, block - 19062096
+startBlock: 8831830 # add - 0x0fa205c0446cd9eedcc7538c9e24bc55ad08207f, block - 19062096
 userId: 6cd145d5-b8bc-41a0-a74d-2e9b88ffb675
 projectId: 6aa2619a-2485-4dd9-882c-56b4ed1a86d0
-network: Ethereum
+network: Base
 execution: parallel
 user: prady
 schema:
@@ -12,7 +12,7 @@ Resources:
   - Name: iRelay
     Abi: src/abis/assetForwarderEthereum.json
     Type: contract/function
-    Address: "0xc21e4ebd1d92036cb467b53fe3258f219d909eb9"
+    Address: "0x0fa205c0446cd9eedcc7538c9e24bc55ad08207f"
     Triggers:
       - Function: iRelay(tuple(uint256,bytes32,uint256,address,address))payable
         Handler: src/receive/iRelay/index.iRelayHandler
@@ -20,7 +20,7 @@ Resources:
   - Name: iRelayMessage
     Abi: src/abis/assetForwarderEthereum.json
     Type: contract/function
-    Address: "0xc21e4ebd1d92036cb467b53fe3258f219d909eb9"
+    Address: "0x0fa205c0446cd9eedcc7538c9e24bc55ad08207f"
     Triggers:
       - Function: iRelayMessage(tuple(uint256,bytes32,uint256,address,address,bytes))payable
         Handler: src/receive/iRelayMessage/index.iRelayMessageHandler
@@ -28,7 +28,7 @@ Resources:
   - Name: fundsPaidWithMessage
     Abi: src/abis/assetForwarderEthereum.json
     Type: contract/event
-    Address: "0xc21e4ebd1d92036cb467b53fe3258f219d909eb9"
+    Address: "0x0fa205c0446cd9eedcc7538c9e24bc55ad08207f"
     Triggers:
       - Event: FundsPaidWithMessage(bytes32,address,uint256,bool,bytes)
         Handler: src/receive/fundsPaidWithMessage/index.FundsPaidWithMessageHandler
@@ -36,7 +36,7 @@ Resources:
   - Name: fundsPaid
     Abi: src/abis/assetForwarderEthereum.json
     Type: contract/event
-    Address: "0xC21e4ebD1d92036Cb467b53fE3258F219d909Eb9"
+    Address: "0x0fa205c0446cd9eedcc7538c9e24bc55ad08207f"
     Triggers:
       - Event: FundsPaid(bytes32,address,uint256)
         Handler: src/receive/fundsPaid/index.FundsPaidHandler
@@ -44,7 +44,7 @@ Resources:
   - Name: fundsDeposited
     Abi: src/abis/assetForwarderEthereum.json
     Type: contract/event
-    Address: "0xC21e4ebD1d92036Cb467b53fE3258F219d909Eb9"
+    Address: "0x0fa205c0446cd9eedcc7538c9e24bc55ad08207f"
     Triggers:
       - Event: FundsDeposited(uint256,uint256,bytes32,uint256,uint256,address,address,bytes,bytes)
         Handler: src/deposit/FundsDeposited/index.FundsDepositedHandler
@@ -52,7 +52,7 @@ Resources:
   - Name: fundsDepositedWithMessage
     Abi: src/abis/assetForwarderEthereum.json
     Type: contract/event
-    Address: "0xC21e4ebD1d92036Cb467b53fE3258F219d909Eb9"
+    Address: "0x0fa205c0446cd9eedcc7538c9e24bc55ad08207f"
     Triggers:
       - Event: FundsDepositedWithMessage(uint256,uint256,bytes32,uint256,uint256,address,bytes,address,bytes,bytes)
         Handler: src/deposit/FundsDepositedWithMessage/index.FundsDepositedWithMessageHandler
@@ -60,15 +60,15 @@ Resources:
   - Name: depositInfoUpdate
     Abi: src/abis/assetForwarderEthereum.json
     Type: contract/event
-    Address: "0xC21e4ebD1d92036Cb467b53fE3258F219d909Eb9"
+    Address: "0x0fa205c0446cd9eedcc7538c9e24bc55ad08207f"
     Triggers:
       - Event: DepositInfoUpdate(address,uint256,uint256,uint256,bool,address)
         Handler: src/deposit/DepositInfoUpdate/index.DepositInfoUpdate
-
+  
   - Name: tokenTransfer
     Abi: src/abis/assetBridge.json
     Type: contract/event
-    Address: "0xF9f4C3dC7ba8f56737a92d74Fd67230c38AF51f2"
+    Address: "0x21c1E74CAaDf990E237920d5515955a024031109"
     Triggers:
       - Event: TokenTransfer(bytes32,address,uint256,bytes,uint256,uint256)
         Handler: src/deposit/TokenTransfer/index.TokenTransferHandler
@@ -76,7 +76,7 @@ Resources:
   - Name: tokenTransferWithInstruction
     Abi: src/abis/assetBridge.json
     Type: contract/event
-    Address: "0xF9f4C3dC7ba8f56737a92d74Fd67230c38AF51f2"
+    Address: "0x21c1E74CAaDf990E237920d5515955a024031109"
     Triggers:
       - Event: TokenTransferWithInstruction(bytes32,address,uint256,bytes,uint256,uint64,bytes,uint256)
         Handler: src/deposit/TokenTransferWithInstruction/index.TokenTransferWithInstructionHandler
@@ -84,7 +84,7 @@ Resources:
   - Name: execute
     Abi: src/abis/assetBridge.json
     Type: contract/event
-    Address: "0xF9f4C3dC7ba8f56737a92d74Fd67230c38AF51f2"
+    Address: "0x21c1E74CAaDf990E237920d5515955a024031109"
     Triggers:
       - Event: Execute(uint8,bytes32,uint256,address,uint256,address)
         Handler: src/receive/execute/index.executeHandler
@@ -92,8 +92,7 @@ Resources:
   - Name: executeWithMessage
     Abi: src/abis/assetBridge.json
     Type: contract/event
-    Address: "0xF9f4C3dC7ba8f56737a92d74Fd67230c38AF51f2"
+    Address: "0x21c1E74CAaDf990E237920d5515955a024031109"
     Triggers:
       - Event: ExecuteWithMessage(uint8,bytes32,uint256,address,uint256,address,bool,bytes)
         Handler: src/receive/executeWithMessage/index.executeWithMessageHandler
-

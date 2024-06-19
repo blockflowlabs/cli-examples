@@ -1,9 +1,10 @@
 import axios from "axios";
 import { Interface } from "ethers";
+import { formatDecimals } from "./formatting";
 
 const retryLimit = 12; // Maximum number of retries
 const delayBetweenRetries = 400; // 400ms delay between retries
-const ABI = [
+const ERC20_ABI = [
   {
     constant: true,
     inputs: [],
@@ -33,30 +34,30 @@ const ABI = [
   },
 ];
 
-const iface = new Interface(ABI);
+const iface = new Interface(ERC20_ABI);
 
-export const getRpcProviderUrl = (network: string) => {
-  switch (network) {
-    case "ethereum":
+export const getRpcProviderUrl = (chainId: string) => {
+  switch (chainId) {
+    case "1":
       return "https://rpc.ankr.com/eth";
-    case "polygon":
+    case "137":
       return "https://rpc.ankr.com/polygon";
-    case "optimism":
+    case "10":
       return "https://rpc.ankr.com/optimism";
-    case "avalanche":
+    case "43114":
       return "https://rpc.ankr.com/avalanche";
+    case "8453":
+      return "https://base.llamarpc.com";
+    case "7225878":
+      return "https://rpc.saakuru.network";
     default:
       return "https://rpc.ankr.com/eth";
   }
 };
 
-export async function nodeRequest(
-  data: object,
-  network = "Ethereum"
-): Promise<any> {
+export async function nodeRequest(data: object, chainId = "1"): Promise<any> {
   for (let tries = 0; tries < retryLimit; tries++) {
-    const rpc = getRpcProviderUrl(network);
-
+    const rpc = getRpcProviderUrl(chainId);
     try {
       let response = await axios.post(rpc, data, {
         headers: { "Content-Type": "application/json" },
@@ -77,7 +78,7 @@ export async function nodeRequest(
 const getContractData = async (
   contractAddress: string,
   data: string,
-  network: string
+  chainId: string
 ) => {
   try {
     const calldata = {
@@ -92,7 +93,8 @@ const getContractData = async (
       ],
       id: 1,
     };
-    const response = await nodeRequest(calldata, network);
+    console.log("contractAddress", contractAddress, "chainId", chainId);
+    const response = await nodeRequest(calldata, chainId);
     return response.result;
   } catch (error) {
     console.error("Error fetching contract data:", error);
@@ -114,30 +116,51 @@ const getTokenSymbol = async (contractAddress: string, network: string) => {
   return iface.decodeFunctionResult("symbol", symbolHex).toString();
 };
 
-const getTokenDecimals = async (contractAddress: string, network: string) => {
+const getTokenDecimals = async (contractAddress: string, chainId: string) => {
   // The data for the 'decimals()' function call
   const decimalsSig = "0x313ce567";
   const decimalsHex = await getContractData(
     contractAddress,
     decimalsSig,
-    network
+    chainId
   );
 
-  var iface = new Interface(ABI);
+  var iface = new Interface(ERC20_ABI);
   return parseInt(
     iface.decodeFunctionResult("decimals", decimalsHex).toString(),
     10
   );
 };
 
-export async function fetchTokenInfo(contractAddress: string, network: string) {
-  await getTokenDecimals(contractAddress, network);
-
+export async function fetchTokenInfo(contractAddress: string, chainId: string) {
   const data = await Promise.all([
-    getTokenName(contractAddress, network),
-    getTokenSymbol(contractAddress, network),
-    getTokenDecimals(contractAddress, network),
+    getTokenSymbol(contractAddress, chainId),
+    getTokenDecimals(contractAddress, chainId),
+    //getTokenName(contractAddress, chainId),
   ]);
+  return { symbol: data[0], decimals: data[1] };
+}
 
-  return { name: data[0], symbol: data[1], decimals: data[2] };
+export async function fetchTokenPriceFromOracle(symbol: string) {
+  const lowSymbol = symbol.toLowerCase();
+  if (
+    lowSymbol === "usdc" ||
+    lowSymbol === "usdt" ||
+    lowSymbol === "usdc.e" ||
+    lowSymbol === "fdusd" ||
+    lowSymbol === "tusd" ||
+    lowSymbol === "dai"
+  ) {
+    return "1";
+  }
+  console.log(
+    "url",
+    `https://sentry.lcd.routerprotocol.com/router-protocol/router-chain/pricefeed/price/${symbol}`
+  );
+  const priceData = await axios.get(
+    `https://sentry.lcd.routerprotocol.com/router-protocol/router-chain/pricefeed/price/${symbol}`
+  );
+  return parseFloat(
+    formatDecimals(priceData.data.price.price, priceData.data.price.decimals)
+  ).toFixed(6);
 }

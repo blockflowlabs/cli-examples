@@ -1,19 +1,14 @@
-import { BigNumber } from "bignumber.js";
-import {
-  IEventContext,
-  IBind,
-  Instance,
-  ISecrets,
-} from "@blockflow-labs/utils";
+import { IEventContext, IBind, Instance } from "@blockflow-labs/utils";
 
 import {
   hexToString,
-  chainToContract,
-  hashDepositData,
-  stringToHex,
   getTokenInfo,
+  EventNameEnum,
+  getDestTokenInfo,
 } from "../../utils/helper";
-import { Source, FeeInfo } from "../../types/schema";
+import { Destination, Source } from "../../types/schema";
+import { fetchTokenDetails } from "../../utils/token";
+import { formatDecimals } from "../../utils/formatting";
 
 /**
  * @dev Event::FundsDeposited(uint256 partnerId, uint256 amount, bytes32 destChainIdBytes, uint256 destAmount, uint256 depositId, address srcToken, address depositor, bytes recipient, bytes destToken)
@@ -22,8 +17,7 @@ import { Source, FeeInfo } from "../../types/schema";
  */
 export const FundsDepositedHandler = async (
   context: IEventContext,
-  bind: IBind,
-  secrets: ISecrets
+  bind: IBind
 ) => {
   // Implement your event handler logic for FundsDeposited here
   const { event, transaction, block } = context;
@@ -55,76 +49,71 @@ export const FundsDepositedHandler = async (
   const srcDB: Instance = bind(Source);
   const srcChain = block.chain_id;
   const dstChain = hexToString(destChainIdBytes);
-  const tokenInfo = getTokenInfo(srcChain, srcToken);
-  const feeDB: Instance = bind(FeeInfo);
-
-  let messageHash = "0x";
-  if (destToken === "0x") destToken = tokenInfo.token;
-
-  try {
-    messageHash = hashDepositData({
-      amount,
-      srcChainId: stringToHex(srcChain),
-      depositId,
-      destToken,
-      recipient,
-      contract: chainToContract(dstChain),
-    });
-  } catch (error) {}
-
-  const id = `${srcChain}_${dstChain}_${depositId}_${chainToContract(srcChain)}_${chainToContract(dstChain)}`; // messageHash.toLowerCase()
-
-  // feetoken - stable token
-  await feeDB.create({
-    id: id.toLowerCase(),
-    feeToken: {
-      amount: new BigNumber(amount)
-        .minus(destAmount)
-        .dividedBy(
-          new BigNumber(10).pow(tokenInfo.decimals || 0) // as decimals can be ""
-        )
-        .toString(),
-      symbol: tokenInfo.symbol,
-    },
-    usdValue: "",
-  });
+  if (destToken === "0x")
+    destToken = getDestTokenInfo(
+      dstChain,
+      getTokenInfo(srcChain, srcToken)?.symbol
+    )?.address;
+  const [stableTokenInfo, stableDestTokenInfo] = await Promise.all([
+    fetchTokenDetails(bind, srcChain, srcToken),
+    fetchTokenDetails(bind, dstChain, destToken),
+  ]);
+  const id = `${srcChain}_${dstChain}_${depositId}`;
 
   const tokenList = {
     sourcetoken: {
-      address: srcToken,
-      amount: new BigNumber(amount)
-        .dividedBy(
-          new BigNumber(10).pow(tokenInfo.decimals || 0) // as decimals can be ""
-        )
-        .toString(),
-      symbol: tokenInfo.symbol,
+      amount: formatDecimals(amount, stableTokenInfo.decimals),
+      tokenRef: stableTokenInfo._id,
     },
     stableToken: {
-      address: srcToken,
-      amount: new BigNumber(amount)
-        .dividedBy(
-          new BigNumber(10).pow(tokenInfo.decimals || 0) // as decimals can be ""
-        )
-        .toString(),
-      symbol: tokenInfo.symbol,
+      amount: formatDecimals(amount, stableTokenInfo.decimals),
+      tokenRef: stableTokenInfo._id,
+    },
+    stableDestToken: {
+      amount: formatDecimals(destAmount, stableTokenInfo.decimals),
+      tokenRef: stableDestTokenInfo._id,
     },
   };
-
-  // create this receipt entry for src chain
-  await srcDB.create({
+  const srcObj: any = {
     id: id.toLowerCase(), // message hash
-    blocktimestamp: parseInt(block.block_timestamp.toString(), 10),
+    //@ts-ignore
+    blockTimestamp: parseInt(block.block_timestamp.toString(), 10),
     blockNumber: block.block_number,
     chainId: srcChain,
+    destChainId: dstChain,
     transactionHash: transaction.transaction_hash,
+    eventName: EventNameEnum.FundsDeposited,
     sourcetoken: tokenList.sourcetoken,
     stableToken: tokenList.stableToken,
+    stableDestToken: tokenList.stableDestToken,
     depositorAddress: depositor, // Contract from where txn came
     senderAddress: transaction.transaction_from_address, // Who triggered the transaction
     depositId: depositId,
-    messageHash: messageHash,
     partnerId: partnerId,
     message: "", // fundDepositWithMessage
-    usdValue: "",
+    usdValue: (
+      stableTokenInfo.priceUsd * parseFloat(tokenList.stableToken.amount)
+    ).toFixed(4),
+    fee: {
+      tokenRef: tokenList.stableToken.tokenRef,
+      amount:
+        parseFloat(tokenList.stableToken.amount) -
+        parseFloat(tokenList.stableToken.amount),
+    },
+    recipientAddress: recipient,
+  };
+  const destDB: Instance = bind(Destination);
+  const destRecord = await destDB.findOne({
+    depositId: depositId,
+    srcChainId: srcChain,
   });
+  if (destRecord) {
+    srcObj["destRef"] = { record: destRecord._id };
+  }
+  await srcDB.save(srcObj);
+  if (destRecord) {
+    const savedSrcRecord = await srcDB.findOne({ id });
+    destRecord["srcRef"] = { record: savedSrcRecord._id };
+    destDB.save(destRecord);
+  }
 };

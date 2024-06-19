@@ -16,6 +16,21 @@ const REFUEL_ABI = [
   "event GasLeaked(address ttoken, uint256 ttokenAmount, uint256 nativeAmount, address recipient)",
 ];
 
+export enum EventNameEnum {
+  FundsPaid = "FundsPaid",
+  FundsDeposited = "FundsDeposited",
+  FundsDepositedWithMessage = "FundsDepositedWithMessage",
+  DepositInfoUpdate = "DepositInfoUpdate",
+  FundsPaidWithMessage = "FundsPaidWithMessage",
+  iUSDCDeposited = "iUSDCDeposited",
+  MessageReceived = "MessageReceived",
+  TokenTransfer = "TokenTransfer",
+  TokenTransferWithInstruction = "TokenTransferWithInstruction",
+  Execute = "Execute",
+  ExecuteWithMessage = "ExecuteWithMessage",
+  Swap = "Swap",
+}
+
 export type DepositData = {
   amount: any;
   srcChainId: string;
@@ -166,6 +181,8 @@ export const chainToContract = (chain: string) => {
       return "0x8201c02d4ab2214471e8c3ad6475c8b0cd9f2d06";
     case "59144":
       return "0x8C4aCd74Ff4385f3B7911432FA6787Aa14406f8B";
+    case "8453":
+      return "0x0fa205c0446cd9eedcc7538c9e24bc55ad08207f";
     default:
       return "0x8c4acd74ff4385f3b7911432fa6787aa14406f8b";
   }
@@ -175,15 +192,36 @@ export function getTokenInfo(chainId: string, token: string) {
   for (const [key, value] of Object.entries(list))
     if (key.toLowerCase() === `${chainId}---${token}`.toLowerCase())
       return {
-        chainId: value[0],
-        token: value[1],
-        symbol: value[2],
-        decimals: value[3],
+        chainId: value[0]?.toString() ?? "",
+        address: value[1]?.toString() ?? "",
+        symbol: value[2]?.toString() ?? "",
+        decimals: value[3]?.toString() ?? "",
       };
 
   return {
-    chainId: "",
-    token: "",
+    chainId,
+    address: token,
+    symbol: "",
+    decimals: "",
+  };
+}
+
+export function getDestTokenInfo(chainId: string, symbol: string) {
+  for (const [_key, value] of Object.entries(list))
+    if (
+      value[0]?.toString() === chainId &&
+      value[2]?.toString().toLowerCase() === symbol.toLowerCase()
+    )
+      return {
+        chainId: value[0]?.toString() ?? "",
+        address: value[1]?.toString() ?? "",
+        symbol: value[2]?.toString() ?? "",
+        decimals: value[3]?.toString() ?? "",
+      };
+
+  return {
+    chainId,
+    address: "",
     symbol: "",
     decimals: "",
   };

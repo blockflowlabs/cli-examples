@@ -1,6 +1,6 @@
 import { IEventContext, IBind, Instance } from "@blockflow-labs/utils";
 
-import { chainToContract } from "../../utils/helper";
+import { chainToContract, EventNameEnum } from "../../utils/helper";
 import { DepositInfoUpdate as infoUpdate } from "../../types/schema";
 
 /**
@@ -37,6 +37,7 @@ export const DepositInfoUpdate = async (
     id: `${depositId}_${chainToContract(srcChain)}`.toLowerCase(),
     updateId: eventNonce,
     isWithdraw: initiatewithdrawal,
+    eventName: EventNameEnum.DepositInfoUpdate,
     transactionHash: transaction.transaction_hash,
   });
 };
