@@ -1,0 +1,20 @@
+name: Project Apollo
+description: A top-secret research project to the moon
+startBlock: latest
+userId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
+projectId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
+network: Ethereum
+user: Jane-doe
+schema:
+  file: ./studio.schema.ts
+execution: parallel
+Resources:
+  - Name: blockflow
+    Abi: src/abis/blockflow.json
+    Type: contract/event
+    Address: "0x46978CD477A496028A18c02F07ab7F35EDBa5A54"
+    Triggers:
+      - Event: AdminChanged(address,address)
+        Handler: src/handlers/blockflow/AdminChanged.AdminChangedHandler
+      - Event: BroadcasterUpdated(address indexed,bool indexed)
+        Handler: src/handlers/blockflow/BroadcasterUpdated.BroadcasterUpdatedHandler
