@@ -14,7 +14,9 @@ Resources:
     Type: contract/event
     Address: "0x46978CD477A496028A18c02F07ab7F35EDBa5A54"
     Triggers:
-      - Event: AdminChanged(address,address)
-        Handler: src/handlers/blockflow/AdminChanged.AdminChangedHandler
-      - Event: BroadcasterUpdated(address indexed,bool indexed)
-        Handler: src/handlers/blockflow/BroadcasterUpdated.BroadcasterUpdatedHandler
+      - Event: >-
+          ExecuteFailed(address indexed,address indexed,address
+          indexed,bytes,string)
+        Handler: src/handlers/blockflow/ExecuteFailed.ExecuteFailedHandler
+      - Event: Executed(address indexed,address indexed,address indexed,bytes)
+        Handler: src/handlers/blockflow/Executed.ExecutedHandler

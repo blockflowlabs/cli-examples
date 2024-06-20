@@ -1,120 +1,6 @@
 [
   {
     "inputs": [
-      { "internalType": "address", "name": "logic_", "type": "address" },
-      { "internalType": "address", "name": "admin_", "type": "address" },
-      { "internalType": "bytes", "name": "data_", "type": "bytes" }
-    ],
-    "stateMutability": "payable",
-    "type": "constructor"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "previousAdmin",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "newAdmin",
-        "type": "address"
-      }
-    ],
-    "name": "AdminChanged",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "beacon",
-        "type": "address"
-      }
-    ],
-    "name": "BeaconUpgraded",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "implementation",
-        "type": "address"
-      }
-    ],
-    "name": "Upgraded",
-    "type": "event"
-  },
-  { "stateMutability": "payable", "type": "fallback" },
-  {
-    "inputs": [],
-    "name": "admin",
-    "outputs": [
-      { "internalType": "address", "name": "admin_", "type": "address" }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "address", "name": "newAdmin", "type": "address" }
-    ],
-    "name": "changeAdmin",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "implementation",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "implementation_",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "newImplementation",
-        "type": "address"
-      }
-    ],
-    "name": "upgradeTo",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "newImplementation",
-        "type": "address"
-      },
-      { "internalType": "bytes", "name": "data", "type": "bytes" }
-    ],
-    "name": "upgradeToAndCall",
-    "outputs": [],
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  { "stateMutability": "payable", "type": "receive" },
-  {
-    "inputs": [
       {
         "internalType": "contract IAvoFactory",
         "name": "avoFactory_",
@@ -131,64 +17,20 @@
     "type": "error"
   },
   { "inputs": [], "name": "AvoForwarder__Unauthorized", "type": "error" },
-  { "inputs": [], "name": "AvoForwarder__Unsupported", "type": "error" },
+  { "inputs": [], "name": "AvoForwarder__VersionMismatch", "type": "error" },
   {
     "anonymous": false,
     "inputs": [
       {
         "indexed": true,
         "internalType": "address",
-        "name": "auth",
+        "name": "avoSafeOwner",
         "type": "address"
       },
       {
         "indexed": true,
-        "internalType": "bool",
-        "name": "status",
-        "type": "bool"
-      }
-    ],
-    "name": "AuthUpdated",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
         "internalType": "address",
-        "name": "broadcaster",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "bool",
-        "name": "status",
-        "type": "bool"
-      }
-    ],
-    "name": "BroadcasterUpdated",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "avocadoOwner",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint32",
-        "name": "index",
-        "type": "uint32"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "avocadoAddress",
+        "name": "avoSafeAddress",
         "type": "address"
       },
       {
@@ -219,19 +61,13 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "avocadoOwner",
+        "name": "avoSafeOwner",
         "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint32",
-        "name": "index",
-        "type": "uint32"
       },
       {
         "indexed": true,
         "internalType": "address",
-        "name": "avocadoAddress",
+        "name": "avoSafeAddress",
         "type": "address"
       },
       {
@@ -264,25 +100,6 @@
     "type": "event"
   },
   {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "previousOwner",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "newOwner",
-        "type": "address"
-      }
-    ],
-    "name": "OwnershipTransferred",
-    "type": "event"
-  },
-  {
     "inputs": [],
     "name": "avoFactory",
     "outputs": [
@@ -292,48 +109,44 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "owner_", "type": "address" },
-      { "internalType": "uint32", "name": "index_", "type": "uint32" }
-    ],
-    "name": "avoNonce",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [],
-    "name": "avocadoBytecode",
+    "name": "avoSafeBytecode",
     "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "owner_", "type": "address" },
-      { "internalType": "uint32", "name": "index_", "type": "uint32" }
+      { "internalType": "address", "name": "owner_", "type": "address" }
     ],
-    "name": "avocadoVersion",
+    "name": "avoSafeNonce",
+    "outputs": [{ "internalType": "uint88", "name": "", "type": "uint88" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "owner_", "type": "address" }
+    ],
+    "name": "avoWalletVersion",
     "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "owner_", "type": "address" },
-      { "internalType": "uint32", "name": "index_", "type": "uint32" }
+      { "internalType": "address", "name": "owner_", "type": "address" }
     ],
-    "name": "avocadoVersionName",
+    "name": "avoWalletVersionName",
     "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "owner_", "type": "address" },
-      { "internalType": "uint32", "name": "index_", "type": "uint32" }
+      { "internalType": "address", "name": "owner_", "type": "address" }
     ],
-    "name": "computeAvocado",
+    "name": "computeAddress",
     "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
@@ -341,67 +154,45 @@
   {
     "inputs": [
       { "internalType": "address", "name": "from_", "type": "address" },
-      { "internalType": "uint32", "name": "index_", "type": "uint32" },
       {
         "components": [
-          {
-            "components": [
-              {
-                "internalType": "address",
-                "name": "target",
-                "type": "address"
-              },
-              { "internalType": "bytes", "name": "data", "type": "bytes" },
-              { "internalType": "uint256", "name": "value", "type": "uint256" },
-              {
-                "internalType": "uint256",
-                "name": "operation",
-                "type": "uint256"
-              }
-            ],
-            "internalType": "struct AvocadoMultisigStructs.Action[]",
-            "name": "actions",
-            "type": "tuple[]"
-          },
-          { "internalType": "uint256", "name": "id", "type": "uint256" },
-          { "internalType": "int256", "name": "avoNonce", "type": "int256" },
-          { "internalType": "bytes32", "name": "salt", "type": "bytes32" },
-          { "internalType": "address", "name": "source", "type": "address" },
-          { "internalType": "bytes", "name": "metadata", "type": "bytes" }
-        ],
-        "internalType": "struct AvocadoMultisigStructs.CastParams",
-        "name": "params_",
-        "type": "tuple"
-      },
-      {
-        "components": [
-          { "internalType": "uint256", "name": "gas", "type": "uint256" },
-          { "internalType": "uint256", "name": "gasPrice", "type": "uint256" },
-          {
-            "internalType": "uint256",
-            "name": "validAfter",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "validUntil",
-            "type": "uint256"
-          },
+          { "internalType": "address", "name": "target", "type": "address" },
+          { "internalType": "bytes", "name": "data", "type": "bytes" },
           { "internalType": "uint256", "name": "value", "type": "uint256" }
         ],
-        "internalType": "struct AvocadoMultisigStructs.CastForwardParams",
-        "name": "forwardParams_",
-        "type": "tuple"
+        "internalType": "struct IAvoWalletV1.Action[]",
+        "name": "actions_",
+        "type": "tuple[]"
       },
+      { "internalType": "uint256", "name": "validUntil_", "type": "uint256" },
+      { "internalType": "uint256", "name": "gas_", "type": "uint256" },
+      { "internalType": "address", "name": "source_", "type": "address" },
+      { "internalType": "bytes", "name": "metadata_", "type": "bytes" },
+      { "internalType": "bytes", "name": "signature_", "type": "bytes" }
+    ],
+    "name": "execute",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "from_", "type": "address" },
       {
         "components": [
-          { "internalType": "bytes", "name": "signature", "type": "bytes" },
-          { "internalType": "address", "name": "signer", "type": "address" }
+          { "internalType": "address", "name": "target", "type": "address" },
+          { "internalType": "bytes", "name": "data", "type": "bytes" },
+          { "internalType": "uint256", "name": "value", "type": "uint256" }
         ],
-        "internalType": "struct AvocadoMultisigStructs.SignatureParams[]",
-        "name": "signaturesParams_",
+        "internalType": "struct IAvoWalletV1.Action[]",
+        "name": "actions_",
         "type": "tuple[]"
-      }
+      },
+      { "internalType": "uint256", "name": "validUntil_", "type": "uint256" },
+      { "internalType": "uint256", "name": "gas_", "type": "uint256" },
+      { "internalType": "address", "name": "source_", "type": "address" },
+      { "internalType": "bytes", "name": "metadata_", "type": "bytes" },
+      { "internalType": "bytes", "name": "signature_", "type": "bytes" }
     ],
     "name": "executeV1",
     "outputs": [],
@@ -410,13 +201,43 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "owner_", "type": "address" },
+      { "internalType": "address", "name": "from_", "type": "address" },
       {
-        "internalType": "address[]",
-        "name": "allowedBroadcasters_",
-        "type": "address[]"
-      }
+        "components": [
+          { "internalType": "address", "name": "target", "type": "address" },
+          { "internalType": "bytes", "name": "data", "type": "bytes" },
+          { "internalType": "uint256", "name": "value", "type": "uint256" },
+          { "internalType": "uint256", "name": "operation", "type": "uint256" }
+        ],
+        "internalType": "struct IAvoWalletV2.Action[]",
+        "name": "actions_",
+        "type": "tuple[]"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "validUntil",
+            "type": "uint256"
+          },
+          { "internalType": "uint256", "name": "gas", "type": "uint256" },
+          { "internalType": "address", "name": "source", "type": "address" },
+          { "internalType": "uint256", "name": "id", "type": "uint256" },
+          { "internalType": "bytes", "name": "metadata", "type": "bytes" }
+        ],
+        "internalType": "struct IAvoWalletV2.CastParams",
+        "name": "params_",
+        "type": "tuple"
+      },
+      { "internalType": "bytes", "name": "signature_", "type": "bytes" }
     ],
+    "name": "executeV2",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "initialize",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -424,225 +245,85 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "auth_", "type": "address" }
-    ],
-    "name": "isAuth",
-    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "address", "name": "broadcaster_", "type": "address" }
-    ],
-    "name": "isBroadcaster",
-    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "owner",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "renounceOwnership",
-    "outputs": [],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
       { "internalType": "address", "name": "from_", "type": "address" },
-      { "internalType": "uint32", "name": "index_", "type": "uint32" },
       {
         "components": [
-          {
-            "components": [
-              {
-                "internalType": "address",
-                "name": "target",
-                "type": "address"
-              },
-              { "internalType": "bytes", "name": "data", "type": "bytes" },
-              { "internalType": "uint256", "name": "value", "type": "uint256" },
-              {
-                "internalType": "uint256",
-                "name": "operation",
-                "type": "uint256"
-              }
-            ],
-            "internalType": "struct AvocadoMultisigStructs.Action[]",
-            "name": "actions",
-            "type": "tuple[]"
-          },
-          { "internalType": "uint256", "name": "id", "type": "uint256" },
-          { "internalType": "int256", "name": "avoNonce", "type": "int256" },
-          { "internalType": "bytes32", "name": "salt", "type": "bytes32" },
-          { "internalType": "address", "name": "source", "type": "address" },
-          { "internalType": "bytes", "name": "metadata", "type": "bytes" }
-        ],
-        "internalType": "struct AvocadoMultisigStructs.CastParams",
-        "name": "params_",
-        "type": "tuple"
-      },
-      {
-        "components": [
-          { "internalType": "uint256", "name": "gas", "type": "uint256" },
-          { "internalType": "uint256", "name": "gasPrice", "type": "uint256" },
-          {
-            "internalType": "uint256",
-            "name": "validAfter",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "validUntil",
-            "type": "uint256"
-          },
+          { "internalType": "address", "name": "target", "type": "address" },
+          { "internalType": "bytes", "name": "data", "type": "bytes" },
           { "internalType": "uint256", "name": "value", "type": "uint256" }
         ],
-        "internalType": "struct AvocadoMultisigStructs.CastForwardParams",
-        "name": "forwardParams_",
-        "type": "tuple"
+        "internalType": "struct IAvoWalletV1.Action[]",
+        "name": "actions_",
+        "type": "tuple[]"
       },
-      {
-        "components": [
-          { "internalType": "bytes", "name": "signature", "type": "bytes" },
-          { "internalType": "address", "name": "signer", "type": "address" }
-        ],
-        "internalType": "struct AvocadoMultisigStructs.SignatureParams[]",
-        "name": "signaturesParams_",
-        "type": "tuple[]"
-      }
+      { "internalType": "uint256", "name": "validUntil_", "type": "uint256" },
+      { "internalType": "uint256", "name": "gas_", "type": "uint256" },
+      { "internalType": "address", "name": "source_", "type": "address" },
+      { "internalType": "bytes", "name": "metadata_", "type": "bytes" },
+      { "internalType": "bytes", "name": "signature_", "type": "bytes" }
     ],
-    "name": "simulateV1",
-    "outputs": [
-      { "internalType": "uint256", "name": "castGasUsed_", "type": "uint256" },
-      {
-        "internalType": "uint256",
-        "name": "deploymentGasUsed_",
-        "type": "uint256"
-      },
-      { "internalType": "bool", "name": "isDeployed_", "type": "bool" },
-      { "internalType": "bool", "name": "success_", "type": "bool" },
-      { "internalType": "string", "name": "revertReason_", "type": "string" }
-    ],
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "address", "name": "newOwner", "type": "address" }
-    ],
-    "name": "transferOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "components": [
-          { "internalType": "address", "name": "addr", "type": "address" },
-          { "internalType": "bool", "name": "value", "type": "bool" }
-        ],
-        "internalType": "struct AvoForwarderStructs.AddressBool[]",
-        "name": "authsStatus_",
-        "type": "tuple[]"
-      }
-    ],
-    "name": "updateAuths",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "components": [
-          { "internalType": "address", "name": "addr", "type": "address" },
-          { "internalType": "bool", "name": "value", "type": "bool" }
-        ],
-        "internalType": "struct AvoForwarderStructs.AddressBool[]",
-        "name": "broadcastersStatus_",
-        "type": "tuple[]"
-      }
-    ],
-    "name": "updateBroadcasters",
-    "outputs": [],
+    "name": "verify",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [
       { "internalType": "address", "name": "from_", "type": "address" },
-      { "internalType": "uint32", "name": "index_", "type": "uint32" },
       {
         "components": [
-          {
-            "components": [
-              {
-                "internalType": "address",
-                "name": "target",
-                "type": "address"
-              },
-              { "internalType": "bytes", "name": "data", "type": "bytes" },
-              { "internalType": "uint256", "name": "value", "type": "uint256" },
-              {
-                "internalType": "uint256",
-                "name": "operation",
-                "type": "uint256"
-              }
-            ],
-            "internalType": "struct AvocadoMultisigStructs.Action[]",
-            "name": "actions",
-            "type": "tuple[]"
-          },
-          { "internalType": "uint256", "name": "id", "type": "uint256" },
-          { "internalType": "int256", "name": "avoNonce", "type": "int256" },
-          { "internalType": "bytes32", "name": "salt", "type": "bytes32" },
-          { "internalType": "address", "name": "source", "type": "address" },
-          { "internalType": "bytes", "name": "metadata", "type": "bytes" }
-        ],
-        "internalType": "struct AvocadoMultisigStructs.CastParams",
-        "name": "params_",
-        "type": "tuple"
-      },
-      {
-        "components": [
-          { "internalType": "uint256", "name": "gas", "type": "uint256" },
-          { "internalType": "uint256", "name": "gasPrice", "type": "uint256" },
-          {
-            "internalType": "uint256",
-            "name": "validAfter",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "validUntil",
-            "type": "uint256"
-          },
+          { "internalType": "address", "name": "target", "type": "address" },
+          { "internalType": "bytes", "name": "data", "type": "bytes" },
           { "internalType": "uint256", "name": "value", "type": "uint256" }
         ],
-        "internalType": "struct AvocadoMultisigStructs.CastForwardParams",
-        "name": "forwardParams_",
-        "type": "tuple"
-      },
-      {
-        "components": [
-          { "internalType": "bytes", "name": "signature", "type": "bytes" },
-          { "internalType": "address", "name": "signer", "type": "address" }
-        ],
-        "internalType": "struct AvocadoMultisigStructs.SignatureParams[]",
-        "name": "signaturesParams_",
+        "internalType": "struct IAvoWalletV1.Action[]",
+        "name": "actions_",
         "type": "tuple[]"
-      }
+      },
+      { "internalType": "uint256", "name": "validUntil_", "type": "uint256" },
+      { "internalType": "uint256", "name": "gas_", "type": "uint256" },
+      { "internalType": "address", "name": "source_", "type": "address" },
+      { "internalType": "bytes", "name": "metadata_", "type": "bytes" },
+      { "internalType": "bytes", "name": "signature_", "type": "bytes" }
     ],
     "name": "verifyV1",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "from_", "type": "address" },
+      {
+        "components": [
+          { "internalType": "address", "name": "target", "type": "address" },
+          { "internalType": "bytes", "name": "data", "type": "bytes" },
+          { "internalType": "uint256", "name": "value", "type": "uint256" },
+          { "internalType": "uint256", "name": "operation", "type": "uint256" }
+        ],
+        "internalType": "struct IAvoWalletV2.Action[]",
+        "name": "actions_",
+        "type": "tuple[]"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "validUntil",
+            "type": "uint256"
+          },
+          { "internalType": "uint256", "name": "gas", "type": "uint256" },
+          { "internalType": "address", "name": "source", "type": "address" },
+          { "internalType": "uint256", "name": "id", "type": "uint256" },
+          { "internalType": "bytes", "name": "metadata", "type": "bytes" }
+        ],
+        "internalType": "struct IAvoWalletV2.CastParams",
+        "name": "params_",
+        "type": "tuple"
+      },
+      { "internalType": "bytes", "name": "signature_", "type": "bytes" }
+    ],
+    "name": "verifyV2",
     "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "nonpayable",
     "type": "function"

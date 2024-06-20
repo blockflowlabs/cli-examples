@@ -1,5 +1,12 @@
 import { String, Array } from "@blockflow-labs/utils";
 
+type Action = {
+  value: string;
+  to: string;
+  from: string;
+  contractAddress: string;
+};
+
 export interface avoData {
   id: String;
   transactionHash: string;
@@ -7,8 +14,7 @@ export interface avoData {
   status: string;
   time: string;
   network: string;
-  transactionActionAmount: string;
-  transactionActionTo: string;
+  actions: [Action];
   user: string;
   avocadoWallet: string;
 }
