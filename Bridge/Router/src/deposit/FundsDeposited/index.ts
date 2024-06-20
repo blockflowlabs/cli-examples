@@ -5,6 +5,8 @@ import {
   getTokenInfo,
   EventNameEnum,
   getDestTokenInfo,
+  SWAP_WITH_RECIPIENT_TOPIC0,
+  decodeSwapWithRecipient,
 } from "../../utils/helper";
 import { Destination, Source } from "../../types/schema";
 import { fetchTokenDetails } from "../../utils/token";
@@ -61,7 +63,7 @@ export const FundsDepositedHandler = async (
   const id = `${srcChain}_${dstChain}_${depositId}`;
 
   const tokenList = {
-    sourcetoken: {
+    sourceToken: {
       amount: formatDecimals(amount, stableTokenInfo.decimals),
       tokenRef: stableTokenInfo._id,
     },
@@ -74,6 +76,27 @@ export const FundsDepositedHandler = async (
       tokenRef: stableDestTokenInfo._id,
     },
   };
+
+  const isSwapWithReceiptRelay = transaction.logs
+    ? transaction.logs.find(
+        (log) => log.topics[0].toLowerCase() === SWAP_WITH_RECIPIENT_TOPIC0
+      )
+    : null;
+
+  if (isSwapWithReceiptRelay) {
+    // https://etherscan.io/tx/0xc396afbd9f874a47b217a57fd74c46299bb79abd460700c01f4407ae166ca5e6
+    const decodeEvent: any = decodeSwapWithRecipient(isSwapWithReceiptRelay);
+    const [sourceToken, _stableToken] = decodeEvent[1];
+    console.log;
+    const srcInTokenInfo = await fetchTokenDetails(bind, srcChain, sourceToken);
+    // prettier-ignore
+    const [amountIn, _amountOut] = [decodeEvent[2].toString(), decodeEvent[5].toString()]
+    tokenList["sourceToken"] = {
+      tokenRef: srcInTokenInfo._id,
+      amount: formatDecimals(amountIn, srcInTokenInfo.decimals),
+    };
+  }
+
   const srcObj: any = {
     id: id.toLowerCase(), // message hash
     //@ts-ignore
@@ -83,7 +106,7 @@ export const FundsDepositedHandler = async (
     destChainId: dstChain,
     transactionHash: transaction.transaction_hash,
     eventName: EventNameEnum.FundsDeposited,
-    sourcetoken: tokenList.sourcetoken,
+    sourceToken: tokenList.sourceToken,
     stableToken: tokenList.stableToken,
     stableDestToken: tokenList.stableDestToken,
     depositorAddress: depositor, // Contract from where txn came
@@ -108,12 +131,12 @@ export const FundsDepositedHandler = async (
     srcChainId: srcChain,
   });
   if (destRecord) {
-    srcObj["destRef"] = { record: destRecord._id };
+    srcObj["destRef"] = { recordRef: destRecord._id };
   }
   await srcDB.save(srcObj);
   if (destRecord) {
     const savedSrcRecord = await srcDB.findOne({ id });
-    destRecord["srcRef"] = { record: savedSrcRecord._id };
+    destRecord["srcRef"] = { recordRef: savedSrcRecord._id };
     destDB.save(destRecord);
   }
 };

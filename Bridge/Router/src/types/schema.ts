@@ -53,7 +53,7 @@ export class Destination {
     nativeTokenAmount: "String",
     depositId: "String",
     srcChainId: "String",
-    srcRef: { record: "ObjectId" },
+    srcRef: { recordRef: "ObjectId" },
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     instanceId: { type: "String", index: true },
@@ -81,7 +81,8 @@ export class Source {
     fee: { tokenRef: "ObjectId", amount: "String" },
     stableDestToken: { tokenRef: "ObjectId", amount: "String" },
     recipientAddress: "String",
-    destRef: { record: "ObjectId" },
+    destRef: { recordRef: "ObjectId" },
+    withdrawRef: { recordRef: "ObjectId" },
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     instanceId: { type: "String", index: true },
@@ -97,6 +98,10 @@ export class DepositInfoUpdate {
     isWithdraw: "Boolean",
     transactionHash: "String",
     refundOutboundId: "String",
+    srcChainId: "String",
+    depositId: "String",
+    feeAmount: "String",
+    srcRef: { recordRef: "ObjectId" },
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
@@ -170,7 +175,7 @@ type Token = {
 };
 
 type RecordRef = {
-  record: ObjectId;
+  recordRef: ObjectId;
 };
 
 export interface IDestination extends Document {
@@ -218,6 +223,7 @@ export interface ISource extends Document {
   stableDestToken: Token;
   recipientAddress: String;
   destRef: RecordRef;
+  withdrawRef: RecordRef;
   blocknumber: String;
   entityId: String;
   instanceId: String;
@@ -231,10 +237,13 @@ export interface IDepositInfoUpdate extends Document {
   isWithdraw: Boolean;
   transactionHash: String;
   refundOutboundId: String;
+  srcChainId: String;
+  depositId: String;
+  feeAmount: String;
+  srcRef: RecordRef;
   blocknumber: String;
   entityId: String;
   instanceId: String;
-  chainId: String;
 }
 
 // GasLeaked, emitted with fundPaidWithMessage

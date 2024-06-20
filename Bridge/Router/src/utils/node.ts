@@ -142,25 +142,30 @@ export async function fetchTokenInfo(contractAddress: string, chainId: string) {
 }
 
 export async function fetchTokenPriceFromOracle(symbol: string) {
-  const lowSymbol = symbol.toLowerCase();
-  if (
-    lowSymbol === "usdc" ||
-    lowSymbol === "usdt" ||
-    lowSymbol === "usdc.e" ||
-    lowSymbol === "fdusd" ||
-    lowSymbol === "tusd" ||
-    lowSymbol === "dai"
-  ) {
-    return "1";
+  try {
+    const lowSymbol = symbol.toLowerCase();
+    if (
+      lowSymbol === "usdc" ||
+      lowSymbol === "usdt" ||
+      lowSymbol === "usdc.e" ||
+      lowSymbol === "fdusd" ||
+      lowSymbol === "tusd" ||
+      lowSymbol === "dai"
+    ) {
+      return "1";
+    }
+    console.log(
+      "url",
+      `https://sentry.lcd.routerprotocol.com/router-protocol/router-chain/pricefeed/price/${symbol}`
+    );
+    const priceData = await axios.get(
+      `https://sentry.lcd.routerprotocol.com/router-protocol/router-chain/pricefeed/price/${symbol}`
+    );
+    return parseFloat(
+      formatDecimals(priceData.data.price.price, priceData.data.price.decimals)
+    ).toFixed(6);
+  } catch (e: any) {
+    console.error("Error in fethcing price from router oracle - ", e?.message);
+    return null;
   }
-  console.log(
-    "url",
-    `https://sentry.lcd.routerprotocol.com/router-protocol/router-chain/pricefeed/price/${symbol}`
-  );
-  const priceData = await axios.get(
-    `https://sentry.lcd.routerprotocol.com/router-protocol/router-chain/pricefeed/price/${symbol}`
-  );
-  return parseFloat(
-    formatDecimals(priceData.data.price.price, priceData.data.price.decimals)
-  ).toFixed(6);
 }

@@ -28,7 +28,7 @@ type Token = {
 };
 
 type RecordRef = {
-  record: ObjectId;
+  recordRef: ObjectId;
 };
 
 export interface Destination {
@@ -73,6 +73,7 @@ export interface Source {
   stableDestToken: Token;
   recipientAddress: String;
   destRef: RecordRef;
+  withdrawRef: RecordRef;
 }
 
 //DepositInfoUpdate
@@ -83,6 +84,10 @@ export interface DepositInfoUpdate {
   isWithdraw: Boolean;
   transactionHash: String;
   refundOutboundId: String;
+  srcChainId: String;
+  depositId: String;
+  feeAmount: String;
+  srcRef: RecordRef;
 }
 
 // GasLeaked, emitted with fundPaidWithMessage

@@ -119,7 +119,7 @@ export const iRelayMessageHandler = async (context: IFunctionContext, bind: IBin
   });
   console.log("srcRecord", srcRecord);
   if (srcRecord) {
-    destObj["srcRef"] = { record: srcRecord._id };
+    destObj["srcRef"] = { recordRef: srcRecord._id };
   }
   await transferDB.save(destObj);
 
@@ -128,7 +128,7 @@ export const iRelayMessageHandler = async (context: IFunctionContext, bind: IBin
       id,
     });
     console.log("savedDest", savedDest);
-    srcRecord["destRef"] = { record: savedDest._id };
+    srcRecord["destRef"] = { recordRef: savedDest._id };
     await sourceDB.save(srcRecord);
   }
 };

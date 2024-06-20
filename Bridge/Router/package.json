@@ -10,6 +10,9 @@
     "instance-test-base": "blockflow instance-test --path 'base.studio.yaml' --range 10 --startBlock 15740530",
     "instance-test-ethereum-swapAndDeposit": "blockflow instance-test --path 'ethereum.studio.yaml' --range 1 --startBlock 19568913",
     "instance-test-ethereum-deposit": "blockflow instance-test --path 'ethereum.studio.yaml' --range 5 --startBlock 20119997",
+    "instance-test-ethereum-usdc": "blockflow instance-test --path 'ethereum.studio.yaml' --range 3 --startBlock 20096506",
+    "instance-test-ethereum-usdcPaid": "blockflow instance-test --path 'ethereum.studio.yaml' --range 3 --startBlock 19253582",
+    "instance-test-ethereum-dexspan": "blockflow instance-test --path 'ethereum.studio.yaml' --range 3 --startBlock 19481971",
     "instance-test-ethereum-transfer": "blockflow instance-test --path 'ethereum.studio.yaml' --range 5 --startBlock 20096150",
     "instance-test-ethereum-transferWithInstruction": "blockflow instance-test --path 'ethereum.studio.yaml' --range 2 --startBlock 20000486",
     "instance-test-ethereum-execute": "blockflow instance-test --path 'ethereum.studio.yaml' --range 5 --startBlock 20069617",
@@ -23,7 +26,8 @@
     "api-deploy": "blockflow api-deploy --path 'api.studio.yaml'"
   },
   "dependencies": {
-    "@blockflow-labs/utils": "^1.0.7-beta.5",
+    "@blockflow-labs/cli": "^1.0.8-beta.1",
+    "@blockflow-labs/utils": "^1.0.7",
     "@typegoose/typegoose": "^11.7.0",
     "axios": "^1.7.2",
     "ethers": "^6.11.1",

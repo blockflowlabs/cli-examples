@@ -28,9 +28,11 @@ export const fetchTokenDetails = async (
       address: address,
       decimals: fetchedTokenInfo.decimals,
       symbol: fetchedTokenInfo.symbol,
-      priceUsd: priceUsd,
       priceRecordTimestamp: Math.floor(new Date().getTime() / 1000),
     };
+    if (priceUsd) {
+      token["priceUsd"] = priceUsd;
+    }
     await tokendb.save(token);
     token = await tokendb.findOne({
       id: `${chainId}_${address}`.toLowerCase(),
@@ -41,7 +43,9 @@ export const fetchTokenDetails = async (
       15 * 60 * 60
     ) {
       const priceUsd = await fetchTokenPriceFromOracle(token.symbol);
-      token["priceUsd"] = priceUsd;
+      if (priceUsd) {
+        token["priceUsd"] = priceUsd;
+      }
       token["priceRecordTimestamp"] = Math.floor(new Date().getTime() / 1000);
       await tokendb.save(token);
       token = await tokendb.findOne({

@@ -16,7 +16,7 @@ import {
   SWAP_WITH_RECIPIENT_TOPIC0,
   decodeSwapWithRecipient,
 } from "../../utils/helper";
-import { Source } from "../../types/schema";
+import { Destination, Source } from "../../types/schema";
 import { formatDecimals } from "../../utils/formatting";
 import { fetchTokenDetails } from "../../utils/token";
 
@@ -102,7 +102,7 @@ export const TokenTransferWithInstructionHandler = async (
   const id = `${srcChain}_${dstChain}_${depositId}_${chainToContract(srcChain)}_${chainToContract(dstChain)}`;
 
   // create this receipt entry for src chain
-  await srcDB.save({
+  let srcObj: any = {
     id: id.toLowerCase(), // message hash
     //@ts-ignore
     blockTimestamp: parseInt(block.block_timestamp.toString(), 10),
@@ -122,5 +122,19 @@ export const TokenTransferWithInstructionHandler = async (
       stableTokenInfo.priceUsd * parseFloat(tokenPath.stableToken.amount)
     ).toFixed(4),
     recipientAddress: recipient,
+  };
+  const destDB: Instance = bind(Destination);
+  const destRecord = await destDB.findOne({
+    depositId: depositId,
+    srcChainId: srcChain,
   });
+  if (destRecord) {
+    srcObj["destRef"] = { recordRef: destRecord._id };
+  }
+  await srcDB.save(srcObj);
+  if (destRecord) {
+    const savedSrcRecord = await srcDB.findOne({ id });
+    destRecord["srcRef"] = { recordRef: savedSrcRecord._id };
+    destDB.save(destRecord);
+  }
 };

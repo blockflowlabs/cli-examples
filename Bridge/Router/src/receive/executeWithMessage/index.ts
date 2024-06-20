@@ -11,7 +11,7 @@ import {
   hexToString,
   SWAP_WITH_RECIPIENT_TOPIC0,
 } from "../../utils/helper";
-import { Destination } from "../../types/schema";
+import { Destination, Source } from "../../types/schema";
 import { formatDecimals } from "../../utils/formatting";
 import { fetchTokenDetails } from "../../utils/token";
 
@@ -82,7 +82,7 @@ export const executeWithMessageHandler = async (
 
   const id = `${dstChain}_${transaction.transaction_hash}`;
 
-  await transferDB.save({
+  let destObj: any = {
     id: id.toLowerCase(),
     //@ts-ignore
     blockTimestamp: parseInt(block.block_timestamp.toString(), 10),
@@ -98,5 +98,23 @@ export const executeWithMessageHandler = async (
     srcChainId: srcChain,
     execData,
     execFlag,
+  };
+  const sourceDB: Instance = bind(Source);
+  const srcRecord: any = await sourceDB.findOne({
+    id: `${srcChain}_${dstChain}_${depositId}`,
   });
+  console.log("srcRecord", srcRecord);
+  if (srcRecord) {
+    destObj["srcRef"] = { recordRef: srcRecord._id };
+  }
+  await transferDB.save(destObj);
+
+  if (srcRecord) {
+    const savedDest = await transferDB.findOne({
+      id,
+    });
+    console.log("savedDest", savedDest);
+    srcRecord["destRef"] = { recordRef: savedDest._id };
+    await sourceDB.save(srcRecord);
+  }
 };

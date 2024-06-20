@@ -1,56 +1,51 @@
-import { IBind, Instance, IFunctionContext } from "@blockflow-labs/utils";
+import { IBind, Instance, IEventContext } from "@blockflow-labs/utils";
 
-import { hexToString } from "../../utils/helper";
+import { EventNameEnum } from "../../utils/helper";
 import { Destination, Source } from "../../types/schema";
-import { formatDecimals } from "../../utils/formatting";
-import { fetchTokenDetails } from "../../utils/token";
+import { getAddress } from "ethers";
 
 /**
  * @dev Function::iRelay(tuple relayData)
  * @param context trigger object with contains {functionParams: {relayData }, transaction, block}
  * @param bind init function for database wrapper methods
  */
-export const iRelayHandler = async (context: IFunctionContext, bind: IBind) => {
+const CIRCLE_DOMAIN_MAINNET_ID: any = {
+  "0": "1",
+  "1": "43114",
+  "2": "10",
+  "3": "42161",
+  "6": "8453",
+  "7": "137",
+};
+const NITRO_FORWARDER = "0x00051d55999c7cd91B17Af7276cbecD647dBC000";
+export const MessageReceivedHandler = async (
+  context: IEventContext,
+  bind: IBind
+) => {
   // Implement your function handler logic for iRelay here
-  const { functionParams, transaction, block } = context;
-  const { relayData } = functionParams;
-
-  const amount = relayData.amount.toString();
-  const srcChain = hexToString(relayData.srcChainId.toString());
-  const depositId = relayData.depositId.toString();
-  const destToken = relayData.destToken.toString();
-  const recipient = relayData.recipient.toString();
+  const { event, transaction, block } = context;
+  let { caller, sourceDomain, messageBody, nonce } = event;
+  if (caller.toString().toLowerCase() !== NITRO_FORWARDER.toLowerCase()) return;
+  const srcChain = CIRCLE_DOMAIN_MAINNET_ID[sourceDomain.toString()];
+  const depositId = nonce.toString();
 
   const dstChain = block.chain_id;
   const transferDB: Instance = bind(Destination);
 
-  const tokenInfo = await fetchTokenDetails(bind, dstChain, destToken);
-
-  let tokenPath = {
-    destinationToken: {
-      tokenRef: tokenInfo._id,
-      amount: formatDecimals(amount, tokenInfo.decimals.toString()),
-    },
-    stableToken: {
-      tokenRef: tokenInfo._id,
-      amount: formatDecimals(amount, tokenInfo.decimals.toString()),
-    },
-  };
-
   const id = `${dstChain}_${transaction.transaction_hash}`;
 
-  const destObj: any = {
+  let destObj: any = {
     id: id.toLowerCase(),
+    //@ts-ignore
     blockTimestamp: parseInt(block.block_timestamp.toString(), 10),
     blockNumber: block.block_number,
     chainId: dstChain,
+    eventName: EventNameEnum.MessageReceived,
     transactionHash: transaction.transaction_hash,
-    destinationToken: tokenPath.destinationToken,
-    stableToken: tokenPath.stableToken,
-    recipientAddress: recipient, // Contract from where txn came
-    receiverAddress: recipient,
     depositId: depositId,
     srcChainId: srcChain,
+    recipientAddress: getAddress("0x" + messageBody.slice(98, 138)),
+    receiverAddress: getAddress("0x" + messageBody.slice(98, 138)),
   };
   const sourceDB: Instance = bind(Source);
   const srcRecord: any = await sourceDB.findOne({

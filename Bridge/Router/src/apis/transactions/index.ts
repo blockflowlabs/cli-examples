@@ -91,7 +91,7 @@
 //         dstChain: srcTx.dstChain,
 //         dstToken: srcTx.dstToken,
 //         dstTokenAmount: srcTx.dstTokenAmount,
-//         blocknumber: srcTx.blocknumber,
+//         blockNumber: srcTx.blockNumber,
 //       },
 //       destination: {},
 //     };
@@ -106,7 +106,7 @@
 //         dstTxHash: dstTx.dstTxHash,
 //         dstTxTime: dstTx.dstTxTime,
 //         dstTxStatus: dstTx.dstTxStatus,
-//         blocknumber: dstTx.blocknumber,
+//         blockNumber: dstTx.blockNumber,
 //       };
 //     }
 //   }

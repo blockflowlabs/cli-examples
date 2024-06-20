@@ -97,3 +97,27 @@ Resources:
       - Event: ExecuteWithMessage(uint8,bytes32,uint256,address,uint256,address,bool,bytes)
         Handler: src/receive/executeWithMessage/index.executeWithMessageHandler
 
+  - Name: iUSDCDeposited
+    Abi: src/abis/cctpBridge.json
+    Type: contract/event
+    Address: "0xfB375Cdfb975381731be52c05e8e695C8253c319"
+    Triggers:
+      - Event: iUSDCDeposited(uint256,uint256,bytes32,uint256,address,bytes32,address)
+        Handler: src/deposit/IUSDCDeposited/index.IUSDCDepositedHandler
+        
+  - Name: MessageReceived
+    Abi: src/abis/messageTransmitter.json
+    Type: contract/event
+    Address: "0x0a992d191deec32afe36203ad87d7d289a738f81"
+    Triggers:
+      - Event: MessageReceived(address,uint32,uint64,bytes32,bytes)
+        Handler: src/receive/MessageReceived/index.MessageReceivedHandler
+
+  - Name: Swap
+    Abi: src/abis/dexspan.json
+    Type: contract/event
+    Address: "0x6C45E28A76977a96e263f84F95912B47F927B687"
+    Triggers:
+      - Event: Swap(string,address[],uint256,address,address,uint256,uint256[],uint256)
+        Handler: src/deposit/Dexspan/index.SwapHandler
+

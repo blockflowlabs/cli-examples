@@ -1,50 +1,42 @@
 import { IEventContext, IBind, Instance } from "@blockflow-labs/utils";
 import {
   hexToString,
-  getTokenInfo,
   EventNameEnum,
-  getDestTokenInfo,
-  SWAP_WITH_RECIPIENT_TOPIC0,
   decodeSwapWithRecipient,
+  SWAP_WITH_RECIPIENT_TOPIC0,
 } from "../../utils/helper";
 import { Destination, Source } from "../../types/schema";
 import { fetchTokenDetails } from "../../utils/token";
 import { formatDecimals } from "../../utils/formatting";
 
 /**
- * @dev Event::TokenTransfer(index bytes32 destChainIdBytes, index address srcTokenAddress, uint256 srcTokenAmount, bytes recipient, uint256 partnerId, uint256 depositId)
- * @param context trigger object with contains {event: {
-    destChainIdBytes,
-    srcTokenAddress,
-    srcTokenAmount,
-    recipient,
-    partnerId,
-    depositId,
-  }, transaction, block, log}
+ * @dev Event::FundsDeposited(uint256 partnerId, uint256 amount, bytes32 destChainIdBytes, uint256 destAmount, uint256 depositId, address srcToken, address depositor, bytes recipient, bytes destToken)
+ * @param context trigger object with contains {event: {partnerId ,amount ,destChainIdBytes ,destAmount ,depositId ,srcToken ,depositor ,recipient ,destToken }, transaction, block, log}
  * @param bind init function for database wrapper methods
  */
-export const TokenTransferHandler = async (
+export const IUSDCDepositedHandler = async (
   context: IEventContext,
   bind: IBind
 ) => {
   // Implement your event handler logic for FundsDeposited here
   const { event, transaction, block } = context;
   let {
-    destChainIdBytes,
-    srcTokenAddress,
-    srcTokenAmount,
-    recipient,
     partnerId,
-    depositId,
+    amount,
+    destChainIdBytes,
+    usdcNonce,
+    srcToken,
+    depositor,
+    recipient,
   } = event;
-
   // sanitising parameters
   {
     partnerId = partnerId.toString();
-    srcTokenAddress = srcTokenAddress.toString();
+    amount = amount.toString();
     destChainIdBytes = destChainIdBytes.toString();
-    srcTokenAmount = srcTokenAmount.toString();
-    depositId = depositId.toString();
+    usdcNonce = usdcNonce.toString();
+    srcToken = srcToken.toString();
+    depositor = depositor.toString();
     recipient = recipient.toString();
   }
 
@@ -52,21 +44,22 @@ export const TokenTransferHandler = async (
   const srcChain = block.chain_id;
   const dstChain = hexToString(destChainIdBytes);
 
-  const stableTokenInfo = await fetchTokenDetails(
-    bind,
-    srcChain,
-    srcTokenAddress
-  );
-
-  const id = `${srcChain}_${dstChain}_${depositId}`;
+  const [stableTokenInfo] = await Promise.all([
+    fetchTokenDetails(bind, srcChain, srcToken),
+  ]);
+  const id = `${srcChain}_${dstChain}_${usdcNonce}`;
 
   const tokenList = {
     sourceToken: {
-      amount: formatDecimals(srcTokenAmount, stableTokenInfo.decimals),
+      amount: formatDecimals(amount, stableTokenInfo.decimals),
       tokenRef: stableTokenInfo._id,
     },
     stableToken: {
-      amount: formatDecimals(srcTokenAmount, stableTokenInfo.decimals),
+      amount: formatDecimals(amount, stableTokenInfo.decimals),
+      tokenRef: stableTokenInfo._id,
+    },
+    stableDestToken: {
+      amount: formatDecimals(amount, stableTokenInfo.decimals),
       tokenRef: stableTokenInfo._id,
     },
   };
@@ -91,8 +84,7 @@ export const TokenTransferHandler = async (
     };
   }
 
-  // create this receipt entry for src chain
-  let srcObj: any = {
+  const srcObj: any = {
     id: id.toLowerCase(), // message hash
     //@ts-ignore
     blockTimestamp: parseInt(block.block_timestamp.toString(), 10),
@@ -100,22 +92,29 @@ export const TokenTransferHandler = async (
     chainId: srcChain,
     destChainId: dstChain,
     transactionHash: transaction.transaction_hash,
-    eventName: EventNameEnum.TokenTransfer,
+    eventName: EventNameEnum.FundsDeposited,
     sourceToken: tokenList.sourceToken,
     stableToken: tokenList.stableToken,
-    depositorAddress: transaction.transaction_from_address, // Contract from where txn came
+    stableDestToken: tokenList.stableDestToken,
+    depositorAddress: depositor, // Contract from where txn came
     senderAddress: transaction.transaction_from_address, // Who triggered the transaction
-    depositId: depositId,
+    depositId: usdcNonce,
     partnerId: partnerId,
-    message: "", // tokenTransferWithMessage
+    message: "", // fundDepositWithMessage
     usdValue: (
       stableTokenInfo.priceUsd * parseFloat(tokenList.stableToken.amount)
     ).toFixed(4),
+    fee: {
+      tokenRef: tokenList.stableToken.tokenRef,
+      amount:
+        parseFloat(tokenList.stableToken.amount) -
+        parseFloat(tokenList.stableToken.amount),
+    },
     recipientAddress: recipient,
   };
   const destDB: Instance = bind(Destination);
   const destRecord = await destDB.findOne({
-    depositId: depositId,
+    depositId: usdcNonce,
     srcChainId: srcChain,
   });
   if (destRecord) {

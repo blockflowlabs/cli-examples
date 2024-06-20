@@ -1,7 +1,9 @@
 import { IEventContext, IBind, Instance } from "@blockflow-labs/utils";
 
 import { chainToContract, EventNameEnum } from "../../utils/helper";
-import { DepositInfoUpdate as infoUpdate } from "../../types/schema";
+import { DepositInfoUpdate as infoUpdate, Source } from "../../types/schema";
+import { fetchTokenDetails } from "../../utils/token";
+import { formatDecimals } from "../../utils/formatting";
 
 /**
  * @dev Event::DepositInfoUpdate(address srcToken, uint256 feeAmount, uint256 depositId, uint256 eventNonce, bool initiatewithdrawal, address depositor)
@@ -33,11 +35,35 @@ export const DepositInfoUpdate = async (
   const infoDB: Instance = bind(infoUpdate);
   const srcChain = block.chain_id;
 
-  await infoDB.create({
-    id: `${depositId}_${chainToContract(srcChain)}`.toLowerCase(),
+  const feeToken = await fetchTokenDetails(bind, srcChain, srcToken);
+  const id = `${srcChain}_${transaction.transaction_hash}`.toLowerCase();
+  const updateObj: any = {
+    id,
+    srcChainId: srcChain,
+    depositId: depositId,
     updateId: eventNonce,
     isWithdraw: initiatewithdrawal,
+    feeAmount: formatDecimals(feeAmount, feeToken.decimals),
     eventName: EventNameEnum.DepositInfoUpdate,
     transactionHash: transaction.transaction_hash,
+  };
+  const sourceDB: Instance = bind(Source);
+  const srcRecord: any = await sourceDB.findOne({
+    depositId: depositId,
+    srcChainId: srcChain,
   });
+  console.log("srcRecord", srcRecord);
+  if (srcRecord) {
+    updateObj["srcRef"] = { recordRef: srcRecord._id };
+  }
+  await infoDB.create(updateObj);
+
+  if (srcRecord) {
+    const savedDest = await updateObj.findOne({
+      id,
+    });
+    console.log("savedDest", savedDest);
+    srcRecord["withdrawRef"] = { recordRef: savedDest._id };
+    await sourceDB.save(srcRecord);
+  }
 };

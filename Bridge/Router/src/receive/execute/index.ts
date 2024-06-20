@@ -6,7 +6,7 @@ import {
 } from "@blockflow-labs/utils";
 
 import { EventNameEnum, hexToString } from "../../utils/helper";
-import { Destination } from "../../types/schema";
+import { Destination, Source } from "../../types/schema";
 import { formatDecimals } from "../../utils/formatting";
 import { fetchTokenDetails } from "../../utils/token";
 
@@ -49,7 +49,7 @@ export const executeHandler = async (context: IEventContext, bind: IBind) => {
 
   const id = `${dstChain}_${transaction.transaction_hash}`;
 
-  await transferDB.save({
+  let destObj: any = {
     id: id.toLowerCase(),
     //@ts-ignore
     blockTimestamp: parseInt(block.block_timestamp.toString(), 10),
@@ -63,5 +63,23 @@ export const executeHandler = async (context: IEventContext, bind: IBind) => {
     receiverAddress: recipient,
     depositId: depositId,
     srcChainId: srcChain,
+  };
+  const sourceDB: Instance = bind(Source);
+  const srcRecord: any = await sourceDB.findOne({
+    id: `${srcChain}_${dstChain}_${depositId}`,
   });
+  console.log("srcRecord", srcRecord);
+  if (srcRecord) {
+    destObj["srcRef"] = { recordRef: srcRecord._id };
+  }
+  await transferDB.save(destObj);
+
+  if (srcRecord) {
+    const savedDest = await transferDB.findOne({
+      id,
+    });
+    console.log("savedDest", savedDest);
+    srcRecord["destRef"] = { recordRef: savedDest._id };
+    await sourceDB.save(srcRecord);
+  }
 };
