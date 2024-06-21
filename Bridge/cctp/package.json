@@ -21,7 +21,7 @@
     "deploy-base-dst": "blockflow instance-deploy --path configs/mint/base.studio.yaml"
   },
   "dependencies": {
-    "@blockflow-labs/utils": "latest",
+    "@blockflow-labs/utils": "^1.0.7-beta.1",
     "ethers": "^6.13.0"
   },
   "devDependencies": {
