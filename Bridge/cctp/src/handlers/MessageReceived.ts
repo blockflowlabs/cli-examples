@@ -35,14 +35,14 @@ export const MessageReceivedHandler = async (
   bind: IBind,
   secrets: ISecrets
 ) => {
-  // Implement your event handler logic for MessageReceived here
+  // Implement your event handler logic for MessageReceived here 163201_10_1
   const { event, transaction, block, log } = context;
   const { caller, sourceDomain, nonce, sender, messageBody } = event;
 
   const srcChainId = domainToChainId[sourceDomain];
   const feeinUSDId = block.chain_id;
 
-  let amountDestination = "0";
+  let amountDestination = "-1";
   let attestationdata = "";
 
   const isMintAndWithdraw = transaction.logs
