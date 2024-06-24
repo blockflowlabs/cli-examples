@@ -2,9 +2,9 @@ import BigNumber from "bignumber.js";
 import { Instance, IBind } from "@blockflow-labs/utils";
 
 // prettier-ignore
-import { cctpDayDataDB, cctpWeekDataDB, cctpMonthDataDB, cctpYearDataDB, cctpAllTimeDB } from "../types/schema";
+import { cctpDayDataDB, cctpWeekDataDB, cctpMonthDataDB, cctpYearDataDB, cctpAllTimeDB, FeeInfo } from "../types/schema";
 // prettier-ignore
-import { IcctpAllTimeDB, IcctpDayDataDB, IcctpMonthDataDB, IcctpWeekDataDB, IcctpYearDataDB } from "../types/schema";
+import { IcctpAllTimeDB, IcctpDayDataDB, IcctpMonthDataDB, IcctpWeekDataDB, IcctpYearDataDB, IFeeInfo } from "../types/schema";
 
 export class Stats {
   fee: number;
@@ -18,6 +18,7 @@ export class Stats {
   cctpMonthDataDB: Instance;
   cctpYearDataDB: Instance;
   cctpAllTimeDB: Instance;
+  feeDB: Instance;
 
   constructor(
     isMint: boolean,
@@ -33,6 +34,7 @@ export class Stats {
     this.chainId = chainId;
     this.date = new Date(Number(timestamp) * 1000);
 
+    this.feeDB = bind(FeeInfo);
     this.cctpAllTimeDB = bind(cctpAllTimeDB);
     this.cctpDayDataDB = bind(cctpDayDataDB);
     this.cctpYearDataDB = bind(cctpYearDataDB);
@@ -54,6 +56,24 @@ export class Stats {
 
   _getYear(): number {
     return this.date.getFullYear();
+  }
+
+  async updateFee() {
+    if (this.fee > 0) {
+      let feeinfo: IFeeInfo = await this.feeDB.findOne({
+        id: this.fee,
+      });
+
+      if (feeinfo) {
+        feeinfo.feeInUSDC += this.fee;
+
+        await this.feeDB.save(feeinfo);
+      } else
+        feeinfo = await this.feeDB.create({
+          id: this.chainId,
+          feeInUSDC: this.fee,
+        });
+    }
   }
 
   async updateDailyData() {
@@ -246,6 +266,7 @@ export class Stats {
 
   async update() {
     try {
+      await this.updateFee();
       await this.updateDailyData();
       await this.updateWeeklyData();
       await this.updateYearlyData();
