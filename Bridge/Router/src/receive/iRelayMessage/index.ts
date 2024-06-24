@@ -45,7 +45,7 @@ export const iRelayMessageHandler = async (context: IFunctionContext, bind: IBin
   let receiverAddress = null,
     nativeTokenAmount = null;
 
-  const id = `${dstChain}_${transaction.transaction_hash}`;
+  const id = `${dstChain}_${transaction.transaction_hash}_${depositId}`;
 
   const isSwapWithReceiptRelay = transaction.logs
     ? transaction.logs.find(
@@ -117,7 +117,6 @@ export const iRelayMessageHandler = async (context: IFunctionContext, bind: IBin
   const srcRecord: any = await sourceDB.findOne({
     id: `${srcChain}_${dstChain}_${depositId}`,
   });
-  console.log("srcRecord", srcRecord);
   if (srcRecord) {
     destObj["srcRef"] = { recordRef: srcRecord._id };
   }
@@ -127,7 +126,6 @@ export const iRelayMessageHandler = async (context: IFunctionContext, bind: IBin
     const savedDest = await transferDB.findOne({
       id,
     });
-    console.log("savedDest", savedDest);
     srcRecord["destRef"] = { recordRef: savedDest._id };
     await sourceDB.save(srcRecord);
   }

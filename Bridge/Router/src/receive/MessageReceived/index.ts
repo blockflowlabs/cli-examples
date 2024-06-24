@@ -32,7 +32,7 @@ export const MessageReceivedHandler = async (
   const dstChain = block.chain_id;
   const transferDB: Instance = bind(Destination);
 
-  const id = `${dstChain}_${transaction.transaction_hash}`;
+  const id = `${dstChain}_${transaction.transaction_hash}_${depositId}`;
 
   let destObj: any = {
     id: id.toLowerCase(),
@@ -51,7 +51,6 @@ export const MessageReceivedHandler = async (
   const srcRecord: any = await sourceDB.findOne({
     id: `${srcChain}_${dstChain}_${depositId}`,
   });
-  console.log("srcRecord", srcRecord);
   if (srcRecord) {
     destObj["srcRef"] = { recordRef: srcRecord._id };
   }
@@ -61,7 +60,6 @@ export const MessageReceivedHandler = async (
     const savedDest = await transferDB.findOne({
       id,
     });
-    console.log("savedDest", savedDest);
     srcRecord["destRef"] = { recordRef: savedDest._id };
     await sourceDB.save(srcRecord);
   }

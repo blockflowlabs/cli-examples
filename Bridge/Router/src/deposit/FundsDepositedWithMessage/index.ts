@@ -122,8 +122,7 @@ export const FundsDepositedWithMessageHandler = async (
     toChainId: dstChain,
     toTokenAddress: destToken,
   });
-  console.log("competitorData", competitorData);
-  const id = `${srcChain}_${dstChain}_${depositId}_${chainToContract(srcChain)}_${chainToContract(dstChain)}`;
+  const id = `${srcChain}_${dstChain}_${depositId}`;
 
   // create this receipt entry for src chain
   let srcObj: any = {
@@ -167,6 +166,6 @@ export const FundsDepositedWithMessageHandler = async (
   if (destRecord) {
     const savedSrcRecord = await srcDB.findOne({ id });
     destRecord["srcRef"] = { recordRef: savedSrcRecord._id };
-    destDB.save(destRecord);
+    await destDB.save(destRecord);
   }
 };

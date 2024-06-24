@@ -49,7 +49,6 @@ export const executeWithMessageHandler = async (
   const transferDB: Instance = bind(Destination);
 
   const tokenInfo = await fetchTokenDetails(bind, dstChain, destToken);
-  console.log("tokenInfo", tokenInfo);
   let tokenPath = {
     destinationToken: {
       tokenRef: tokenInfo._id,
@@ -103,7 +102,6 @@ export const executeWithMessageHandler = async (
   const srcRecord: any = await sourceDB.findOne({
     id: `${srcChain}_${dstChain}_${depositId}`,
   });
-  console.log("srcRecord", srcRecord);
   if (srcRecord) {
     destObj["srcRef"] = { recordRef: srcRecord._id };
   }
@@ -113,7 +111,6 @@ export const executeWithMessageHandler = async (
     const savedDest = await transferDB.findOne({
       id,
     });
-    console.log("savedDest", savedDest);
     srcRecord["destRef"] = { recordRef: savedDest._id };
     await sourceDB.save(srcRecord);
   }

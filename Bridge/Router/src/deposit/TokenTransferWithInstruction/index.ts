@@ -89,7 +89,6 @@ export const TokenTransferWithInstructionHandler = async (
     // https://etherscan.io/tx/0xc396afbd9f874a47b217a57fd74c46299bb79abd460700c01f4407ae166ca5e6
     const decodeEvent: any = decodeSwapWithRecipient(isSwapWithReceiptRelay);
     const [sourceToken, _stableToken] = decodeEvent[1];
-    console.log;
     const srcInTokenInfo = await fetchTokenDetails(bind, srcChain, sourceToken);
     // prettier-ignore
     const [amountIn, _amountOut] = [decodeEvent[2].toString(), decodeEvent[5].toString()]
@@ -99,7 +98,7 @@ export const TokenTransferWithInstructionHandler = async (
     };
   }
 
-  const id = `${srcChain}_${dstChain}_${depositId}_${chainToContract(srcChain)}_${chainToContract(dstChain)}`;
+  const id = `${srcChain}_${dstChain}_${depositId}}`;
 
   // create this receipt entry for src chain
   let srcObj: any = {
@@ -135,6 +134,6 @@ export const TokenTransferWithInstructionHandler = async (
   if (destRecord) {
     const savedSrcRecord = await srcDB.findOne({ id });
     destRecord["srcRef"] = { recordRef: savedSrcRecord._id };
-    destDB.save(destRecord);
+    await destDB.save(destRecord);
   }
 };

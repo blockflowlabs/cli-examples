@@ -36,7 +36,8 @@ export const DepositInfoUpdate = async (
   const srcChain = block.chain_id;
 
   const feeToken = await fetchTokenDetails(bind, srcChain, srcToken);
-  const id = `${srcChain}_${transaction.transaction_hash}`.toLowerCase();
+  const id =
+    `${srcChain}_${transaction.transaction_hash}_${eventNonce}`.toLowerCase();
   const updateObj: any = {
     id,
     srcChainId: srcChain,
@@ -52,7 +53,6 @@ export const DepositInfoUpdate = async (
     depositId: depositId,
     srcChainId: srcChain,
   });
-  console.log("srcRecord", srcRecord);
   if (srcRecord) {
     updateObj["srcRef"] = { recordRef: srcRecord._id };
   }
@@ -62,7 +62,6 @@ export const DepositInfoUpdate = async (
     const savedDest = await updateObj.findOne({
       id,
     });
-    console.log("savedDest", savedDest);
     srcRecord["withdrawRef"] = { recordRef: savedDest._id };
     await sourceDB.save(srcRecord);
   }

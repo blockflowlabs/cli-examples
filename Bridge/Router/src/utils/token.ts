@@ -14,14 +14,11 @@ export const fetchTokenDetails = async (
   });
   if (!token) {
     const localToken = getTokenInfo(chainId, address);
-    console.log("localToken", localToken);
     const fetchedTokenInfo =
       localToken && localToken.symbol
         ? localToken
         : await fetchTokenInfo(address, chainId);
-    console.log("fetchedTokenInfo", fetchedTokenInfo);
     const priceUsd = await fetchTokenPriceFromOracle(fetchedTokenInfo.symbol);
-    console.log("priceUsd", priceUsd);
     token = {
       id: `${chainId}_${address}`.toLowerCase(),
       chainId: chainId,

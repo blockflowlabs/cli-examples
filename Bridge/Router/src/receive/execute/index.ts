@@ -68,7 +68,6 @@ export const executeHandler = async (context: IEventContext, bind: IBind) => {
   const srcRecord: any = await sourceDB.findOne({
     id: `${srcChain}_${dstChain}_${depositId}`,
   });
-  console.log("srcRecord", srcRecord);
   if (srcRecord) {
     destObj["srcRef"] = { recordRef: srcRecord._id };
   }
@@ -78,7 +77,6 @@ export const executeHandler = async (context: IEventContext, bind: IBind) => {
     const savedDest = await transferDB.findOne({
       id,
     });
-    console.log("savedDest", savedDest);
     srcRecord["destRef"] = { recordRef: savedDest._id };
     await sourceDB.save(srcRecord);
   }

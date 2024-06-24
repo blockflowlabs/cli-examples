@@ -66,7 +66,7 @@ export async function nodeRequest(data: object, chainId = "1"): Promise<any> {
       if (response.data !== null && response.data !== undefined)
         return response.data;
     } catch (error: any) {
-      console.log("nodeRequest::fetch encountered an error -", error.message);
+      //console.log("nodeRequest::fetch encountered an error -", error.message);
     }
 
     await new Promise((resolve) => setTimeout(resolve, delayBetweenRetries));
@@ -93,7 +93,7 @@ const getContractData = async (
       ],
       id: 1,
     };
-    console.log("contractAddress", contractAddress, "chainId", chainId);
+    //console.log("contractAddress", contractAddress, "chainId", chainId);
     const response = await nodeRequest(calldata, chainId);
     return response.result;
   } catch (error) {
@@ -154,10 +154,6 @@ export async function fetchTokenPriceFromOracle(symbol: string) {
     ) {
       return "1";
     }
-    console.log(
-      "url",
-      `https://sentry.lcd.routerprotocol.com/router-protocol/router-chain/pricefeed/price/${symbol}`
-    );
     const priceData = await axios.get(
       `https://sentry.lcd.routerprotocol.com/router-protocol/router-chain/pricefeed/price/${symbol}`
     );
