@@ -111,23 +111,7 @@ export const MessageReceivedHandler = async (
   });
 
   let feeamount = 0;
-
   if (srcTx && srcTx.amount) feeamount = srcTx.amount - amount;
-
-  const FeeInfoDB: Instance = bind(FeeInfo);
-  let feeinfo: IFeeInfo = await FeeInfoDB.findOne({
-    id: feeinUSDId,
-  });
-
-  if (feeinfo) {
-    feeinfo.feeInUSDC += feeamount;
-
-    await FeeInfoDB.save(feeinfo);
-  } else
-    feeinfo = await FeeInfoDB.create({
-      id: feeinUSDId,
-      feeInUSDC: feeamount,
-    });
 
   // prettier-ignore
   try {

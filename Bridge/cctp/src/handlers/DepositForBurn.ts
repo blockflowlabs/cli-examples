@@ -7,7 +7,12 @@ import {
 
 import { Stats } from "../utils/tracking";
 import { domainToChainId } from "../utils/helper";
-import { burnTransactionsTable, IburnTransactionsTable } from "../types/schema";
+import {
+  burnTransactionsTable,
+  IburnTransactionsTable,
+  ImintTransactionsTable,
+  mintTransactionsTable,
+} from "../types/schema";
 
 /**
  * @dev Event::DepositForBurn(uint64 nonce, address burnToken, uint256 amount, address depositor, bytes32 mintRecipient, uint32 destinationDomain, bytes32 destinationTokenMessenger, bytes32 destinationCaller)
@@ -59,9 +64,17 @@ export const DepositForBurnHandler = async (
     destinationCaller: destinationCaller.toString(),
   });
 
+  const mintDB: Instance = bind(mintTransactionsTable);
+  const dstTx: ImintTransactionsTable = await mintDB.findOne({
+    id: burnId.toLowerCase(),
+  });
+
+  let feeamount = 0;
+  if (dstTx && dstTx.amount) feeamount = amount - dstTx.amount;
+
   // prettier-ignore
   try {
-    await (new Stats(false, block.chain_id, amount, 0, block.block_timestamp, bind)).update()
+    await (new Stats(false, block.chain_id, amount, feeamount, block.block_timestamp, bind)).update()
   } catch (error) {
     console.log(error);
   }
