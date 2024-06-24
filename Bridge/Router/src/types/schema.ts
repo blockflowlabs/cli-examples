@@ -81,6 +81,11 @@ export class Source {
     fee: { tokenRef: "ObjectId", amount: "String" },
     stableDestToken: { tokenRef: "ObjectId", amount: "String" },
     recipientAddress: "String",
+    competitorData: {
+      gasFeeUsd: "String",
+      bridgeFeeUsd: "String",
+      timeTaken: "String",
+    },
     destRef: { recordRef: "ObjectId" },
     withdrawRef: { recordRef: "ObjectId" },
     entityId: { type: "String", index: true },
@@ -178,6 +183,12 @@ type RecordRef = {
   recordRef: ObjectId;
 };
 
+type CompetitorData = {
+  gasFeeUsd: String;
+  bridgeFeeUsd: String;
+  timeTaken: String;
+};
+
 export interface IDestination extends Document {
   id: String;
   eventName: String;
@@ -222,6 +233,7 @@ export interface ISource extends Document {
   fee: Token;
   stableDestToken: Token;
   recipientAddress: String;
+  competitorData: CompetitorData;
   destRef: RecordRef;
   withdrawRef: RecordRef;
   blocknumber: String;
@@ -256,12 +268,6 @@ export interface IRefuelInfo extends Document {
   instanceId: String;
   chainId: String;
 }
-
-type competitorData = {
-  gasFeeUsd: String;
-  bridgeFeeUsd: String;
-  time: String;
-};
 
 export interface IExtraInfo extends Document {
   id: String;

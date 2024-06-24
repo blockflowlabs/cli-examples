@@ -31,6 +31,12 @@ type RecordRef = {
   recordRef: ObjectId;
 };
 
+type CompetitorData = {
+  gasFeeUsd: String;
+  bridgeFeeUsd: String;
+  timeTaken: String;
+};
+
 export interface Destination {
   id: String;
   eventName: String;
@@ -72,6 +78,7 @@ export interface Source {
   fee: Token;
   stableDestToken: Token;
   recipientAddress: String;
+  competitorData: CompetitorData;
   destRef: RecordRef;
   withdrawRef: RecordRef;
 }
@@ -96,12 +103,6 @@ export interface RefuelInfo {
   nativeToken: native;
   nativeRecipient: String;
 }
-
-type competitorData = {
-  gasFeeUsd: String;
-  bridgeFeeUsd: String;
-  time: String;
-};
 
 export interface ExtraInfo {
   id: String;

@@ -17,6 +17,7 @@ import {
 import { Destination, Source } from "../../types/schema";
 import { formatDecimals } from "../../utils/formatting";
 import { fetchTokenDetails } from "../../utils/token";
+import { fetchLifiFeeTimeData } from "../../utils/liFi";
 
 /**
  * @dev Event::FundsDepositedWithMessage(uint256 partnerId, uint256 amount, bytes32 destChainIdBytes, uint256 destAmount, uint256 depositId, address srcToken, bytes recipient, address depositor, bytes destToken, bytes message)
@@ -69,6 +70,8 @@ export const FundsDepositedWithMessageHandler = async (
     fetchTokenDetails(bind, srcChain, srcToken),
     fetchTokenDetails(bind, dstChain, destToken),
   ]);
+  let lifFiFromAmount = amount,
+    lifFiFromToken = srcToken;
   let tokenPath = {
     sourceToken: {
       amount: formatDecimals(amount, stableTokenInfo.decimals),
@@ -108,8 +111,18 @@ export const FundsDepositedWithMessageHandler = async (
       amount: formatDecimals(amountIn, sourceTokenInfo.decimals),
       tokenRef: sourceTokenInfo._id,
     };
+    lifFiFromAmount = amountIn;
+    lifFiFromToken = sourceToken;
   }
 
+  const competitorData = await fetchLifiFeeTimeData({
+    fromChainId: srcChain,
+    fromAmount: lifFiFromAmount,
+    fromTokenAddress: lifFiFromToken,
+    toChainId: dstChain,
+    toTokenAddress: destToken,
+  });
+  console.log("competitorData", competitorData);
   const id = `${srcChain}_${dstChain}_${depositId}_${chainToContract(srcChain)}_${chainToContract(dstChain)}`;
 
   // create this receipt entry for src chain
@@ -140,6 +153,7 @@ export const FundsDepositedWithMessageHandler = async (
         parseFloat(tokenPath.stableToken.amount),
     },
     recipientAddress: recipient,
+    competitorData: competitorData,
   };
   const destDB: Instance = bind(Destination);
   const destRecord = await destDB.findOne({
