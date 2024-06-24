@@ -1,9 +1,9 @@
 name: cctp-src
 description: Indexing circle etheruem cctp contracts
-startBlock: 16730025
+startBlock: 25114705
 userId: google-oauth2%7C113106604109449522744
 projectId: 9b8821f7-0942-4afa-b739-6d2560166cb2
-network: Ethereum
+network: Avalanche
 user: prady-cctp
 schema:
   file: ./studio.schema.ts
@@ -12,14 +12,21 @@ Resources:
   - Name: tokenmessenger
     Abi: src/abis/tokenmessenger.json
     Type: contract/event
-    Address: "0xBd3fa81B58Ba92a82136038B25aDec7066af3155"
+    Address: "0x6b25532e1060ce10cc3b0a99e5683b91bfde6982"
     Triggers:
       - Event: DepositForBurn(uint64 indexed,address indexed,uint256,address indexed,bytes32,uint32,bytes32,bytes32)
         Handler: src/handlers/DepositForBurn.DepositForBurnHandler
   - Name: tokenMinter
     Abi: src/abis/tokenMinter.json
     Type: contract/event
-    Address: "0xc4922d64a24675E16e1586e3e3Aa56C06fABe907"
+    Address: "0x420f5035fd5dc62a167e7e7f08b604335ae272b8"
     Triggers:
       - Event: SetBurnLimitPerMessage(address indexed,uint256)
         Handler: src/handlers/SetBurnLimitPerMessage.SetBurnLimitPerMessageHandler
+  - Name: messageTransmitter
+    Abi: src/abis/messageTransmitter.json
+    Type: contract/event
+    Address: "0x8186359af5f57fbb40c6b14a588d2a59c0c29880"
+    Triggers:
+      - Event: MessageReceived(address indexed,uint32,uint64 indexed,bytes32,bytes)
+        Handler: src/handlers/MessageReceived.MessageReceivedHandler

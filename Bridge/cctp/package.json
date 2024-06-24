@@ -5,20 +5,14 @@
   "scripts": {
     "prettier": "prettier --write .",
     "compile": "tsc -b",
-    "test-src": "blockflow instance-test --path configs/burn/ethereum.studio.yaml --startBlock 19260948 --range 1 --clean",
-    "test-dst": "blockflow instance-test --path configs/mint/polygon.studio.yaml --startBlock 53702451 --range 1",
-    "deploy-eth-src": "blockflow instance-deploy --path configs/burn/ethereum.studio.yaml",
-    "deploy-pol-src": "blockflow instance-deploy --path configs/burn/polygon.studio.yaml",
-    "deploy-op-src": "blockflow instance-deploy --path configs/burn/op.studio.yaml",
-    "deploy-avax-src": "blockflow instance-deploy --path configs/burn/avalanche.studio.yaml",
-    "deploy-arb-src": "blockflow instance-deploy --path configs/burn/arbitrum.studio.yaml",
-    "deploy-base-src": "blockflow instance-deploy --path configs/burn/base.studio.yaml",
-    "deploy-eth-dst": "blockflow instance-deploy --path configs/mint/ethereum.studio.yaml",
-    "deploy-pol-dst": "blockflow instance-deploy --path configs/mint/polygon.studio.yaml",
-    "deploy-op-dst": "blockflow instance-deploy --path configs/mint/op.studio.yaml",
-    "deploy-avax-dst": "blockflow instance-deploy --path configs/mint/avalanche.studio.yaml",
-    "deploy-arb-dst": "blockflow instance-deploy --path configs/mint/arbitrum.studio.yaml",
-    "deploy-base-dst": "blockflow instance-deploy --path configs/mint/base.studio.yaml"
+    "test-src": "blockflow instance-test --path configs/ethereum.studio.yaml --startBlock 19260948 --range 1 --clean",
+    "test-dst": "blockflow instance-test --path configs/polygon.studio.yaml --startBlock 53702451 --range 1",
+    "deploy-eth": "blockflow instance-deploy --path configs/ethereum.studio.yaml",
+    "deploy-pol": "blockflow instance-deploy --path configs/polygon.studio.yaml",
+    "deploy-op": "blockflow instance-deploy --path configs/op.studio.yaml",
+    "deploy-avax": "blockflow instance-deploy --path configs/avalanche.studio.yaml",
+    "deploy-arb": "blockflow instance-deploy --path configs/arbitrum.studio.yaml",
+    "deploy-base": "blockflow instance-deploy --path configs/base.studio.yaml"
   },
   "dependencies": {
     "@blockflow-labs/utils": "^1.0.7-beta.1",

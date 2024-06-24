@@ -23,3 +23,10 @@ Resources:
     Triggers:
       - Event: SetBurnLimitPerMessage(address indexed,uint256)
         Handler: src/handlers/SetBurnLimitPerMessage.SetBurnLimitPerMessageHandler
+  - Name: messageTransmitter
+    Abi: src/abis/messageTransmitter.json
+    Type: contract/event
+    Address: "0xF3be9355363857F3e001be68856A2f96b4C39Ba9"
+    Triggers:
+      - Event: MessageReceived(address indexed,uint32,uint64 indexed,bytes32,bytes)
+        Handler: src/handlers/MessageReceived.MessageReceivedHandler
