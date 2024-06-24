@@ -4,7 +4,7 @@ type Action = {
   value: string;
   to: string;
   from: string;
-  contractAddress: string;
+  address: string;
 };
 
 export interface avoData {

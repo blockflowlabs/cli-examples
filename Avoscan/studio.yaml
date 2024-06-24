@@ -10,13 +10,9 @@ schema:
 execution: parallel
 Resources:
   - Name: blockflow
-    Abi: src/abis/blockflow.json
+    Abi: src/abis/abi.json
     Type: contract/event
-    Address: "0x46978CD477A496028A18c02F07ab7F35EDBa5A54"
+    Address: "0x46978cd477a496028a18c02f07ab7f35edba5a54"
     Triggers:
-      - Event: >-
-          ExecuteFailed(address indexed,address indexed,address
-          indexed,bytes,string)
-        Handler: src/handlers/blockflow/ExecuteFailed.ExecuteFailedHandler
-      - Event: Executed(address indexed,address indexed,address indexed,bytes)
-        Handler: src/handlers/blockflow/Executed.ExecutedHandler
+      - Event: Executed(address indexed,uint32,address indexed,address indexed,bytes)
+        Handler: src/handlers/Executed.ExecutedHandler

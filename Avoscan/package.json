@@ -6,7 +6,8 @@
     "compile": "tsc -b"
   },
   "dependencies": {
-    "@blockflow-labs/utils": "latest"
+    "@blockflow-labs/utils": "latest",
+    "ethers": "^6.13.1"
   },
   "devDependencies": {
     "bignumber.js": "^9.1.1",
