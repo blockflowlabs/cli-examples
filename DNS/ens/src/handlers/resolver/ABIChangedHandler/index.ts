@@ -14,7 +14,7 @@ import { AbiChanged, Resolver } from "../../../types/schema";
  */
 export const ABIChangedHandler = async (
   context: IEventContext,
-  bind: Function
+  bind: Function,
 ) => {
   // Implement your event handler logic for ABIChanged here
   const { event, transaction, log } = context;

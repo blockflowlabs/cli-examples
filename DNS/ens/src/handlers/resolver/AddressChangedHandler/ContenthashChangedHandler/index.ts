@@ -14,7 +14,7 @@ import { ContenthashChanged, IResolver, Resolver } from "../../../types/schema";
  */
 export const ContenthashChangedHandler = async (
   context: IEventContext,
-  bind: IBind
+  bind: IBind,
 ) => {
   // Implement your event handler logic for ContenthashChanged here
   const { event, transaction, log } = context;
@@ -27,7 +27,7 @@ export const ContenthashChangedHandler = async (
   const resolver: IResolver = await getResolver(
     node,
     log.log_address,
-    resolverDB
+    resolverDB,
   );
 
   resolver.contentHash = hash;

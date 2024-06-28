@@ -18,7 +18,7 @@ import {
  */
 export const AddressChangedHandler = async (
   context: IEventContext,
-  bind: Function
+  bind: Function,
 ) => {
   // Implement your event handler logic for AddressChanged here
   const { event, transaction, log } = context;
@@ -32,7 +32,7 @@ export const AddressChangedHandler = async (
   const resolver: IResolver = await getResolver(
     node,
     log.log_address,
-    resolverDB
+    resolverDB,
   );
 
   // since coinTypes is of type [Number]

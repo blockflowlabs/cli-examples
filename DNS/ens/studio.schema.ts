@@ -36,7 +36,6 @@ interface Domain {
   labelName: String;
   labelhash: String;
   parent: String;
-  subdomains: [String];
   subdomainCount: Number;
   resolvedAddress: String;
   owner: String;
@@ -55,6 +54,7 @@ interface Domain {
 type DomainEvent = {
   domain: String;
   transactionID: String;
+  blockNumber: Number;
 };
 
 interface Resolver {

@@ -14,7 +14,7 @@ export function createEventID(context: IEventContext): string {
 export async function getResolver(
   node: string,
   address: string,
-  resolverDB: Instance
+  resolverDB: Instance,
 ) {
   let id = createResolverID(node, address);
   let resolver = await resolverDB.findOne({ id: id.toLowerCase() });
