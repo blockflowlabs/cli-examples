@@ -26,5 +26,5 @@ export const NewTTLHandler = async (
   const domainDB: Instance = bind(Domain);
   let domain = await createorloaddomain(domainDB, node, block.block_timestamp, bind);
   domain.ttl = ttl;
-  await domain.save();
+  await domainDB.save(domain);
 };

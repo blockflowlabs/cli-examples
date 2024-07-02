@@ -37,7 +37,7 @@ export const NameUnwrappedHandler = async (
   if(domain.expiryDate && domain.parent != ETH_NODE){
     domain.expiryDate = null;
   }
-  domain.save();
+  domainDB.save(domain);
   
   let nameunwrapperevent = await nameunwrappereventsDB.create({
   id: node,

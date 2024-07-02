@@ -1,4 +1,4 @@
-import { IEventContext } from "@blockflow-labs/utils";
+import { IEventContext, Instance } from "@blockflow-labs/utils";
 
 import { Domain, Resolver } from "../../../types/schema";
 /**
@@ -15,10 +15,12 @@ export const NewResolverHandler = async (
   const { event, transaction, block, log } = context;
   const { node, resolver } = event;
 
+  const domainDB: Instance = bind(Domain);
+
   const id = resolver.toString() + "-" + node.toLowerCase();
 
-  let domainDB = await bind(Domain).findOne({ id: node.toLowerCase() });
-  domainDB.resolver = id;
+  let domain = await bind(Domain).findOne({ id: node.toLowerCase() });
+  domain.resolver = id;
 
   let resolverDB = await bind(Resolver).findOne({ id: id });
   if (!resolverDB) {
@@ -28,10 +30,10 @@ export const NewResolverHandler = async (
       domain: node.toLowerCase(),
       events: [resolver, transaction.transaction_hash],
     });
-    domainDB.resolvedAddress = "";
-    domainDB.events = [node, transaction.transaction_hash, block.block_number];
+    domain.resolvedAddress = "";
+    domain.events = [node, transaction.transaction_hash, block.block_number];
   } else {
-    domainDB.resolvedAddress = resolverDB.addr;
+    domain.resolvedAddress = resolverDB.addr;
   }
-  await domainDB.save();
+  await domainDB.save(domain);
 };

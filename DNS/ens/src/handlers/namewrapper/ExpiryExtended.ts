@@ -38,7 +38,7 @@ if(checkPccBurned(wrappeddoamin.fuses)){
   let domain = await createorloaddomain(domainDB,node,block.block_timestamp,bind);
   if(!domain.expiryDate || expiry> domain.expiryDate){
     domain.expiryDate = expiry;
-    domain.save();
+    domainDB.save(domain);
   }
 }
 let expiryExtendedEvent: Instance = bind(Expiryextendedevent);

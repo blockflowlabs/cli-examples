@@ -327,9 +327,9 @@ import { String, Array, Number } from "@blockflow-labs/utils";
 
 export interface IAccount extends Document {
   id: String;
-  domains: [String]; // domain ids
-  wrappedDomains: [String]; // wrapped domain ids
-  registrations: [String]; // registration ids
+  domains: [String];
+  wrappedDomains: [String];
+  registrations: [String];
   blocknumber: String;
   entityId: String;
   instanceId: String;

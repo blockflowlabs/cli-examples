@@ -30,5 +30,5 @@ export const TransferHandler = async (
   const domain = await createorloaddomain(domainDB, node, block.block_timestamp, bind);
   domain.registrant = account.id;
   domain.events = [node, transaction.transaction_hash];
-  await domain.save();
+  await domainDB.save(domain);
 };

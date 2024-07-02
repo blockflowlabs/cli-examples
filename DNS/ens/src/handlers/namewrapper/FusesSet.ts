@@ -39,7 +39,7 @@ export const FusesSetHandler = async (
     let domain = await createorloaddomain(domainDB,node,block.block_timestamp,bind);
     if(!domain.expiryDate || wrappeddoamin.expiryDate > domain.expiryDate){
       domain.expiryDate = wrappeddoamin.expiryDate;
-      await domain.save();
+      await domainDB.save(domain);
     }
   }
   let fusesburnteventDB: Instance = bind(Fusesburntevent);

@@ -25,5 +25,5 @@ export const NewResolverHandler = async (
   const domainDB: Instance = bind(Domain);
   let domain = await createorloaddomain(domainDB, node, block.block_timestamp, bind);
   domain.resolver = resolver;
-  await domain.save();
+  await domainDB.save(domain);
 };

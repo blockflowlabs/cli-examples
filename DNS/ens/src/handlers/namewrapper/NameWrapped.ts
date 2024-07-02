@@ -48,7 +48,7 @@ export const NameWrappedHandler = async (
      domain.expiryDate = expiry;
     }
     domain.wrappedOwner = account.id;
-    await domain.save();
+    await domainDB.save(domain);
 
   let wrappeddomain = await wrappeddomainDB.create({
     id: domain.id,

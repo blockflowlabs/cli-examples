@@ -1,4 +1,4 @@
-import { IEventContext } from "@blockflow-labs/utils";
+import { IEventContext, Instance } from "@blockflow-labs/utils";
 import { Domain } from "../../../types/schema";
 /**
  * @dev Event::NewTTL(bytes32 node, uint64 ttl)
@@ -11,7 +11,11 @@ export const NewTTLHandler = async (context: IEventContext, bind: Function) => {
   const { event, transaction, block, log } = context;
   const { node, ttl } = event;
 
-  const domain = await bind(Domain).findOne({ id: node.toLowerCase() });
+  const domainDB: Instance = bind(Domain);
+
+  const domain = await bind(Domain).findOne({
+     id: node.toLowerCase()
+     });
   if (!domain) {
     await bind(Domain).create({
       id: node.toLowerCase(),
@@ -20,6 +24,6 @@ export const NewTTLHandler = async (context: IEventContext, bind: Function) => {
     });
   } else {
     domain.ttl = ttl.toString();
-    await domain.save();
+    await domainDB.save(domain);
   }
 };
