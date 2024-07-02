@@ -5,8 +5,12 @@ import {
   ISecrets,
 } from "@blockflow-labs/utils";
 
-import { WrappedDomain, Domain, Expiryextendedevent} from "../../types/schema";
-import { createorloaddomain, checkPccBurned, PARENT_CANNOT_CONTROL } from "../../utils/helper";
+import { WrappedDomain, Domain, Expiryextendedevent } from "../../types/schema";
+import {
+  createorloaddomain,
+  checkPccBurned,
+  PARENT_CANNOT_CONTROL,
+} from "../../utils/helper";
 /**
  * @dev Event::ExpiryExtended(bytes32 node, uint64 expiry)
  * @param context trigger object with contains {event: {node ,expiry }, transaction, block, log}
@@ -22,12 +26,12 @@ export const ExpiryExtendedHandler = async (
   const { event, transaction, block, log } = context;
   const { node, expiry } = event;
 
-  let domainDB : Instance = bind(Domain);
+  let domainDB: Instance = bind(Domain);
   let wrappeddomainDB: Instance = bind(WrappedDomain);
 
-  let wrappeddoamin = await wrappeddomainDB.findOne({ 
-    id: node
-   });
+  let wrappeddoamin = await wrappeddomainDB.findOne({
+    id: node,
+  });
   wrappeddoamin.expiryDate = expiry;
   wrappeddoamin.events = [
     node,
@@ -36,19 +40,24 @@ export const ExpiryExtendedHandler = async (
   ];
   await wrappeddomainDB.save(wrappeddoamin);
 
-if(checkPccBurned(wrappeddoamin.fuses)){
-  let domain = await createorloaddomain(domainDB,node,block.block_timestamp,bind);
-  if(!domain.expiryDate || expiry> domain.expiryDate){
-    domain.expiryDate = expiry;
-    domainDB.save(domain);
+  if (checkPccBurned(wrappeddoamin.fuses)) {
+    let domain = await createorloaddomain(
+      domainDB,
+      node,
+      block.block_timestamp,
+      bind,
+    );
+    if (!domain.expiryDate || expiry > domain.expiryDate) {
+      domain.expiryDate = expiry;
+      domainDB.save(domain);
+    }
   }
-}
 
-let expiryExtendedEvent: Instance = bind(Expiryextendedevent);
-let expiryevent = await bind(Expiryextendedevent).create({
-  id: node,
-  expiry: expiry,
-  blockNumber: block.block_number,
-  transactionID: transaction.transaction_hash,
-});
+  let expiryExtendedEvent: Instance = bind(Expiryextendedevent);
+  let expiryevent = await bind(Expiryextendedevent).create({
+    id: node,
+    expiry: expiry,
+    blockNumber: block.block_number,
+    transactionID: transaction.transaction_hash,
+  });
 };

@@ -5,8 +5,18 @@ import {
   ISecrets,
 } from "@blockflow-labs/utils";
 
-import { Account,Domain, Registration, WrappedDomain , wrappedTransfer} from "../../types/schema";
-import { toHexString, createorloadaccount, createorloaddomain } from "../../utils/helper";
+import {
+  Account,
+  Domain,
+  Registration,
+  WrappedDomain,
+  wrappedTransfer,
+} from "../../types/schema";
+import {
+  toHexString,
+  createorloadaccount,
+  createorloaddomain,
+} from "../../utils/helper";
 /**
  * @dev Event::TransferSingle(address operator, address from, address to, uint256 id, uint256 value)
  * @param context trigger object with contains {event: {operator ,from ,to ,id ,value }, transaction, block, log}
@@ -25,29 +35,39 @@ export const TransferSingleHandler = async (
   const accountDB: Instance = bind(Account);
   const domainDB: Instance = bind(Domain);
 
- async function makeWrappedTransfer(
+  async function makeWrappedTransfer(
     blocknumber: number,
     transactionhash: string,
     eventId: string,
     node: any,
-    to: string
-  ){
-    const _to = createorloadaccount(accountDB,to,bind);
-    const namehash = toHexString(node); 
-    const domain = createorloaddomain(domainDB,namehash,block.block_timestamp,bind);
-    let wrappeDDomain = await bind(WrappedDomain).findOne({id: namehash });
+    to: string,
+  ) {
+    const _to = createorloadaccount(accountDB, to, bind);
+    const namehash = toHexString(node);
+    const domain = createorloaddomain(
+      domainDB,
+      namehash,
+      block.block_timestamp,
+      bind,
+    );
+    let wrappeDDomain = await bind(WrappedDomain).findOne({ id: namehash });
 
-    if(wrappeDDomain == null){
+    if (wrappeDDomain == null) {
       wrappeDDomain = await bind(WrappedDomain).create({
         id: namehash,
         expiryDate: 0,
         fuses: 0,
         name: "",
-        events: [namehash, block.block_number, transaction.transaction_hash]
+        events: [namehash, block.block_number, transaction.transaction_hash],
       });
     }
   }
-  
-  makeWrappedTransfer(block.block_number, transaction.transaction_hash,log.log_address, id, to);
-};
 
+  makeWrappedTransfer(
+    block.block_number,
+    transaction.transaction_hash,
+    log.log_address,
+    id,
+    to,
+  );
+};

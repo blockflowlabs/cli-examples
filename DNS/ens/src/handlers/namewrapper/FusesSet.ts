@@ -6,7 +6,11 @@ import {
 } from "@blockflow-labs/utils";
 
 import { WrappedDomain, Domain, Fusesburntevent } from "../../types/schema";
-import { createorloaddomain, checkPccBurned, PARENT_CANNOT_CONTROL } from "../../utils/helper";
+import {
+  createorloaddomain,
+  checkPccBurned,
+  PARENT_CANNOT_CONTROL,
+} from "../../utils/helper";
 
 /**
  * @dev Event::FusesSet(bytes32 node, uint32 fuses)
@@ -23,10 +27,10 @@ export const FusesSetHandler = async (
   const { event, transaction, block, log } = context;
   const { node, fuses } = event;
 
-  const domainDB : Instance = bind(Domain);
-  const wrappeddomainDB : Instance = bind(WrappedDomain);
-  let wrappeddomain = await wrappeddomainDB.findOne({ 
-    id: node 
+  const domainDB: Instance = bind(Domain);
+  const wrappeddomainDB: Instance = bind(WrappedDomain);
+  let wrappeddomain = await wrappeddomainDB.findOne({
+    id: node,
   });
   wrappeddomain.fuses = fuses;
   wrappeddomain.events = [
@@ -35,9 +39,14 @@ export const FusesSetHandler = async (
     transaction.transaction_hash,
   ];
   await wrappeddomainDB.save(wrappeddomain);
-  if(wrappeddomain.expiryDate && checkPccBurned(wrappeddomain.fuses)){
-    let domain = await createorloaddomain(domainDB,node,block.block_timestamp,bind);
-    if(!domain.expiryDate || wrappeddomain.expiryDate > domain.expiryDate){
+  if (wrappeddomain.expiryDate && checkPccBurned(wrappeddomain.fuses)) {
+    let domain = await createorloaddomain(
+      domainDB,
+      node,
+      block.block_timestamp,
+      bind,
+    );
+    if (!domain.expiryDate || wrappeddomain.expiryDate > domain.expiryDate) {
       domain.expiryDate = wrappeddomain.expiryDate;
       await domainDB.save(domain);
     }
@@ -49,5 +58,4 @@ export const FusesSetHandler = async (
     blockNumber: block.block_number,
     transactionID: transaction.transaction_hash,
   });
-
 };

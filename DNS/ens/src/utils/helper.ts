@@ -185,32 +185,32 @@ export async function createorloaddomain(
   Domain: Instance,
   node: string,
   timestamp: String,
-  bind: Function
+  bind: Function,
 ) {
-  let domainDB: Instance= bind(Domain);
+  let domainDB: Instance = bind(Domain);
   let domain = await domainDB.findOne({ id: node.toLowerCase() });
   if (!domain) {
     domain = await domainDB.create({
-    id: node.toLowerCase(),
-    name: "",
-    labelName: "",
-    labelhash: "",
-    parent: "",
-    subdomains: [],
-    subdomainsCount: 0,
-    resolvedAddress: "",
-    owner: "",
-    resolver: "",
-    ttl: 0,
-    isMigrated: false,
-    createdAt: 0,
-    registrant: "",
-    wrappedOwner: "",
-    expiryDate: 0,
-    wrappedDomain: "",
-    events: [],
-    registration: "",
-  });
+      id: node.toLowerCase(),
+      name: "",
+      labelName: "",
+      labelhash: "",
+      parent: "",
+      subdomains: [],
+      subdomainsCount: 0,
+      resolvedAddress: "",
+      owner: "",
+      resolver: "",
+      ttl: 0,
+      isMigrated: false,
+      createdAt: 0,
+      registrant: "",
+      wrappedOwner: "",
+      expiryDate: 0,
+      wrappedDomain: "",
+      events: [],
+      registration: "",
+    });
     domain.createdAt = timestamp;
   }
   return domain;
@@ -219,22 +219,22 @@ export async function createorloaddomain(
 export async function createorloadaccount(
   Account: Instance,
   owner: string,
-  bind: Function
+  bind: Function,
 ) {
-  let accountDB: Instance= bind(Account);
+  let accountDB: Instance = bind(Account);
   let account = await accountDB.findOne({ id: owner.toLowerCase() });
   if (!account) {
-    account = await accountDB.create({ 
+    account = await accountDB.create({
       id: owner.toLowerCase(),
       domains: [],
       wrappedDomains: [],
       registrations: [],
-     });
+    });
   }
   return account;
 }
 
 export const PARENT_CANNOT_CONTROL = 65536;
-export function checkPccBurned(fuses:any): boolean {
+export function checkPccBurned(fuses: any): boolean {
   return (fuses & PARENT_CANNOT_CONTROL) == PARENT_CANNOT_CONTROL;
 }

@@ -23,7 +23,12 @@ export const NewResolverHandler = async (
   const { node, resolver } = event;
 
   const domainDB: Instance = bind(Domain);
-  let domain = await createorloaddomain(domainDB, node, block.block_timestamp, bind);
+  let domain = await createorloaddomain(
+    domainDB,
+    node,
+    block.block_timestamp,
+    bind,
+  );
   domain.resolver = resolver;
   await domainDB.save(domain);
 };

@@ -24,25 +24,30 @@ export const NameUnwrappedHandler = async (
   const { node, owner } = event;
 
   const ETH_NODE =
-  "0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae";
+    "0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae";
 
   const accountDB: Instance = bind(Account);
   const domainDB: Instance = bind(Domain);
   const nameunwrappereventsDB: Instance = bind(Nameunwrapperevents);
 
   let account = await createorloadaccount(accountDB, owner, bind);
-  let domain = await createorloaddomain(domainDB,node, block.block_timestamp, bind);
+  let domain = await createorloaddomain(
+    domainDB,
+    node,
+    block.block_timestamp,
+    bind,
+  );
   domain.wrappedOwner = "";
 
-  if(domain.expiryDate && domain.parent != ETH_NODE){
+  if (domain.expiryDate && domain.parent != ETH_NODE) {
     domain.expiryDate = null;
   }
   domainDB.save(domain);
-  
+
   let nameunwrapperevent = await nameunwrappereventsDB.create({
-  id: node,
-  blockNumber: block.block_number,
-  transactionID: transaction.transaction_hash,
-  owner: owner,
+    id: node,
+    blockNumber: block.block_number,
+    transactionID: transaction.transaction_hash,
+    owner: owner,
   });
 };

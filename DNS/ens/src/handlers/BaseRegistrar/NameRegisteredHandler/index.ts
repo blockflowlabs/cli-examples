@@ -18,14 +18,28 @@ export const NameRegisteredHandler = async (
   const isoDate = new Date(Number(block.block_timestamp) * 1000).toISOString();
 
   const registrationDB: Instance = bind(Registration);
-  await registrationDB.create({
+
+  let registration = await registrationDB.findOne({
     id: id.toString(),
-    domain: "",
-    registrationDate: isoDate,
-    expiryDate: expires.toString(),
-    cost: "",
-    registrant: owner,
-    labelName: "",
-    events: [],
   });
+  registration.registrant = owner;
+  registration.events = [
+    id.toString(),
+    block.block_number,
+    transaction.transaction_hash,
+  ];
+  await registrationDB.save(registration);
+
+  if (registration) {
+    await registrationDB.create({
+      id: id.toString(),
+      domain: "",
+      registrationDate: isoDate,
+      expiryDate: expires.toString(),
+      cost: "",
+      registrant: owner,
+      labelName: "",
+      events: [],
+    });
+  }
 };

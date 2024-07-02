@@ -5,8 +5,18 @@ import {
   ISecrets,
 } from "@blockflow-labs/utils";
 
-import { Account, WrappedDomain, Domain, Namewrapperevents } from "../../types/schema";
-import { decodeName, createorloadaccount, createorloaddomain, checkPccBurned } from "../../utils/helper";
+import {
+  Account,
+  WrappedDomain,
+  Domain,
+  Namewrapperevents,
+} from "../../types/schema";
+import {
+  decodeName,
+  createorloadaccount,
+  createorloaddomain,
+  checkPccBurned,
+} from "../../utils/helper";
 /**
  * @dev Event::NameWrapped(bytes32 node, bytes name, address owner, uint32 fuses, uint64 expiry)
  * @param context trigger object with contains {event: {node ,name ,owner ,fuses ,expiry }, transaction, block, log}
@@ -36,23 +46,30 @@ export const NameWrappedHandler = async (
   const namewrappereventsDB: Instance = bind(Namewrapperevents);
 
   let account = await createorloadaccount(accountDB, owner, bind);
-  let domain = await createorloaddomain(domainDB, node, block.block_timestamp, bind);
+  let domain = await createorloaddomain(
+    domainDB,
+    node,
+    block.block_timestamp,
+    bind,
+  );
   if (!domain.labelName && label) {
     domain.labelName = label;
     domain.name = decodename;
   }
-  if(
-    checkPccBurned(fuses) && (!domain.expiryDate || expiry > domain.expiryDate!)){
-     domain.expiryDate = expiry;
-    }
-    domain.wrappedOwner = account.id;
-    await domainDB.save(domain);
+  if (
+    checkPccBurned(fuses) &&
+    (!domain.expiryDate || expiry > domain.expiryDate!)
+  ) {
+    domain.expiryDate = expiry;
+  }
+  domain.wrappedOwner = account.id;
+  await domainDB.save(domain);
 
   let wrappeddomain = await wrappeddomainDB.create({
     id: domain.id,
     expiryDate: expiry,
     fuses: fuses,
-    name: decodename
+    name: decodename,
   });
 
   let namewrapperevents = await namewrappereventsDB.create({
@@ -61,6 +78,6 @@ export const NameWrappedHandler = async (
     transactionID: transaction.transaction_hash,
     fuses: fuses,
     expiryDate: expiry,
-    owner: owner
+    owner: owner,
   });
 };

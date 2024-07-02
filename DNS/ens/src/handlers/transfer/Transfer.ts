@@ -22,12 +22,17 @@ export const TransferHandler = async (
 
   const { event, transaction, block, log } = context;
   const { node, owner } = event;
- 
+
   const domainDB: Instance = bind(Domain);
   const accountDB: Instance = bind(Account);
 
-  const account = await  createorloadaccount(accountDB, owner, bind);
-  const domain = await createorloaddomain(domainDB, node, block.block_timestamp, bind);
+  const account = await createorloadaccount(accountDB, owner, bind);
+  const domain = await createorloaddomain(
+    domainDB,
+    node,
+    block.block_timestamp,
+    bind,
+  );
   domain.registrant = account.id;
   domain.events = [node, transaction.transaction_hash];
   await domainDB.save(domain);

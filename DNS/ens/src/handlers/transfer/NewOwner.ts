@@ -26,7 +26,12 @@ export const NewOwnerHandler = async (
 
   let account = await bind(Account).create({ id: owner });
   let registration = await bind(Registration).create({ id: label });
-  let domain = await createorloaddomain(domainDB, node, block.block_timestamp, bind);
+  let domain = await createorloaddomain(
+    domainDB,
+    node,
+    block.block_timestamp,
+    bind,
+  );
 
   registration.domain = domain.id;
   registration.registrationDate = block.block_timestamp;

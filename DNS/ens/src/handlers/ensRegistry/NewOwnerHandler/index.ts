@@ -1,4 +1,4 @@
-import { IEventContext , Instance} from "@blockflow-labs/utils";
+import { IEventContext, Instance } from "@blockflow-labs/utils";
 
 import { Domain, WrappedDomain } from "../../../types/schema";
 import { resolveAddress } from "ethers";
@@ -17,9 +17,14 @@ export const NewOwnerHandler = async (
   const { event, transaction, block, log } = context;
   const { node, label, owner } = event;
 
-  const domainDB : Instance = bind(Domain);
+  const domainDB: Instance = bind(Domain);
 
-  let domain = await createorloaddomain(domainDB, node, block.block_timestamp, bind);
+  let domain = await createorloaddomain(
+    domainDB,
+    node,
+    block.block_timestamp,
+    bind,
+  );
   domain.owner = owner;
   domain.label = label;
   domain.name = label + ".eth";

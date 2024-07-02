@@ -14,8 +14,8 @@ export const NewTTLHandler = async (context: IEventContext, bind: Function) => {
   const domainDB: Instance = bind(Domain);
 
   const domain = await bind(Domain).findOne({
-     id: node.toLowerCase()
-     });
+    id: node.toLowerCase(),
+  });
   if (!domain) {
     await bind(Domain).create({
       id: node.toLowerCase(),
