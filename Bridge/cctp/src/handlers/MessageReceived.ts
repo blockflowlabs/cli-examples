@@ -40,9 +40,8 @@ export const MessageReceivedHandler = async (
   const { caller, sourceDomain, nonce, sender, messageBody } = event;
 
   const srcChainId = domainToChainId[sourceDomain];
-  const feeinUSDId = block.chain_id;
 
-  let amountDestination = "-1";
+  let amountDestination = "0";
   let attestationdata = "";
 
   const isMintAndWithdraw = transaction.logs

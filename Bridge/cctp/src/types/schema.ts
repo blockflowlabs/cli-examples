@@ -6,13 +6,17 @@ export class burnTransactionsTable {
   static entity = "burnTransactionsTable";
   static schema = {
     id: { type: "String", index: true },
-    transactionHash: "string",
-    sourceDomain: "string",
-    destinationDomain: "string",
     amount: "number",
+    timeStamp: "string",
+    isCompleted: "Boolean",
+    sourceDomain: "string",
     mintRecipient: "string",
     messageSender: "string",
-    timeStamp: "string",
+    transactionHash: "string",
+    destinationDomain: "string",
+    burnToken: "string",
+    destinationCaller: "string",
+    destinationTokenMessenger: "string",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
@@ -24,12 +28,12 @@ export class mintTransactionsTable {
   static entity = "mintTransactionsTable";
   static schema = {
     id: { type: "String", index: true },
-    transactionHash: "string",
-    sourceDomain: "string",
-    destinationDomain: "string",
     amount: "number",
-    mintRecipient: "string",
     timeStamp: "string",
+    sourceDomain: "string",
+    mintRecipient: "string",
+    transactionHash: "string",
+    destinationDomain: "string",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
@@ -165,13 +169,18 @@ import { String, Array } from "@blockflow-labs/utils";
 
 export interface IburnTransactionsTable extends Document {
   id: String;
-  transactionHash: string;
-  sourceDomain: string;
-  destinationDomain: string;
   amount: number;
+  timeStamp: string;
+  isCompleted: Boolean;
+  sourceDomain: string;
   mintRecipient: string;
   messageSender: string;
-  timeStamp: string;
+  transactionHash: string;
+  destinationDomain: string;
+
+  burnToken: string;
+  destinationCaller: string;
+  destinationTokenMessenger: string;
   blocknumber: String;
   entityId: String;
   instanceId: String;
@@ -180,12 +189,12 @@ export interface IburnTransactionsTable extends Document {
 
 export interface ImintTransactionsTable extends Document {
   id: String;
-  transactionHash: string;
-  sourceDomain: string;
-  destinationDomain: string;
   amount: number;
-  mintRecipient: string;
   timeStamp: string;
+  sourceDomain: string;
+  mintRecipient: string;
+  transactionHash: string;
+  destinationDomain: string;
   blocknumber: String;
   entityId: String;
   instanceId: String;

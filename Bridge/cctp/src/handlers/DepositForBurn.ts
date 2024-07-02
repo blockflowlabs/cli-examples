@@ -6,7 +6,7 @@ import {
 } from "@blockflow-labs/utils";
 
 import { Stats } from "../utils/tracking";
-import { domainToChainId } from "../utils/helper";
+import { chainIdToDomain, domainToChainId } from "../utils/helper";
 import {
   burnTransactionsTable,
   IburnTransactionsTable,
@@ -50,19 +50,28 @@ export const DepositForBurnHandler = async (
     }
   );
 
-  burntransaction ??= await burntransactionDB.create({
-    id: burnId,
-    burnToken: burnToken.toString(),
-    transactionHash: transaction.transaction_hash,
-    sourceDomain: dstChainId,
-    destinationDomain: destinationDomain.toString(),
-    amount: amount,
-    mintRecipient: mintRecipient.toString(),
-    messageSender: depositor.toString(),
-    timeStamp: block.block_timestamp,
-    destinationTokenMessenger: destinationTokenMessenger.toString(),
-    destinationCaller: destinationCaller.toString(),
-  });
+  if (!burntransaction) {
+    // https://github.com/circlefin/evm-cctp-contracts/blob/master/src/TokenMessenger.sol#L469
+    await burntransactionDB.create({
+      id: burnId,
+      burnToken: burnToken.toString(),
+      transactionHash: transaction.transaction_hash,
+      sourceDomain: chainIdToDomain[block.chain_id],
+      destinationDomain: destinationDomain.toString(),
+      amount: amount,
+      mintRecipient: mintRecipient.toLowerCase().toString(),
+      messageSender: depositor.toString(),
+      timeStamp: block.block_timestamp,
+      destinationTokenMessenger: destinationTokenMessenger.toString(),
+      destinationCaller: destinationCaller.toString(),
+    });
+  } else {
+    // https://github.com/circlefin/evm-cctp-contracts/blob/master/src/TokenMessenger.sol#L290
+    burntransaction.mintRecipient = mintRecipient.toString();
+    burntransaction.destinationCaller = destinationCaller.toString();
+
+    await burntransactionDB.save(burntransaction);
+  }
 
   const mintDB: Instance = bind(mintTransactionsTable);
   const dstTx: ImintTransactionsTable = await mintDB.findOne({
