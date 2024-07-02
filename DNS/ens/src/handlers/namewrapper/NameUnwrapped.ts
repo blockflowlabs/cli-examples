@@ -38,8 +38,8 @@ export const NameUnwrappedHandler = async (
     domain.expiryDate = null;
   }
   domain.save();
-
- let nameunwrapperevent = await nameunwrappereventsDB.create({
+  
+  let nameunwrapperevent = await nameunwrappereventsDB.create({
   id: node,
   blockNumber: block.block_number,
   transactionID: transaction.transaction_hash,

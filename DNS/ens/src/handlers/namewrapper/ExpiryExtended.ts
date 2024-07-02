@@ -23,8 +23,10 @@ export const ExpiryExtendedHandler = async (
   const { node, expiry } = event;
 
   let domainDB : Instance = bind(Domain);
-
-  let wrappeddoamin = await bind(WrappedDomain).findOne({ id: node });
+  let wrappeddoaminDB: Instance = bind(WrappedDomain);
+  let wrappeddoamin = await wrappeddoaminDB.findOne({ 
+    id: node
+   });
   wrappeddoamin.expiryDate = expiry;
   wrappeddoamin.events = [
     node,

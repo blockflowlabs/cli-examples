@@ -24,8 +24,10 @@ export const FusesSetHandler = async (
   const { node, fuses } = event;
 
   const domainDB : Instance = bind(Domain);
-  
-  let wrappeddoamin = await bind(WrappedDomain).findOne({ id: node });
+  let wrappeddomainDB : Instance = bind(WrappedDomain);
+  let wrappeddoamin = await wrappeddomainDB.findOne({ 
+    id: node 
+  });
   wrappeddoamin.fuses = fuses;
   wrappeddoamin.events = [
     node,

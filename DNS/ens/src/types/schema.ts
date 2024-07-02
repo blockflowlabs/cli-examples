@@ -265,6 +265,64 @@ export class VersionChanged {
   };
 }
 
+export class Namewrapperevents {
+  static entity = "Namewrapperevents";
+  static schema = {
+    id: { type: "String", index: true },
+    blockNumber: "Number",
+    transactionID: "String",
+    fuses: "Number",
+    expiryDate: "Number",
+    owner: "String",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
+  };
+}
+
+export class Nameunwrapperevents {
+  static entity = "Nameunwrapperevents";
+  static schema = {
+    id: { type: "String", index: true },
+    blockNumber: "Number",
+    transactionID: "String",
+    owner: "String",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
+  };
+}
+
+export class Fusesburntevent {
+  static entity = "Fusesburntevent";
+  static schema = {
+    id: { type: "String", index: true },
+    fuses: "Number",
+    blockNumber: "Number",
+    transactionID: "String",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
+  };
+}
+
+export class Expiryextendedevent {
+  static entity = "Expiryextendedevent";
+  static schema = {
+    id: { type: "String", index: true },
+    expiryDate: "Number",
+    blockNumber: "Number",
+    transactionID: "String",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
+  };
+}
+
 import { String, Array, Number } from "@blockflow-labs/utils";
 
 export interface IAccount extends Document {
@@ -488,15 +546,48 @@ export interface IVersionChanged extends Document {
   chainId: String;
 }
 
-type Namewrapperevents = {
+export interface INamewrapperevents extends Document {
   id: String;
   blockNumber: Number;
   transactionID: String;
-};
+  fuses: Number;
+  expiryDate: Number;
+  owner: String;
+  blocknumber: String;
+  entityId: String;
+  instanceId: String;
+  chainId: String;
+}
 
-type Fusesburntevent = {
+export interface INameunwrapperevents extends Document {
   id: String;
-  fuses: any;
   blockNumber: Number;
   transactionID: String;
-};
+  owner: String;
+  blocknumber: String;
+  entityId: String;
+  instanceId: String;
+  chainId: String;
+}
+
+export interface IFusesburntevent extends Document {
+  id: String;
+  fuses: Number;
+  blockNumber: Number;
+  transactionID: String;
+  blocknumber: String;
+  entityId: String;
+  instanceId: String;
+  chainId: String;
+}
+
+export interface IExpiryextendedevent extends Document {
+  id: String;
+  expiryDate: Number;
+  blockNumber: Number;
+  transactionID: String;
+  blocknumber: String;
+  entityId: String;
+  instanceId: String;
+  chainId: String;
+}

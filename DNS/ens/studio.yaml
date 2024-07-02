@@ -75,10 +75,10 @@ Resources:
     Address: "0x314159265dd8dbb310642f98f50c066173c1259b"
     Triggers:
       - Event: Transfer(bytes32 indexed,address)
-        Handler: src/handlers/blockflow/Transfer.TransferHandler
+        Handler: src/handlers/transfer/Transfer.TransferHandler
       - Event: NewOwner(bytes32 indexed,bytes32 indexed,address)
-        Handler: src/handlers/blockflow/NewOwner.NewOwnerHandler
+        Handler: src/handlers/transfer/NewOwner.NewOwnerHandler
       - Event: NewResolver(bytes32 indexed,address)
-        Handler: src/handlers/blockflow/NewResolver.NewResolverHandler
+        Handler: src/handlers/transfer/NewResolver.NewResolverHandler
       - Event: NewTTL(bytes32 indexed,uint64)
-        Handler: src/handlers/blockflow/NewTTL.NewTTLHandler
+        Handler: src/handlers/transfer/NewTTL.NewTTLHandler

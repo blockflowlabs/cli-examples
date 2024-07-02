@@ -57,7 +57,7 @@ export const NameWrappedHandler = async (
     name: decodename
   });
 
-  let Namewrapperevents = await namewrappereventsDB.create({
+  let namewrapperevents = await namewrappereventsDB.create({
     id: domain.id,
     blockNumber: block.block_number,
     transactionID: transaction.transaction_hash,
