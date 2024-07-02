@@ -24,21 +24,21 @@ export const FusesSetHandler = async (
   const { node, fuses } = event;
 
   const domainDB : Instance = bind(Domain);
-  let wrappeddomainDB : Instance = bind(WrappedDomain);
-  let wrappeddoamin = await wrappeddomainDB.findOne({ 
+  const wrappeddomainDB : Instance = bind(WrappedDomain);
+  let wrappeddomain = await wrappeddomainDB.findOne({ 
     id: node 
   });
-  wrappeddoamin.fuses = fuses;
-  wrappeddoamin.events = [
+  wrappeddomain.fuses = fuses;
+  wrappeddomain.events = [
     node,
     block.block_number,
     transaction.transaction_hash,
   ];
-  await wrappeddoamin.save();
-  if(wrappeddoamin.expiryDate && checkPccBurned(wrappeddoamin.fuses)){
+  await wrappeddomainDB.save(wrappeddomain);
+  if(wrappeddomain.expiryDate && checkPccBurned(wrappeddomain.fuses)){
     let domain = await createorloaddomain(domainDB,node,block.block_timestamp,bind);
-    if(!domain.expiryDate || wrappeddoamin.expiryDate > domain.expiryDate){
-      domain.expiryDate = wrappeddoamin.expiryDate;
+    if(!domain.expiryDate || wrappeddomain.expiryDate > domain.expiryDate){
+      domain.expiryDate = wrappeddomain.expiryDate;
       await domainDB.save(domain);
     }
   }

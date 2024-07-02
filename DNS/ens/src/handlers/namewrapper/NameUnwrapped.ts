@@ -28,7 +28,7 @@ export const NameUnwrappedHandler = async (
 
   const accountDB: Instance = bind(Account);
   const domainDB: Instance = bind(Domain);
-  let nameunwrappereventsDB: Instance = bind(Nameunwrapperevents);
+  const nameunwrappereventsDB: Instance = bind(Nameunwrapperevents);
 
   let account = await createorloadaccount(accountDB, owner, bind);
   let domain = await createorloaddomain(domainDB,node, block.block_timestamp, bind);

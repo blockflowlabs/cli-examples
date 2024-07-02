@@ -7,8 +7,6 @@ import {
 
 import { Account, WrappedDomain, Domain, Namewrapperevents } from "../../types/schema";
 import { decodeName, createorloadaccount, createorloaddomain, checkPccBurned } from "../../utils/helper";
-import { ExpiryExtendedHandler } from "./ExpiryExtended";
-
 /**
  * @dev Event::NameWrapped(bytes32 node, bytes name, address owner, uint32 fuses, uint64 expiry)
  * @param context trigger object with contains {event: {node ,name ,owner ,fuses ,expiry }, transaction, block, log}

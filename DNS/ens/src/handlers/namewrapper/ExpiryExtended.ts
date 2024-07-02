@@ -23,8 +23,9 @@ export const ExpiryExtendedHandler = async (
   const { node, expiry } = event;
 
   let domainDB : Instance = bind(Domain);
-  let wrappeddoaminDB: Instance = bind(WrappedDomain);
-  let wrappeddoamin = await wrappeddoaminDB.findOne({ 
+  let wrappeddomainDB: Instance = bind(WrappedDomain);
+
+  let wrappeddoamin = await wrappeddomainDB.findOne({ 
     id: node
    });
   wrappeddoamin.expiryDate = expiry;
@@ -33,7 +34,8 @@ export const ExpiryExtendedHandler = async (
     block.block_number,
     transaction.transaction_hash,
   ];
-  await wrappeddoamin.save();
+  await wrappeddomainDB.save(wrappeddoamin);
+
 if(checkPccBurned(wrappeddoamin.fuses)){
   let domain = await createorloaddomain(domainDB,node,block.block_timestamp,bind);
   if(!domain.expiryDate || expiry> domain.expiryDate){
@@ -41,6 +43,7 @@ if(checkPccBurned(wrappeddoamin.fuses)){
     domainDB.save(domain);
   }
 }
+
 let expiryExtendedEvent: Instance = bind(Expiryextendedevent);
 let expiryevent = await bind(Expiryextendedevent).create({
   id: node,
