@@ -16,6 +16,20 @@ export class Account {
   };
 }
 
+export class wrappedTransfer {
+  static entity = "wrappedTransfer";
+  static schema = {
+    id: { type: "String", index: true },
+    blockNumber: "Number",
+    transactionID: "string",
+    owner: "string",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
+  };
+}
+
 export class Registration {
   static entity = "Registration";
   static schema = {
@@ -264,6 +278,17 @@ export interface IAccount extends Document {
   chainId: String;
 }
 
+export interface IwrappedTransfer extends Document {
+  id: String;
+  blockNumber: Number;
+  transactionID: string;
+  owner: string;
+  blocknumber: String;
+  entityId: String;
+  instanceId: String;
+  chainId: String;
+}
+
 export interface IRegistration extends Document {
   id: String;
   domain: String;
@@ -462,3 +487,16 @@ export interface IVersionChanged extends Document {
   instanceId: String;
   chainId: String;
 }
+
+type Namewrapperevents = {
+  id: String;
+  blockNumber: Number;
+  transactionID: String;
+};
+
+type Fusesburntevent = {
+  id: String;
+  fuses: any;
+  blockNumber: Number;
+  transactionID: String;
+};

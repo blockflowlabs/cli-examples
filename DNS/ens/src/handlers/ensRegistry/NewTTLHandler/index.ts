@@ -11,12 +11,12 @@ export const NewTTLHandler = async (context: IEventContext, bind: Function) => {
   const { event, transaction, block, log } = context;
   const { node, ttl } = event;
 
-  const domain = await bind(Domain).findOne({ id: node.toLowerCase()});
+  const domain = await bind(Domain).findOne({ id: node.toLowerCase() });
   if (!domain) {
     await bind(Domain).create({
       id: node.toLowerCase(),
       ttl: ttl.toString(),
-      events:[node, transaction.transaction_hash,block.block_number]
+      events: [node, transaction.transaction_hash, block.block_number],
     });
   } else {
     domain.ttl = ttl.toString();

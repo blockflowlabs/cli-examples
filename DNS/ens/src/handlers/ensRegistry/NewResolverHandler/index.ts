@@ -15,8 +15,8 @@ export const NewResolverHandler = async (
   const { event, transaction, block, log } = context;
   const { node, resolver } = event;
 
-  const id = resolver.toString()+"-"+node.toLowerCase();
-  
+  const id = resolver.toString() + "-" + node.toLowerCase();
+
   let domainDB = await bind(Domain).findOne({ id: node.toLowerCase() });
   domainDB.resolver = id;
 
@@ -26,12 +26,11 @@ export const NewResolverHandler = async (
       id: id,
       address: resolver.toString(),
       domain: node.toLowerCase(),
-      events:[resolver, transaction.transaction_hash]
+      events: [resolver, transaction.transaction_hash],
     });
     domainDB.resolvedAddress = "";
     domainDB.events = [node, transaction.transaction_hash, block.block_number];
-  }
-  else{
+  } else {
     domainDB.resolvedAddress = resolverDB.addr;
   }
   await domainDB.save();

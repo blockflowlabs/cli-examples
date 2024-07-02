@@ -17,7 +17,6 @@ export const NameRegisteredHandler = async (
   const { id, owner, expires } = event;
   const isoDate = new Date(Number(block.block_timestamp) * 1000).toISOString();
 
-  
   const registrationDB: Instance = bind(Registration);
   await registrationDB.create({
     id: id.toString(),

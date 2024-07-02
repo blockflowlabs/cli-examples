@@ -49,10 +49,7 @@ export class Transferhelper {
 
   async saveDomain(domain: any) {
     // await this.recurseDomainDelete(domain);
-    await this.DOMAIN.updateOne(
-      { id: domain.owner.toLowerCase() },
-      domain,
-    ).exec();
+    await this.DOMAIN.updateOne({ id: domain.owner.toLowerCase() }, domain);
   }
 
   async recurseDomainDelete(domain: any) {

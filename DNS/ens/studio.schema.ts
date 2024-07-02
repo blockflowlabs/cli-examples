@@ -7,6 +7,13 @@ interface Account {
   registrations: [String]; // registration ids
 }
 
+interface wrappedTransfer {
+  id: String;
+  blockNumber: Number;
+  transactionID: string;
+  owner: string;
+}
+
 interface Registration {
   id: String;
   domain: String;
@@ -144,4 +151,34 @@ interface VersionChanged {
   resolver: String;
   transactionID: String;
   version: Number;
+}
+
+type Namewrapperevents = {
+  id: String;
+  blockNumber: Number;
+  transactionID: String;
+  fuses: any;
+  expiryDate: any;
+  owner: String;
+};
+
+type Nameunwrapperevents= {
+  id: String;
+  blockNumber: Number;
+  transactionID: String;
+  owner: String;
+};
+
+type Fusesburntevent = {
+  id: String;
+  fuses: any;
+  blockNumber: Number;
+  transactionID: String;
+};
+
+type Expiryextendedevent = {
+  id: String;
+  expiryDate: Number;
+  blockNumber: Number;
+  transactionID: String;
 }

@@ -4,8 +4,12 @@ import {
   createResolverID,
   createEventID,
   getResolver,
-} from "../../../utils/helper";
-import { ContenthashChanged, IResolver, Resolver } from "../../../types/schema";
+} from "../../../../utils/helper";
+import {
+  ContenthashChanged,
+  IResolver,
+  Resolver,
+} from "../../../../types/schema";
 
 /**
  * @dev Event::ContenthashChanged(bytes32 node, bytes hash)

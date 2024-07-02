@@ -36,8 +36,8 @@ export const NewOwnerHandler = async (
       expiryDate: null,
       WrappedDomain: "",
       events: [node, transaction.transaction_hash, block.block_number],
-      registration: ""
-      //do i need to fill all other entries of domain DB??? while creating 
+      registration: "",
+      //do i need to fill all other entries of domain DB??? while creating
     });
   } else {
     domain.owner = owner.toString();
