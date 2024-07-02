@@ -1,10 +1,5 @@
 import { ObjectId } from "@blockflow-labs/utils";
 
-type native = {
-  amount: String;
-  symbol: String;
-};
-
 export interface TokensInfo {
   id: string;
   chainId: string;
@@ -13,13 +8,6 @@ export interface TokensInfo {
   decimals: string;
   priceUsd: number;
   priceRecordTimestamp: number;
-}
-
-interface Oracle {
-  id: string; // Token name
-  price: string;
-  decimals: number;
-  timestamp: number;
 }
 
 type Token = {
@@ -95,26 +83,4 @@ export interface DepositInfoUpdate {
   depositId: String;
   feeAmount: String;
   srcRef: RecordRef;
-}
-
-// GasLeaked, emitted with fundPaidWithMessage
-export interface RefuelInfo {
-  id: String;
-  nativeToken: native;
-  nativeRecipient: String;
-}
-
-export interface ExtraInfo {
-  id: String;
-  flowType: String;
-  gasFeeUsd: String;
-  bridgeFee: String;
-  bridgeFeeUsd: String;
-  nativeRecipientAddress: String;
-  // competitorData: competitorData;
-  // Partner info from middle-ware contract
-  // sys_fee: String;
-  // partner_fee: String;
-  // forwarder_fee: String;
-  // expiry_timestamp: Number;
 }

@@ -18,20 +18,6 @@ export class TokensInfo {
   };
 }
 
-export class Oracle {
-  static entity = "Oracle";
-  static schema = {
-    id: { type: "String", index: true },
-    price: "string",
-    decimals: "number",
-    timestamp: "number",
-    entityId: { type: "String", index: true },
-    blocknumber: { type: "Number", index: true },
-    chainId: { type: "String", index: true },
-    instanceId: { type: "String", index: true },
-  };
-}
-
 export class Destination {
   static entity = "Destination";
   static schema = {
@@ -114,41 +100,7 @@ export class DepositInfoUpdate {
   };
 }
 
-export class RefuelInfo {
-  static entity = "RefuelInfo";
-  static schema = {
-    id: { type: "String", index: true },
-    nativeToken: { amount: "String", symbol: "String" },
-    nativeRecipient: "String",
-    entityId: { type: "String", index: true },
-    blocknumber: { type: "Number", index: true },
-    chainId: { type: "String", index: true },
-    instanceId: { type: "String", index: true },
-  };
-}
-
-export class ExtraInfo {
-  static entity = "ExtraInfo";
-  static schema = {
-    id: { type: "String", index: true },
-    flowType: "String",
-    gasFeeUsd: "String",
-    bridgeFee: "String",
-    bridgeFeeUsd: "String",
-    nativeRecipientAddress: "String",
-    entityId: { type: "String", index: true },
-    blocknumber: { type: "Number", index: true },
-    chainId: { type: "String", index: true },
-    instanceId: { type: "String", index: true },
-  };
-}
-
 import { ObjectId } from "@blockflow-labs/utils";
-
-type native = {
-  amount: String;
-  symbol: String;
-};
 
 export interface ITokensInfo extends Document {
   id: string;
@@ -161,17 +113,6 @@ export interface ITokensInfo extends Document {
   blocknumber: String;
   entityId: String;
   instanceId: String;
-}
-
-export interface IOracle extends Document {
-  id: string; // Token name
-  price: string;
-  decimals: number;
-  timestamp: number;
-  blocknumber: String;
-  entityId: String;
-  instanceId: String;
-  chainId: String;
 }
 
 type Token = {
@@ -256,34 +197,4 @@ export interface IDepositInfoUpdate extends Document {
   blocknumber: String;
   entityId: String;
   instanceId: String;
-}
-
-// GasLeaked, emitted with fundPaidWithMessage
-export interface IRefuelInfo extends Document {
-  id: String;
-  nativeToken: native;
-  nativeRecipient: String;
-  blocknumber: String;
-  entityId: String;
-  instanceId: String;
-  chainId: String;
-}
-
-export interface IExtraInfo extends Document {
-  id: String;
-  flowType: String;
-  gasFeeUsd: String;
-  bridgeFee: String;
-  bridgeFeeUsd: String;
-  nativeRecipientAddress: String;
-  // competitorData: competitorData;
-  // Partner info from middle-ware contract
-  // sys_fee: String;
-  // partner_fee: String;
-  // forwarder_fee: String;
-  // expiry_timestamp: Number;
-  blocknumber: String;
-  entityId: String;
-  instanceId: String;
-  chainId: String;
 }
