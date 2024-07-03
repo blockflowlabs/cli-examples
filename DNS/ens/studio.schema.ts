@@ -2,9 +2,9 @@ import { String, Array, Number } from "@blockflow-labs/utils";
 
 interface Account {
   id: String;
-  domains: [String]; 
-  wrappedDomains: [String]; 
-  registrations: [String]; 
+  domains: [String];
+  wrappedDomains: [String];
+  registrations: [String];
 }
 
 interface wrappedTransfer {
@@ -153,28 +153,28 @@ interface VersionChanged {
   version: Number;
 }
 
-interface Namewrapperevents  {
+interface Namewrapperevents {
   id: String;
   blockNumber: Number;
   transactionID: String;
   fuses: Number;
   expiryDate: Number;
   owner: String;
-};
+}
 
 interface Nameunwrapperevents {
   id: String;
   blockNumber: Number;
   transactionID: String;
   owner: String;
-};
+}
 
 interface Fusesburntevent {
   id: String;
   fuses: Number;
   blockNumber: Number;
   transactionID: String;
-};
+}
 
 interface Expiryextendedevent {
   id: String;

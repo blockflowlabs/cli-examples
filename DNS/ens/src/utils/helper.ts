@@ -15,7 +15,7 @@ export function createEventID(context: IEventContext): string {
 export async function getResolver(
   node: string,
   address: string,
-  resolverDB: Instance,
+  resolverDB: Instance
 ) {
   let id = createResolverID(node, address);
   let resolver = await resolverDB.findOne({ id: id.toLowerCase() });
@@ -78,7 +78,7 @@ export class Transferhelper {
     // await this.recurseDomainDelete(domain);
     await this.DOMAIN.updateOne(
       { id: domain.owner.toLowerCase() },
-      domain,
+      domain
     ).exec();
   }
 
@@ -96,7 +96,7 @@ export class Transferhelper {
         parentDomain.subdomainCount = parentDomain.subdomainCount - 1;
         await this.DOMAIN.updateOne(
           { id: domain.parent.toLowerCase() },
-          parentDomain,
+          parentDomain
         );
         this.recurseDomainDelete(parentDomain);
       }
@@ -136,7 +136,7 @@ export function decodeName(buf: Uint8Array): Array<string> | null {
         return false;
       } else if (charCode === 46) {
         console.warn(
-          `Invalid label '${name}' contained separator char '.'. Skipping.`,
+          `Invalid label '${name}' contained separator char '.'. Skipping.`
         );
         return false;
       } else if (charCode === 91) {
@@ -182,12 +182,11 @@ export function toHexString(value: bigint): string {
 }
 
 export async function createorloaddomain(
-  Domain: Instance,
+  domainDB: Instance,
   node: string,
   timestamp: String,
-  bind: Function,
+  bind: Function
 ) {
-  let domainDB: Instance = bind(Domain);
   let domain = await domainDB.findOne({ id: node.toLowerCase() });
   if (!domain) {
     domain = await domainDB.create({
@@ -219,7 +218,7 @@ export async function createorloaddomain(
 export async function createorloadaccount(
   Account: Instance,
   owner: string,
-  bind: Function,
+  bind: Function
 ) {
   let accountDB: Instance = bind(Account);
   let account = await accountDB.findOne({ id: owner.toLowerCase() });

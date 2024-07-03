@@ -15,7 +15,7 @@ import { createorloaddomain } from "../../utils/helper";
 export const NewOwnerHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets,
+  secrets: ISecrets
 ) => {
   // Implement your event handler logic for NewOwner here
 
@@ -30,7 +30,7 @@ export const NewOwnerHandler = async (
     domainDB,
     node,
     block.block_timestamp,
-    bind,
+    bind
   );
 
   registration.domain = domain.id;

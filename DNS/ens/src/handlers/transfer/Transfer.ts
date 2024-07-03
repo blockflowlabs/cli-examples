@@ -16,7 +16,7 @@ import { createorloadaccount, createorloaddomain } from "../../utils/helper";
 export const TransferHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets,
+  secrets: ISecrets
 ) => {
   // Implement your event handler logic for Transfer here
 
@@ -31,9 +31,14 @@ export const TransferHandler = async (
     domainDB,
     node,
     block.block_timestamp,
-    bind,
+    bind
   );
   domain.registrant = account.id;
-  domain.events = [node, transaction.transaction_hash];
+  domain.events.push({
+    domain: node,
+    transactionID: transaction.transaction_hash,
+    blockNumber: block.block_number,
+  });
+
   await domainDB.save(domain);
 };

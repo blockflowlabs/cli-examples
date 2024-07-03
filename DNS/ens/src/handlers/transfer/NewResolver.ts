@@ -15,7 +15,7 @@ import { createorloaddomain } from "../../utils/helper";
 export const NewResolverHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets,
+  secrets: ISecrets
 ) => {
   // Implement your event handler logic for NewResolver here
 
@@ -27,7 +27,7 @@ export const NewResolverHandler = async (
     domainDB,
     node,
     block.block_timestamp,
-    bind,
+    bind
   );
   domain.resolver = resolver;
   await domainDB.save(domain);
