@@ -64,7 +64,7 @@ export const UserOperationEventHandler = async (
     )
     : null;
      
-     ERC20TransferAmount = useropevent?.log_data || "";
+     ERC20TransferAmount = parseInt(useropevent?.log_data || "").toString()  || "";
      ERC20TransferFromAddress = useropevent?.topics[1] || "";
      ERC20TransferToAddress = useropevent?.topics[2] || "";
 
