@@ -43,6 +43,7 @@ interface Paymaster {
   createdAt: String;
   updatedAt: String;
   totalOperations: String;
+  gasSponsored: String;
 }
 
 interface Bundler {

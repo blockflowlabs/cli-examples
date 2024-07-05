@@ -84,6 +84,7 @@ export class Paymaster {
     createdAt: "String",
     updatedAt: "String",
     totalOperations: "String",
+    gasSponsored: "String",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
@@ -225,6 +226,7 @@ export interface IPaymaster extends Document {
   createdAt: String;
   updatedAt: String;
   totalOperations: String;
+  gasSponsored: String;
   blocknumber: String;
   entityId: String;
   instanceId: String;

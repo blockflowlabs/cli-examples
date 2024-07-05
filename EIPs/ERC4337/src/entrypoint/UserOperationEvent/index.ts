@@ -53,7 +53,7 @@ export const UserOperationEventHandler = async (
     
     await updateBlockchain(bind(Blockchain));
     // prettier-ignore
-    await updatePaymaster(bind(Paymaster), block.block_timestamp, paymaster, userOpHash);
+    await updatePaymaster(bind(Paymaster), block.block_timestamp, paymaster, userOpHash, actualGasUsed);
     // prettier-ignore
     await updateBundler(bind(Bundler), block.block_timestamp, transaction.transaction_from_address, userOpHash);
 
@@ -143,6 +143,7 @@ const updatePaymaster = async (
   timestamp: string,
   paymaster: string,
   userOpHash: string,
+  actualGasUsed: string
 ) => {
   try {
     let $paymaster: IPaymaster = await paymasterDB.findOne({
@@ -152,6 +153,7 @@ const updatePaymaster = async (
       id: paymaster.toLowerCase(),
       totalOperations: "0",
       createdAt: timestamp,
+      gasSponsored: actualGasUsed
     });
 
     $paymaster.ops.push(userOpHash);
@@ -161,6 +163,7 @@ const updatePaymaster = async (
     )
       .plus(1)
       .toString();
+    $paymaster.gasSponsored += actualGasUsed;
 
     await paymasterDB.save($paymaster);
   } catch (error) {
