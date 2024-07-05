@@ -9,12 +9,14 @@ interface Transaction {
 interface Block {
   id: string; // keep this same as block number
   transactionHashesWithUserOps: [string];
+  blockNumber: string;
 }
 
 interface AccountFactory {
   id: String;
   totalAccount: String;
   accounts: [String];
+  blockNumber: String;
 }
 
 interface Account {
@@ -88,4 +90,8 @@ interface UserOperation {
   paymasterAndData: string;
   signature: string;
   beneficiary: string;
+  ERC20TransferAmount: string;
+  ERC20TransferFrom: string;
+  ERC20TransferTo: string;
+  ERC20Token: string;
 }

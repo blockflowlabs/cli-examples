@@ -1,5 +1,6 @@
 import { keccak256 } from "@ethersproject/keccak256";
 import { defaultAbiCoder } from "@ethersproject/abi";
+import { Interface } from "ethers";
 
 function pack(userOp: any) {
   const sender = userOp.sender;
@@ -55,3 +56,5 @@ function getUserOpHash(userOp: any, entryPointAddr: string, chainId: string) {
 }
 
 export default getUserOpHash;
+
+export const USER_OP_EVENT_TRANSFER_TOPIC0 = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef";

@@ -1,5 +1,5 @@
 import { BigNumber } from "bignumber.js";
-import { IEventContext, IBind, Instance } from "@blockflow-labs/utils";
+import { IEventContext, IBind, Instance, ITransaction } from "@blockflow-labs/utils";
 
 import {
   UserOperation,
@@ -14,6 +14,7 @@ import {
   IBlockchain,
 } from "../../types/schema";
 
+import { USER_OP_EVENT_TRANSFER_TOPIC0 } from "../../utils/helpers";
 /**
  * @dev Event::UserOperationEvent(bytes32 userOpHash, address sender, address paymaster, uint256 nonce, bool success, uint256 actualGasCost, uint256 actualGasUsed)
  * @param context trigger object with contains {event: {userOpHash ,sender ,paymaster ,nonce ,success ,actualGasCost ,actualGasUsed }, transaction, block, log}
@@ -44,12 +45,28 @@ export const UserOperationEventHandler = async (
     userOpHash = userOpHash.toString();
     actualGasCost = actualGasCost.toString();
     actualGasUsed = actualGasUsed.toString();
+    
+    let ERC20TransferAmount = "";
+    let ERC20TransferFromAddress = "";
+    let ERC20TransferToAddress = "";
 
+    
     await updateBlockchain(bind(Blockchain));
     // prettier-ignore
     await updatePaymaster(bind(Paymaster), block.block_timestamp, paymaster, userOpHash);
     // prettier-ignore
     await updateBundler(bind(Bundler), block.block_timestamp, transaction.transaction_from_address, userOpHash);
+
+    const useropevent = transaction.logs
+    ? transaction.logs.find(
+      (log) =>
+        log.topics[0].toLowerCase() === USER_OP_EVENT_TRANSFER_TOPIC0.toLowerCase()
+    )
+    : null;
+     
+     ERC20TransferAmount = useropevent?.log_data || "";
+     ERC20TransferFromAddress = useropevent?.topics[1] || "";
+     ERC20TransferToAddress = useropevent?.topics[2] || "";
 
     const accountDB = bind(Account);
     let account: IAccount = await accountDB.findOne({
@@ -89,6 +106,9 @@ export const UserOperationEventHandler = async (
     userOp.createdAt = block.block_timestamp;
     userOp.entryPoint = transaction.transaction_to_address;
     userOp.network = "mainnet";
+    userOp.ERC20TransferFrom = ERC20TransferFromAddress;
+    userOp.ERC20TransferTo = ERC20TransferToAddress;
+    userOp.ERC20TransferAmount = ERC20TransferAmount;
 
     await userOpDB.save(userOp);
   } catch (error) {
@@ -117,11 +137,12 @@ const updateBlockchain = async (blockchainDB: Instance) => {
   }
 };
 
+
 const updatePaymaster = async (
   paymasterDB: Instance,
   timestamp: string,
   paymaster: string,
-  userOpHash: string
+  userOpHash: string,
 ) => {
   try {
     let $paymaster: IPaymaster = await paymasterDB.findOne({
