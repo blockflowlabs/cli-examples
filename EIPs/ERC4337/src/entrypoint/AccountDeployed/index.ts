@@ -20,7 +20,7 @@ import {
 export const AccountDeployedHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: any
+  secrets: any,
 ) => {
   try {
     // Implement your event handler logic for UserOperationRevertReason here
@@ -37,7 +37,7 @@ export const AccountDeployedHandler = async (
       bind(Paymaster),
       block.block_timestamp,
       paymaster,
-      userOpHash
+      userOpHash,
     );
     await updateAccountFactory(bind(AccountFactory), factory, sender);
 
@@ -89,7 +89,7 @@ const updatePaymaster = async (
   paymasterDB: Instance,
   timestamp: string,
   id: string,
-  userOpHash: string
+  userOpHash: string,
 ) => {
   try {
     let paymaster: IPaymaster = await paymasterDB.findOne({
@@ -104,7 +104,7 @@ const updatePaymaster = async (
     paymaster.ops.push(userOpHash);
     paymaster.updatedAt = timestamp;
     paymaster.totalOperations = new BigNumber(
-      paymaster.totalOperations.toString()
+      paymaster.totalOperations.toString(),
     )
       .plus(1)
       .toString();
@@ -118,7 +118,7 @@ const updatePaymaster = async (
 const updateAccountFactory = async (
   factoryDB: Instance,
   id: string,
-  account: string
+  account: string,
 ) => {
   try {
     let factory: IAccountFactory = await factoryDB.findOne({

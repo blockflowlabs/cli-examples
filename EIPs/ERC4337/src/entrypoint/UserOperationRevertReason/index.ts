@@ -13,7 +13,7 @@ import {
 export const UserOperationRevertReasonHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: any
+  secrets: any,
 ) => {
   try {
     // Implement your event handler logic for UserOperationRevertReason here

@@ -254,8 +254,8 @@ export const paymasterHandler = async (context: any, bind: ABind) => {
       {
         skip: skip,
         limit: limit,
-      }
-    ))
+      },
+    )),
   );
 
   return response;

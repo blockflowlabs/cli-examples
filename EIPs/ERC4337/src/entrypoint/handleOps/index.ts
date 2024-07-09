@@ -18,7 +18,7 @@ const CHAIN_ID = "1";
 export const handleOps = async (
   context: IFunctionContext,
   bind: IBind,
-  secrets: any
+  secrets: any,
 ) => {
   // Implement your function handler logic for handleOps here
 
@@ -34,7 +34,7 @@ export const handleOps = async (
   await updateBlock(
     bind(Block),
     block.block_number.toString(),
-    transactionHash
+    transactionHash,
   );
 
   // transaction
@@ -84,7 +84,7 @@ export const handleOps = async (
 const updateBlock = async (
   blockDB: Instance,
   id: string,
-  transactionHash: string
+  transactionHash: string,
 ) => {
   let block = await blockDB.findOne({ id });
   block ??= await blockDB.create({ id });

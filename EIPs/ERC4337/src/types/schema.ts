@@ -100,6 +100,10 @@ export class Bundler {
     createdAt: "String",
     updatedAt: "String",
     totalOperations: "String",
+    sender: "String",
+    target: "String",
+    fee: "String",
+    gasCollected: "String",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
@@ -150,10 +154,7 @@ export class UserOperation {
     paymasterAndData: "string",
     signature: "string",
     beneficiary: "string",
-    ERC20TransferAmount: "string",
-    ERC20TransferFrom: "string",
-    ERC20TransferTo: "string",
-    ERC20Token: "string",
+    ERC20Data: "string",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
@@ -161,6 +162,20 @@ export class UserOperation {
   };
 }
 
+export class UserOpLogs {
+  static entity = "UserOpLogs";
+  static schema = {
+    id: { type: "String", index: true },
+    numberOfLogs: "number",
+    JSONdata: ["String"],
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
+  };
+}
+
+import { Array } from "@blockflow-labs/utils";
 export interface ITransaction extends Document {
   id: string; // keep this same as transaction hash
   transactionHash: string;
@@ -239,6 +254,10 @@ export interface IBundler extends Document {
   createdAt: String;
   updatedAt: String;
   totalOperations: String;
+  sender: String;
+  target: String;
+  fee: String;
+  gasCollected: String;
   blocknumber: String;
   entityId: String;
   instanceId: String;
@@ -286,10 +305,23 @@ export interface IUserOperation extends Document {
   paymasterAndData: string;
   signature: string;
   beneficiary: string;
+  ERC20Data: string;
+  blocknumber: String;
+  entityId: String;
+  instanceId: String;
+  chainId: String;
+}
+
+type ERC20data = {
   ERC20TransferAmount: string;
   ERC20TransferFrom: string;
   ERC20TransferTo: string;
-  ERC20Token: string;
+};
+
+export interface IUserOpLogs extends Document {
+  id: String;
+  numberOfLogs: number;
+  JSONdata: [String];
   blocknumber: String;
   entityId: String;
   instanceId: String;

@@ -57,4 +57,5 @@ function getUserOpHash(userOp: any, entryPointAddr: string, chainId: string) {
 
 export default getUserOpHash;
 
-export const USER_OP_EVENT_TRANSFER_TOPIC0 = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef";
+export const USER_OP_EVENT_TRANSFER_TOPIC0 =
+  "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef";
