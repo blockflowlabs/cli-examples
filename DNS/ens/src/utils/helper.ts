@@ -125,30 +125,30 @@ export function decodeName(buf: Uint8Array): Array<string> | null {
     return [firstLabel, "."];
   }
 
-  function checkValidLabel(name: string | null): boolean {
-    if (name == null) {
-      return false;
-    }
-    for (let i = 0; i < name.length; i++) {
-      let charCode = name.charCodeAt(i);
-      if (charCode === 0) {
-        console.warn(`Invalid label '${name}' contained null byte. Skipping.`);
-        return false;
-      } else if (charCode === 46) {
-        console.warn(
-          `Invalid label '${name}' contained separator char '.'. Skipping.`
-        );
-        return false;
-      } else if (charCode === 91) {
-        console.warn(`Invalid label '${name}' contained char '['. Skipping.`);
-        return false;
-      } else if (charCode === 93) {
-        console.warn(`Invalid label '${name}' contained char ']'. Skipping.`);
-        return false;
-      }
-    }
-    return true;
-  }
+  // function checkValidLabel(name: string | null): boolean {
+  //   if (name == null) {
+  //     return false;
+  //   }
+  //   for (let i = 0; i < name.length; i++) {
+  //     let charCode = name.charCodeAt(i);
+  //     if (charCode === 0) {
+  //       console.warn(`Invalid label '${name}' contained null byte. Skipping.`);
+  //       return false;
+  //     } else if (charCode === 46) {
+  //       console.warn(
+  //         `Invalid label '${name}' contained separator char '.'. Skipping.`
+  //       );
+  //       return false;
+  //     } else if (charCode === 91) {
+  //       console.warn(`Invalid label '${name}' contained char '['. Skipping.`);
+  //       return false;
+  //     } else if (charCode === 93) {
+  //       console.warn(`Invalid label '${name}' contained char ']'. Skipping.`);
+  //       return false;
+  //     }
+  //   }
+  //   return true;
+  // }
 
   function concat(a: Uint8Array, b: Uint8Array): Uint8Array {
     let c = new Uint8Array(a.length + b.length);
@@ -161,9 +161,9 @@ export function decodeName(buf: Uint8Array): Array<string> | null {
     let label = hex.slice((offset + 1) * 2, (offset + 1 + len) * 2);
     let labelBytes = Uint8Array.from(Buffer.from(label, "hex"));
 
-    if (!checkValidLabel(String.fromCharCode(...labelBytes))) {
-      return null;
-    }
+    // if (!checkValidLabel(String.fromCharCode(...labelBytes))) {
+    //   return null;
+    // }
 
     if (offset > 1) {
       list = concat(list, dot);
@@ -216,11 +216,10 @@ export async function createorloaddomain(
 }
 
 export async function createorloadaccount(
-  Account: Instance,
+  accountDB: Instance,
   owner: string,
   bind: Function
 ) {
-  let accountDB: Instance = bind(Account);
   let account = await accountDB.findOne({ id: owner.toLowerCase() });
   if (!account) {
     account = await accountDB.create({
