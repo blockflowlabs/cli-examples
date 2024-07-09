@@ -111,72 +111,47 @@ export class Transferhelper {
   }
 }
 
-export function decodeName(buf: Uint8Array): Array<string> | null {
+export function decodeName(buf: Uint8Array): string | false {
   let offset = 0;
-  let list = new Uint8Array(0);
-  const dot = new Uint8Array([0x2e]);
   let len = buf[offset++];
-  let hex = Array.from(buf)
-    .map((byte) => byte.toString(16).padStart(2, "0"))
-    .join("");
-  let firstLabel = "";
+  let name = "";
 
   if (len === 0) {
-    return [firstLabel, "."];
+    return "";
   }
 
-  // function checkValidLabel(name: string | null): boolean {
-  //   if (name == null) {
-  //     return false;
-  //   }
-  //   for (let i = 0; i < name.length; i++) {
-  //     let charCode = name.charCodeAt(i);
-  //     if (charCode === 0) {
-  //       console.warn(`Invalid label '${name}' contained null byte. Skipping.`);
-  //       return false;
-  //     } else if (charCode === 46) {
-  //       console.warn(
-  //         `Invalid label '${name}' contained separator char '.'. Skipping.`
-  //       );
-  //       return false;
-  //     } else if (charCode === 91) {
-  //       console.warn(`Invalid label '${name}' contained char '['. Skipping.`);
-  //       return false;
-  //     } else if (charCode === 93) {
-  //       console.warn(`Invalid label '${name}' contained char ']'. Skipping.`);
-  //       return false;
-  //     }
-  //   }
-  //   return true;
-  // }
-
-  function concat(a: Uint8Array, b: Uint8Array): Uint8Array {
-    let c = new Uint8Array(a.length + b.length);
-    c.set(a);
-    c.set(b, a.length);
-    return c;
-  }
-
-  while (len) {
-    let label = hex.slice((offset + 1) * 2, (offset + 1 + len) * 2);
-    let labelBytes = Uint8Array.from(Buffer.from(label, "hex"));
-
-    // if (!checkValidLabel(String.fromCharCode(...labelBytes))) {
-    //   return null;
-    // }
-
-    if (offset > 1) {
-      list = concat(list, dot);
-    } else {
-      firstLabel = String.fromCharCode(...labelBytes);
+  function checkValidLabel(labelBytes: Uint8Array): boolean {
+    for (let i = 0; i < labelBytes.length; i++) {
+      let byte = labelBytes[i];
+      if (byte === 0 || byte === 46 || byte === 91 || byte === 93) {
+        return false;
+      }
     }
-    list = concat(list, labelBytes);
+    return true;
+  }
+
+  while (len > 0 && offset < buf.length) {
+    let labelHex = Array.from(buf.slice(offset, offset + len))
+      .map((byte) => byte.toString(16).padStart(2, "0"))
+      .join("");
+    let labelBytes = new Uint8Array(Buffer.from(labelHex, "hex"));
+
+    if (!checkValidLabel(labelBytes)) {
+      return false;
+    }
+
+    let labelString = new TextDecoder().decode(labelBytes);
+    name += labelString + ".";
     offset += len;
     len = buf[offset++];
   }
-  return [firstLabel, String.fromCharCode(...list)];
-}
 
+  if (name.endsWith(".")) {
+    name = name.slice(0, -1);
+  }
+
+  return name;
+}
 export function toHexString(value: bigint): string {
   return "0x" + value.toString(16).padStart(64, "0");
 }
