@@ -1,10 +1,10 @@
-name: Project Apollo
-description: A top-secret research project to the moon
-startBlock: latest
-userId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
-projectId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
+name: Avoscan
+description: It is to index avocado wallets.
+startBlock: 20267333
+userId: XXX-XXX-XXXX
+projectId: XXX-XXX-XXXX
 network: Ethereum
-user: Jane-doe
+user: Jane-Doe
 schema:
   file: ./studio.schema.ts
 execution: parallel

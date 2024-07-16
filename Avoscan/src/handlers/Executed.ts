@@ -19,12 +19,14 @@ export const ExecutedHandler = async (
   secrets: ISecrets
 ) => {
   const { event, transaction, block, log } = context;
-  const { avoSafeOwner, avoSafeAddress, source, metadata } = event;
+  const { avocadoOwner, avocadoAddress } = event;
 
   const avoDataDB: Instance = bind(avoData);
   const id = transaction.transaction_hash + ":" + log.log_index.toString();
 
-  const actions = getAllTransactionActions(transaction.logs);
+  const actions = getAllTransactionActions(transaction.logs).filter(
+    (action) => action != null
+  );
 
   await avoDataDB.create({
     id: id,
@@ -34,7 +36,7 @@ export const ExecutedHandler = async (
     time: block.block_timestamp.toString(),
     network: "ETH",
     actions,
-    user: avoSafeOwner,
-    avocadoWallet: avoSafeAddress,
+    user: avocadoOwner,
+    avocadoWallet: avocadoAddress,
   });
 };
