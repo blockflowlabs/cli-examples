@@ -1,0 +1,103 @@
+name: Project Apollo
+description: A top-secret research project to the moon
+startBlock: latest
+userId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
+projectId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
+network: Ethereum
+user: Jane-doe
+schema:
+  file: ./studio.schema.ts
+execution: parallel
+Resources:
+  - Name: operatorregistry
+    Abi: src/abis/operatorregistry.json
+    Type: contract/event
+    Address: "0x0BAAc79acD45A023E19345c352d8a7a83C4e5656"
+    Triggers:
+      - Event: ChurnApproverUpdated(address,address)
+        Handler: >-
+          src/handlers/operatorregistry/ChurnApproverUpdated.ChurnApproverUpdatedHandler
+      - Event: EjectorUpdated(address,address)
+        Handler: src/handlers/operatorregistry/EjectorUpdated.EjectorUpdatedHandler
+      - Event: Initialized(uint8)
+        Handler: src/handlers/operatorregistry/Initialized.InitializedHandler
+      - Event: OperatorDeregistered(address indexed,bytes32 indexed)
+        Handler: >-
+          src/handlers/operatorregistry/OperatorDeregistered.OperatorDeregisteredHandler
+      - Event: OperatorRegistered(address indexed,bytes32 indexed)
+        Handler: >-
+          src/handlers/operatorregistry/OperatorRegistered.OperatorRegisteredHandler
+      - Event: OperatorSetParamsUpdated(uint8 indexed,tuple(uint32,uint16,uint16))
+        Handler: >-
+          src/handlers/operatorregistry/OperatorSetParamsUpdated.OperatorSetParamsUpdatedHandler
+      - Event: OperatorSocketUpdate(bytes32 indexed,string)
+        Handler: >-
+          src/handlers/operatorregistry/OperatorSocketUpdate.OperatorSocketUpdateHandler
+      - Event: QuorumBlockNumberUpdated(uint8 indexed,uint256)
+        Handler: >-
+          src/handlers/operatorregistry/QuorumBlockNumberUpdated.QuorumBlockNumberUpdatedHandler
+      - Event: Unpaused(address indexed,uint256)
+        Handler: src/handlers/operatorregistry/Unpaused.UnpausedHandler
+  - Name: stakeregistry
+    Abi: src/abis/stakeregistry.json
+    Type: contract/event
+    Address: "0x006124Ae7976137266feeBFb3F4D2BE4C073139D"
+    Triggers:
+      - Event: MinimumStakeForQuorumUpdated(uint8 indexed,uint96)
+        Handler: >-
+          src/handlers/stakeregistry/MinimumStakeForQuorumUpdated.MinimumStakeForQuorumUpdatedHandler
+      - Event: OperatorStakeUpdate(bytes32 indexed,uint8,uint96)
+        Handler: >-
+          src/handlers/stakeregistry/OperatorStakeUpdate.OperatorStakeUpdateHandler
+      - Event: QuorumCreated(uint8 indexed)
+        Handler: src/handlers/stakeregistry/QuorumCreated.QuorumCreatedHandler
+      - Event: StrategyAddedToQuorum(uint8 indexed,address)
+        Handler: >-
+          src/handlers/stakeregistry/StrategyAddedToQuorum.StrategyAddedToQuorumHandler
+      - Event: StrategyMultiplierUpdated(uint8 indexed,address,uint256)
+        Handler: >-
+          src/handlers/stakeregistry/StrategyMultiplierUpdated.StrategyMultiplierUpdatedHandler
+      - Event: StrategyRemovedFromQuorum(uint8 indexed,address)
+        Handler: >-
+          src/handlers/stakeregistry/StrategyRemovedFromQuorum.StrategyRemovedFromQuorumHandler
+  - Name: indexregistry
+    Abi: src/abis/indexregistry.json
+    Type: contract/event
+    Address: "0xBd35a7a1CDeF403a6a99e4E8BA0974D198455030"
+    Triggers: 
+      - Event: Initialized(uint8)
+        Handler: src/handlers/indexregistry/Initialized.InitializedHandler
+      - Event: QuorumIndexUpdate(bytes32 indexed,uint8,uint32)
+        Handler: src/handlers/indexregistry/QuorumIndexUpdate.QuorumIndexUpdateHandler
+  - Name: blsapkregistry
+    Abi: src/abis/blsapkregistry.json
+    Type: contract/event
+    Address: "0x00A5Fd09F6CeE6AE9C8b0E5e33287F7c82880505"
+    Triggers:
+      - Event: Initialized(uint8)
+        Handler: src/handlers/blsapkregistry/Initialized.InitializedHandler
+      - Event: >-
+          NewPubkeyRegistration(address
+          indexed,tuple(uint256,uint256),tuple(uint256[2],uint256[2]))
+        Handler: >-
+          src/handlers/blsapkregistry/NewPubkeyRegistration.NewPubkeyRegistrationHandler
+      - Event: OperatorAddedToQuorums(address,bytes32,bytes)
+        Handler: >-
+          src/handlers/blsapkregistry/OperatorAddedToQuorums.OperatorAddedToQuorumsHandler
+      - Event: OperatorRemovedFromQuorums(address,bytes32,bytes)
+        Handler: >-
+          src/handlers/blsapkregistry/OperatorRemovedFromQuorums.OperatorRemovedFromQuorumsHandler
+  - Name: eigendaservicemanager
+    Abi: src/abis/eigendaservicemanager.json
+    Type: contract/event
+    Address: "0x870679E138bCdf293b7Ff14dD44b70FC97e12fc0"
+    Triggers:
+      - Event: BatchConfirmed(bytes32 indexed,uint32)
+        Handler: >-
+          src/handlers/eigendaservicemanager/BatchConfirmed.BatchConfirmedHandler
+      - Event: BatchConfirmerStatusChanged(address,bool)
+        Handler: >-
+          src/handlers/eigendaservicemanager/BatchConfirmerStatusChanged.BatchConfirmerStatusChangedHandler
+      - Event: Initialized(uint8)
+        Handler: src/handlers/eigendaservicemanager/Initialized.InitializedHandler
+      
