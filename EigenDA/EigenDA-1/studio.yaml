@@ -1,0 +1,26 @@
+name: Eigen DA
+description: It is to make blob explorer
+startBlock: 20325977
+userId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
+projectId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
+network: Ethereum
+user: Vaibhav Dwivedi
+schema:
+  file: ./studio.schema.ts
+execution: parallel
+Resources:
+  - Name: edasm
+    Abi: src/abis/edasm.json
+    Type: contract/function
+    Address: "0x870679E138bCdf293b7Ff14dD44b70FC97e12fc0"
+    Triggers:
+      - Function: >-
+          confirmBatch((bytes32,bytes,bytes,uint32),(uint32[],(uint256,uint256)[],(uint256,uint256)[],(uint256[2],uint256[2]),(uint256,uint256),uint32[],uint32[],uint32[][]))
+        Handler: src/handlers/edasm/confirmBatch.ConfirmBatchHandler
+  - Name: edasm
+    Abi: src/abis/edasm.json
+    Type: contract/event
+    Address: "0x870679E138bCdf293b7Ff14dD44b70FC97e12fc0"
+    Triggers:
+      - Event: BatchConfirmed(bytes32 indexed,uint32)
+        Handler: src/handlers/edasm/BatchConfirmed.BatchConfirmedHandler
