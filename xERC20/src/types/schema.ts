@@ -109,6 +109,22 @@ export class LockBoxSet {
   };
 }
 
+export class LockBoxData {
+  static entity = "LockBoxData";
+  static schema = {
+    id: { type: "String", index: true },
+    lockboxaddress: "string",
+    senderAccount: "string",
+    depositedAmount: "number",
+    withdrawnAmount: "number",
+    netAmount: "number",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
+  };
+}
+
 import { String } from "@blockflow-labs/utils";
 
 export interface ITransfer extends Document {
@@ -197,6 +213,19 @@ export interface ILockBoxSet extends Document {
   block_timestamp: string;
   block_hash: string;
   block_number: string;
+  blocknumber: String;
+  entityId: String;
+  instanceId: String;
+  chainId: String;
+}
+
+export interface ILockBoxData extends Document {
+  id: String;
+  lockboxaddress: string;
+  senderAccount: string;
+  depositedAmount: number;
+  withdrawnAmount: number;
+  netAmount: number;
   blocknumber: String;
   entityId: String;
   instanceId: String;

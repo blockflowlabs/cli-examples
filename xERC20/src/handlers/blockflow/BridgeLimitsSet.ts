@@ -4,10 +4,7 @@ import {
   Instance,
   ISecrets,
 } from "@blockflow-labs/utils";
-import{
-  IBridgeLimitsSet,
-  BridgeLimitsSet
-} from "../../types/schema";
+import { IBridgeLimitsSet, BridgeLimitsSet } from "../../types/schema";
 
 /**
  * @dev Event::BridgeLimitsSet(uint256 _mintingLimit, uint256 _burningLimit, address _bridge)
@@ -28,9 +25,9 @@ export const BridgeLimitsSetHandler = async (
   const bridgeId = `${_bridge.toString()}`.toLowerCase();
 
   let bridgedata = await bridgeLimitsSetDB.findOne({
-    id: bridgeId
+    id: bridgeId,
   });
-  if(!bridgeId){
+  if (!bridgeId) {
     bridgedata = await bridgeLimitsSetDB.create({
       id: bridgeId,
       mintingLimit: _mintingLimit,
@@ -38,10 +35,9 @@ export const BridgeLimitsSetHandler = async (
       bridge: _bridge,
       block_timestamp: block.block_timestamp,
       block_hash: block.block_hash,
-      block_number: block.block_number
+      block_number: block.block_number,
     });
-  }
-  else{
+  } else {
     bridgedata.mintingLimit = _mintingLimit;
     bridgedata.burningLimit = _burningLimit;
     bridgedata.block_timestamp = block.block_timestamp;

@@ -54,7 +54,7 @@ export interface Token {
   total_transferred: string;
 }
 
-export interface BridgeLimitsSet{
+export interface BridgeLimitsSet {
   id: String;
   mintingLimit: Number;
   burningLimit: Number;
@@ -64,10 +64,19 @@ export interface BridgeLimitsSet{
   block_number: string;
 }
 
-export interface LockBoxSet{
+export interface LockBoxSet {
   id: String;
   lockboxaddress: string;
   block_timestamp: string;
   block_hash: string;
   block_number: string;
+}
+
+export interface LockBoxData{
+  id: String;
+  lockboxaddress: string;
+  senderAccount: string;
+  depositedAmount: number;
+  withdrawnAmount: number;
+  netAmount: number;
 }

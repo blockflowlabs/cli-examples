@@ -24,17 +24,16 @@ export const LockboxSetHandler = async (
 
   const LockBoxSetDB: Instance = bind(LockBoxSet);
   let lockboxset = await LockBoxSetDB.findOne({
-    id: _lockbox
+    id: _lockbox,
   });
   //should lockbox id be the address itself only???
-  if(!lockboxset){
+  if (!lockboxset) {
     await LockBoxSetDB.create({
       id: _lockbox,
       lockboxaddress: _lockbox,
       block_timestamp: block.block_timestamp,
       block_hash: block.block_hash,
-      block_number: block.block_number
-    })
+      block_number: block.block_number,
+    });
   }
-
 };

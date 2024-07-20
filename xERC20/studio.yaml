@@ -20,3 +20,12 @@ Resources:
         Handler: src/handlers/blockflow/LockboxSet.LockboxSetHandler
       - Event: Transfer(address indexed,address indexed,uint256)
         Handler: src/handlers/blockflow/Transfer.TransferHandler
+  - Name: lockbox
+    Abi: src/abis/lockbox.json
+    Type: contract/event
+    Address: "0x9141776017D6A8a8522f913fddFAcAe3e84a7CDb"
+    Triggers:
+      - Event: Deposit(address,uint256)
+        Handler: src/handlers/lockbox/Deposit.DepositHandler
+      - Event: Withdraw(address,uint256)
+        Handler: src/handlers/lockbox/Withdraw.WithdrawHandler
