@@ -13,3 +13,11 @@ Resources:
     Type: api
     Slug: count
     Handler: src/apis/counts.countHandler
+  - Name: flows
+    Type: api
+    Slug: flow
+    Handler: src/apis/flows.flowHandler
+  - Name: users
+    Type: api
+    Slug: top/users
+    Handler: src/apis/user.userHandler
