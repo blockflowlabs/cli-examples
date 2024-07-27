@@ -45,5 +45,18 @@ export interface BridgeData {
   solverGasCost: string;
   timestampSrc: string;
   timestampDest: string;
-  bridgeTime: string;
+}
+
+export interface SolverAnalysis {
+  id: String;
+  totalTransactions: number;
+  totalVolume: string;
+  averageVolume: string;
+  totalGasSpent: string;
+}
+
+export interface Volumeforeachpair {
+  id: String;
+  frequency: number;
+  volume: string;
 }

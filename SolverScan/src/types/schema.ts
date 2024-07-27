@@ -70,7 +70,34 @@ export class BridgeData {
     solverGasCost: "string",
     timestampSrc: "string",
     timestampDest: "string",
-    bridgeTime: "string",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
+  };
+}
+
+export class SolverAnalysis {
+  static entity = "SolverAnalysis";
+  static schema = {
+    id: { type: "String", index: true },
+    totalTransactions: "number",
+    totalVolume: "string",
+    averageVolume: "string",
+    totalGasSpent: "string",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
+  };
+}
+
+export class Volumeforeachpair {
+  static entity = "Volumeforeachpair";
+  static schema = {
+    id: { type: "String", index: true },
+    frequency: "number",
+    volume: "string",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
@@ -137,7 +164,28 @@ export interface IBridgeData extends Document {
   solverGasCost: string;
   timestampSrc: string;
   timestampDest: string;
-  bridgeTime: string;
+  blocknumber: String;
+  entityId: String;
+  instanceId: String;
+  chainId: String;
+}
+
+export interface ISolverAnalysis extends Document {
+  id: String;
+  totalTransactions: number;
+  totalVolume: string;
+  averageVolume: string;
+  totalGasSpent: string;
+  blocknumber: String;
+  entityId: String;
+  instanceId: String;
+  chainId: String;
+}
+
+export interface IVolumeforeachpair extends Document {
+  id: String;
+  frequency: number;
+  volume: string;
   blocknumber: String;
   entityId: String;
   instanceId: String;

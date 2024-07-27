@@ -5,11 +5,12 @@ import {
   ISecrets,
 } from "@blockflow-labs/utils";
 
-import { TradeData, SolverData } from "../../types/schema";
+import { TradeData, SolverData, Volumeforeachpair } from "../../types/schema";
 import {
   COW_PROTOCOL_TOPIC0,
   COW_PROTOCOL_ADDRESS,
   SETTLEMENT_LOG_TOPIC,
+  pairIdgenerator,
 } from "../../utils/utils";
 
 /**
@@ -37,6 +38,7 @@ export const TradeHandler = async (
 
   const tradeDataDB: Instance = bind(TradeData);
   const solverDataDB: Instance = bind(SolverData);
+  const VolumeforeachpairDB: Instance = bind(Volumeforeachpair);
 
   const solver = transaction.logs
     ? transaction.logs.find(
@@ -45,6 +47,8 @@ export const TradeHandler = async (
       )
     : null;
   const solverAddress = solver?.topics[1].toLowerCase();
+
+  const pairId = pairIdgenerator(sellToken, buyToken);
 
   let tradedata = await tradeDataDB.create({
     id: transaction.transaction_hash,
@@ -82,5 +86,20 @@ export const TradeHandler = async (
       solverData.totalVolume / solverData.totalTransactions;
     solverData.totalGasUsed += transaction.transaction_gas;
     await solverDataDB.save(solverData);
+  }
+
+  let volumeforeachpair = await VolumeforeachpairDB.findOne({
+    id: pairId,
+  });
+  if (!volumeforeachpair) {
+    await VolumeforeachpairDB.create({
+      id: pairId,
+      frequency: 1,
+      volume: buyAmount,
+    });
+  } else {
+    volumeforeachpair.frequency += 1;
+    volumeforeachpair.volume += buyAmount;
+    await VolumeforeachpairDB.save(volumeforeachpair);
   }
 };

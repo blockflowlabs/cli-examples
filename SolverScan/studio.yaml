@@ -46,3 +46,18 @@ Resources:
       - Event: SetDlnSourceAddress(uint256,bytes,uint8)
         Handler: >-
           src/handlers/dlndestination/SetDlnSourceAddress.SetDlnSourceAddressHandler
+  - Name: across
+    Abi: src/abis/across.json
+    Type: contract/event
+    Address: "0x5c7BCd6E7De5423a257D81B442095A1a6ced35C5"
+    Triggers:
+      - Event: >-
+          FilledV3Relay(address,address,uint256,uint256,uint256,uint256
+          indexed,uint32 indexed,uint32,uint32,address,address
+          indexed,address,address,bytes,tuple(address,bytes,uint256,uint8))
+        Handler: src/handlers/across/FilledV3Relay.FilledV3RelayHandler
+      - Event: >-
+          V3FundsDeposited(address,address,uint256,uint256,uint256
+          indexed,uint32 indexed,uint32,uint32,uint32,address
+          indexed,address,address,bytes)
+        Handler: src/handlers/across/V3FundsDeposited.V3FundsDepositedHandler

@@ -29,22 +29,38 @@ export const CreatedOrderHandler = async (
     metadata,
   } = event;
 
- const value = parseInt(transaction.transaction_value) - affiliateFee -nativeFixFee;
+  const value =
+    parseInt(transaction.transaction_value) -
+    affiliateFee -
+    nativeFixFee -
+    percentFee;
 
- const bridgeDataDB: Instance = bind(BridgeData);
+  const bridgeDataDB: Instance = bind(BridgeData);
 
- let bridgedata = await bridgeDataDB.create({
-  id:orderId,
-  transactionHashSrc: transaction.transaction_hash,
-  transactionHashDest: "",
-  from: log.log_address,
-  fromValue: value,
-  to:"",
-  toValue: "",
-  solver: "",
-  solverGasCost:"",
-  timestampSrc: block.block_timestamp,
-  timestampDest:"",
-  bridgeTime:""
- })
+  let bridgedata = await bridgeDataDB.findOne({
+    id: orderId,
+  });
+  if(!bridgedata){
+  await bridgeDataDB.create({
+    id: orderId,
+    transactionHashSrc: transaction.transaction_hash,
+    transactionHashDest: "",
+    from: log.log_address,
+    fromValue: value,
+    to: "",
+    toValue: "",
+    solver: "",
+    solverGasCost: "",
+    timestampSrc: block.block_timestamp,
+    timestampDest: "",
+    bridgeTime: "",
+  });}
+  else{
+    bridgedata.transactionHashSrc = transaction.transaction_hash;
+    bridgedata.from = log.log_address;
+    bridgedata.fromValue = value;
+    bridgedata.timestampSrc = block.block_timestamp;
+    await bridgeDataDB.save(bridgedata);
+  }
 };
+
