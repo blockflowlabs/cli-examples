@@ -4,7 +4,7 @@ import {
   Instance,
   ISecrets,
 } from "@blockflow-labs/utils";
-import {BridgeData, SolverAnalysis} from "../../types/schema";
+import {BridgeDataDest, SolverAnalysis} from "../../types/schema";
 import { BigNumber } from "bignumber.js";
 
 /**
@@ -38,7 +38,7 @@ export const FilledV3RelayHandler = async (
     relayExecutionInfo,
   } = event;
 
-  const bridgeDataDB: Instance = bind(BridgeData);
+  const bridgeDataDestDB: Instance = bind(BridgeDataDest);
   const solveranalysisDB: Instance = bind(SolverAnalysis);
 
   const gasPrice = new BigNumber(transaction.transaction_gas_price);
@@ -47,31 +47,20 @@ export const FilledV3RelayHandler = async (
 
   const solverGasCost = gasPrice.multipliedBy(gasUsed).dividedBy(etherUnit);
 
-  let bridgedata = await bridgeDataDB.findOne({
+  let bridgedata = await bridgeDataDestDB.findOne({
     id:depositId
   });
   if(!bridgedata){
-    await bridgeDataDB.create({
+    await bridgeDataDestDB.create({
       id: depositId,
-      transactionHashSrc:"",
-      transactionHashDest: transaction.transaction_hash,
-      from:"",
-      fromValue:"",
+      transactionHashDest: transaction.transaction_hash,  
+      to: outputToken,
+      toValue: outputAmount.toString(),
       solver: relayer,
       solverGasCost: solverGasCost,
-      timeStampSrc:"",
       timestampDest: block.block_timestamp.toString(),
     });
   }
-  else{
-    bridgedata.transactionHashDest = transaction.transaction_hash;
-    bridgedata.solver = relayer;
-    bridgedata.solverGasCost = parseInt(bridgedata.solverGasCost) + solverGasCost.toNumber();
-    bridgedata.timestampDest = block.block_timestamp.toString();
-
-    await bridgeDataDB.save(bridgedata);
-  }
-
   let solverdata = await solveranalysisDB.findOne({
     id: relayer
   });

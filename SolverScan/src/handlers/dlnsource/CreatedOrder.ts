@@ -5,7 +5,7 @@ import {
   ISecrets,
 } from "@blockflow-labs/utils";
 
-import { BridgeData } from "../../types/schema";
+import { BridgeDataSrc } from "../../types/schema";
 /**
  * @dev Event::CreatedOrder(tuple order, bytes32 orderId, bytes affiliateFee, uint256 nativeFixFee, uint256 percentFee, uint32 referralCode, bytes metadata)
  * @param context trigger object with contains {event: {order ,orderId ,affiliateFee ,nativeFixFee ,percentFee ,referralCode ,metadata }, transaction, block, log}
@@ -35,32 +35,19 @@ export const CreatedOrderHandler = async (
     parseInt(nativeFixFee) -
     parseInt(percentFee);
 
-  const bridgeDataDB: Instance = bind(BridgeData);
+  const bridgeDataSrcDB: Instance = bind(BridgeDataSrc);
 
-  let bridgedata = await bridgeDataDB.findOne({
+  let bridgedata = await bridgeDataSrcDB.findOne({
     id: orderId,
   });
   if(!bridgedata){
-  await bridgeDataDB.create({
+  await bridgeDataSrcDB.create({
     id: orderId,
     transactionHashSrc: transaction.transaction_hash,
-    transactionHashDest: "",
     from: log.log_address,
     fromValue: value,
-    to: "",
-    toValue: "",
-    solver: "",
-    solverGasCost: "",
     timestampSrc: block.block_timestamp,
-    timestampDest: "",
-    bridgeTime: "",
-  });}
-  else{
-    bridgedata.transactionHashSrc = transaction.transaction_hash;
-    bridgedata.from = log.log_address;
-    bridgedata.fromValue = value;
-    bridgedata.timestampSrc = block.block_timestamp;
-    await bridgeDataDB.save(bridgedata);
-  }
+  });
+}
 };
 

@@ -34,18 +34,23 @@ export interface LiqudityData {
   selector: string;
 }
 
-export interface BridgeData {
+export interface BridgeDataSrc {
   id: String;
   transactionHashSrc: string;
-  transactionHashDest: string;
   from: string;
   fromValue: string;
+  timestampSrc: string;
+}
+
+export interface BridgeDataDest {
+  id: String;
+  transactionHashDest: string;
   to: string;
   toValue: string;
   solver: string;
   solverGasCost: string;
-  timestampSrc: string;
   timestampDest: string;
+
 }
 
 export interface SolverAnalysis {

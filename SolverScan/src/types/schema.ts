@@ -57,19 +57,30 @@ export class LiqudityData {
   };
 }
 
-export class BridgeData {
-  static entity = "BridgeData";
+export class BridgeDataSrc {
+  static entity = "BridgeDataSrc";
   static schema = {
     id: { type: "String", index: true },
     transactionHashSrc: "string",
-    transactionHashDest: "string",
     from: "string",
     fromValue: "string",
+    timestampSrc: "string",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
+  };
+}
+
+export class BridgeDataDest {
+  static entity = "BridgeDataDest";
+  static schema = {
+    id: { type: "String", index: true },
+    transactionHashDest: "string",
     to: "string",
     toValue: "string",
     solver: "string",
     solverGasCost: "string",
-    timestampSrc: "string",
     timestampDest: "string",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
@@ -156,18 +167,27 @@ export interface ILiqudityData extends Document {
   chainId: String;
 }
 
-export interface IBridgeData extends Document {
+export interface IBridgeDataSrc extends Document {
   id: String;
   transactionHashSrc: string;
-  transactionHashDest: string;
   from: string;
   fromValue: string;
+  timestampSrc: string;
+  blocknumber: String;
+  entityId: String;
+  instanceId: String;
+  chainId: String;
+}
+
+export interface IBridgeDataDest extends Document {
+  id: String;
+  transactionHashDest: string;
   to: string;
   toValue: string;
   solver: string;
   solverGasCost: string;
-  timestampSrc: string;
   timestampDest: string;
+
   blocknumber: String;
   entityId: String;
   instanceId: String;
