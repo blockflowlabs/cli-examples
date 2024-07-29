@@ -13,6 +13,7 @@ import {
   pairIdgenerator,
 } from "../../utils/utils";
 
+import { findMatchingProtocols } from "../../utils/utils";
 /**
  * @dev Event::Trade(address owner, address sellToken, address buyToken, uint256 sellAmount, uint256 buyAmount, uint256 feeAmount, bytes orderUid)
  * @param context trigger object with contains {event: {owner ,sellToken ,buyToken ,sellAmount ,buyAmount ,feeAmount ,orderUid }, transaction, block, log}
@@ -47,6 +48,8 @@ export const TradeHandler = async (
       )
     : null;
   const solverAddress = solver?.topics[1].toLowerCase();
+  
+  const liquiditySource = findMatchingProtocols(transaction);
 
   const pairId = pairIdgenerator(sellToken, buyToken);
 
@@ -59,6 +62,7 @@ export const TradeHandler = async (
     sellAmount: sellAmount,
     buyAmount: buyAmount,
     solver: solverAddress,
+    liquiditySource: liquiditySource,
     feeAmount: feeAmount,
     orderUid: orderUid,
     timeStamp: block.block_timestamp,
@@ -96,6 +100,8 @@ export const TradeHandler = async (
       id: pairId,
       frequency: 1,
       volume: buyAmount,
+      token1address: sellToken,
+      token2address: buyToken
     });
   } else {
     volumeforeachpair.frequency += 1;

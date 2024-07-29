@@ -16,10 +16,6 @@ Resources:
     Triggers:
       - Event: Interaction(address indexed,uint256,bytes4)
         Handler: src/handlers/gpv2Settlement/Interaction.InteractionHandler
-      - Event: OrderInvalidated(address indexed,bytes)
-        Handler: src/handlers/gpv2Settlement/OrderInvalidated.OrderInvalidatedHandler
-      - Event: PreSignature(address indexed,bytes,bool)
-        Handler: src/handlers/gpv2Settlement/PreSignature.PreSignatureHandler
       - Event: Settlement(address indexed)
         Handler: src/handlers/gpv2Settlement/Settlement.SettlementHandler
       - Event: Trade(address indexed,address,address,uint256,uint256,uint256,bytes)
@@ -32,9 +28,6 @@ Resources:
       - Event: >-
           CreatedOrder(tuple(uint64,bytes,uint256,bytes,uint256,uint256,bytes,uint256,bytes,bytes,bytes,bytes,bytes,bytes),bytes32,bytes,uint256,uint256,uint32,bytes)
         Handler: src/handlers/dlnsource/CreatedOrder.CreatedOrderHandler
-      - Event: SetDlnDestinationAddress(uint256,bytes,uint8)
-        Handler: >-
-          src/handlers/dlnsource/SetDlnDestinationAddress.SetDlnDestinationAddressHandler
   - Name: dlndestination
     Abi: src/abis/dlndestination.json
     Type: contract/event
@@ -43,9 +36,6 @@ Resources:
       - Event: >-
           FulfilledOrder(tuple(uint64,bytes,uint256,bytes,uint256,uint256,bytes,uint256,bytes,bytes,bytes,bytes,bytes,bytes),bytes32,address,address)
         Handler: src/handlers/dlndestination/FulfilledOrder.FulfilledOrderHandler
-      - Event: SetDlnSourceAddress(uint256,bytes,uint8)
-        Handler: >-
-          src/handlers/dlndestination/SetDlnSourceAddress.SetDlnSourceAddressHandler
   - Name: across
     Abi: src/abis/across.json
     Type: contract/event

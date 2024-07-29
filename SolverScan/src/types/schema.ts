@@ -13,6 +13,7 @@ export class TradeData {
     sellAmount: "string",
     buyAmount: "string",
     solver: "string",
+    liquiditySource: "string",
     feeAmount: "string",
     orderUid: "string",
     timeStamp: "string",
@@ -98,6 +99,8 @@ export class Volumeforeachpair {
     id: { type: "String", index: true },
     frequency: "number",
     volume: "string",
+    token1address: "string",
+    token2address: "string",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
@@ -116,6 +119,7 @@ export interface ITradeData extends Document {
   sellAmount: string;
   buyAmount: string;
   solver: string;
+  liquiditySource: string;
   feeAmount: string;
   orderUid: string;
   timeStamp: string;
@@ -186,6 +190,8 @@ export interface IVolumeforeachpair extends Document {
   id: String;
   frequency: number;
   volume: string;
+  token1address: string;
+  token2address: string;
   blocknumber: String;
   entityId: String;
   instanceId: String;

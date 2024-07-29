@@ -9,6 +9,7 @@ export interface TradeData {
   sellAmount: string;
   buyAmount: string;
   solver: string;
+  liquiditySource: string;
   feeAmount: string;
   orderUid: string;
   timeStamp: string;
@@ -59,4 +60,6 @@ export interface Volumeforeachpair {
   id: String;
   frequency: number;
   volume: string;
+  token1address: string;
+  token2address: string;
 }

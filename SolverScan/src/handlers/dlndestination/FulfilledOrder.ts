@@ -6,6 +6,7 @@ import {
 } from "@blockflow-labs/utils";
 
 import { BridgeData, SolverAnalysis } from "../../types/schema";
+import { BigNumber } from "bignumber.js";
 
 /**
  * @dev Event::FulfilledOrder(tuple order, bytes32 orderId, address sender, address unlockAuthority)
@@ -24,11 +25,13 @@ export const FulfilledOrderHandler = async (
   const bridgeDataDB: Instance = bind(BridgeData);
   const solveranalysisDB: Instance = bind(SolverAnalysis);
 
-  const solverGasCost =
-    parseFloat(transaction.transaction_receipt_gas_used) *
-    parseFloat(transaction.transaction_gas_price);
+const gasPrice = new BigNumber(transaction.transaction_gas_price);
+const gasUsed = new BigNumber(transaction.transaction_receipt_gas_used);
+const etherUnit = new BigNumber('1e18');
+const transactionValue = new BigNumber(transaction.transaction_value);
 
-  const value = parseInt(transaction.transaction_value) - solverGasCost;
+const solverGasCost = gasPrice.multipliedBy(gasUsed).dividedBy(etherUnit);
+const value = (transactionValue.minus(solverGasCost)).dividedBy(etherUnit);
 
   let bridgedata = await bridgeDataDB.findOne({
     id: orderId
@@ -73,8 +76,8 @@ export const FulfilledOrderHandler = async (
   } else {
     solveranalysis.totalTransactions += 1;
     solveranalysis.totalGasSpent += solverGasCost;
-    solveranalysis.totalVolume += value;
-    solveranalysis.averageVolume = solveranalysis.totalVolume/solveranalysis.totalTransactions;
+    solveranalysis.totalVolume =  (solveranalysis.totalVolume + value).toString();
+    solveranalysis.averageVolume = (parseInt(solveranalysis.totalVolume)/parseInt(solveranalysis.totalTransactions)).toString();
 
     await solveranalysisDB.save(solveranalysis);
   }
