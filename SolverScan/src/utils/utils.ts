@@ -9,9 +9,9 @@ export const SETTLEMENT_LOG_TOPIC =
 
 export function pairIdgenerator(str1: string, str2: string): string {
   if (str1 > str2) {
-    return str1 + str2;
+    return `${str1}-${str2}`;
   } else {
-    return str2 + str1;
+    return `${str2}-${str1}`;
   }
 }
 

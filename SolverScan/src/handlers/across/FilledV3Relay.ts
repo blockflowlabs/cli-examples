@@ -53,9 +53,13 @@ export const FilledV3RelayHandler = async (
   if(!bridgedata){
     await bridgeDataDB.create({
       id: depositId,
+      transactionHashSrc:"",
       transactionHashDest: transaction.transaction_hash,
+      from:"",
+      fromValue:"",
       solver: relayer,
-      solverGasCost: solverGasCost ,
+      solverGasCost: solverGasCost,
+      timeStampSrc:"",
       timestampDest: block.block_timestamp.toString(),
     });
   }

@@ -31,9 +31,9 @@ export const CreatedOrderHandler = async (
 
   const value =
     parseInt(transaction.transaction_value) -
-    affiliateFee -
-    nativeFixFee -
-    percentFee;
+    parseInt(affiliateFee) -
+    parseInt(nativeFixFee) -
+    parseInt(percentFee);
 
   const bridgeDataDB: Instance = bind(BridgeData);
 

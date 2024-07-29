@@ -53,6 +53,9 @@ export const TradeHandler = async (
 
   const pairId = pairIdgenerator(sellToken, buyToken);
 
+  const token1 = buyToken.toString() > sellToken.toString() ? buyToken : sellToken;
+  const token2 = buyToken.toString() > sellToken.toString() ? sellToken : buyToken;
+
   let tradedata = await tradeDataDB.create({
     id: transaction.transaction_hash,
     protocolAddress: COW_PROTOCOL_ADDRESS,
@@ -100,8 +103,8 @@ export const TradeHandler = async (
       id: pairId,
       frequency: 1,
       volume: buyAmount,
-      token1address: sellToken,
-      token2address: buyToken
+      token1address: token1,
+      token2address: token2
     });
   } else {
     volumeforeachpair.frequency += 1;
