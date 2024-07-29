@@ -2,15 +2,22 @@ import { String, Array, Number } from "@blockflow-labs/utils";
 
 interface Account {
   id: String;
-  domains: [String]; // domain ids
-  wrappedDomains: [String]; // wrapped domain ids
-  registrations: [String]; // registration ids
+  domains: [String];
+  wrappedDomains: [String];
+  registrations: [String];
+}
+
+interface wrappedTransfer {
+  id: String;
+  blockNumber: Number;
+  transactionID: string;
+  owner: string;
 }
 
 interface Registration {
   id: String;
   domain: String;
-  registrationDate: Number;
+  registrationDate: String;
   expiryDate: Number;
   cost: Number;
   registrant: String;
@@ -36,7 +43,6 @@ interface Domain {
   labelName: String;
   labelhash: String;
   parent: String;
-  subdomains: [String];
   subdomainCount: Number;
   resolvedAddress: String;
   owner: String;
@@ -55,6 +61,7 @@ interface Domain {
 type DomainEvent = {
   domain: String;
   transactionID: String;
+  blockNumber: Number;
 };
 
 interface Resolver {
@@ -144,4 +151,34 @@ interface VersionChanged {
   resolver: String;
   transactionID: String;
   version: Number;
+}
+
+interface Namewrapperevents {
+  id: String;
+  blockNumber: Number;
+  transactionID: String;
+  fuses: Number;
+  expiryDate: Number;
+  owner: String;
+}
+
+interface Nameunwrapperevents {
+  id: String;
+  blockNumber: Number;
+  transactionID: String;
+  owner: String;
+}
+
+interface Fusesburntevent {
+  id: String;
+  fuses: Number;
+  blockNumber: Number;
+  transactionID: String;
+}
+
+interface Expiryextendedevent {
+  id: String;
+  expiryDate: Number;
+  blockNumber: Number;
+  transactionID: String;
 }

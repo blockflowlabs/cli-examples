@@ -14,7 +14,7 @@ import { InterfaceChanged, Resolver } from "../../../types/schema";
  */
 export const InterfaceChangedHandler = async (
   context: IEventContext,
-  bind: Function
+  bind: Function,
 ) => {
   // Implement your event handler logic for InterfaceChanged here
   const { event, transaction, block, log } = context;

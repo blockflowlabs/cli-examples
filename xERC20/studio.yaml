@@ -1,0 +1,31 @@
+name: Project Apollo
+description: A top-secret research project to the moon
+startBlock: latest
+userId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
+projectId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
+network: Ethereum
+user: Jane-doe
+schema:
+  file: ./studio.schema.ts
+execution: parallel
+Resources:
+  - Name: blockflow
+    Abi: src/abis/blockflow.json
+    Type: contract/event
+    Address: "0xeA581cA64e4A384aE4dEA39bb083173CcBd2D817"
+    Triggers:
+      - Event: BridgeLimitsSet(uint256,uint256,address indexed)
+        Handler: src/handlers/blockflow/BridgeLimitsSet.BridgeLimitsSetHandler
+      - Event: LockboxSet(address)
+        Handler: src/handlers/blockflow/LockboxSet.LockboxSetHandler
+      - Event: Transfer(address indexed,address indexed,uint256)
+        Handler: src/handlers/blockflow/Transfer.TransferHandler
+  - Name: lockbox
+    Abi: src/abis/lockbox.json
+    Type: contract/event
+    Address: "0x9141776017D6A8a8522f913fddFAcAe3e84a7CDb"
+    Triggers:
+      - Event: Deposit(address,uint256)
+        Handler: src/handlers/lockbox/Deposit.DepositHandler
+      - Event: Withdraw(address,uint256)
+        Handler: src/handlers/lockbox/Withdraw.WithdrawHandler

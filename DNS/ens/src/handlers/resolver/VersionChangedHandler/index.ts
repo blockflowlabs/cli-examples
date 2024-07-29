@@ -20,7 +20,7 @@ import {
  */
 export const VersionChangedHandler = async (
   context: IEventContext,
-  bind: Function
+  bind: Function,
 ) => {
   // Implement your event handler logic for VersionChanged here
   const { event, transaction, log } = context;
@@ -53,7 +53,7 @@ export const VersionChangedHandler = async (
   const resolver: IResolver = await getResolver(
     node,
     log.log_address,
-    resolverDB
+    resolverDB,
   );
 
   // @ts-ignore

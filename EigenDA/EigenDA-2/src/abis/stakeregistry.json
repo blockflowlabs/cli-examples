@@ -1,0 +1,698 @@
+[
+  {
+    "inputs": [
+      { "internalType": "address", "name": "_logic", "type": "address" },
+      { "internalType": "address", "name": "admin_", "type": "address" },
+      { "internalType": "bytes", "name": "_data", "type": "bytes" }
+    ],
+    "stateMutability": "payable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "previousAdmin",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "newAdmin",
+        "type": "address"
+      }
+    ],
+    "name": "AdminChanged",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "beacon",
+        "type": "address"
+      }
+    ],
+    "name": "BeaconUpgraded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "implementation",
+        "type": "address"
+      }
+    ],
+    "name": "Upgraded",
+    "type": "event"
+  },
+  { "stateMutability": "payable", "type": "fallback" },
+  {
+    "inputs": [],
+    "name": "admin",
+    "outputs": [
+      { "internalType": "address", "name": "admin_", "type": "address" }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "newAdmin", "type": "address" }
+    ],
+    "name": "changeAdmin",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "implementation",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "implementation_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newImplementation",
+        "type": "address"
+      }
+    ],
+    "name": "upgradeTo",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newImplementation",
+        "type": "address"
+      },
+      { "internalType": "bytes", "name": "data", "type": "bytes" }
+    ],
+    "name": "upgradeToAndCall",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  { "stateMutability": "payable", "type": "receive" },
+  {
+    "inputs": [
+      {
+        "internalType": "contract IRegistryCoordinator",
+        "name": "_registryCoordinator",
+        "type": "address"
+      },
+      {
+        "internalType": "contract IDelegationManager",
+        "name": "_delegationManager",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint8",
+        "name": "quorumNumber",
+        "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint96",
+        "name": "minimumStake",
+        "type": "uint96"
+      }
+    ],
+    "name": "MinimumStakeForQuorumUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "operatorId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint8",
+        "name": "quorumNumber",
+        "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint96",
+        "name": "stake",
+        "type": "uint96"
+      }
+    ],
+    "name": "OperatorStakeUpdate",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint8",
+        "name": "quorumNumber",
+        "type": "uint8"
+      }
+    ],
+    "name": "QuorumCreated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint8",
+        "name": "quorumNumber",
+        "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "internalType": "contract IStrategy",
+        "name": "strategy",
+        "type": "address"
+      }
+    ],
+    "name": "StrategyAddedToQuorum",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint8",
+        "name": "quorumNumber",
+        "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "internalType": "contract IStrategy",
+        "name": "strategy",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "multiplier",
+        "type": "uint256"
+      }
+    ],
+    "name": "StrategyMultiplierUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint8",
+        "name": "quorumNumber",
+        "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "internalType": "contract IStrategy",
+        "name": "strategy",
+        "type": "address"
+      }
+    ],
+    "name": "StrategyRemovedFromQuorum",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "MAX_WEIGHING_FUNCTION_LENGTH",
+    "outputs": [{ "internalType": "uint8", "name": "", "type": "uint8" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "WEIGHTING_DIVISOR",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint8", "name": "quorumNumber", "type": "uint8" },
+      {
+        "components": [
+          {
+            "internalType": "contract IStrategy",
+            "name": "strategy",
+            "type": "address"
+          },
+          { "internalType": "uint96", "name": "multiplier", "type": "uint96" }
+        ],
+        "internalType": "struct IStakeRegistry.StrategyParams[]",
+        "name": "_strategyParams",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "addStrategies",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "delegation",
+    "outputs": [
+      {
+        "internalType": "contract IDelegationManager",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "operatorId", "type": "bytes32" },
+      { "internalType": "bytes", "name": "quorumNumbers", "type": "bytes" }
+    ],
+    "name": "deregisterOperator",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "operatorId", "type": "bytes32" },
+      { "internalType": "uint8", "name": "quorumNumber", "type": "uint8" }
+    ],
+    "name": "getCurrentStake",
+    "outputs": [{ "internalType": "uint96", "name": "", "type": "uint96" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint8", "name": "quorumNumber", "type": "uint8" }
+    ],
+    "name": "getCurrentTotalStake",
+    "outputs": [{ "internalType": "uint96", "name": "", "type": "uint96" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "operatorId", "type": "bytes32" },
+      { "internalType": "uint8", "name": "quorumNumber", "type": "uint8" }
+    ],
+    "name": "getLatestStakeUpdate",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint32",
+            "name": "updateBlockNumber",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint32",
+            "name": "nextUpdateBlockNumber",
+            "type": "uint32"
+          },
+          { "internalType": "uint96", "name": "stake", "type": "uint96" }
+        ],
+        "internalType": "struct IStakeRegistry.StakeUpdate",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "operatorId", "type": "bytes32" },
+      { "internalType": "uint8", "name": "quorumNumber", "type": "uint8" },
+      { "internalType": "uint32", "name": "blockNumber", "type": "uint32" }
+    ],
+    "name": "getStakeAtBlockNumber",
+    "outputs": [{ "internalType": "uint96", "name": "", "type": "uint96" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint8", "name": "quorumNumber", "type": "uint8" },
+      { "internalType": "uint32", "name": "blockNumber", "type": "uint32" },
+      { "internalType": "bytes32", "name": "operatorId", "type": "bytes32" },
+      { "internalType": "uint256", "name": "index", "type": "uint256" }
+    ],
+    "name": "getStakeAtBlockNumberAndIndex",
+    "outputs": [{ "internalType": "uint96", "name": "", "type": "uint96" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "operatorId", "type": "bytes32" },
+      { "internalType": "uint8", "name": "quorumNumber", "type": "uint8" }
+    ],
+    "name": "getStakeHistory",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint32",
+            "name": "updateBlockNumber",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint32",
+            "name": "nextUpdateBlockNumber",
+            "type": "uint32"
+          },
+          { "internalType": "uint96", "name": "stake", "type": "uint96" }
+        ],
+        "internalType": "struct IStakeRegistry.StakeUpdate[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "operatorId", "type": "bytes32" },
+      { "internalType": "uint8", "name": "quorumNumber", "type": "uint8" }
+    ],
+    "name": "getStakeHistoryLength",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint8", "name": "quorumNumber", "type": "uint8" },
+      { "internalType": "bytes32", "name": "operatorId", "type": "bytes32" },
+      { "internalType": "uint256", "name": "index", "type": "uint256" }
+    ],
+    "name": "getStakeUpdateAtIndex",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint32",
+            "name": "updateBlockNumber",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint32",
+            "name": "nextUpdateBlockNumber",
+            "type": "uint32"
+          },
+          { "internalType": "uint96", "name": "stake", "type": "uint96" }
+        ],
+        "internalType": "struct IStakeRegistry.StakeUpdate",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "operatorId", "type": "bytes32" },
+      { "internalType": "uint8", "name": "quorumNumber", "type": "uint8" },
+      { "internalType": "uint32", "name": "blockNumber", "type": "uint32" }
+    ],
+    "name": "getStakeUpdateIndexAtBlockNumber",
+    "outputs": [{ "internalType": "uint32", "name": "", "type": "uint32" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint8", "name": "quorumNumber", "type": "uint8" },
+      { "internalType": "uint32", "name": "blockNumber", "type": "uint32" },
+      { "internalType": "uint256", "name": "index", "type": "uint256" }
+    ],
+    "name": "getTotalStakeAtBlockNumberFromIndex",
+    "outputs": [{ "internalType": "uint96", "name": "", "type": "uint96" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint8", "name": "quorumNumber", "type": "uint8" }
+    ],
+    "name": "getTotalStakeHistoryLength",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint32", "name": "blockNumber", "type": "uint32" },
+      { "internalType": "bytes", "name": "quorumNumbers", "type": "bytes" }
+    ],
+    "name": "getTotalStakeIndicesAtBlockNumber",
+    "outputs": [{ "internalType": "uint32[]", "name": "", "type": "uint32[]" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint8", "name": "quorumNumber", "type": "uint8" },
+      { "internalType": "uint256", "name": "index", "type": "uint256" }
+    ],
+    "name": "getTotalStakeUpdateAtIndex",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint32",
+            "name": "updateBlockNumber",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint32",
+            "name": "nextUpdateBlockNumber",
+            "type": "uint32"
+          },
+          { "internalType": "uint96", "name": "stake", "type": "uint96" }
+        ],
+        "internalType": "struct IStakeRegistry.StakeUpdate",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint8", "name": "quorumNumber", "type": "uint8" },
+      { "internalType": "uint96", "name": "minimumStake", "type": "uint96" },
+      {
+        "components": [
+          {
+            "internalType": "contract IStrategy",
+            "name": "strategy",
+            "type": "address"
+          },
+          { "internalType": "uint96", "name": "multiplier", "type": "uint96" }
+        ],
+        "internalType": "struct IStakeRegistry.StrategyParams[]",
+        "name": "_strategyParams",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "initializeQuorum",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint8", "name": "", "type": "uint8" }],
+    "name": "minimumStakeForQuorum",
+    "outputs": [{ "internalType": "uint96", "name": "", "type": "uint96" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint8", "name": "quorumNumber", "type": "uint8" },
+      {
+        "internalType": "uint256[]",
+        "name": "strategyIndices",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "uint96[]",
+        "name": "newMultipliers",
+        "type": "uint96[]"
+      }
+    ],
+    "name": "modifyStrategyParams",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "operator", "type": "address" },
+      { "internalType": "bytes32", "name": "operatorId", "type": "bytes32" },
+      { "internalType": "bytes", "name": "quorumNumbers", "type": "bytes" }
+    ],
+    "name": "registerOperator",
+    "outputs": [
+      { "internalType": "uint96[]", "name": "", "type": "uint96[]" },
+      { "internalType": "uint96[]", "name": "", "type": "uint96[]" }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "registryCoordinator",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint8", "name": "quorumNumber", "type": "uint8" },
+      {
+        "internalType": "uint256[]",
+        "name": "indicesToRemove",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "removeStrategies",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint8", "name": "quorumNumber", "type": "uint8" },
+      { "internalType": "uint96", "name": "minimumStake", "type": "uint96" }
+    ],
+    "name": "setMinimumStakeForQuorum",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint8", "name": "", "type": "uint8" },
+      { "internalType": "uint256", "name": "", "type": "uint256" }
+    ],
+    "name": "strategiesPerQuorum",
+    "outputs": [
+      { "internalType": "contract IStrategy", "name": "", "type": "address" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint8", "name": "", "type": "uint8" },
+      { "internalType": "uint256", "name": "", "type": "uint256" }
+    ],
+    "name": "strategyParams",
+    "outputs": [
+      {
+        "internalType": "contract IStrategy",
+        "name": "strategy",
+        "type": "address"
+      },
+      { "internalType": "uint96", "name": "multiplier", "type": "uint96" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint8", "name": "quorumNumber", "type": "uint8" },
+      { "internalType": "uint256", "name": "index", "type": "uint256" }
+    ],
+    "name": "strategyParamsByIndex",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "contract IStrategy",
+            "name": "strategy",
+            "type": "address"
+          },
+          { "internalType": "uint96", "name": "multiplier", "type": "uint96" }
+        ],
+        "internalType": "struct IStakeRegistry.StrategyParams",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint8", "name": "quorumNumber", "type": "uint8" }
+    ],
+    "name": "strategyParamsLength",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "operator", "type": "address" },
+      { "internalType": "bytes32", "name": "operatorId", "type": "bytes32" },
+      { "internalType": "bytes", "name": "quorumNumbers", "type": "bytes" }
+    ],
+    "name": "updateOperatorStake",
+    "outputs": [{ "internalType": "uint192", "name": "", "type": "uint192" }],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint8", "name": "quorumNumber", "type": "uint8" },
+      { "internalType": "address", "name": "operator", "type": "address" }
+    ],
+    "name": "weightOfOperatorForQuorum",
+    "outputs": [{ "internalType": "uint96", "name": "", "type": "uint96" }],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

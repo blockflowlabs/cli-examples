@@ -9,44 +9,76 @@ execution: sequential
 schema:
   file: ./studio.schema.ts
 Resources:
-  # - Name: ensRegistry
-  #   Abi: src/abis/ensRegistry.json
-  #   Type: contract/event
-  #   Address: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e"
-  #   Triggers:
-  #     - Event: Transfer(bytes32 indexed,address)
-  #       Handler: src/handlers/ensRegistry/TransferHandler/index.TransferHandler
-
-  # - Name: baseRegistrar
-  #   Abi: src/abis/BaseRegistrar.json
-  #   Type: contract/event
-  #   Address: "0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85"
-  #   Triggers:
-  #     - Event: NameRegistered(uint256 indexed,address indexed,uint256)
-  #       Handler: src/handlers/BaseRegistrar/NameRegisteredHandler/index.NameRegisteredHandler
-  #     - Event: NameRenewed(uint256 indexed,uint256)
-  #       Handler: src/handlers/BaseRegistrar/NameRenewedHandler/index.NameRenewedHandler
-  #     - Event: Transfer(address indexed,address indexed,uint256 indexed)
-  #       Handler: src/handlers/BaseRegistrar/TransferHandler/index.TransferHandler
-
+  - Name: ensRegistry
+    Abi: src/abis/ensRegistry.json
+    Type: contract/event
+    Address: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e"
+    Triggers:
+      - Event: Transfer(bytes32 indexed,address)
+        Handler: src/handlers/ensRegistry/TransferHandler/index.TransferHandler
+  - Name: baseRegistrar
+    Abi: src/abis/BaseRegistrar.json
+    Type: contract/event
+    Address: "0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85"
+    Triggers:
+      - Event: NameRegistered(uint256 indexed,address indexed,uint256)
+        Handler: >-
+          src/handlers/BaseRegistrar/NameRegisteredHandler/index.NameRegisteredHandler
   - Name: resolver
     Abi: src/abis/resolver.json
     Type: contract/event
-    Address: "0x4976fb03c32e5b8cfe2b6ccb31c09ba78ebaba41" # public resolver 2
+    Address: "0x4976fb03c32e5b8cfe2b6ccb31c09ba78ebaba41"
     Triggers:
       - Event: ABIChanged(bytes32 indexed,uint256 indexed)
         Handler: src/handlers/resolver/ABIChangedHandler/index.ABIChangedHandler
       - Event: AddrChanged(bytes32 indexed,address)
         Handler: src/handlers/resolver/AddrChangedHandler/index.AddrChangedHandler
       - Event: AddressChanged(bytes32 indexed,uint256,bytes)
-        Handler: src/handlers/resolver/AddressChangedHandler/index.AddressChangedHandler
+        Handler: >-
+          src/handlers/resolver/AddressChangedHandler/index.AddressChangedHandler
       - Event: ContenthashChanged(bytes32 indexed,bytes)
-        Handler: src/handlers/resolver/ContenthashChangedHandler/index.ContenthashChangedHandler
+        Handler: >-
+          src/handlers/resolver/ContenthashChangedHandler/index.ContenthashChangedHandler
       - Event: InterfaceChanged(bytes32 indexed,bytes4 indexed,address)
-        Handler: src/handlers/resolver/InterfaceChangedHandler/index.InterfaceChangedHandler
+        Handler: >-
+          src/handlers/resolver/InterfaceChangedHandler/index.InterfaceChangedHandler
       - Event: NameChanged(bytes32 indexed,string)
         Handler: src/handlers/resolver/NameChangedHandler/index.NameChangedHandler
       - Event: PubkeyChanged(bytes32 indexed,bytes32,bytes32)
         Handler: src/handlers/resolver/PubkeyChangedHandler/index.PubkeyChangedHandler
       - Event: TextChanged(bytes32 indexed,string indexed,string)
         Handler: src/handlers/resolver/TextChangedHandler/index.TextChangedHandler
+  - Name: namewrapper
+    Abi: src/abis/namewrapper.json
+    Type: contract/event
+    Address: "0xD4416b13d2b3a9aBae7AcD5D6C2BbDBE25686401"
+    Triggers:
+      - Event: ExpiryExtended(bytes32 indexed,uint64)
+        Handler: src/handlers/namewrapper/ExpiryExtended.ExpiryExtendedHandler
+      - Event: FusesSet(bytes32 indexed,uint32)
+        Handler: src/handlers/namewrapper/FusesSet.FusesSetHandler
+      - Event: NameUnwrapped(bytes32 indexed,address)
+        Handler: src/handlers/namewrapper/NameUnwrapped.NameUnwrappedHandler
+      - Event: NameWrapped(bytes32 indexed,bytes,address,uint32,uint64)
+        Handler: src/handlers/namewrapper/NameWrapped.NameWrappedHandler
+      - Event: >-
+          TransferBatch(address indexed,address indexed,address
+          indexed,uint256[],uint256[])
+        Handler: src/handlers/namewrapper/TransferBatch.TransferBatchHandler
+      - Event: >-
+          TransferSingle(address indexed,address indexed,address
+          indexed,uint256,uint256)
+        Handler: src/handlers/namewrapper/TransferSingle.TransferSingleHandler
+  - Name: transfer
+    Abi: src/abis/transfer.json
+    Type: contract/event
+    Address: "0x314159265dd8dbb310642f98f50c066173c1259b"
+    Triggers:
+      - Event: Transfer(bytes32 indexed,address)
+        Handler: src/handlers/transfer/Transfer.TransferHandler
+      - Event: NewOwner(bytes32 indexed,bytes32 indexed,address)
+        Handler: src/handlers/transfer/NewOwner.NewOwnerHandler
+      - Event: NewResolver(bytes32 indexed,address)
+        Handler: src/handlers/transfer/NewResolver.NewResolverHandler
+      - Event: NewTTL(bytes32 indexed,uint64)
+        Handler: src/handlers/transfer/NewTTL.NewTTLHandler

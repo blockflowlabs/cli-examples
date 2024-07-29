@@ -1,0 +1,53 @@
+name: SolverScan
+description: A top-secret research project to the moon
+startBlock: latest
+userId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
+projectId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
+network: Ethereum
+user: Jane-doe
+schema:
+  file: ./studio.schema.ts
+execution: parallel
+Resources:
+  - Name: gpv2Settlement
+    Abi: src/abis/gpv2Settlement.json
+    Type: contract/event
+    Address: "0x9008D19f58AAbD9eD0D60971565AA8510560ab41"
+    Triggers:
+      - Event: Interaction(address indexed,uint256,bytes4)
+        Handler: src/handlers/gpv2Settlement/Interaction.InteractionHandler
+      - Event: Settlement(address indexed)
+        Handler: src/handlers/gpv2Settlement/Settlement.SettlementHandler
+      - Event: Trade(address indexed,address,address,uint256,uint256,uint256,bytes)
+        Handler: src/handlers/gpv2Settlement/Trade.TradeHandler
+  - Name: dlnsource
+    Abi: src/abis/dlnsource.json
+    Type: contract/event
+    Address: "0xeF4fB24aD0916217251F553c0596F8Edc630EB66"
+    Triggers:
+      - Event: >-
+          CreatedOrder(tuple(uint64,bytes,uint256,bytes,uint256,uint256,bytes,uint256,bytes,bytes,bytes,bytes,bytes,bytes),bytes32,bytes,uint256,uint256,uint32,bytes)
+        Handler: src/handlers/dlnsource/CreatedOrder.CreatedOrderHandler
+  - Name: dlndestination
+    Abi: src/abis/dlndestination.json
+    Type: contract/event
+    Address: "0xe7351fd770a37282b91d153ee690b63579d6dd7f"
+    Triggers:
+      - Event: >-
+          FulfilledOrder(tuple(uint64,bytes,uint256,bytes,uint256,uint256,bytes,uint256,bytes,bytes,bytes,bytes,bytes,bytes),bytes32,address,address)
+        Handler: src/handlers/dlndestination/FulfilledOrder.FulfilledOrderHandler
+  - Name: across
+    Abi: src/abis/across.json
+    Type: contract/event
+    Address: "0x5c7BCd6E7De5423a257D81B442095A1a6ced35C5"
+    Triggers:
+      - Event: >-
+          FilledV3Relay(address,address,uint256,uint256,uint256,uint256
+          indexed,uint32 indexed,uint32,uint32,address,address
+          indexed,address,address,bytes,tuple(address,bytes,uint256,uint8))
+        Handler: src/handlers/across/FilledV3Relay.FilledV3RelayHandler
+      - Event: >-
+          V3FundsDeposited(address,address,uint256,uint256,uint256
+          indexed,uint32 indexed,uint32,uint32,uint32,address
+          indexed,address,address,bytes)
+        Handler: src/handlers/across/V3FundsDeposited.V3FundsDepositedHandler
