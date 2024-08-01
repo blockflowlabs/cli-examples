@@ -34,7 +34,7 @@ import { fetchTokenDetails } from "../../utils/token";
 export const TokenTransferWithInstructionHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets
+  secrets: ISecrets,
 ) => {
   // Implement your event handler logic for TokenTransferWithInstruction here
   const { event, transaction, block } = context;
@@ -66,7 +66,7 @@ export const TokenTransferWithInstructionHandler = async (
   const stableTokenInfo = await fetchTokenDetails(
     bind,
     srcChain,
-    srcTokenAddress
+    srcTokenAddress,
   );
   let tokenPath = {
     sourceToken: {
@@ -81,7 +81,7 @@ export const TokenTransferWithInstructionHandler = async (
 
   const isSwapWithReceiptRelay = transaction.logs
     ? transaction.logs.find(
-        (log) => log.topics[0].toLowerCase() === SWAP_WITH_RECIPIENT_TOPIC0
+        (log) => log.topics[0].toLowerCase() === SWAP_WITH_RECIPIENT_TOPIC0,
       )
     : null;
 
@@ -117,9 +117,11 @@ export const TokenTransferWithInstructionHandler = async (
     depositId: depositId,
     partnerId: partnerId,
     message: instruction,
-    usdValue: (
-      stableTokenInfo.priceUsd * parseFloat(tokenPath.stableToken.amount)
-    ).toFixed(4),
+    usdValue: stableTokenInfo.priceUsd
+      ? (
+          stableTokenInfo.priceUsd * parseFloat(tokenPath.stableToken.amount)
+        ).toFixed(4)
+      : "",
     recipientAddress: recipient,
   };
   const destDB: Instance = bind(Destination);

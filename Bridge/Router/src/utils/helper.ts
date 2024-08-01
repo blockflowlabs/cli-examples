@@ -135,7 +135,7 @@ export function hexToString(hex: string) {
 }
 
 export function hashDepositDataWithMessage(
-  data: DepositDataWithMessage
+  data: DepositDataWithMessage,
 ): string {
   const coder = new AbiCoder();
   const encodedData = coder.encode(
@@ -148,7 +148,7 @@ export function hashDepositDataWithMessage(
       data.recipient,
       data.contract,
       data.message,
-    ]
+    ],
   );
 
   const hashedData = keccak256(encodedData);
@@ -166,7 +166,7 @@ export function hashDepositData(data: DepositData): string {
       data.destToken,
       data.recipient,
       data.contract,
-    ]
+    ],
   );
 
   const hashedData = keccak256(encodedData);

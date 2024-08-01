@@ -22,7 +22,7 @@ import { fetchTokenDetails } from "../../utils/token";
  */
 export const executeWithMessageHandler = async (
   context: IEventContext,
-  bind: IBind
+  bind: IBind,
 ) => {
   // Implement your function handler logic for iRelay here
   const { event, transaction, block } = context;
@@ -44,7 +44,7 @@ export const executeWithMessageHandler = async (
   const execData = data.toString();
   let receiverAddress = null;
 
-  const dstChain = "8453"; //block.chain_id;
+  const dstChain = block.chain_id;
 
   const transferDB: Instance = bind(Destination);
 
@@ -62,7 +62,7 @@ export const executeWithMessageHandler = async (
 
   const isSwapWithReceiptRelay = transaction.logs
     ? transaction.logs.find(
-        (log) => log.topics[0].toLowerCase() === SWAP_WITH_RECIPIENT_TOPIC0
+        (log) => log.topics[0].toLowerCase() === SWAP_WITH_RECIPIENT_TOPIC0,
       )
     : null;
 

@@ -1,10 +1,10 @@
 name: Router Nitro
 description: Indexing cross chain transfers on router nitro protocol
-startBlock: 113123990 # optimism deployment blockNumber 113123990, address 0x8201c02d4ab2214471e8c3ad6475c8b0cd9f2d06
-userId: 6cd145d5-b8bc-41a0-a74d-2e9b88ffb675
-projectId: 6aa2619a-2485-4dd9-882c-56b4ed1a86d0
+startBlock: 114254350 # add - 0x8201c02d4ab2214471e8c3ad6475c8b0cd9f2d06, block - 19062096
+userId: process.env.userId
+projectId: process.env.projectId
 network: Optimism
-exection: parallel
+execution: parallel
 user: prady
 schema:
   file: ./studio.schema.ts
@@ -64,3 +64,59 @@ Resources:
     Triggers:
       - Event: DepositInfoUpdate(address,uint256,uint256,uint256,bool,address)
         Handler: src/deposit/DepositInfoUpdate/index.DepositInfoUpdate
+
+  - Name: tokenTransfer
+    Abi: src/abis/assetBridge.json
+    Type: contract/event
+    Address: "0x21c1E74CAaDf990E237920d5515955a024031109"
+    Triggers:
+      - Event: TokenTransfer(bytes32,address,uint256,bytes,uint256,uint256)
+        Handler: src/deposit/TokenTransfer/index.TokenTransferHandler
+
+  - Name: tokenTransferWithInstruction
+    Abi: src/abis/assetBridge.json
+    Type: contract/event
+    Address: "0x21c1E74CAaDf990E237920d5515955a024031109"
+    Triggers:
+      - Event: TokenTransferWithInstruction(bytes32,address,uint256,bytes,uint256,uint64,bytes,uint256)
+        Handler: src/deposit/TokenTransferWithInstruction/index.TokenTransferWithInstructionHandler
+
+  - Name: execute
+    Abi: src/abis/assetBridge.json
+    Type: contract/event
+    Address: "0x21c1E74CAaDf990E237920d5515955a024031109"
+    Triggers:
+      - Event: Execute(uint8,bytes32,uint256,address,uint256,address)
+        Handler: src/receive/execute/index.executeHandler
+
+  - Name: executeWithMessage
+    Abi: src/abis/assetBridge.json
+    Type: contract/event
+    Address: "0x21c1E74CAaDf990E237920d5515955a024031109"
+    Triggers:
+      - Event: ExecuteWithMessage(uint8,bytes32,uint256,address,uint256,address,bool,bytes)
+        Handler: src/receive/executeWithMessage/index.executeWithMessageHandler
+
+  - Name: iUSDCDeposited
+    Abi: src/abis/cctpBridge.json
+    Type: contract/event
+    Address: "0x8fE7fA902E57a1C74F6af3fC54272dce03d54b1F"
+    Triggers:
+      - Event: iUSDCDeposited(uint256,uint256,bytes32,uint256,address,bytes32,address)
+        Handler: src/deposit/IUSDCDeposited/index.IUSDCDepositedHandler
+
+  - Name: MessageReceived
+    Abi: src/abis/messageTransmitter.json
+    Type: contract/event
+    Address: "0x4d41f22c5a0e5c74090899e5a8fb597a8842b3e8"
+    Triggers:
+      - Event: MessageReceived(address,uint32,uint64,bytes32,bytes)
+        Handler: src/receive/MessageReceived/index.MessageReceivedHandler
+
+  - Name: Swap
+    Abi: src/abis/dexspan.json
+    Type: contract/event
+    Address: "0x5501A36b1313aC5d27e85418acd2AA4564f50b44"
+    Triggers:
+      - Event: Swap(string,address[],uint256,address,address,uint256,uint256[],uint256)
+        Handler: src/deposit/Dexspan/index.SwapHandler

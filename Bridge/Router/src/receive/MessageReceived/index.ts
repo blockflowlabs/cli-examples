@@ -20,7 +20,7 @@ const CIRCLE_DOMAIN_MAINNET_ID: any = {
 const NITRO_FORWARDER = "0x00051d55999c7cd91B17Af7276cbecD647dBC000";
 export const MessageReceivedHandler = async (
   context: IEventContext,
-  bind: IBind
+  bind: IBind,
 ) => {
   // Implement your function handler logic for iRelay here
   const { event, transaction, block } = context;

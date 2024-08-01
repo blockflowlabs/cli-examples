@@ -1,10 +1,10 @@
 name: Router Nitro
 description: Indexing cross chain transfers on router nitro protocol
-startBlock: 1523862 # linea deployment blockNumber 1523862, 0x8c4acd74ff4385f3b7911432fa6787aa14406f8b
-userId: 6cd145d5-b8bc-41a0-a74d-2e9b88ffb675
-projectId: 6aa2619a-2485-4dd9-882c-56b4ed1a86d0
+startBlock: 1523860 # add - 0x8c4acd74ff4385f3b7911432fa6787aa14406f8b, block - 19062096
+userId: process.env.userId
+projectId: process.env.projectId
 network: Linea
-exection: parallel
+execution: parallel
 user: prady
 schema:
   file: ./studio.schema.ts
@@ -64,3 +64,43 @@ Resources:
     Triggers:
       - Event: DepositInfoUpdate(address,uint256,uint256,uint256,bool,address)
         Handler: src/deposit/DepositInfoUpdate/index.DepositInfoUpdate
+
+  - Name: tokenTransfer
+    Abi: src/abis/assetBridge.json
+    Type: contract/event
+    Address: "0x01B4CE0d48Ce91eB6bcaf5dB33870C65d641b894"
+    Triggers:
+      - Event: TokenTransfer(bytes32,address,uint256,bytes,uint256,uint256)
+        Handler: src/deposit/TokenTransfer/index.TokenTransferHandler
+
+  - Name: tokenTransferWithInstruction
+    Abi: src/abis/assetBridge.json
+    Type: contract/event
+    Address: "0x01B4CE0d48Ce91eB6bcaf5dB33870C65d641b894"
+    Triggers:
+      - Event: TokenTransferWithInstruction(bytes32,address,uint256,bytes,uint256,uint64,bytes,uint256)
+        Handler: src/deposit/TokenTransferWithInstruction/index.TokenTransferWithInstructionHandler
+
+  - Name: execute
+    Abi: src/abis/assetBridge.json
+    Type: contract/event
+    Address: "0x01B4CE0d48Ce91eB6bcaf5dB33870C65d641b894"
+    Triggers:
+      - Event: Execute(uint8,bytes32,uint256,address,uint256,address)
+        Handler: src/receive/execute/index.executeHandler
+
+  - Name: executeWithMessage
+    Abi: src/abis/assetBridge.json
+    Type: contract/event
+    Address: "0x01B4CE0d48Ce91eB6bcaf5dB33870C65d641b894"
+    Triggers:
+      - Event: ExecuteWithMessage(uint8,bytes32,uint256,address,uint256,address,bool,bytes)
+        Handler: src/receive/executeWithMessage/index.executeWithMessageHandler
+
+  - Name: Swap
+    Abi: src/abis/dexspan.json
+    Type: contract/event
+    Address: "0x6D6050Ca1dd8e4aAb9164B663d805104a3ECFC34"
+    Triggers:
+      - Event: Swap(string,address[],uint256,address,address,uint256,uint256[],uint256)
+        Handler: src/deposit/Dexspan/index.SwapHandler

@@ -50,6 +50,8 @@ export const getRpcProviderUrl = (chainId: string) => {
       return "https://base.llamarpc.com";
     case "7225878":
       return "https://rpc.saakuru.network";
+    case "59144":
+      return "https://linea.blockpi.network/v1/rpc/public";
     default:
       return "https://rpc.ankr.com/eth";
   }
@@ -78,7 +80,7 @@ export async function nodeRequest(data: object, chainId = "1"): Promise<any> {
 const getContractData = async (
   contractAddress: string,
   data: string,
-  chainId: string
+  chainId: string,
 ) => {
   try {
     const calldata = {
@@ -122,13 +124,13 @@ const getTokenDecimals = async (contractAddress: string, chainId: string) => {
   const decimalsHex = await getContractData(
     contractAddress,
     decimalsSig,
-    chainId
+    chainId,
   );
 
   var iface = new Interface(ERC20_ABI);
   return parseInt(
     iface.decodeFunctionResult("decimals", decimalsHex).toString(),
-    10
+    10,
   );
 };
 
@@ -155,10 +157,10 @@ export async function fetchTokenPriceFromOracle(symbol: string) {
       return "1";
     }
     const priceData = await axios.get(
-      `https://sentry.lcd.routerprotocol.com/router-protocol/router-chain/pricefeed/price/${symbol}`
+      `https://sentry.lcd.routerprotocol.com/router-protocol/router-chain/pricefeed/price/${symbol}`,
     );
     return parseFloat(
-      formatDecimals(priceData.data.price.price, priceData.data.price.decimals)
+      formatDecimals(priceData.data.price.price, priceData.data.price.decimals),
     ).toFixed(6);
   } catch (e: any) {
     console.error("Error in fethcing price from router oracle - ", e?.message);

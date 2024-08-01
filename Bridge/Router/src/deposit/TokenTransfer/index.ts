@@ -25,7 +25,7 @@ import { formatDecimals } from "../../utils/formatting";
  */
 export const TokenTransferHandler = async (
   context: IEventContext,
-  bind: IBind
+  bind: IBind,
 ) => {
   // Implement your event handler logic for FundsDeposited here
   const { event, transaction, block } = context;
@@ -55,7 +55,7 @@ export const TokenTransferHandler = async (
   const stableTokenInfo = await fetchTokenDetails(
     bind,
     srcChain,
-    srcTokenAddress
+    srcTokenAddress,
   );
 
   const id = `${srcChain}_${dstChain}_${depositId}`;
@@ -73,7 +73,7 @@ export const TokenTransferHandler = async (
 
   const isSwapWithReceiptRelay = transaction.logs
     ? transaction.logs.find(
-        (log) => log.topics[0].toLowerCase() === SWAP_WITH_RECIPIENT_TOPIC0
+        (log) => log.topics[0].toLowerCase() === SWAP_WITH_RECIPIENT_TOPIC0,
       )
     : null;
 
@@ -107,9 +107,11 @@ export const TokenTransferHandler = async (
     depositId: depositId,
     partnerId: partnerId,
     message: "", // tokenTransferWithMessage
-    usdValue: (
-      stableTokenInfo.priceUsd * parseFloat(tokenList.stableToken.amount)
-    ).toFixed(4),
+    usdValue: stableTokenInfo.priceUsd
+      ? (
+          stableTokenInfo.priceUsd * parseFloat(tokenList.stableToken.amount)
+        ).toFixed(4)
+      : "",
     recipientAddress: recipient,
   };
   const destDB: Instance = bind(Destination);

@@ -9,7 +9,7 @@ import { Destination } from "../../types/schema";
  */
 export const FundsPaidWithMessageHandler = async (
   context: IEventContext,
-  bind: IBind
+  bind: IBind,
 ) => {
   // Implement your event handler logic for FundsPaidWithMessage here
   const { event, transaction, block } = context;

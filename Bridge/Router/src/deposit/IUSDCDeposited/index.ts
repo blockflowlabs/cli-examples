@@ -16,7 +16,7 @@ import { formatDecimals } from "../../utils/formatting";
  */
 export const IUSDCDepositedHandler = async (
   context: IEventContext,
-  bind: IBind
+  bind: IBind,
 ) => {
   // Implement your event handler logic for FundsDeposited here
   const { event, transaction, block } = context;
@@ -66,7 +66,7 @@ export const IUSDCDepositedHandler = async (
 
   const isSwapWithReceiptRelay = transaction.logs
     ? transaction.logs.find(
-        (log) => log.topics[0].toLowerCase() === SWAP_WITH_RECIPIENT_TOPIC0
+        (log) => log.topics[0].toLowerCase() === SWAP_WITH_RECIPIENT_TOPIC0,
       )
     : null;
 
@@ -100,9 +100,11 @@ export const IUSDCDepositedHandler = async (
     depositId: usdcNonce,
     partnerId: partnerId,
     message: "", // fundDepositWithMessage
-    usdValue: (
-      stableTokenInfo.priceUsd * parseFloat(tokenList.stableToken.amount)
-    ).toFixed(4),
+    usdValue: stableTokenInfo.priceUsd
+      ? (
+          stableTokenInfo.priceUsd * parseFloat(tokenList.stableToken.amount)
+        ).toFixed(4)
+      : "",
     fee: {
       tokenRef: tokenList.stableToken.tokenRef,
       amount:

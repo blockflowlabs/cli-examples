@@ -6,8 +6,11 @@ import { fetchTokenInfo, fetchTokenPriceFromOracle } from "./node";
 export const fetchTokenDetails = async (
   bind: IBind,
   chainId: string,
-  address: string
+  address: string,
 ) => {
+  if (!address || address === "0x") {
+    return null;
+  }
   const tokendb: Instance = bind(TokensInfo);
   let token = await tokendb.findOne({
     id: `${chainId}_${address}`.toLowerCase(),
@@ -26,6 +29,7 @@ export const fetchTokenDetails = async (
       decimals: fetchedTokenInfo.decimals,
       symbol: fetchedTokenInfo.symbol,
       priceRecordTimestamp: Math.floor(new Date().getTime() / 1000),
+      priceUsd: "",
     };
     if (priceUsd) {
       token["priceUsd"] = priceUsd;

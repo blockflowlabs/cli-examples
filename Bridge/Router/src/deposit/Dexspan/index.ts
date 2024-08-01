@@ -76,9 +76,11 @@ export const SwapHandler = async (context: IEventContext, bind: IBind) => {
     depositId: "",
     partnerId: widgetID,
     message: "", // fundDepositWithMessage
-    usdValue: (
-      stableTokenInfo.priceUsd * parseFloat(tokenList.stableToken.amount)
-    ).toFixed(4),
+    usdValue: stableTokenInfo.priceUsd
+      ? (
+          stableTokenInfo.priceUsd * parseFloat(tokenList.stableToken.amount)
+        ).toFixed(4)
+      : "",
     fee: {
       tokenRef: tokenList.stableToken.tokenRef,
       amount:

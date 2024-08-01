@@ -1,0 +1,17 @@
+name: Project Apollo
+description: A top-secret research project to the moon
+startBlock: latest
+userId: process.env.userId
+projectId: process.env.projectId
+network: Ethereum
+user: Jane-doe
+schema:
+  file: ./studio.schema.ts
+execution: parallel
+Resources:
+  - Name: blockflow
+    Type: api/graphql
+    Slug: graphql
+    Handlers:
+      resolver: src/handlers/resolver.ts
+      typedefs: src/handlers/typedef.ts

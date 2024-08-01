@@ -1,8 +1,8 @@
 name: Router Nitro
 description: Indexing cross chain transfers on router nitro protocol
 startBlock: 8831830 # add - 0x0fa205c0446cd9eedcc7538c9e24bc55ad08207f, block - 19062096
-userId: 6cd145d5-b8bc-41a0-a74d-2e9b88ffb675
-projectId: 6aa2619a-2485-4dd9-882c-56b4ed1a86d0
+userId: process.env.userId
+projectId: process.env.projectId
 network: Base
 execution: parallel
 user: prady
@@ -64,7 +64,7 @@ Resources:
     Triggers:
       - Event: DepositInfoUpdate(address,uint256,uint256,uint256,bool,address)
         Handler: src/deposit/DepositInfoUpdate/index.DepositInfoUpdate
-  
+
   - Name: tokenTransfer
     Abi: src/abis/assetBridge.json
     Type: contract/event
@@ -80,7 +80,7 @@ Resources:
     Triggers:
       - Event: TokenTransferWithInstruction(bytes32,address,uint256,bytes,uint256,uint64,bytes,uint256)
         Handler: src/deposit/TokenTransferWithInstruction/index.TokenTransferWithInstructionHandler
-        
+
   - Name: execute
     Abi: src/abis/assetBridge.json
     Type: contract/event
@@ -96,3 +96,27 @@ Resources:
     Triggers:
       - Event: ExecuteWithMessage(uint8,bytes32,uint256,address,uint256,address,bool,bytes)
         Handler: src/receive/executeWithMessage/index.executeWithMessageHandler
+
+  - Name: iUSDCDeposited
+    Abi: src/abis/cctpBridge.json
+    Type: contract/event
+    Address: "0x2F301d3b045544A9D7Ec3FA090CD78986F11f2E7"
+    Triggers:
+      - Event: iUSDCDeposited(uint256,uint256,bytes32,uint256,address,bytes32,address)
+        Handler: src/deposit/IUSDCDeposited/index.IUSDCDepositedHandler
+
+  - Name: MessageReceived
+    Abi: src/abis/messageTransmitter.json
+    Type: contract/event
+    Address: "0xAD09780d193884d503182aD4588450C416D6F9D4"
+    Triggers:
+      - Event: MessageReceived(address,uint32,uint64,bytes32,bytes)
+        Handler: src/receive/MessageReceived/index.MessageReceivedHandler
+
+  - Name: Swap
+    Abi: src/abis/dexspan.json
+    Type: contract/event
+    Address: "0x02D728B9C1513478a6b6de77a92648e1D8F801e7"
+    Triggers:
+      - Event: Swap(string,address[],uint256,address,address,uint256,uint256[],uint256)
+        Handler: src/deposit/Dexspan/index.SwapHandler

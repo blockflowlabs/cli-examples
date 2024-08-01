@@ -19,7 +19,7 @@ import { formatDecimals } from "../../utils/formatting";
  */
 export const FundsDepositedHandler = async (
   context: IEventContext,
-  bind: IBind
+  bind: IBind,
 ) => {
   // Implement your event handler logic for FundsDeposited here
   const { event, transaction, block } = context;
@@ -54,7 +54,7 @@ export const FundsDepositedHandler = async (
   if (destToken === "0x")
     destToken = getDestTokenInfo(
       dstChain,
-      getTokenInfo(srcChain, srcToken)?.symbol
+      getTokenInfo(srcChain, srcToken)?.symbol,
     )?.address;
   const [stableTokenInfo, stableDestTokenInfo] = await Promise.all([
     fetchTokenDetails(bind, srcChain, srcToken),
@@ -72,14 +72,16 @@ export const FundsDepositedHandler = async (
       tokenRef: stableTokenInfo._id,
     },
     stableDestToken: {
-      amount: formatDecimals(destAmount, stableTokenInfo.decimals),
-      tokenRef: stableDestTokenInfo._id,
+      amount: stableDestTokenInfo
+        ? formatDecimals(destAmount, stableDestTokenInfo.decimals)
+        : formatDecimals(destAmount, stableTokenInfo.decimals),
+      tokenRef: stableDestTokenInfo ? stableDestTokenInfo._id : null,
     },
   };
 
   const isSwapWithReceiptRelay = transaction.logs
     ? transaction.logs.find(
-        (log) => log.topics[0].toLowerCase() === SWAP_WITH_RECIPIENT_TOPIC0
+        (log) => log.topics[0].toLowerCase() === SWAP_WITH_RECIPIENT_TOPIC0,
       )
     : null;
 
@@ -113,9 +115,11 @@ export const FundsDepositedHandler = async (
     depositId: depositId,
     partnerId: partnerId,
     message: "", // fundDepositWithMessage
-    usdValue: (
-      stableTokenInfo.priceUsd * parseFloat(tokenList.stableToken.amount)
-    ).toFixed(4),
+    usdValue: stableTokenInfo.priceUsd
+      ? (
+          stableTokenInfo.priceUsd * parseFloat(tokenList.stableToken.amount)
+        ).toFixed(4)
+      : "",
     fee: {
       tokenRef: tokenList.stableToken.tokenRef,
       amount:

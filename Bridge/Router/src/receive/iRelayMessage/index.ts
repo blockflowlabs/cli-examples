@@ -16,7 +16,10 @@ import { fetchTokenDetails } from "../../utils/token";
  * @param context trigger object with contains {functionParams: {relayData }, transaction, block}
  * @param bind init function for database wrapper methods
  */
-export const iRelayMessageHandler = async (context: IFunctionContext, bind: IBind) => {
+export const iRelayMessageHandler = async (
+  context: IFunctionContext,
+  bind: IBind,
+) => {
   // Implement your function handler logic for iRelayMessage here
   const { functionParams, transaction, block } = context;
   const { relayData } = functionParams;
@@ -49,7 +52,7 @@ export const iRelayMessageHandler = async (context: IFunctionContext, bind: IBin
 
   const isSwapWithReceiptRelay = transaction.logs
     ? transaction.logs.find(
-        (log) => log.topics[0].toLowerCase() === SWAP_WITH_RECIPIENT_TOPIC0
+        (log) => log.topics[0].toLowerCase() === SWAP_WITH_RECIPIENT_TOPIC0,
       )
     : null;
 
@@ -80,7 +83,7 @@ export const iRelayMessageHandler = async (context: IFunctionContext, bind: IBin
 
   const isGasLeaked = transaction.logs
     ? transaction.logs.find(
-        (log) => log.topics[0].toLowerCase() === GASLEAKED_TOPIC0
+        (log) => log.topics[0].toLowerCase() === GASLEAKED_TOPIC0,
       )
     : null;
 
@@ -90,11 +93,11 @@ export const iRelayMessageHandler = async (context: IFunctionContext, bind: IBin
     const destTokenInfo = await fetchTokenDetails(
       bind,
       dstChain,
-      decodeEvent[0].toString()
+      decodeEvent[0].toString(),
     );
     nativeTokenAmount = formatDecimals(
       decodeEvent[2].toString(),
-      destTokenInfo.decimals
+      destTokenInfo.decimals,
     );
     receiverAddress = decodeEvent[3].toString();
   }
