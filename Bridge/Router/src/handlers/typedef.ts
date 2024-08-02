@@ -1,4 +1,4 @@
-import { nitroSchema } from "../utils/nitroschema";
+import { nitroSchema } from "../utils/nitroSchema";
 
 export function testTypeDefs() {
   try {
@@ -15,7 +15,7 @@ export function testTypeDefs() {
             limit: Int
             page: Int
           ): [${collectionName}]
-        `,
+        `
         )
         .join("\n")}
     }
@@ -25,7 +25,7 @@ export function testTypeDefs() {
     let inputTypes = ""; // To store generated input types definitions
 
     for (const [collectionName, collectionSchema] of Object.entries(
-      nitroSchema,
+      nitroSchema
     ) as any) {
       // Generate object types for nested object fields
       // prettier-ignore
@@ -67,7 +67,7 @@ export function testTypeDefs() {
               fieldType = getGraphQLType(
                 field.type,
                 field.name,
-                collectionName,
+                collectionName
               );
             }
             return `${field.name}: ${fieldType}`;
@@ -87,7 +87,7 @@ export function testTypeDefs() {
               // Generate and append the filter input type for the array of objects
               inputTypes += generateInputTypeForArrayOfObjects(
                 field.type[0],
-                inputTypeName,
+                inputTypeName
               );
               return `
                 ${field.name}: ${inputTypeName}
@@ -114,7 +114,7 @@ export function testTypeDefs() {
               const fieldType = getGraphQLType(
                 field.type,
                 field.name,
-                collectionName,
+                collectionName
               );
               return `
                 ${field.name}: ${fieldType}
@@ -158,7 +158,7 @@ export function testTypeDefs() {
 
 function generateInputTypeForArrayOfObjects(
   obj: { [s: string]: unknown } | ArrayLike<unknown>,
-  typeName: string | undefined,
+  typeName: string | undefined
 ) {
   try {
     let inputFields = Object.entries(obj)
@@ -213,8 +213,8 @@ function generateObjectType(obj: any, typeName: string) {
           ([fieldName, fieldType]) =>
             `${fieldName}: ${getGraphQLType(
               fieldType,
-              typeName + "_" + fieldName,
-            )}`,
+              typeName + "_" + fieldName
+            )}`
         )
         .join("\n")}
     }
@@ -225,7 +225,7 @@ function generateObjectType(obj: any, typeName: string) {
       if (typeof fieldType === "object" && !Array.isArray(fieldType)) {
         objectTypeDef += generateObjectType(
           fieldType,
-          `${typeName}_${fieldName}`,
+          `${typeName}_${fieldName}`
         );
       }
     }
@@ -245,8 +245,8 @@ function generateInputType(obj: any, typeName: string) {
           ([fieldName, fieldType]) =>
             `${fieldName}: ${getGraphQLType(
               fieldType,
-              typeName + "_" + fieldName,
-            )}`,
+              typeName + "_" + fieldName
+            )}`
         )
         .join("\n")}
     }
@@ -257,7 +257,7 @@ function generateInputType(obj: any, typeName: string) {
       if (typeof fieldType === "object" && !Array.isArray(fieldType)) {
         inputTypeDef += generateInputType(
           fieldType,
-          `${typeName}_${fieldName}`,
+          `${typeName}_${fieldName}`
         );
       }
     }

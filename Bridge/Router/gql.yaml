@@ -13,5 +13,5 @@ Resources:
     Type: api/graphql
     Slug: graphql
     Handlers:
-      resolver: src/handlers/resolver.ts
-      typedefs: src/handlers/typedef.ts
+      resolver: src/handlers/resolver.testResolvers
+      typedefs: src/handlers/typedef.testTypeDefs

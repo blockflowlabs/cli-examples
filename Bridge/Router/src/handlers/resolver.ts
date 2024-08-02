@@ -1,4 +1,5 @@
-import { nitroSchema } from "../utils/nitroschema";
+import { Source } from "../types/schema";
+import { nitroSchema } from "../utils/nitroSchema";
 
 export function testResolvers(bind: any) {
   try {
@@ -7,7 +8,7 @@ export function testResolvers(bind: any) {
     };
 
     for (const [collectionName, collectionSchema] of Object.entries(
-      nitroSchema,
+      nitroSchema
     )) {
       resolvers.Query[collectionName] = async (_: any, args: any) => {
         const filter: any = {};
@@ -20,7 +21,7 @@ export function testResolvers(bind: any) {
         if (args.sortBy) {
           for (const [key, order] of Object.entries(args.sortBy) as any) {
             const fieldSchema = collectionSchema.find(
-              (field) => field.name === key,
+              (field) => field.name === key
             );
             if (!options["sort"]) options["sort"] = {};
             if (fieldSchema) options["sort"][key] = order === "asc" ? 1 : -1;
@@ -36,7 +37,7 @@ export function testResolvers(bind: any) {
           for (const [key, value] of Object.entries(args.filter) as any) {
             const [fieldName, operator] = key.split("_");
             const fieldSchema = collectionSchema.find(
-              (field) => field.name === fieldName,
+              (field) => field.name === fieldName
             );
             if (fieldSchema) {
               switch (operator) {
@@ -69,14 +70,14 @@ export function testResolvers(bind: any) {
                 case "in":
                   filter[fieldName] = {
                     $in: value.map((val: any) =>
-                      mapToType(fieldSchema.type, val),
+                      mapToType(fieldSchema.type, val)
                     ),
                   };
                   break;
                 case "nin":
                   filter[fieldName] = {
                     $nin: value.map((val: any) =>
-                      mapToType(fieldSchema.type, val),
+                      mapToType(fieldSchema.type, val)
                     ),
                   };
                   break;
@@ -90,8 +91,14 @@ export function testResolvers(bind: any) {
           }
         }
 
-        const api = bind();
-        return await api.find(filter, options);
+        const api = bind(Source);
+        delete filter.entityId;
+        console.log("api", api);
+        console.log("filter", filter);
+        console.log("options", options);
+        const data = await api.find(filter, options);
+        console.log("DATA", data);
+        return data;
       };
     }
 
