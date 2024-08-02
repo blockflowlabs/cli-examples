@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@blockflow-labs/utils": "^1.0.7-beta.1",
+    "axios": "^1.7.2",
     "ethers": "^6.13.0"
   },
   "devDependencies": {

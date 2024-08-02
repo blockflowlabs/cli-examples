@@ -1,5 +1,6 @@
 import { ABind, API } from "@blockflow-labs/utils";
 
+import { domainToChainId } from "../utils/helper";
 import { burnTransactionsTable } from "../types/schema";
 
 /**
@@ -8,24 +9,27 @@ import { burnTransactionsTable } from "../types/schema";
  * @param bind init function for database wrapper methods
  */
 export const countHandler = async (context: any, bind: ABind) => {
-  // Implement your function handler logic for API here
   let { request, response } = context;
 
-  // request contains query object. To access user query params use
-  let { source, destination } = request.query;
+  let { source, destination, pending, timestamp } = request.query;
+  const sourceParsed = JSON.parse(source);
+  const destinationParsed = JSON.parse(destination);
+  const chainIds = sourceParsed.map((src: any) => domainToChainId[src]);
+
   const srcDb: API = bind(burnTransactionsTable);
 
-  const pipeline = [
-    {
-      $match: {
-        sourceDomain: { $in: JSON.parse(source) },
-        destinationDomain: { $in: JSON.parse(destination) },
-      },
-    },
-    {
-      $count: "count",
-    },
-  ];
+  const matchStage: any = {
+    destinationDomain: { $in: destinationParsed },
+    entityId:
+      pending === "true" ? "burnTransactionsTable" : "mintTransactionsTable",
+  };
+
+  if (pending !== "true") matchStage.sourceDomain = { $in: sourceParsed };
+  else matchStage.chainId = { $in: chainIds };
+
+  if (timestamp) matchStage.timeStamp = { $gt: timestamp };
+
+  const pipeline = [{ $match: matchStage }, { $count: "count" }];
 
   response = await srcDb.aggregate(pipeline);
 

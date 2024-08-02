@@ -64,6 +64,7 @@ export const DepositForBurnHandler = async (
       timeStamp: block.block_timestamp,
       destinationTokenMessenger: destinationTokenMessenger.toString(),
       destinationCaller: destinationCaller.toString(),
+      //@todo add status field
     });
   } else {
     // https://github.com/circlefin/evm-cctp-contracts/blob/master/src/TokenMessenger.sol#L290

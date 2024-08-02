@@ -14,7 +14,7 @@ export const flowHandler = async (context: any, bind: ABind) => {
   let { request, response } = context;
 
   // request contains query object. To access user query params use
-  let { timestamp } = request.query;
+  let { timestamp, chainId } = request.query;
 
   const srcDb: API = bind(mintTransactionsTable);
 
@@ -27,6 +27,7 @@ export const flowHandler = async (context: any, bind: ABind) => {
   };
 
   if (timestamp) matchStage.timeStamp = { $gt: timestamp };
+  if (chainId) matchStage.chainId = chainId;
 
   const result = await srcDb.aggregate([
     {

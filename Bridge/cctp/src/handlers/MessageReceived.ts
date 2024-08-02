@@ -75,8 +75,9 @@ export const MessageReceivedHandler = async (
     transactionHash: transaction.transaction_hash,
     sourceDomain: sourceDomain,
     destinationDomain: chainIdToDomain[block.chain_id],
-    mintRecipient: caller,
-    timeStamp: block.block_timestamp,
+    mintRecipient: caller, // @todo fix this term
+    // @TODO add msgSender
+    timeStamp: block.block_timestamp, // @todo to number
   });
 
   const messagereceivesig = MESSAGE_RECEIVE_SIG.includes(
