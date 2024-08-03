@@ -96,7 +96,29 @@ export function testResolvers(bind: any) {
         console.log("api", api);
         console.log("filter", filter);
         console.log("options", options);
-        const data = await api.find(filter, options);
+        const data = await api.aggregate([
+          // Initial match stage to apply find criteria
+          {
+            $match: {
+              transactionHash:
+                "0xbd44610b3cab590d26260b8161bf78c5fecf61e8951c790bc76edd1e92071a46",
+            },
+          },
+          {
+            $lookup: {
+              from: "Token", // Assuming 'tokens' is the collection name for tokens
+              localField: "sourceToken.tokenRef",
+              foreignField: "_id",
+              as: "sourceTokenDetails",
+            },
+          },
+          {
+            $unwind: {
+              path: "$sourceTokenDetails",
+              preserveNullAndEmptyArrays: true,
+            },
+          },
+        ]);
         console.log("DATA", data);
         return data;
       };
