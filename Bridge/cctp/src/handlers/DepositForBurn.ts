@@ -39,8 +39,8 @@ export const DepositForBurnHandler = async (
   amount = parseInt(amount.toString(), 10);
 
   const dstChainId: string = domainToChainId[destinationDomain];
-  const burnId =
-    `${nonce.toString()}_${block.chain_id}_${dstChainId}`.toLowerCase();
+  // prettier-ignore
+  const burnId = `${nonce.toString()}_${block.chain_id}_${dstChainId}`.toLowerCase();
 
   const burntransactionDB: Instance = bind(burnTransactionsTable);
 
@@ -52,7 +52,7 @@ export const DepositForBurnHandler = async (
 
   if (!burntransaction) {
     // https://github.com/circlefin/evm-cctp-contracts/blob/master/src/TokenMessenger.sol#L469
-    await burntransactionDB.create({
+    burntransaction = await burntransactionDB.create({
       id: burnId,
       burnToken: burnToken.toString(),
       transactionHash: transaction.transaction_hash,
@@ -61,10 +61,10 @@ export const DepositForBurnHandler = async (
       amount: amount,
       mintRecipient: mintRecipient.toLowerCase().toString(),
       messageSender: depositor.toString(),
-      timeStamp: block.block_timestamp,
+      timeStamp: parseInt(block.block_timestamp),
       destinationTokenMessenger: destinationTokenMessenger.toString(),
       destinationCaller: destinationCaller.toString(),
-      //@todo add status field
+      isCompleted: false,
     });
   } else {
     // https://github.com/circlefin/evm-cctp-contracts/blob/master/src/TokenMessenger.sol#L290
@@ -78,6 +78,14 @@ export const DepositForBurnHandler = async (
   const dstTx: ImintTransactionsTable = await mintDB.findOne({
     id: burnId.toLowerCase(),
   });
+
+  if (dstTx) {
+    burntransaction.isCompleted = true;
+    await burntransactionDB.save(burntransaction);
+
+    dstTx.messageSender = depositor.toString();
+    await mintDB.save(dstTx);
+  }
 
   let feeamount = 0;
   if (dstTx && dstTx.amount) feeamount = amount - dstTx.amount;

@@ -6,8 +6,6 @@ import {
 } from "@blockflow-labs/utils";
 
 import {
-  FeeInfo,
-  IFeeInfo,
   attestationTable,
   IattestationTable,
   mintTransactionsTable,
@@ -37,12 +35,16 @@ export const MessageReceivedHandler = async (
 ) => {
   // Implement your event handler logic for MessageReceived here 163201_10_1
   const { event, transaction, block, log } = context;
+
+  // sender is token messager address
+  // caller is circle EOA address
   const { caller, sourceDomain, nonce, sender, messageBody } = event;
 
   const srcChainId = domainToChainId[sourceDomain];
 
   let amountDestination = "0";
   let attestationdata = "";
+  let mintRecipient = "";
 
   const isMintAndWithdraw = transaction.logs
     ? transaction.logs.find(
@@ -56,6 +58,7 @@ export const MessageReceivedHandler = async (
       isMintAndWithdraw.topics,
       isMintAndWithdraw.log_data
     );
+    mintRecipient = decodeEvent[0].toString();
     amountDestination = decodeEvent[1].toString();
   }
 
@@ -75,9 +78,11 @@ export const MessageReceivedHandler = async (
     transactionHash: transaction.transaction_hash,
     sourceDomain: sourceDomain,
     destinationDomain: chainIdToDomain[block.chain_id],
-    mintRecipient: caller, // @todo fix this term
-    // @TODO add msgSender
-    timeStamp: block.block_timestamp, // @todo to number
+    mintRecipient,
+    msgSender: "",
+    timeStamp: parseInt(block.block_timestamp), // @todo to number,
+    caller,
+    sender,
   });
 
   const messagereceivesig = MESSAGE_RECEIVE_SIG.includes(
@@ -109,6 +114,14 @@ export const MessageReceivedHandler = async (
   const srcTx: IburnTransactionsTable = await burnDB.findOne({
     id: mintId.toLowerCase(),
   });
+
+  if (srcTx) {
+    minttransaction.messageSender = srcTx.messageSender;
+    await minttransactionDB.save(minttransaction);
+
+    srcTx.isCompleted = true;
+    await burnDB.save(srcTx);
+  }
 
   let feeamount = 0;
   if (srcTx && srcTx.amount) feeamount = srcTx.amount - amount;

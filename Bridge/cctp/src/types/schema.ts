@@ -7,7 +7,7 @@ export class burnTransactionsTable {
   static schema = {
     id: { type: "String", index: true },
     amount: "number",
-    timeStamp: "string",
+    timeStamp: "number",
     isCompleted: "Boolean",
     sourceDomain: "string",
     mintRecipient: "string",
@@ -29,11 +29,14 @@ export class mintTransactionsTable {
   static schema = {
     id: { type: "String", index: true },
     amount: "number",
-    timeStamp: "string",
+    timeStamp: "number",
     sourceDomain: "string",
     mintRecipient: "string",
+    messageSender: "string",
     transactionHash: "string",
     destinationDomain: "string",
+    caller: "string",
+    sender: "string",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
@@ -170,7 +173,7 @@ import { String, Array } from "@blockflow-labs/utils";
 export interface IburnTransactionsTable extends Document {
   id: String;
   amount: number;
-  timeStamp: string;
+  timeStamp: number;
   isCompleted: Boolean;
   sourceDomain: string;
   mintRecipient: string;
@@ -190,11 +193,15 @@ export interface IburnTransactionsTable extends Document {
 export interface ImintTransactionsTable extends Document {
   id: String;
   amount: number;
-  timeStamp: string;
+  timeStamp: number;
   sourceDomain: string;
   mintRecipient: string;
+  messageSender: string;
   transactionHash: string;
   destinationDomain: string;
+
+  caller: string;
+  sender: string;
   blocknumber: String;
   entityId: String;
   instanceId: String;

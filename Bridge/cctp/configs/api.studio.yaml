@@ -1,8 +1,8 @@
 name: cctp-dst
 description: Indexing circle etheruem cctp contracts
 startBlock: 25114705
-userId: google-oauth2%7C113106604109449522744
-projectId: 9b8821f7-0942-4afa-b739-6d2560166cb2
+userId: process.env.userId
+projectId: process.env.projectId
 network: Avalanche
 user: prady-cctp
 schema:

@@ -3,7 +3,7 @@ import { String, Array } from "@blockflow-labs/utils";
 export interface burnTransactionsTable {
   id: String;
   amount: number;
-  timeStamp: string;
+  timeStamp: number;
   isCompleted: Boolean;
   sourceDomain: string;
   mintRecipient: string;
@@ -19,11 +19,15 @@ export interface burnTransactionsTable {
 export interface mintTransactionsTable {
   id: String;
   amount: number;
-  timeStamp: string;
+  timeStamp: number;
   sourceDomain: string;
   mintRecipient: string;
+  messageSender: string;
   transactionHash: string;
   destinationDomain: string;
+
+  caller: string;
+  sender: string;
 }
 
 export interface attestationTable {
