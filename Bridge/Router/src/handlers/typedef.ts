@@ -14,7 +14,7 @@ export function testTypeDefs() {
             sort: ${collectionName}SortInput
             limit: Int
             page: Int
-          ): [${collectionName}]
+          ): ${collectionName === "findNitroTransactionsByFilter" ? "NitroTransactionList" : `[${collectionName}]`}
         `
         )
         .join("\n")}
@@ -28,7 +28,6 @@ export function testTypeDefs() {
       nitroSchema
     ) as any) {
       // Generate object types for nested object fields
-      // prettier-ignore
       for (const field of collectionSchema) {
         if (typeof field.type === "object") {
           if (!Array.isArray(field.type)) {
@@ -46,158 +45,100 @@ export function testTypeDefs() {
           }
         }
       }
+
       if (collectionName === "findNitroTransactionsByFilter") {
-        class CompareType {
-          eq?: string;
-
-          gt?: number;
-
-          gte?: number;
-
-          in?: string[];
-
-          lt?: number;
-
-          lte?: number;
-
-          ne?: string;
-
-          nin?: string[];
-
-          exists?: boolean;
-
-          regex?: string;
-
-          all?: string[];
-
-          size?: number;
-        }
-        enum NitroTransactionStatus {
-          pending = "pending",
-          completed = "completed",
-          failed = "failed",
-        }
-        class StatusFilterInput {
-          eq?: NitroTransactionStatus;
-
-          in?: NitroTransactionStatus[];
-        }
-        enum NitroContractType {
-          asset_forwarder = "asset-forwarder",
-          asset_bridge = "asset-bridge",
-          circle = "circle",
-          same_chain = "same-chain",
-        }
-        const requiredFilters = [
-          { name: "src_chain_id", type: CompareType },
-          { name: "dest_chain_id", type: CompareType },
-          { name: "status", type: StatusFilterInput },
-          { name: "widget_id", type: "String" },
-          { name: "transaction_type", type: "String" },
-          { name: "sender_address", type: "String" },
-          { name: "src_tx_hash", type: "String" },
-          { name: "src_timestamp", type: CompareType },
-          { name: "flow_type", type: NitroContractType },
-          { name: "is_Crosschain", type: "Boolean" },
-          { name: "usdc_value", type: CompareType },
-        ];
+        // Add NitroTransactionList type
         typeDefs += `
-        type ${collectionName} {
+        type NitroTransactionList {
+          data: [NitroTransaction!]!
+          limit: Float!
+          page: Float!
+          total: Float!
+        }
+
+        type NitroTransaction {
           ${collectionSchema
             .map((field: { type: any[]; name: any }) => {
-              let fieldType;
-              // Check if the field is an array of objects
-              if (
-                Array.isArray(field.type) &&
-                typeof field.type[0] === "object"
-              ) {
-                // Generate a unique type name for elements within the array
-                const typeName = `${collectionName}_${field.name}Type`;
-                fieldType = `[${typeName}]`; // Indicate it's an array of this type
-              } else if (
-                typeof field.type === "object" &&
-                !Array.isArray(field.type)
-              ) {
-                // Handle non-array object types
-                fieldType = `${collectionName}_${field.name}`;
-              } else {
-                // Handle base types and arrays of base types
-                fieldType = getGraphQLType(
-                  field.type,
-                  field.name,
-                  collectionName
-                );
-              }
+              let fieldType = getGraphQLType(
+                field.type,
+                field.name,
+                collectionName
+              );
               return `${field.name}: ${fieldType}`;
             })
             .join("\n")}
         }
-  
-        input ${collectionName}WhereInput {
-          ${requiredFilters
-            .map((field: { type: any; name: any }) => {
-              if (
-                [
-                  "dummy",
-                  // "src_chain_id",
-                  // "dest_chain_id",
-                  // "src_timestamp",
-                  // "usdc_value",
-                ].includes(field.name)
-              ) {
-                inputTypes += `
-                input XYZ {
-                  eq: String
-                }`;
-                return `
-                eq: String
-                `;
-              } else if (
-                Array.isArray(field.type) &&
-                typeof field.type[0] === "object"
-              ) {
-                // Handle arrays of objects
-                const inputTypeName = `${collectionName}_${field.name}WhereInput`;
-                // Generate and append the filter input type for the array of objects
-                inputTypes += generateInputTypeForArrayOfObjects(
-                  field.type[0],
-                  inputTypeName
-                );
-                return `
-                  ${field.name}: ${inputTypeName}
-                  ${field.name}_some: ${inputTypeName} # Example filter for matching any object within the array
-                  ${field.name}_none: ${inputTypeName} # Example for no objects matching
-                  ${field.name}_every: ${inputTypeName} # Example for all objects matching
-                `;
-              } else if (
-                typeof field.type === "object" &&
-                !Array.isArray(field.type)
-              ) {
-                // Generate filter fields for object types
-                const inputTypeName = `${collectionName}_${field.name}WhereInput`;
-                inputTypes += generateInputType(field.type, inputTypeName);
-                return `
-                  ${field.name}: ${inputTypeName}
-                  ${field.name}_eq: ${inputTypeName}
-                  ${field.name}_ne: ${inputTypeName}
-                  ${field.name}_in: [${inputTypeName}]
-                  ${field.name}_nin: [${inputTypeName}]
-                `;
-              } else {
-                // Handle scalar types
-                const fieldType = getGraphQLType(
-                  field.type,
-                  field.name,
-                  collectionName
-                );
-                return `
-                  ${field.name}: ${fieldType}
-                `;
-              }
-            })
-            .join("\n")}
+
+        input NitroTransactionFilter {
+          widget_id: String
+          dest_chain_id: MongoDbGenericFilterInput
+          flow_type: NitroContractType
+          is_crosschain: Boolean
+          sender_address: String
+          src_chain_id: MongoDbGenericFilterInput
+          src_timestamp: MongoDbGenericFilterInput
+          src_tx_hash: String
+          status: MongoStatusFilterInput
+          transaction_type: NitroTransactionType
+          usdc_value: MongoDbGenericFilterInput
         }
-  
+
+        input MongoDbGenericFilterInput {
+          all: [String!]
+          and: [MongoDbGenericFilterInput!]
+          eq: String
+          exists: Boolean
+          gt: Float
+          gte: Float
+          in: [String!]
+          lt: Float
+          lte: Float
+          ne: String
+          nin: [String!]
+          not: MongoDbGenericFilterInput
+          or: [MongoDbGenericFilterInput!]
+          regex: String
+          size: Float
+        }
+
+        input MongoStatusFilterInput {
+          eq: NitroTransactionStatus
+          in: [NitroTransactionStatus!]
+        }
+
+        enum NitroTransactionStatus {
+          pending
+          completed
+          failed
+        }
+
+        enum NitroContractType {
+          asset_forwarder
+          asset_bridge
+          circle
+          same_chain
+        }
+
+        enum NitroTransactionType {
+          TYPE_X
+          TYPE_Y
+          TYPE_Z
+        }
+
+        input ${collectionName}WhereInput {
+          widget_id: String
+          dest_chain_id: MongoDbGenericFilterInput
+          flow_type: NitroContractType
+          is_crosschain: Boolean
+          sender_address: String
+          src_chain_id: MongoDbGenericFilterInput
+          src_timestamp: MongoDbGenericFilterInput
+          src_tx_hash: String
+          status: MongoStatusFilterInput
+          transaction_type: NitroTransactionType
+          usdc_value: MongoDbGenericFilterInput
+        }
+
         input ${collectionName}SortInput {
           ${collectionSchema
             .map((field: { name: any }) => `${field.name}: SortOrder`)
@@ -209,29 +150,11 @@ export function testTypeDefs() {
         type ${collectionName} {
           ${collectionSchema
             .map((field: { type: any[]; name: any }) => {
-              let fieldType;
-              // Check if the field is an array of objects
-              if (
-                Array.isArray(field.type) &&
-                typeof field.type[0] === "object"
-              ) {
-                // Generate a unique type name for elements within the array
-                const typeName = `${collectionName}_${field.name}Type`;
-                fieldType = `[${typeName}]`; // Indicate it's an array of this type
-              } else if (
-                typeof field.type === "object" &&
-                !Array.isArray(field.type)
-              ) {
-                // Handle non-array object types
-                fieldType = `${collectionName}_${field.name}`;
-              } else {
-                // Handle base types and arrays of base types
-                fieldType = getGraphQLType(
-                  field.type,
-                  field.name,
-                  collectionName
-                );
-              }
+              let fieldType = getGraphQLType(
+                field.type,
+                field.name,
+                collectionName
+              );
               return `${field.name}: ${fieldType}`;
             })
             .join("\n")}
@@ -244,24 +167,21 @@ export function testTypeDefs() {
                 Array.isArray(field.type) &&
                 typeof field.type[0] === "object"
               ) {
-                // Handle arrays of objects
                 const inputTypeName = `${collectionName}_${field.name}WhereInput`;
-                // Generate and append the filter input type for the array of objects
                 inputTypes += generateInputTypeForArrayOfObjects(
                   field.type[0],
                   inputTypeName
                 );
                 return `
                   ${field.name}: ${inputTypeName}
-                  ${field.name}_some: ${inputTypeName} # Example filter for matching any object within the array
-                  ${field.name}_none: ${inputTypeName} # Example for no objects matching
-                  ${field.name}_every: ${inputTypeName} # Example for all objects matching
+                  ${field.name}_some: ${inputTypeName}
+                  ${field.name}_none: ${inputTypeName}
+                  ${field.name}_every: ${inputTypeName}
                 `;
               } else if (
                 typeof field.type === "object" &&
                 !Array.isArray(field.type)
               ) {
-                // Generate filter fields for object types
                 const inputTypeName = `${collectionName}_${field.name}WhereInput`;
                 inputTypes += generateInputType(field.type, inputTypeName);
                 return `
@@ -272,7 +192,6 @@ export function testTypeDefs() {
                   ${field.name}_nin: [${inputTypeName}]
                 `;
               } else {
-                // Handle scalar types
                 const fieldType = getGraphQLType(
                   field.type,
                   field.name,
@@ -310,8 +229,8 @@ export function testTypeDefs() {
     }
   `;
 
-    typeDefs += objectTypes; // Append generated object types at the end
-    typeDefs += inputTypes; // Append generated input types at the end
+    typeDefs += objectTypes;
+    typeDefs += inputTypes;
 
     return typeDefs;
   } catch (error: any) {
