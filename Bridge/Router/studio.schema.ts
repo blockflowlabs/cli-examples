@@ -44,7 +44,7 @@ export interface Destination {
   nativeTokenAmount: String;
   depositId: String;
   srcChainId: String;
-  srcRef: RecordRef;
+  source: RecordRef;
 }
 
 export interface Source {
@@ -67,8 +67,8 @@ export interface Source {
   stableDestToken: Token;
   recipientAddress: String;
   competitorData: CompetitorData;
-  destRef: RecordRef;
-  withdrawRef: RecordRef;
+  destination: RecordRef;
+  withdraw: RecordRef;
 }
 
 //DepositInfoUpdate
@@ -82,5 +82,5 @@ export interface DepositInfoUpdate {
   srcChainId: String;
   depositId: String;
   feeAmount: String;
-  srcRef: RecordRef;
+  source: RecordRef;
 }

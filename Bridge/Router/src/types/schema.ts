@@ -39,7 +39,7 @@ export class Destination {
     nativeTokenAmount: "String",
     depositId: "String",
     srcChainId: "String",
-    srcRef: { recordRef: "ObjectId" },
+    source: { recordRef: "ObjectId" },
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     instanceId: { type: "String", index: true },
@@ -72,8 +72,8 @@ export class Source {
       bridgeFeeUsd: "String",
       timeTaken: "String",
     },
-    destRef: { recordRef: "ObjectId" },
-    withdrawRef: { recordRef: "ObjectId" },
+    destination: { recordRef: "ObjectId" },
+    withdraw: { recordRef: "ObjectId" },
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     instanceId: { type: "String", index: true },
@@ -92,7 +92,7 @@ export class DepositInfoUpdate {
     srcChainId: "String",
     depositId: "String",
     feeAmount: "String",
-    srcRef: { recordRef: "ObjectId" },
+    source: { recordRef: "ObjectId" },
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
@@ -149,7 +149,7 @@ export interface IDestination extends Document {
   nativeTokenAmount: String;
   depositId: String;
   srcChainId: String;
-  srcRef: RecordRef;
+  source: RecordRef;
   blocknumber: String;
   entityId: String;
   instanceId: String;
@@ -175,8 +175,8 @@ export interface ISource extends Document {
   stableDestToken: Token;
   recipientAddress: String;
   competitorData: CompetitorData;
-  destRef: RecordRef;
-  withdrawRef: RecordRef;
+  destination: RecordRef;
+  withdraw: RecordRef;
   blocknumber: String;
   entityId: String;
   instanceId: String;
@@ -193,7 +193,7 @@ export interface IDepositInfoUpdate extends Document {
   srcChainId: String;
   depositId: String;
   feeAmount: String;
-  srcRef: RecordRef;
+  source: RecordRef;
   blocknumber: String;
   entityId: String;
   instanceId: String;

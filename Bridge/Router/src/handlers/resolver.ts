@@ -93,11 +93,9 @@ export function testResolvers(bind: any) {
 
         const api = bind(Source);
         delete filter.entityId;
-        console.log("api", api);
         console.log("filter", filter);
         console.log("options", options);
         const data = await api.aggregate([
-          // Initial match stage to apply find criteria
           {
             $match: {
               transactionHash:
@@ -106,20 +104,218 @@ export function testResolvers(bind: any) {
           },
           {
             $lookup: {
-              from: "Token", // Assuming 'tokens' is the collection name for tokens
-              localField: "sourceToken.tokenRef",
-              foreignField: "_id",
-              as: "sourceTokenDetails",
+              from: "051429b0-8d48-44b9-bda1-014268440964",
+              let: { tokenRef: "$sourceToken.tokenRef" },
+              pipeline: [
+                {
+                  $match: {
+                    $expr: {
+                      $and: [
+                        { $eq: ["$_id", "$$tokenRef"] },
+                        { $eq: ["$entityId", "TokensInfo"] },
+                      ],
+                    },
+                  },
+                },
+              ],
+              as: "sourceToken.fullInfo",
+            },
+          },
+          {
+            $lookup: {
+              from: "051429b0-8d48-44b9-bda1-014268440964",
+              let: { tokenRef: "$destinationToken.tokenRef" },
+              pipeline: [
+                {
+                  $match: {
+                    $expr: {
+                      $and: [
+                        { $eq: ["$_id", "$$tokenRef"] },
+                        { $eq: ["$entityId", "TokensInfo"] },
+                      ],
+                    },
+                  },
+                },
+              ],
+              as: "destinationToken.fullInfo",
+            },
+          },
+          {
+            $lookup: {
+              from: "051429b0-8d48-44b9-bda1-014268440964",
+              let: { tokenRef: "$stableToken.tokenRef" },
+              pipeline: [
+                {
+                  $match: {
+                    $expr: {
+                      $and: [
+                        { $eq: ["$_id", "$$tokenRef"] },
+                        { $eq: ["$entityId", "TokensInfo"] },
+                      ],
+                    },
+                  },
+                },
+              ],
+              as: "stableToken.fullInfo",
+            },
+          },
+          {
+            $lookup: {
+              from: "051429b0-8d48-44b9-bda1-014268440964",
+              let: { tokenRef: "$fee.tokenRef" },
+              pipeline: [
+                {
+                  $match: {
+                    $expr: {
+                      $and: [
+                        { $eq: ["$_id", "$$tokenRef"] },
+                        { $eq: ["$entityId", "TokensInfo"] },
+                      ],
+                    },
+                  },
+                },
+              ],
+              as: "fee.fullInfo",
+            },
+          },
+          {
+            $lookup: {
+              from: "051429b0-8d48-44b9-bda1-014268440964",
+              let: { tokenRef: "$stableDestToken.tokenRef" },
+              pipeline: [
+                {
+                  $match: {
+                    $expr: {
+                      $and: [
+                        { $eq: ["$_id", "$$tokenRef"] },
+                        { $eq: ["$entityId", "TokensInfo"] },
+                      ],
+                    },
+                  },
+                },
+              ],
+              as: "stableDestToken.fullInfo",
+            },
+          },
+          {
+            $lookup: {
+              from: "051429b0-8d48-44b9-bda1-014268440964",
+              let: { recordRef: "$destination.recordRef" },
+              pipeline: [
+                {
+                  $match: {
+                    $expr: {
+                      $and: [
+                        { $eq: ["$_id", "$$recordRef"] },
+                        { $eq: ["$entityId", "Destination"] },
+                      ],
+                    },
+                  },
+                },
+              ],
+              as: "destination.fullInfo",
             },
           },
           {
             $unwind: {
-              path: "$sourceTokenDetails",
-              preserveNullAndEmptyArrays: true,
+              path: "$destination.fullInfo",
+              preserveNullAndEmptyArrays: true, // To keep documents without matches
+            },
+          },
+          {
+            $lookup: {
+              from: "051429b0-8d48-44b9-bda1-014268440964",
+              let: {
+                tokenRef: "$destination.fullInfo.destinationToken.tokenRef",
+              },
+              pipeline: [
+                {
+                  $match: {
+                    $expr: {
+                      $and: [
+                        { $eq: ["$_id", "$$tokenRef"] },
+                        { $eq: ["$entityId", "TokensInfo"] },
+                      ],
+                    },
+                  },
+                },
+              ],
+              as: "destination.fullInfo.destinationToken.fullInfo",
+            },
+          },
+          //   {
+          //     $addFields: {
+          //       "sourceToken.tokenRef": {
+          //         $cond: {
+          //           if: { $gt: [{ $size: "$sourceToken.tokenInfo" }, 0] },
+          //           then: { $arrayElemAt: ["$sourceToken.tokenInfo", 0] },
+          //           else: "$sourceToken.tokenRef",
+          //         },
+          //       },
+          //       "destinationToken.tokenRef": {
+          //         $cond: {
+          //           if: { $gt: [{ $size: "$destinationToken.tokenInfo" }, 0] },
+          //           then: { $arrayElemAt: ["$destinationToken.tokenInfo", 0] },
+          //           else: "$destinationToken.tokenRef",
+          //         },
+          //       },
+          //       "stableToken.tokenRef": {
+          //         $cond: {
+          //           if: { $gt: [{ $size: "$stableToken.tokenInfo" }, 0] },
+          //           then: { $arrayElemAt: ["$stableToken.tokenInfo", 0] },
+          //           else: "$stableToken.tokenRef",
+          //         },
+          //       },
+          //       "fee.tokenRef": {
+          //         $cond: {
+          //           if: { $gt: [{ $size: "$fee.tokenInfo" }, 0] },
+          //           then: { $arrayElemAt: ["$fee.tokenInfo", 0] },
+          //           else: "$fee.tokenRef",
+          //         },
+          //       },
+          //       "stableDestToken.tokenRef": {
+          //         $cond: {
+          //           if: { $gt: [{ $size: "$stableDestToken.tokenInfo" }, 0] },
+          //           then: { $arrayElemAt: ["$stableDestToken.tokenInfo", 0] },
+          //           else: "$stableDestToken.tokenRef",
+          //         },
+          //       },
+          //     },
+          //   },
+          {
+            $project: {
+              id: 1,
+              eventName: 1,
+              blockTimestamp: 1,
+              blockNumber: 1,
+              chainId: 1,
+              destChainId: 1,
+              transactionHash: 1,
+              sourceToken: 1,
+              stableToken: 1,
+              depositorAddress: 1,
+              senderAddress: 1,
+              depositId: 1,
+              partnerId: 1,
+              message: 1,
+              usdValue: 1,
+              fee: 1,
+              stableDestToken: 1,
+              recipientAddress: 1,
+              competitorData: 1,
+              destination: 1,
+              withdraw: 1,
             },
           },
         ]);
-        console.log("DATA", data);
+        console.log(
+          "DATA",
+          populateFullInfo(data[0]),
+          "1",
+          data[0].destination,
+          "2",
+          data[0].destination.fullInfo.destinationToken
+        );
         return data;
       };
     }
@@ -162,4 +358,54 @@ function mapObjectToType(obj: any, objectSchema: any) {
     }
   }
   return mappedObj;
+}
+
+function populateFullInfo(obj: any) {
+  // Helper function to process tokens
+  function processToken(token: any) {
+    if (token && Array.isArray(token.fullInfo) && token.fullInfo.length > 0) {
+      // Merge the first item in fullInfo into the token object, and remove fullInfo
+      Object.assign(token, token.fullInfo[0]);
+      delete token.fullInfo;
+    }
+  }
+
+  // Process sourceToken
+  if (obj.sourceToken) {
+    processToken(obj.sourceToken);
+  }
+
+  // Process stableToken
+  if (obj.stableToken) {
+    processToken(obj.stableToken);
+  }
+
+  // Process fee
+  if (obj.fee) {
+    processToken(obj.fee);
+  }
+
+  // Process stableDestToken
+  if (obj.stableDestToken) {
+    processToken(obj.stableDestToken);
+  }
+
+  // Process destination
+  if (obj.destination && obj.destination.fullInfo) {
+    const destFullInfo = obj.destination.fullInfo;
+    if (destFullInfo) {
+      obj.destination = { ...destFullInfo };
+    }
+  }
+
+  // Process destinationToken inside destination.fullInfo if present
+  if (obj.destination && obj.destination.destinationToken) {
+    processToken(obj.destination.destinationToken);
+  }
+
+  if (obj.destination && obj.destination.stableToken) {
+    processToken(obj.destination.stableToken);
+  }
+
+  return obj;
 }
