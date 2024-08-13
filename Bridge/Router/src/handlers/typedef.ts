@@ -7,14 +7,20 @@ export function testTypeDefs() {
 
     type Query {
       ${Object.keys(nitroSchema)
-        .map(
-          (collectionName) => `
+        .map((collectionName) =>
+          collectionName === "findNitroTransactionByFilter"
+            ? `
+          ${collectionName}(
+            hash: String!
+          ): NitroTransaction
+        `
+            : `
           ${collectionName}(
             where: ${collectionName}WhereInput
             sort: ${collectionName}SortInput
             limit: Int
             page: Int
-          ): ${collectionName === "findNitroTransactionsByFilter" ? "NitroTransactionList" : `[${collectionName}]`}
+          ): NitroTransactionList
         `
         )
         .join("\n")}
@@ -120,9 +126,14 @@ export function testTypeDefs() {
         }
 
         enum NitroTransactionType {
-          TYPE_X
-          TYPE_Y
-          TYPE_Z
+          without_instruction
+          with_instruction
+          gastopup
+        }
+
+        enum SortEnum {
+          asc
+          desc
         }
 
         input ${collectionName}WhereInput {
@@ -140,8 +151,21 @@ export function testTypeDefs() {
         }
 
         input ${collectionName}SortInput {
+          src_timestamp: SortEnum
+        }
+      `;
+      } else if (collectionName === "findNitroTransactionByFilter") {
+        typeDefs += `
+        type NitroTransaction{
           ${collectionSchema
-            .map((field: { name: any }) => `${field.name}: SortOrder`)
+            .map((field: { type: any[]; name: any }) => {
+              let fieldType = getGraphQLType(
+                field.type,
+                field.name,
+                collectionName
+              );
+              return `${field.name}: ${fieldType}`;
+            })
             .join("\n")}
         }
       `;

@@ -58,4 +58,5 @@ const transactionSchema = [
 
 export const nitroSchema = {
   findNitroTransactionsByFilter: transactionSchema,
+  findNitroTransactionByFilter: transactionSchema,
 };

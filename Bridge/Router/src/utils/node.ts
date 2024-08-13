@@ -39,27 +39,59 @@ const iface = new Interface(ERC20_ABI);
 export const getRpcProviderUrl = (chainId: string) => {
   switch (chainId) {
     case "1":
-      return "https://rpc.ankr.com/eth";
+      return [
+        "https://rpc.ankr.com/eth",
+        "https://eth.llamarpc.com",
+        "https://eth-mainnet.public.blastapi.io",
+        "https://eth.meowrpc.com",
+      ];
     case "137":
-      return "https://rpc.ankr.com/polygon";
+      return [
+        "https://rpc.ankr.com/polygon",
+        "https://polygon.llamarpc.com",
+        "https://polygon.rpc.blxrbdn.com",
+        "https://polygon.drpc.org",
+      ];
     case "10":
-      return "https://rpc.ankr.com/optimism";
+      return [
+        "https://rpc.ankr.com/optimism",
+        "https://optimism.llamarpc.com",
+        "https://optimism-mainnet.public.blastapi.io",
+        "https://optimism.drpc.org",
+      ];
     case "43114":
-      return "https://rpc.ankr.com/avalanche";
+      return [
+        "https://rpc.ankr.com/avalanche",
+        "https://ava-mainnet.public.blastapi.io/ext/bc/C/rpc",
+        "https://avalanche.public-rpc.com",
+        "https://1rpc.io/avax/c",
+      ];
     case "8453":
-      return "https://base.llamarpc.com";
+      return [
+        "https://base.llamarpc.com",
+        "https://base.rpc.subquery.network/public",
+        "https://base-mainnet.public.blastapi.io",
+        "https://base-mainnet.gateway.tatum.io",
+      ];
     case "7225878":
-      return "https://rpc.saakuru.network";
+      return ["https://rpc.saakuru.network"];
     case "59144":
-      return "https://linea.blockpi.network/v1/rpc/public";
+      return [
+        "https://linea.blockpi.network/v1/rpc/public",
+        "https://1rpc.io/linea",
+        "https://rpc.linea.build",
+        "https://linea.drpc.org",
+      ];
     default:
-      return "https://rpc.ankr.com/eth";
+      return ["https://rpc.ankr.com/eth"];
   }
 };
 
 export async function nodeRequest(data: object, chainId = "1"): Promise<any> {
+  let j = 0;
+  const rpcs = getRpcProviderUrl(chainId);
+  const rpc = rpcs[j];
   for (let tries = 0; tries < retryLimit; tries++) {
-    const rpc = getRpcProviderUrl(chainId);
     try {
       let response = await axios.post(rpc, data, {
         headers: { "Content-Type": "application/json" },
@@ -72,6 +104,11 @@ export async function nodeRequest(data: object, chainId = "1"): Promise<any> {
     }
 
     await new Promise((resolve) => setTimeout(resolve, delayBetweenRetries));
+    if (j + 1 === rpcs.length) {
+      j = 0;
+    } else {
+      j++;
+    }
   }
 
   throw new Error("nodeRequest failed after retries");
@@ -80,7 +117,7 @@ export async function nodeRequest(data: object, chainId = "1"): Promise<any> {
 const getContractData = async (
   contractAddress: string,
   data: string,
-  chainId: string,
+  chainId: string
 ) => {
   try {
     const calldata = {
@@ -95,7 +132,6 @@ const getContractData = async (
       ],
       id: 1,
     };
-    //console.log("contractAddress", contractAddress, "chainId", chainId);
     const response = await nodeRequest(calldata, chainId);
     return response.result;
   } catch (error) {
@@ -124,13 +160,13 @@ const getTokenDecimals = async (contractAddress: string, chainId: string) => {
   const decimalsHex = await getContractData(
     contractAddress,
     decimalsSig,
-    chainId,
+    chainId
   );
 
   var iface = new Interface(ERC20_ABI);
   return parseInt(
     iface.decodeFunctionResult("decimals", decimalsHex).toString(),
-    10,
+    10
   );
 };
 
@@ -140,6 +176,8 @@ export async function fetchTokenInfo(contractAddress: string, chainId: string) {
     getTokenDecimals(contractAddress, chainId),
     //getTokenName(contractAddress, chainId),
   ]);
+  console.log("contractAddress", contractAddress);
+  console.log("data", data);
   return { symbol: data[0], decimals: data[1] };
 }
 

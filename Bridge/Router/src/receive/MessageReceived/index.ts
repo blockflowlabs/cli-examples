@@ -3,6 +3,7 @@ import { IBind, Instance, IEventContext } from "@blockflow-labs/utils";
 import { EventNameEnum } from "../../utils/helper";
 import { Destination, Source } from "../../types/schema";
 import { getAddress } from "ethers";
+import { TransactionType } from "../../utils/gql-filters-type";
 
 /**
  * @dev Function::iRelay(tuple relayData)
@@ -20,7 +21,7 @@ const CIRCLE_DOMAIN_MAINNET_ID: any = {
 const NITRO_FORWARDER = "0x00051d55999c7cd91B17Af7276cbecD647dBC000";
 export const MessageReceivedHandler = async (
   context: IEventContext,
-  bind: IBind,
+  bind: IBind
 ) => {
   // Implement your function handler logic for iRelay here
   const { event, transaction, block } = context;
@@ -41,6 +42,7 @@ export const MessageReceivedHandler = async (
     blockNumber: block.block_number,
     chainId: dstChain,
     eventName: EventNameEnum.MessageReceived,
+    type: TransactionType.CircleUSDC,
     transactionHash: transaction.transaction_hash,
     depositId: depositId,
     srcChainId: srcChain,

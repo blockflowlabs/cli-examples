@@ -1,5 +1,8 @@
+import { nitroProjectId } from "../config";
 import { Source } from "../types/schema";
+import { nitroFilterTransformer, nitroSortTransformer } from "../utils/gql";
 import { nitroSchema } from "../utils/nitroSchema";
+import { convertToOldNitroTxn } from "../utils/nitroTransformers";
 
 export function testResolvers(bind: any) {
   try {
@@ -11,100 +14,54 @@ export function testResolvers(bind: any) {
       nitroSchema
     )) {
       resolvers.Query[collectionName] = async (_: any, args: any) => {
-        const filter: any = {};
-        const options: any = {};
+        let where: any = {};
+        let sort: any = {};
+        let options: any = {};
         const schema_: any = {};
         collectionSchema.forEach((sch) => {
           schema_[sch.name] = { type: sch.type };
         });
+        console.log("args", args);
+        if (args.sort) {
+          sort = nitroSortTransformer(args.sort);
+          console.log("newSort", sort);
+        }
 
-        if (args.sortBy) {
-          for (const [key, order] of Object.entries(args.sortBy) as any) {
-            const fieldSchema = collectionSchema.find(
-              (field) => field.name === key
-            );
-            if (!options["sort"]) options["sort"] = {};
-            if (fieldSchema) options["sort"][key] = order === "asc" ? 1 : -1;
+        if (args.where) {
+          if (collectionName === "findNitroTransactionsByFilter") {
+            where = { transactionHash: args.hash };
+          } else {
+            where = nitroFilterTransformer(args.where);
+          }
+          console.log("where", where);
+        }
+
+        if (!args.limit) {
+          if (collectionName === "findNitroTransactionsByFilter") {
+            args.limit = 1;
+          } else {
+            args.limit = 10;
           }
         }
 
-        if (args.limit) options["limit"] = args.limit;
-        if (args.page) options["page"] = args.page;
-
-        filter["entityId"] = collectionName;
-
-        if (args.filter) {
-          for (const [key, value] of Object.entries(args.filter) as any) {
-            const [fieldName, operator] = key.split("_");
-            const fieldSchema = collectionSchema.find(
-              (field) => field.name === fieldName
-            );
-            if (fieldSchema) {
-              switch (operator) {
-                case undefined:
-                  filter[fieldName] = mapToType(fieldSchema.type, value);
-                  break;
-                case "eq":
-                  filter[fieldName] = mapToType(fieldSchema.type, value);
-                  break;
-                case "lt":
-                  filter[fieldName] = {
-                    $lt: mapToType(fieldSchema.type, value),
-                  };
-                  break;
-                case "lte":
-                  filter[fieldName] = {
-                    $lte: mapToType(fieldSchema.type, value),
-                  };
-                  break;
-                case "gt":
-                  filter[fieldName] = {
-                    $gt: mapToType(fieldSchema.type, value),
-                  };
-                  break;
-                case "gte":
-                  filter[fieldName] = {
-                    $gte: mapToType(fieldSchema.type, value),
-                  };
-                  break;
-                case "in":
-                  filter[fieldName] = {
-                    $in: value.map((val: any) =>
-                      mapToType(fieldSchema.type, val)
-                    ),
-                  };
-                  break;
-                case "nin":
-                  filter[fieldName] = {
-                    $nin: value.map((val: any) =>
-                      mapToType(fieldSchema.type, val)
-                    ),
-                  };
-                  break;
-                case "ne":
-                  filter[fieldName] = {
-                    $ne: mapToType(fieldSchema.type, value),
-                  };
-                  break;
-              }
-            }
-          }
+        if (!args.page) {
+          args.page = 1;
         }
 
         const api = bind(Source);
-        delete filter.entityId;
-        console.log("filter", filter);
         console.log("options", options);
-        const data = await api.aggregate([
+        const records = await api.aggregate([
           {
-            $match: {
-              transactionHash:
-                "0xbd44610b3cab590d26260b8161bf78c5fecf61e8951c790bc76edd1e92071a46",
-            },
+            $match: where,
           },
           {
+            $sort: Object.keys(sort).length > 0 ? sort : { blockTimestamp: -1 },
+          },
+          { $skip: (args.page - 1) * args.limit },
+          { $limit: args.limit },
+          {
             $lookup: {
-              from: "051429b0-8d48-44b9-bda1-014268440964",
+              from: nitroProjectId,
               let: { tokenRef: "$sourceToken.tokenRef" },
               pipeline: [
                 {
@@ -123,7 +80,7 @@ export function testResolvers(bind: any) {
           },
           {
             $lookup: {
-              from: "051429b0-8d48-44b9-bda1-014268440964",
+              from: nitroProjectId,
               let: { tokenRef: "$destinationToken.tokenRef" },
               pipeline: [
                 {
@@ -142,7 +99,7 @@ export function testResolvers(bind: any) {
           },
           {
             $lookup: {
-              from: "051429b0-8d48-44b9-bda1-014268440964",
+              from: nitroProjectId,
               let: { tokenRef: "$stableToken.tokenRef" },
               pipeline: [
                 {
@@ -161,7 +118,7 @@ export function testResolvers(bind: any) {
           },
           {
             $lookup: {
-              from: "051429b0-8d48-44b9-bda1-014268440964",
+              from: nitroProjectId,
               let: { tokenRef: "$fee.tokenRef" },
               pipeline: [
                 {
@@ -180,7 +137,7 @@ export function testResolvers(bind: any) {
           },
           {
             $lookup: {
-              from: "051429b0-8d48-44b9-bda1-014268440964",
+              from: nitroProjectId,
               let: { tokenRef: "$stableDestToken.tokenRef" },
               pipeline: [
                 {
@@ -199,7 +156,7 @@ export function testResolvers(bind: any) {
           },
           {
             $lookup: {
-              from: "051429b0-8d48-44b9-bda1-014268440964",
+              from: nitroProjectId,
               let: { recordRef: "$destination.recordRef" },
               pipeline: [
                 {
@@ -224,7 +181,7 @@ export function testResolvers(bind: any) {
           },
           {
             $lookup: {
-              from: "051429b0-8d48-44b9-bda1-014268440964",
+              from: nitroProjectId,
               let: {
                 tokenRef: "$destination.fullInfo.destinationToken.tokenRef",
               },
@@ -243,45 +200,6 @@ export function testResolvers(bind: any) {
               as: "destination.fullInfo.destinationToken.fullInfo",
             },
           },
-          //   {
-          //     $addFields: {
-          //       "sourceToken.tokenRef": {
-          //         $cond: {
-          //           if: { $gt: [{ $size: "$sourceToken.tokenInfo" }, 0] },
-          //           then: { $arrayElemAt: ["$sourceToken.tokenInfo", 0] },
-          //           else: "$sourceToken.tokenRef",
-          //         },
-          //       },
-          //       "destinationToken.tokenRef": {
-          //         $cond: {
-          //           if: { $gt: [{ $size: "$destinationToken.tokenInfo" }, 0] },
-          //           then: { $arrayElemAt: ["$destinationToken.tokenInfo", 0] },
-          //           else: "$destinationToken.tokenRef",
-          //         },
-          //       },
-          //       "stableToken.tokenRef": {
-          //         $cond: {
-          //           if: { $gt: [{ $size: "$stableToken.tokenInfo" }, 0] },
-          //           then: { $arrayElemAt: ["$stableToken.tokenInfo", 0] },
-          //           else: "$stableToken.tokenRef",
-          //         },
-          //       },
-          //       "fee.tokenRef": {
-          //         $cond: {
-          //           if: { $gt: [{ $size: "$fee.tokenInfo" }, 0] },
-          //           then: { $arrayElemAt: ["$fee.tokenInfo", 0] },
-          //           else: "$fee.tokenRef",
-          //         },
-          //       },
-          //       "stableDestToken.tokenRef": {
-          //         $cond: {
-          //           if: { $gt: [{ $size: "$stableDestToken.tokenInfo" }, 0] },
-          //           then: { $arrayElemAt: ["$stableDestToken.tokenInfo", 0] },
-          //           else: "$stableDestToken.tokenRef",
-          //         },
-          //       },
-          //     },
-          //   },
           {
             $project: {
               id: 1,
@@ -308,15 +226,29 @@ export function testResolvers(bind: any) {
             },
           },
         ]);
-        console.log(
-          "DATA",
-          populateFullInfo(data[0]),
-          "1",
-          data[0].destination,
-          "2",
-          data[0].destination.fullInfo.destinationToken
-        );
-        return data;
+
+        if (collectionName === "findNitroTransactionsByFilter") {
+          const totalRecordsResult = await api.aggregate([
+            {
+              $match: where,
+            },
+            {
+              $count: "totalCount",
+            },
+          ]);
+          const totalCount = totalRecordsResult[0]?.totalCount || 0;
+          return {
+            data: records.map((record: any) =>
+              convertToOldNitroTxn(populateFullInfo(record))
+            ),
+            page: args.page,
+            total: totalCount,
+            limit: args.limit,
+          };
+        } else if (collectionName === "findNitroTransactionByFilter") {
+          return convertToOldNitroTxn(populateFullInfo(records[0]));
+        }
+        return records;
       };
     }
 

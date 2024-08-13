@@ -9,6 +9,7 @@ import {
 import { Destination, Source } from "../../types/schema";
 import { fetchTokenDetails } from "../../utils/token";
 import { formatDecimals } from "../../utils/formatting";
+import { TransactionType } from "../../utils/gql-filters-type";
 
 /**
  * @dev Event::Swap(index_topic_1 string funcName, address[] tokenPath, uint256 amount, index_topic_2 address sender, index_topic_3 address receiver, uint256 finalAmt, uint256[] flags, uint256 widgetID)
@@ -68,6 +69,7 @@ export const SwapHandler = async (context: IEventContext, bind: IBind) => {
     destChainId: srcChain,
     transactionHash: transaction.transaction_hash,
     eventName: EventNameEnum.Swap,
+    type: TransactionType.Dexspan,
     sourceToken: tokenList.sourceToken,
     stableToken: tokenList.stableToken,
     stableDestToken: tokenList.stableDestToken,

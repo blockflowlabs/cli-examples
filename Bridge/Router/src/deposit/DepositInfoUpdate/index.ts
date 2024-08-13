@@ -1,9 +1,10 @@
 import { IEventContext, IBind, Instance } from "@blockflow-labs/utils";
 
-import { chainToContract, EventNameEnum } from "../../utils/helper";
+import { EventNameEnum } from "../../utils/helper";
 import { DepositInfoUpdate as infoUpdate, Source } from "../../types/schema";
 import { fetchTokenDetails } from "../../utils/token";
 import { formatDecimals } from "../../utils/formatting";
+import { TransactionType } from "../../utils/gql-filters-type";
 
 /**
  * @dev Event::DepositInfoUpdate(address srcToken, uint256 feeAmount, uint256 depositId, uint256 eventNonce, bool initiatewithdrawal, address depositor)
@@ -13,7 +14,7 @@ import { formatDecimals } from "../../utils/formatting";
 export const DepositInfoUpdate = async (
   context: IEventContext,
   bind: IBind,
-  secrets: Record<string, string>,
+  secrets: Record<string, string>
 ) => {
   // Implement your event handler logic for DepositInfoUpdate here
   const { event, transaction, block } = context;
@@ -46,6 +47,7 @@ export const DepositInfoUpdate = async (
     isWithdraw: initiatewithdrawal,
     feeAmount: formatDecimals(feeAmount, feeToken.decimals),
     eventName: EventNameEnum.DepositInfoUpdate,
+    type: TransactionType.AssetForwarder,
     transactionHash: transaction.transaction_hash,
   };
   const sourceDB: Instance = bind(Source);

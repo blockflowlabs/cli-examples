@@ -14,6 +14,7 @@ import {
 import { Destination, Source } from "../../types/schema";
 import { formatDecimals } from "../../utils/formatting";
 import { fetchTokenDetails } from "../../utils/token";
+import { TransactionType } from "../../utils/gql-filters-type";
 
 /**
  * @dev Function::iRelay(tuple relayData)
@@ -22,7 +23,7 @@ import { fetchTokenDetails } from "../../utils/token";
  */
 export const executeWithMessageHandler = async (
   context: IEventContext,
-  bind: IBind,
+  bind: IBind
 ) => {
   // Implement your function handler logic for iRelay here
   const { event, transaction, block } = context;
@@ -62,7 +63,7 @@ export const executeWithMessageHandler = async (
 
   const isSwapWithReceiptRelay = transaction.logs
     ? transaction.logs.find(
-        (log) => log.topics[0].toLowerCase() === SWAP_WITH_RECIPIENT_TOPIC0,
+        (log) => log.topics[0].toLowerCase() === SWAP_WITH_RECIPIENT_TOPIC0
       )
     : null;
 
@@ -88,6 +89,7 @@ export const executeWithMessageHandler = async (
     blockNumber: block.block_number,
     chainId: dstChain,
     eventName: EventNameEnum.ExecuteWithMessage,
+    type: TransactionType.AssetBridge,
     transactionHash: transaction.transaction_hash,
     destinationToken: tokenPath.destinationToken,
     stableToken: tokenPath.stableToken,

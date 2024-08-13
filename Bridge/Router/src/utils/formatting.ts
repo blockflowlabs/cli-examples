@@ -6,3 +6,4 @@ export const formatDecimals = (amount: any, decimals: string) =>
       new BigNumber(10).pow(decimals), // as decimals can be ""
     )
     .toString();
+    

@@ -48,11 +48,9 @@ export const iRelayMessageHandler = async (
   let receiverAddress = null,
     nativeTokenAmount = null;
 
-  const id = `${dstChain}_${transaction.transaction_hash}_${depositId}`;
-
   const isSwapWithReceiptRelay = transaction.logs
     ? transaction.logs.find(
-        (log) => log.topics[0].toLowerCase() === SWAP_WITH_RECIPIENT_TOPIC0,
+        (log) => log.topics[0].toLowerCase() === SWAP_WITH_RECIPIENT_TOPIC0
       )
     : null;
 
@@ -83,7 +81,7 @@ export const iRelayMessageHandler = async (
 
   const isGasLeaked = transaction.logs
     ? transaction.logs.find(
-        (log) => log.topics[0].toLowerCase() === GASLEAKED_TOPIC0,
+        (log) => log.topics[0].toLowerCase() === GASLEAKED_TOPIC0
       )
     : null;
 
@@ -93,16 +91,15 @@ export const iRelayMessageHandler = async (
     const destTokenInfo = await fetchTokenDetails(
       bind,
       dstChain,
-      decodeEvent[0].toString(),
+      decodeEvent[0].toString()
     );
     nativeTokenAmount = formatDecimals(
       decodeEvent[2].toString(),
-      destTokenInfo.decimals,
+      destTokenInfo.decimals
     );
     receiverAddress = decodeEvent[3].toString();
   }
   const destObj: any = {
-    id: id.toLowerCase(),
     //@ts-ignore
     blockTimestamp: parseInt(block.block_timestamp.toString(), 10),
     blockNumber: block.block_number,
@@ -118,7 +115,7 @@ export const iRelayMessageHandler = async (
   };
   const sourceDB: Instance = bind(Source);
   const srcRecord: any = await sourceDB.findOne({
-    id: `${srcChain}_${dstChain}_${depositId}`,
+    transactionHash: transaction.transaction_hash,
   });
   if (srcRecord) {
     destObj["srcRef"] = { recordRef: srcRecord._id };
@@ -127,7 +124,7 @@ export const iRelayMessageHandler = async (
 
   if (srcRecord) {
     const savedDest = await transferDB.findOne({
-      id,
+      transactionHash: transaction.transaction_hash,
     });
     srcRecord["destRef"] = { recordRef: savedDest._id };
     await sourceDB.save(srcRecord);

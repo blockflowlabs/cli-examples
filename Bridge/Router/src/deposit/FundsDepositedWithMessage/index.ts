@@ -18,6 +18,7 @@ import { Destination, Source } from "../../types/schema";
 import { formatDecimals } from "../../utils/formatting";
 import { fetchTokenDetails } from "../../utils/token";
 import { fetchLifiFeeTimeData } from "../../utils/liFi";
+import { TransactionType } from "../../utils/gql-filters-type";
 
 /**
  * @dev Event::FundsDepositedWithMessage(uint256 partnerId, uint256 amount, bytes32 destChainIdBytes, uint256 destAmount, uint256 depositId, address srcToken, bytes recipient, address depositor, bytes destToken, bytes message)
@@ -27,7 +28,7 @@ import { fetchLifiFeeTimeData } from "../../utils/liFi";
 export const FundsDepositedWithMessageHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets,
+  secrets: ISecrets
 ) => {
   // Implement your event handler logic for FundsDepositedWithMessage here
   const { event, transaction, block } = context;
@@ -64,7 +65,7 @@ export const FundsDepositedWithMessageHandler = async (
   if (destToken === "0x")
     destToken = getDestTokenInfo(
       dstChain,
-      getTokenInfo(srcChain, srcToken)?.symbol,
+      getTokenInfo(srcChain, srcToken)?.symbol
     )?.address;
   const [stableTokenInfo, stableDestTokenInfo] = await Promise.all([
     fetchTokenDetails(bind, srcChain, srcToken),
@@ -90,14 +91,14 @@ export const FundsDepositedWithMessageHandler = async (
   };
 
   const isSwapAndDeposit = SWAP_AND_DEPOSIT_SIGS.includes(
-    transaction.transaction_input.slice(0, 10),
+    transaction.transaction_input.slice(0, 10)
   );
 
   if (isSwapAndDeposit) {
     // https://etherscan.io/tx/0xc396afbd9f874a47b217a57fd74c46299bb79abd460700c01f4407ae166ca5e6
     const decodeTx: any = decodeSwapAndDeposit(
       transaction.transaction_input,
-      transaction.transaction_value,
+      transaction.transaction_value
     );
 
     const swapData = decodeTx[6];
@@ -105,7 +106,7 @@ export const FundsDepositedWithMessageHandler = async (
     const sourceTokenInfo = await fetchTokenDetails(
       bind,
       srcChain,
-      sourceToken,
+      sourceToken
     );
     // prettier-ignore
     const [amountIn, _amountOut] = [swapData[1].toString(), amount];
@@ -136,6 +137,7 @@ export const FundsDepositedWithMessageHandler = async (
     destChainId: dstChain,
     transactionHash: transaction.transaction_hash,
     eventName: EventNameEnum.FundsDepositedWithMessage,
+    type: TransactionType.AssetForwarder,
     sourceToken: tokenPath.sourceToken,
     stableToken: tokenPath.stableToken,
     stableDestToken: tokenPath.stableDestToken,

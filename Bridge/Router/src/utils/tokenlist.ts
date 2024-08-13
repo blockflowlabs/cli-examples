@@ -11,6 +11,18 @@ export const list = {
     "ROUTE",
     18,
   ],
+  "1---0x3bd7d4f524d09f4e331577247a048d56e4b67a7f": [
+    "1",
+    "0x3bd7d4f524d09f4e331577247a048d56e4b67a7f",
+    "5IRE",
+    18,
+  ],
+  "1---0x474021845c4643113458ea4414bdb7fb74a01a77": [
+    "1",
+    "0x474021845c4643113458ea4414bdb7fb74a01a77",
+    "UNO",
+    18,
+  ],
   "1---0x6982508145454ce325ddbe47a25d4ec3d2311933": [
     "1",
     "0x6982508145454ce325ddbe47a25d4ec3d2311933",
@@ -119,12 +131,6 @@ export const list = {
     "USDT",
     18,
   ],
-  "56---0x222e0974365b3b06cb1ad473c542991ed888fde1": [
-    "56",
-    "0x222e0974365b3b06cb1ad473c542991ed888fde1",
-    null,
-    18,
-  ],
   "56---0x24fc769b9107980b2b9c0e1d9e80dc565b0f6f13": [
     "56",
     "0x24fc769b9107980b2b9c0e1d9e80dc565b0f6f13",
@@ -184,12 +190,6 @@ export const list = {
     "0x16eccfdbb4ee1a85a33f3a9b21175cd7ae753db4",
     "ROUTE",
     18,
-  ],
-  "137---0x2791bca1f2de4661ed88a30c99a7a9449aa84174": [
-    "137",
-    "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
-    "USDC",
-    6,
   ],
   "137---0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": [
     "137",
@@ -269,6 +269,18 @@ export const list = {
     "USDT",
     6,
   ],
+  "196---0x5a77f1443d16ee5761d310e38b62f77f726bc71c": [
+    "196",
+    "0x5a77f1443d16ee5761d310e38b62f77f726bc71c",
+    "ETH",
+    18,
+  ],
+  "196---0x74b7f16337b8972027f6196a17a631ac6de26d22": [
+    "196",
+    "0x74b7f16337b8972027f6196a17a631ac6de26d22",
+    "USDC",
+    6,
+  ],
   "288---0x5de1677344d3cb0d7d465c10b72a8f60699c062d": [
     "288",
     "0x5de1677344d3cb0d7d465c10b72a8f60699c062d",
@@ -317,6 +329,18 @@ export const list = {
     "ETH",
     18,
   ],
+  "570---0x570baa32db74279a50491e88d712c957f4c9e409": [
+    "570",
+    "0x570baa32db74279a50491e88d712c957f4c9e409",
+    "UNO",
+    18,
+  ],
+  "995---0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee": [
+    "995",
+    "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "5IRE",
+    18,
+  ],
   "1088---0xbb06dca3ae6887fabf931640f67cab3e3a16f4dc": [
     "1088",
     "0xbb06dca3ae6887fabf931640f67cab3e3a16f4dc",
@@ -350,6 +374,42 @@ export const list = {
   "1101---0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee": [
     "1101",
     "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "ETH",
+    18,
+  ],
+  "1997---0x97eec1c29f745dc7c267f90292aa663d997a601d": [
+    "1997",
+    "0x97eec1c29f745dc7c267f90292aa663d997a601d",
+    "USDC",
+    6,
+  ],
+  "1997---0xb6dc6c8b71e88642cead3be1025565a9ee74d1c6": [
+    "1997",
+    "0xb6dc6c8b71e88642cead3be1025565a9ee74d1c6",
+    "USDT",
+    6,
+  ],
+  "1997---0xff13a7a12fd485bc9687ff88d8ae1a6b655ab469": [
+    "1997",
+    "0xff13a7a12fd485bc9687ff88d8ae1a6b655ab469",
+    "ETH",
+    18,
+  ],
+  "2000---0x97eec1c29f745dc7c267f90292aa663d997a601d": [
+    "2000",
+    "0x97eec1c29f745dc7c267f90292aa663d997a601d",
+    "USDC",
+    6,
+  ],
+  "2000---0xb6dc6c8b71e88642cead3be1025565a9ee74d1c6": [
+    "2000",
+    "0xb6dc6c8b71e88642cead3be1025565a9ee74d1c6",
+    "USDT",
+    6,
+  ],
+  "2000---0xff13a7a12fd485bc9687ff88d8ae1a6b655ab469": [
+    "2000",
+    "0xff13a7a12fd485bc9687ff88d8ae1a6b655ab469",
     "ETH",
     18,
   ],
@@ -407,6 +467,12 @@ export const list = {
     "ETH",
     18,
   ],
+  "near---17208628f84f5d6ad33f0da3bbbeb27ffcb398eac501a31bd6ad2011e36133a1": [
+    "near",
+    "17208628f84f5d6ad33f0da3bbbeb27ffcb398eac501a31bd6ad2011e36133a1",
+    "USDC",
+    6,
+  ],
   "near---usdt.tether-token.near": [
     "near",
     "usdt.tether-token.near",
@@ -430,6 +496,24 @@ export const list = {
     "0x8c4acd74ff4385f3b7911432fa6787aa14406f8b",
     "USDC",
     6,
+  ],
+  "23294---0x8c4acd74ff4385f3b7911432fa6787aa14406f8b": [
+    "23294",
+    "0x8c4acd74ff4385f3b7911432fa6787aa14406f8b",
+    "USDT",
+    6,
+  ],
+  "23294---0x97eec1c29f745dc7c267f90292aa663d997a601d": [
+    "23294",
+    "0x97eec1c29f745dc7c267f90292aa663d997a601d",
+    "USDC",
+    6,
+  ],
+  "23294---0xb6dc6c8b71e88642cead3be1025565a9ee74d1c6": [
+    "23294",
+    "0xb6dc6c8b71e88642cead3be1025565a9ee74d1c6",
+    "ETH",
+    18,
   ],
   "34443---0x4200000000000000000000000000000000000006": [
     "34443",
@@ -506,7 +590,7 @@ export const list = {
   "42161---0xb88a5ac00917a02d82c7cd6cebd73e2852d43574": [
     "42161",
     "0xb88a5ac00917a02d82c7cd6cebd73e2852d43574",
-    null,
+    "SWEEP",
     18,
   ],
   "42161---0xe2dca969624795985f2f083bcd0b674337ba130a": [
@@ -653,10 +737,10 @@ export const list = {
     "DOG",
     18,
   ],
-  "7225878---0x222e0974365b3b06cb1ad473c542991ed888fde1": [
+  "7225878---0x3111472f0be6fa50e157c88f3942262ee8ebf281": [
     "7225878",
-    "0x222e0974365b3b06cb1ad473c542991ed888fde1",
-    null,
+    "0x3111472f0be6fa50e157c88f3942262ee8ebf281",
+    "ETH",
     18,
   ],
   "7225878---0x44d4691bb6fe61491e4e00bab78c56a545820097": [
@@ -710,9 +794,36 @@ export const list = {
   "728126428---0xcbf0a663e5d7657792a7094fa5fb6d07d3704a10": [
     "728126428",
     "0xcbf0a663e5d7657792a7094fa5fb6d07d3704a10",
-    null,
+    "SWEEP",
     18,
   ],
+  "728126428---0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee": [
+    "728126428",
+    "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "TRX",
+    6,
+  ],
+  "osmosis-1---factory/osmo1myv2g72h8dan7n4hx7stt3mmust6ws03zh6gxc7vz4hpmgp5z3lq9aunm9/TRX.rt":
+    [
+      "osmosis-1",
+      "factory/osmo1myv2g72h8dan7n4hx7stt3mmust6ws03zh6gxc7vz4hpmgp5z3lq9aunm9/TRX.rt",
+      "TRX",
+      6,
+    ],
+  "osmosis-1---factory/osmo1myv2g72h8dan7n4hx7stt3mmust6ws03zh6gxc7vz4hpmgp5z3lq9aunm9/USDT.rt":
+    [
+      "osmosis-1",
+      "factory/osmo1myv2g72h8dan7n4hx7stt3mmust6ws03zh6gxc7vz4hpmgp5z3lq9aunm9/USDT.rt",
+      "USDT",
+      6,
+    ],
+  "osmosis-1---ibc/498A0751C798A0D9A389AA3691123DADA57DAA4FE165D5C75894505B876BA6E4":
+    [
+      "osmosis-1",
+      "ibc/498A0751C798A0D9A389AA3691123DADA57DAA4FE165D5C75894505B876BA6E4",
+      "USDC",
+      6,
+    ],
   "1313161554---0x4988a896b1227218e4a686fde5eabdcabd91571f": [
     "1313161554",
     "0x4988a896b1227218e4a686fde5eabdcabd91571f",

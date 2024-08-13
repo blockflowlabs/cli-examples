@@ -19,6 +19,7 @@ import {
 import { Destination, Source } from "../../types/schema";
 import { formatDecimals } from "../../utils/formatting";
 import { fetchTokenDetails } from "../../utils/token";
+import { TransactionType } from "../../utils/gql-filters-type";
 
 /**
  * @dev Event::TokenTransferWithInstruction (index_topic_1 bytes32 destChainIdBytes, index_topic_2 address srcTokenAddress, uint256 srcTokenAmount, bytes recipient, uint256 partnerId, uint64 destGasLimit, bytes instruction, uint256 depositId)
@@ -34,7 +35,7 @@ import { fetchTokenDetails } from "../../utils/token";
 export const TokenTransferWithInstructionHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets,
+  secrets: ISecrets
 ) => {
   // Implement your event handler logic for TokenTransferWithInstruction here
   const { event, transaction, block } = context;
@@ -66,7 +67,7 @@ export const TokenTransferWithInstructionHandler = async (
   const stableTokenInfo = await fetchTokenDetails(
     bind,
     srcChain,
-    srcTokenAddress,
+    srcTokenAddress
   );
   let tokenPath = {
     sourceToken: {
@@ -81,7 +82,7 @@ export const TokenTransferWithInstructionHandler = async (
 
   const isSwapWithReceiptRelay = transaction.logs
     ? transaction.logs.find(
-        (log) => log.topics[0].toLowerCase() === SWAP_WITH_RECIPIENT_TOPIC0,
+        (log) => log.topics[0].toLowerCase() === SWAP_WITH_RECIPIENT_TOPIC0
       )
     : null;
 
@@ -110,6 +111,7 @@ export const TokenTransferWithInstructionHandler = async (
     destChainId: dstChain,
     transactionHash: transaction.transaction_hash,
     eventName: EventNameEnum.TokenTransferWithInstruction,
+    type: TransactionType.AssetBridge,
     sourceToken: tokenPath.sourceToken,
     stableToken: tokenPath.stableToken,
     depositorAddress: transaction.transaction_from_address,

@@ -9,6 +9,7 @@ import { EventNameEnum, hexToString } from "../../utils/helper";
 import { Destination, Source } from "../../types/schema";
 import { formatDecimals } from "../../utils/formatting";
 import { fetchTokenDetails } from "../../utils/token";
+import { TransactionType } from "../../utils/gql-filters-type";
 
 /**
  * @dev Function::iRelay(tuple relayData)
@@ -56,6 +57,7 @@ export const executeHandler = async (context: IEventContext, bind: IBind) => {
     blockNumber: block.block_number,
     chainId: dstChain,
     eventName: EventNameEnum.Execute,
+    type: TransactionType.AssetBridge,
     transactionHash: transaction.transaction_hash,
     destinationToken: tokenPath.destinationToken,
     stableToken: tokenPath.stableToken,

@@ -37,10 +37,7 @@ export const iRelayHandler = async (context: IFunctionContext, bind: IBind) => {
     },
   };
 
-  const id = `${dstChain}_${transaction.transaction_hash}_${depositId}`;
-
   const destObj: any = {
-    id: id.toLowerCase(),
     blockTimestamp: parseInt(block.block_timestamp.toString(), 10),
     blockNumber: block.block_number,
     chainId: dstChain,
@@ -54,7 +51,7 @@ export const iRelayHandler = async (context: IFunctionContext, bind: IBind) => {
   };
   const sourceDB: Instance = bind(Source);
   const srcRecord: any = await sourceDB.findOne({
-    id: `${srcChain}_${dstChain}_${depositId}`,
+    transactionHash: transaction.transaction_hash,
   });
   if (srcRecord) {
     destObj["srcRef"] = { recordRef: srcRecord._id };
@@ -63,7 +60,7 @@ export const iRelayHandler = async (context: IFunctionContext, bind: IBind) => {
 
   if (srcRecord) {
     const savedDest = await transferDB.findOne({
-      id,
+      transactionHash: transaction.transaction_hash,
     });
     srcRecord["destRef"] = { recordRef: savedDest._id };
     await sourceDB.save(srcRecord);

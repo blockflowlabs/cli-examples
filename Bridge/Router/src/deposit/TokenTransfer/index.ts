@@ -10,6 +10,7 @@ import {
 import { Destination, Source } from "../../types/schema";
 import { fetchTokenDetails } from "../../utils/token";
 import { formatDecimals } from "../../utils/formatting";
+import { TransactionType } from "../../utils/gql-filters-type";
 
 /**
  * @dev Event::TokenTransfer(index bytes32 destChainIdBytes, index address srcTokenAddress, uint256 srcTokenAmount, bytes recipient, uint256 partnerId, uint256 depositId)
@@ -25,7 +26,7 @@ import { formatDecimals } from "../../utils/formatting";
  */
 export const TokenTransferHandler = async (
   context: IEventContext,
-  bind: IBind,
+  bind: IBind
 ) => {
   // Implement your event handler logic for FundsDeposited here
   const { event, transaction, block } = context;
@@ -55,7 +56,7 @@ export const TokenTransferHandler = async (
   const stableTokenInfo = await fetchTokenDetails(
     bind,
     srcChain,
-    srcTokenAddress,
+    srcTokenAddress
   );
 
   const id = `${srcChain}_${dstChain}_${depositId}`;
@@ -73,7 +74,7 @@ export const TokenTransferHandler = async (
 
   const isSwapWithReceiptRelay = transaction.logs
     ? transaction.logs.find(
-        (log) => log.topics[0].toLowerCase() === SWAP_WITH_RECIPIENT_TOPIC0,
+        (log) => log.topics[0].toLowerCase() === SWAP_WITH_RECIPIENT_TOPIC0
       )
     : null;
 
@@ -100,6 +101,7 @@ export const TokenTransferHandler = async (
     destChainId: dstChain,
     transactionHash: transaction.transaction_hash,
     eventName: EventNameEnum.TokenTransfer,
+    type: TransactionType.AssetBridge,
     sourceToken: tokenList.sourceToken,
     stableToken: tokenList.stableToken,
     depositorAddress: transaction.transaction_from_address, // Contract from where txn came

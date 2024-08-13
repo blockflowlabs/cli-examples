@@ -8,6 +8,7 @@ import {
 import { Destination, Source } from "../../types/schema";
 import { fetchTokenDetails } from "../../utils/token";
 import { formatDecimals } from "../../utils/formatting";
+import { TransactionType } from "../../utils/gql-filters-type";
 
 /**
  * @dev Event::FundsDeposited(uint256 partnerId, uint256 amount, bytes32 destChainIdBytes, uint256 destAmount, uint256 depositId, address srcToken, address depositor, bytes recipient, bytes destToken)
@@ -16,7 +17,7 @@ import { formatDecimals } from "../../utils/formatting";
  */
 export const IUSDCDepositedHandler = async (
   context: IEventContext,
-  bind: IBind,
+  bind: IBind
 ) => {
   // Implement your event handler logic for FundsDeposited here
   const { event, transaction, block } = context;
@@ -66,7 +67,7 @@ export const IUSDCDepositedHandler = async (
 
   const isSwapWithReceiptRelay = transaction.logs
     ? transaction.logs.find(
-        (log) => log.topics[0].toLowerCase() === SWAP_WITH_RECIPIENT_TOPIC0,
+        (log) => log.topics[0].toLowerCase() === SWAP_WITH_RECIPIENT_TOPIC0
       )
     : null;
 
@@ -92,6 +93,7 @@ export const IUSDCDepositedHandler = async (
     destChainId: dstChain,
     transactionHash: transaction.transaction_hash,
     eventName: EventNameEnum.FundsDeposited,
+    type: TransactionType.CircleUSDC,
     sourceToken: tokenList.sourceToken,
     stableToken: tokenList.stableToken,
     stableDestToken: tokenList.stableDestToken,

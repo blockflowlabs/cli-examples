@@ -1,5 +1,6 @@
 import { IEventContext, IBind, Instance } from "@blockflow-labs/utils";
 import { Destination } from "../../types/schema";
+import { TransactionType } from "../../utils/gql-filters-type";
 import { EventNameEnum } from "../../utils/helper";
 
 /**
@@ -17,13 +18,15 @@ export const FundsPaidHandler = async (context: IEventContext, bind: IBind) => {
 
   const transferDB: Instance = bind(Destination);
 
+  const id = `${block.chain_id}_${transaction.transaction_hash}_${nonce}`;
+
   let dstEntry: any = await transferDB.findOne({
-    id: `${block.chain_id}_${transaction.transaction_hash}`,
+    id: id,
   });
 
   if (!dstEntry) {
     dstEntry = {};
-    dstEntry.id = `${block.chain_id}_${transaction.transaction_hash}`;
+    dstEntry.id = id;
     dstEntry.blockTimestamp = parseInt(block.block_timestamp.toString(), 10);
     dstEntry.blockNumber = block.block_number;
     dstEntry.chainId = block.chain_id;
@@ -32,6 +35,7 @@ export const FundsPaidHandler = async (context: IEventContext, bind: IBind) => {
     dstEntry.receiverAddress = transaction.transaction_to_address;
   }
   dstEntry.eventName = EventNameEnum.FundsPaid;
+  dstEntry.type = TransactionType.AssetForwarder;
   dstEntry.forwarderAddress = forwarder;
   dstEntry.messageHash = messageHash;
   dstEntry.paidId = nonce;
