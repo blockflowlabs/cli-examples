@@ -1,3 +1,4 @@
+import { Array } from "@blockflow-labs/utils";
 interface Transaction {
   id: string; // keep this same as transaction hash
   transactionHash: string;
@@ -9,12 +10,14 @@ interface Transaction {
 interface Block {
   id: string; // keep this same as block number
   transactionHashesWithUserOps: [string];
+  blockNumber: string;
 }
 
 interface AccountFactory {
   id: String;
   totalAccount: String;
   accounts: [String];
+  blockNumber: String;
 }
 
 interface Account {
@@ -41,6 +44,7 @@ interface Paymaster {
   createdAt: String;
   updatedAt: String;
   totalOperations: String;
+  gasSponsored: String;
 }
 
 interface Bundler {
@@ -49,6 +53,10 @@ interface Bundler {
   createdAt: String;
   updatedAt: String;
   totalOperations: String;
+  sender: String;
+  target: String;
+  fee: String;
+  gasCollected: String;
 }
 
 interface UserOperationRevertReason {
@@ -88,4 +96,17 @@ interface UserOperation {
   paymasterAndData: string;
   signature: string;
   beneficiary: string;
+  ERC20Data: string;
+}
+
+type ERC20data =  {
+  ERC20TransferAmount:string;
+  ERC20TransferFrom:string;
+  ERC20TransferTo:string;
+}
+
+interface UserOpLogs{
+ id: String;
+ numberOfLogs: number;
+ JSONdata: [String];
 }

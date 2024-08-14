@@ -7,7 +7,7 @@
     "api-test": "nodemon --exec blockflow api-test"
   },
   "dependencies": {
-    "@blockflow-labs/utils": "^1.0.5",
+    "@blockflow-labs/utils": "^1.0.7",
     "@ethersproject/abi": "^5.7.0",
     "@ethersproject/keccak256": "^5.7.0"
   },

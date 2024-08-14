@@ -13,7 +13,7 @@ import { PubkeyChanged, Resolver } from "../../../types/schema";
  */
 export const PubkeyChangedHandler = async (
   context: IEventContext,
-  bind: Function
+  bind: Function,
 ) => {
   // Implement your event handler logic for PubkeyChanged here
   const { event, transaction, log } = context;

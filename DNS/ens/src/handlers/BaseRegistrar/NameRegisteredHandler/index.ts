@@ -1,4 +1,6 @@
-import { IEventContext } from "@blockflow-labs/utils";
+import { IEventContext, Instance } from "@blockflow-labs/utils";
+
+import { Registration } from "../../../types/schema";
 
 /**
  * @dev Event::NameRegistered(uint256 id, address owner, uint256 expires)
@@ -13,4 +15,31 @@ export const NameRegisteredHandler = async (
 
   const { event, transaction, block, log } = context;
   const { id, owner, expires } = event;
+  const isoDate = new Date(Number(block.block_timestamp) * 1000).toISOString();
+
+  const registrationDB: Instance = bind(Registration);
+
+  let registration = await registrationDB.findOne({
+    id: id.toString(),
+  });
+  registration.registrant = owner;
+  registration.events = [
+    id.toString(),
+    block.block_number,
+    transaction.transaction_hash,
+  ];
+  await registrationDB.save(registration);
+
+  if (registration) {
+    await registrationDB.create({
+      id: id.toString(),
+      domain: "",
+      registrationDate: isoDate,
+      expiryDate: expires.toString(),
+      cost: "",
+      registrant: owner,
+      labelName: "",
+      events: [],
+    });
+  }
 };

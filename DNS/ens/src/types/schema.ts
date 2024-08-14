@@ -12,6 +12,21 @@ export class Account {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
+  };
+}
+
+export class wrappedTransfer {
+  static entity = "wrappedTransfer";
+  static schema = {
+    id: { type: "String", index: true },
+    blockNumber: "Number",
+    transactionID: "string",
+    owner: "string",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -29,6 +44,7 @@ export class Registration {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -40,6 +56,7 @@ export class RegistrationEvent {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -53,6 +70,7 @@ export class WrappedDomain {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -64,7 +82,6 @@ export class Domain {
     labelName: "String",
     labelhash: "String",
     parent: "String",
-    subdomains: ["String"],
     subdomainCount: "Number",
     resolvedAddress: "String",
     owner: "String",
@@ -76,11 +93,14 @@ export class Domain {
     wrappedOwner: "String",
     expiryDate: "Number",
     wrappedDomain: "String",
-    events: [{ domain: "String", transactionID: "String" }],
+    events: [
+      { domain: "String", transactionID: "String", blockNumber: "Number" },
+    ],
     registration: "String",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -98,6 +118,7 @@ export class Resolver {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -111,6 +132,7 @@ export class Transfer {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -124,6 +146,7 @@ export class AddrChanged {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -138,6 +161,7 @@ export class MulticoinAddrChanged {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -151,6 +175,7 @@ export class TextChanged {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -164,6 +189,7 @@ export class NameChanged {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -177,6 +203,7 @@ export class AbiChanged {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -191,6 +218,7 @@ export class PubkeyChanged {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -204,6 +232,7 @@ export class ContenthashChanged {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -218,6 +247,7 @@ export class InterfaceChanged {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -231,6 +261,65 @@ export class VersionChanged {
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
+  };
+}
+
+export class Namewrapperevents {
+  static entity = "Namewrapperevents";
+  static schema = {
+    id: { type: "String", index: true },
+    blockNumber: "Number",
+    transactionID: "String",
+    fuses: "Number",
+    expiryDate: "Number",
+    owner: "String",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
+  };
+}
+
+export class Nameunwrapperevents {
+  static entity = "Nameunwrapperevents";
+  static schema = {
+    id: { type: "String", index: true },
+    blockNumber: "Number",
+    transactionID: "String",
+    owner: "String",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
+  };
+}
+
+export class Fusesburntevent {
+  static entity = "Fusesburntevent";
+  static schema = {
+    id: { type: "String", index: true },
+    fuses: "Number",
+    blockNumber: "Number",
+    transactionID: "String",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
+  };
+}
+
+export class Expiryextendedevent {
+  static entity = "Expiryextendedevent";
+  static schema = {
+    id: { type: "String", index: true },
+    expiryDate: "Number",
+    blockNumber: "Number",
+    transactionID: "String",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
   };
 }
 
@@ -238,11 +327,23 @@ import { String, Array, Number } from "@blockflow-labs/utils";
 
 export interface IAccount extends Document {
   id: String;
-  domains: [String]; // domain ids
-  wrappedDomains: [String]; // wrapped domain ids
-  registrations: [String]; // registration ids
+  domains: [String];
+  wrappedDomains: [String];
+  registrations: [String];
   blocknumber: String;
   entityId: String;
+  instanceId: String;
+  chainId: String;
+}
+
+export interface IwrappedTransfer extends Document {
+  id: String;
+  blockNumber: Number;
+  transactionID: string;
+  owner: string;
+  blocknumber: String;
+  entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -257,6 +358,7 @@ export interface IRegistration extends Document {
   events: [String];
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -265,6 +367,7 @@ export interface IRegistrationEvent extends Document {
   transactionID: String;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -275,6 +378,7 @@ export interface IWrappedDomain extends Document {
   name: String;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -284,7 +388,6 @@ export interface IDomain extends Document {
   labelName: String;
   labelhash: String;
   parent: String;
-  subdomains: [String];
   subdomainCount: Number;
   resolvedAddress: String;
   owner: String;
@@ -300,12 +403,14 @@ export interface IDomain extends Document {
   registration: String;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
 type DomainEvent = {
   domain: String;
   transactionID: String;
+  blockNumber: Number;
 };
 
 export interface IResolver extends Document {
@@ -319,6 +424,7 @@ export interface IResolver extends Document {
   events: [ResolverEvent];
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -334,6 +440,7 @@ export interface ITransfer extends Document {
   owner: String;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -344,6 +451,7 @@ export interface IAddrChanged extends Document {
   addr: String;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -355,6 +463,7 @@ export interface IMulticoinAddrChanged extends Document {
   addr: String;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -365,6 +474,7 @@ export interface ITextChanged extends Document {
   key: String;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -375,6 +485,7 @@ export interface INameChanged extends Document {
   name: String;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -385,6 +496,7 @@ export interface IAbiChanged extends Document {
   contentType: String;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -396,6 +508,7 @@ export interface IPubkeyChanged extends Document {
   y: String;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -406,6 +519,7 @@ export interface IContenthashChanged extends Document {
   hash: String;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -417,6 +531,7 @@ export interface InterfaceChanged extends Document {
   implementer: String;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
   chainId: String;
 }
 
@@ -427,5 +542,52 @@ export interface IVersionChanged extends Document {
   version: Number;
   blocknumber: String;
   entityId: String;
+  instanceId: String;
+  chainId: String;
+}
+
+export interface INamewrapperevents extends Document {
+  id: String;
+  blockNumber: Number;
+  transactionID: String;
+  fuses: Number;
+  expiryDate: Number;
+  owner: String;
+  blocknumber: String;
+  entityId: String;
+  instanceId: String;
+  chainId: String;
+}
+
+export interface INameunwrapperevents extends Document {
+  id: String;
+  blockNumber: Number;
+  transactionID: String;
+  owner: String;
+  blocknumber: String;
+  entityId: String;
+  instanceId: String;
+  chainId: String;
+}
+
+export interface IFusesburntevent extends Document {
+  id: String;
+  fuses: Number;
+  blockNumber: Number;
+  transactionID: String;
+  blocknumber: String;
+  entityId: String;
+  instanceId: String;
+  chainId: String;
+}
+
+export interface IExpiryextendedevent extends Document {
+  id: String;
+  expiryDate: Number;
+  blockNumber: Number;
+  transactionID: String;
+  blocknumber: String;
+  entityId: String;
+  instanceId: String;
   chainId: String;
 }

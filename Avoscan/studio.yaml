@@ -1,0 +1,18 @@
+name: Project Apollo
+description: A top-secret research project to the moon
+startBlock: latest
+userId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
+projectId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
+network: Ethereum
+user: Jane-doe
+schema:
+  file: ./studio.schema.ts
+execution: parallel
+Resources:
+  - Name: blockflow
+    Abi: src/abis/abi.json
+    Type: contract/event
+    Address: "0x46978cd477a496028a18c02f07ab7f35edba5a54"
+    Triggers:
+      - Event: Executed(address indexed,uint32,address indexed,address indexed,bytes)
+        Handler: src/handlers/Executed.ExecutedHandler

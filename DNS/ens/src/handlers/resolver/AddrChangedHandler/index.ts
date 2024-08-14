@@ -16,7 +16,7 @@ import { createResolverID, createEventID } from "../../../utils/helper";
  */
 export const AddrChangedHandler = async (
   context: IEventContext,
-  bind: Function
+  bind: Function,
 ) => {
   // Implement your event handler logic for AddrChanged here
   const { event, transaction, log } = context;

@@ -14,7 +14,7 @@ import { NameChanged, Resolver } from "../../../types/schema";
  */
 export const NameChangedHandler = async (
   context: IEventContext,
-  bind: Function
+  bind: Function,
 ) => {
   // Implement your event handler logic for NameChanged here
   const { event, transaction, log } = context;
