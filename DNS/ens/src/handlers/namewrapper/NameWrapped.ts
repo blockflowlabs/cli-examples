@@ -35,6 +35,9 @@ export const NameWrappedHandler = async (
   let decodedname = decodeName(name);
   let label: string | null = null;
   let decodename: string | null = null;
+  if(!decodedname){
+    return ;
+  }
   if (decodedname != null) {
     label = decodedname[0];
     decodename = decodedname[1];

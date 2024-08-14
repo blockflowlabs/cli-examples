@@ -5,7 +5,7 @@ import {
   ISecrets,
 } from "@blockflow-labs/utils";
 import { Account, Registration, Domain } from "../../types/schema";
-import { createorloaddomain } from "../../utils/helper";
+import { createorloadaccount, createorloaddomain } from "../../utils/helper";
 
 /**
  * @dev Event::NewOwner(bytes32 node, bytes32 label, address owner)
@@ -21,11 +21,12 @@ export const NewOwnerHandler = async (
 
   const { event, transaction, block, log } = context;
   const { node, label, owner } = event;
+  const accountDB: Instance = bind(Account);
   const domainDB: Instance = bind(Domain);
   const registrationDB: Instance = bind(Registration);
 
-  let account = await bind(Account).create({ id: owner });
-  let registration = await bind(Registration).create({ id: label });
+  let account = await createorloadaccount(accountDB, owner, bind);
+  let registration = await bind(Registration).create({id: label});
   let domain = await createorloaddomain(
     domainDB,
     node,

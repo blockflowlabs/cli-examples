@@ -17,7 +17,7 @@ interface wrappedTransfer {
 interface Registration {
   id: String;
   domain: String;
-  registrationDate: Number;
+  registrationDate: String;
   expiryDate: Number;
   cost: Number;
   registrant: String;

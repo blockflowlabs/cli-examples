@@ -35,7 +35,7 @@ export class Registration {
   static schema = {
     id: { type: "String", index: true },
     domain: "String",
-    registrationDate: "Number",
+    registrationDate: "String",
     expiryDate: "Number",
     cost: "Number",
     registrant: "String",
@@ -350,7 +350,7 @@ export interface IwrappedTransfer extends Document {
 export interface IRegistration extends Document {
   id: String;
   domain: String;
-  registrationDate: Number;
+  registrationDate: String;
   expiryDate: Number;
   cost: Number;
   registrant: String;
