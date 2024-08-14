@@ -15,15 +15,25 @@ export function getAllTransactionActions(logs: Array<ILog>) {
 
   return transferlogs.map((log) => {
     const decodedLog: any = decodeTransferLog(log.topics, log.log_data);
-    return {
-      from: decodedLog[0],
-      to: decodedLog[1],
-      value: decodedLog[2].toString(),
-    };
+    if (decodedLog) {
+      return {
+        from: decodedLog[0],
+        to: decodedLog[1],
+        value: decodedLog[2].toString(),
+      };
+    }
   });
 }
 
 export function decodeTransferLog(topics: Array<string>, data: string) {
-  const iface = new Interface(erc20);
-  return iface.parseLog({ topics, data })?.args;
+  try {
+    if (data === "0x") {
+      return null;
+    }
+
+    const iface = new Interface(erc20);
+    return iface.parseLog({ topics, data })?.args;
+  } catch (e) {
+    return null;
+  }
 }
