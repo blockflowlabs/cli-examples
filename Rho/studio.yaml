@@ -1,0 +1,21 @@
+name: Rho
+description: It is a boilerplate code for rho project.
+startBlock: latest
+userId: xxxx-xxxx-xxxx
+projectId: xxxx-xxxx-xxxx
+network: Scroll
+user: Jane-doe
+schema:
+  file: ./studio.schema.ts
+execution: parallel
+Resources:
+  - Name: rtoken
+    Abi: src/abis/rtoken.json
+    Type: contract/event
+    Address:
+      file: tokens.json
+    Triggers:
+      - Event: LiquidateBorrow(address,address,uint256,address,uint256)
+        Handler: src/handlers/rtoken/LiquidateBorrow.LiquidateBorrowHandler
+      - Event: Transfer(address indexed,address indexed,uint256)
+        Handler: src/handlers/rtoken/Transfer.TransferHandler
