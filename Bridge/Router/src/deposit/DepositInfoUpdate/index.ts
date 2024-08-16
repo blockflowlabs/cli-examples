@@ -56,7 +56,7 @@ export const DepositInfoUpdate = async (
     srcChainId: srcChain,
   });
   if (srcRecord) {
-    updateObj["srcRef"] = { recordRef: srcRecord._id };
+    updateObj["source"] = { recordRef: srcRecord._id };
   }
   await infoDB.create(updateObj);
 
@@ -64,7 +64,7 @@ export const DepositInfoUpdate = async (
     const savedDest = await updateObj.findOne({
       id,
     });
-    srcRecord["withdrawRef"] = { recordRef: savedDest._id };
+    srcRecord["withdraw"] = { recordRef: savedDest._id };
     await sourceDB.save(srcRecord);
   }
 };

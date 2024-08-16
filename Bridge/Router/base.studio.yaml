@@ -2,102 +2,55 @@ name: Router Nitro
 description: Indexing cross chain transfers on router nitro protocol
 startBlock: 8831830 # add - 0x0fa205c0446cd9eedcc7538c9e24bc55ad08207f, block - 19062096
 userId: process.env.userId
-projectId: process.env.projectId
+projectId: 3a3f6e1b-f8de-4516-93eb-ff73aa58b5d7
 network: Base
 execution: parallel
 user: prady
 schema:
   file: ./studio.schema.ts
 Resources:
-  - Name: iRelay
-    Abi: src/abis/assetForwarderEthereum.json
-    Type: contract/function
-    Address: "0x0fa205c0446cd9eedcc7538c9e24bc55ad08207f"
-    Triggers:
-      - Function: iRelay(tuple(uint256,bytes32,uint256,address,address))payable
-        Handler: src/receive/iRelay/index.iRelayHandler
-
-  - Name: iRelayMessage
-    Abi: src/abis/assetForwarderEthereum.json
-    Type: contract/function
-    Address: "0x0fa205c0446cd9eedcc7538c9e24bc55ad08207f"
-    Triggers:
-      - Function: iRelayMessage(tuple(uint256,bytes32,uint256,address,address,bytes))payable
-        Handler: src/receive/iRelayMessage/index.iRelayMessageHandler
-
-  - Name: fundsPaidWithMessage
-    Abi: src/abis/assetForwarderEthereum.json
-    Type: contract/event
-    Address: "0x0fa205c0446cd9eedcc7538c9e24bc55ad08207f"
-    Triggers:
-      - Event: FundsPaidWithMessage(bytes32,address,uint256,bool,bytes)
-        Handler: src/receive/fundsPaidWithMessage/index.FundsPaidWithMessageHandler
-
-  - Name: fundsPaid
-    Abi: src/abis/assetForwarderEthereum.json
-    Type: contract/event
-    Address: "0x0fa205c0446cd9eedcc7538c9e24bc55ad08207f"
-    Triggers:
-      - Event: FundsPaid(bytes32,address,uint256)
-        Handler: src/receive/fundsPaid/index.FundsPaidHandler
-
-  - Name: fundsDeposited
+  - Name: AssetForwarder
     Abi: src/abis/assetForwarderEthereum.json
     Type: contract/event
     Address: "0x0fa205c0446cd9eedcc7538c9e24bc55ad08207f"
     Triggers:
       - Event: FundsDeposited(uint256,uint256,bytes32,uint256,uint256,address,address,bytes,bytes)
         Handler: src/deposit/FundsDeposited/index.FundsDepositedHandler
-
-  - Name: fundsDepositedWithMessage
-    Abi: src/abis/assetForwarderEthereum.json
-    Type: contract/event
-    Address: "0x0fa205c0446cd9eedcc7538c9e24bc55ad08207f"
-    Triggers:
       - Event: FundsDepositedWithMessage(uint256,uint256,bytes32,uint256,uint256,address,bytes,address,bytes,bytes)
         Handler: src/deposit/FundsDepositedWithMessage/index.FundsDepositedWithMessageHandler
-
-  - Name: depositInfoUpdate
-    Abi: src/abis/assetForwarderEthereum.json
-    Type: contract/event
-    Address: "0x0fa205c0446cd9eedcc7538c9e24bc55ad08207f"
-    Triggers:
+      - Event: FundsPaidWithMessage(bytes32,address,uint256,bool,bytes)
+        Handler: src/receive/fundsPaidWithMessage/index.FundsPaidWithMessageHandler
+      - Event: FundsPaid(bytes32,address,uint256)
+        Handler: src/receive/fundsPaid/index.FundsPaidHandler
       - Event: DepositInfoUpdate(address,uint256,uint256,uint256,bool,address)
         Handler: src/deposit/DepositInfoUpdate/index.DepositInfoUpdate
 
-  - Name: tokenTransfer
+  - Name: AssetForwarder
+    Abi: src/abis/assetForwarderEthereum.json
+    Type: contract/function
+    Address: "0x0fa205c0446cd9eedcc7538c9e24bc55ad08207f"
+    Triggers:
+      - Function: iRelay(tuple(uint256,bytes32,uint256,address,address))payable
+        Handler: src/receive/iRelay/index.iRelayHandler
+      - Function: iRelayMessage(tuple(uint256,bytes32,uint256,address,address,bytes))payable
+        Handler: src/receive/iRelayMessage/index.iRelayMessageHandler
+      
+  - Name: AssetBridge
     Abi: src/abis/assetBridge.json
     Type: contract/event
     Address: "0x21c1E74CAaDf990E237920d5515955a024031109"
     Triggers:
       - Event: TokenTransfer(bytes32,address,uint256,bytes,uint256,uint256)
         Handler: src/deposit/TokenTransfer/index.TokenTransferHandler
-
-  - Name: tokenTransferWithInstruction
-    Abi: src/abis/assetBridge.json
-    Type: contract/event
-    Address: "0x21c1E74CAaDf990E237920d5515955a024031109"
-    Triggers:
       - Event: TokenTransferWithInstruction(bytes32,address,uint256,bytes,uint256,uint64,bytes,uint256)
         Handler: src/deposit/TokenTransferWithInstruction/index.TokenTransferWithInstructionHandler
-
-  - Name: execute
-    Abi: src/abis/assetBridge.json
-    Type: contract/event
-    Address: "0x21c1E74CAaDf990E237920d5515955a024031109"
-    Triggers:
       - Event: Execute(uint8,bytes32,uint256,address,uint256,address)
         Handler: src/receive/execute/index.executeHandler
-
-  - Name: executeWithMessage
-    Abi: src/abis/assetBridge.json
-    Type: contract/event
-    Address: "0x21c1E74CAaDf990E237920d5515955a024031109"
-    Triggers:
       - Event: ExecuteWithMessage(uint8,bytes32,uint256,address,uint256,address,bool,bytes)
         Handler: src/receive/executeWithMessage/index.executeWithMessageHandler
+      
 
-  - Name: iUSDCDeposited
+  - Name: CCTP
     Abi: src/abis/cctpBridge.json
     Type: contract/event
     Address: "0x2F301d3b045544A9D7Ec3FA090CD78986F11f2E7"
@@ -105,7 +58,7 @@ Resources:
       - Event: iUSDCDeposited(uint256,uint256,bytes32,uint256,address,bytes32,address)
         Handler: src/deposit/IUSDCDeposited/index.IUSDCDepositedHandler
 
-  - Name: MessageReceived
+  - Name: USDCTransmitter
     Abi: src/abis/messageTransmitter.json
     Type: contract/event
     Address: "0xAD09780d193884d503182aD4588450C416D6F9D4"
@@ -113,7 +66,7 @@ Resources:
       - Event: MessageReceived(address,uint32,uint64,bytes32,bytes)
         Handler: src/receive/MessageReceived/index.MessageReceivedHandler
 
-  - Name: Swap
+  - Name: Dexspan
     Abi: src/abis/dexspan.json
     Type: contract/event
     Address: "0x02D728B9C1513478a6b6de77a92648e1D8F801e7"

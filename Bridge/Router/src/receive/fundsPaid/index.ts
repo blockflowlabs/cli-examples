@@ -31,8 +31,6 @@ export const FundsPaidHandler = async (context: IEventContext, bind: IBind) => {
     dstEntry.blockNumber = block.block_number;
     dstEntry.chainId = block.chain_id;
     dstEntry.transactionHash = transaction.transaction_hash;
-    dstEntry.recipientAddress = transaction.transaction_to_address;
-    dstEntry.receiverAddress = transaction.transaction_to_address;
   }
   dstEntry.eventName = EventNameEnum.FundsPaid;
   dstEntry.type = TransactionType.AssetForwarder;

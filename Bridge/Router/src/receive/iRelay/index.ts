@@ -22,7 +22,7 @@ export const iRelayHandler = async (context: IFunctionContext, bind: IBind) => {
   const recipient = relayData.recipient.toString();
 
   const dstChain = block.chain_id;
-  const transferDB: Instance = bind(Destination);
+  const destinationDB: Instance = bind(Destination);
 
   const tokenInfo = await fetchTokenDetails(bind, dstChain, destToken);
 
@@ -38,31 +38,32 @@ export const iRelayHandler = async (context: IFunctionContext, bind: IBind) => {
   };
 
   const destObj: any = {
-    blockTimestamp: parseInt(block.block_timestamp.toString(), 10),
-    blockNumber: block.block_number,
-    chainId: dstChain,
-    transactionHash: transaction.transaction_hash,
-    destinationToken: tokenPath.destinationToken,
-    stableToken: tokenPath.stableToken,
-    recipientAddress: recipient, // Contract from where txn came
+    recipientAddress: recipient,
     receiverAddress: recipient,
+    stableToken: tokenPath.stableToken,
+    destinationToken: tokenPath.destinationToken,
     depositId: depositId,
     srcChainId: srcChain,
   };
   const sourceDB: Instance = bind(Source);
   const srcRecord: any = await sourceDB.findOne({
-    transactionHash: transaction.transaction_hash,
+    //Src Record Id
+    id: `${srcChain}_${dstChain}_${depositId}`,
   });
   if (srcRecord) {
-    destObj["srcRef"] = { recordRef: srcRecord._id };
+    destObj["source"] = { recordRef: srcRecord?._id };
   }
-  await transferDB.save(destObj);
-
+  await destinationDB.updateOne(
+    {
+      transactionHash: transaction.transaction_hash,
+    },
+    destObj
+  );
   if (srcRecord) {
-    const savedDest = await transferDB.findOne({
+    const savedDest = await destinationDB.findOne({
       transactionHash: transaction.transaction_hash,
     });
-    srcRecord["destRef"] = { recordRef: savedDest._id };
+    srcRecord["destination"] = { recordRef: savedDest._id };
     await sourceDB.save(srcRecord);
   }
 };

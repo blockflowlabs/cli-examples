@@ -121,12 +121,12 @@ export const IUSDCDepositedHandler = async (
     srcChainId: srcChain,
   });
   if (destRecord) {
-    srcObj["destRef"] = { recordRef: destRecord._id };
+    srcObj["destination"] = { recordRef: destRecord._id };
   }
   await srcDB.save(srcObj);
   if (destRecord) {
     const savedSrcRecord = await srcDB.findOne({ id });
-    destRecord["srcRef"] = { recordRef: savedSrcRecord._id };
+    destRecord["source"] = { recordRef: savedSrcRecord._id };
     await destDB.save(destRecord);
   }
 };
