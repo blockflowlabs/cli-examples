@@ -37,6 +37,10 @@ export const iRelayHandler = async (context: IFunctionContext, bind: IBind) => {
     },
   };
 
+  const savedDest = await destinationDB.findOne({
+    transactionHash: transaction.transaction_hash,
+  });
+
   const destObj: any = {
     recipientAddress: recipient,
     receiverAddress: recipient,
@@ -45,24 +49,20 @@ export const iRelayHandler = async (context: IFunctionContext, bind: IBind) => {
     depositId: depositId,
     srcChainId: srcChain,
   };
+  destObj["id"] = savedDest.id;
+
   const sourceDB: Instance = bind(Source);
   const srcRecord: any = await sourceDB.findOne({
     //Src Record Id
     id: `${srcChain}_${dstChain}_${depositId}`,
   });
+
   if (srcRecord) {
     destObj["source"] = { recordRef: srcRecord?._id };
   }
-  await destinationDB.updateOne(
-    {
-      transactionHash: transaction.transaction_hash,
-    },
-    destObj
-  );
+  await destinationDB.save(destObj);
+
   if (srcRecord) {
-    const savedDest = await destinationDB.findOne({
-      transactionHash: transaction.transaction_hash,
-    });
     srcRecord["destination"] = { recordRef: savedDest._id };
     await sourceDB.save(srcRecord);
   }

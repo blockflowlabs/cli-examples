@@ -99,6 +99,11 @@ export const iRelayMessageHandler = async (
     );
     receiverAddress = decodeEvent[3].toString();
   }
+
+  const savedDest = await destinationDB.findOne({
+    transactionHash: transaction.transaction_hash,
+  });
+
   const destObj: any = {
     transactionHash: transaction.transaction_hash,
     depositId: depositId,
@@ -109,6 +114,8 @@ export const iRelayMessageHandler = async (
     receiverAddress: receiverAddress ?? recipient, // Who received the funds
     nativeTokenAmount: nativeTokenAmount ?? "",
   };
+  destObj["id"] = savedDest.id;
+
   const sourceDB: Instance = bind(Source);
   const srcRecord: any = await sourceDB.findOne({
     //Src Record Id
@@ -117,17 +124,8 @@ export const iRelayMessageHandler = async (
   if (srcRecord) {
     destObj["source"] = { recordRef: srcRecord._id };
   }
-  await destinationDB.updateOne(
-    {
-      transactionHash: transaction.transaction_hash,
-    },
-    destObj
-  );
-
+  await destinationDB.save(destObj);
   if (srcRecord) {
-    const savedDest = await destinationDB.findOne({
-      transactionHash: transaction.transaction_hash,
-    });
     srcRecord["destination"] = { recordRef: savedDest._id };
     await sourceDB.save(srcRecord);
   }
