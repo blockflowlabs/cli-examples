@@ -5,15 +5,29 @@
   "scripts": {
     "prettier": "prettier --write .",
     "compile": "tsc -b",
-    "test-src": "blockflow instance-test --path ethereum.studio.yaml --startBlock 19260948 --range 1 --clean",
-    "test-dst": "blockflow instance-test --path polygon.studio.yaml --startBlock 53702451 --range 1"
+    "test-src": "blockflow instance-test --path configs/ethereum.studio.yaml --startBlock 19260948 --range 1 --clean --rpc https://rpc.ankr.com/eth",
+    "test-dst": "blockflow instance-test --path configs/polygon.studio.yaml --startBlock 53702451 --range 1 --rpc https://rpc.ankr.com/polygon",
+    "deploy-eth": "blockflow instance-deploy --path configs/ethereum.studio.yaml",
+    "deploy-pol": "blockflow instance-deploy --path configs/polygon.studio.yaml",
+    "deploy-op": "blockflow instance-deploy --path configs/op.studio.yaml",
+    "deploy-avax": "blockflow instance-deploy --path configs/avalanche.studio.yaml",
+    "deploy-arb": "blockflow instance-deploy --path configs/arbitrum.studio.yaml",
+    "deploy-base": "blockflow instance-deploy --path configs/base.studio.yaml",
+    "test": "jest"
   },
   "dependencies": {
-    "@blockflow-labs/utils": "latest",
+    "@babel/preset-typescript": "^7.24.7",
+    "@blockflow-labs/cli-test": "^1.0.1",
+    "@blockflow-labs/utils": "^1.0.7-beta.1",
+    "axios": "^1.7.2",
     "ethers": "^6.13.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.25.2",
+    "@babel/preset-env": "^7.25.3",
+    "babel-jest": "^29.7.0",
     "bignumber.js": "^9.1.1",
+    "jest": "^29.7.0",
     "prettier": "^3.3.1",
     "ts-loader": "^9.5.0",
     "typescript": "^5.1.6",

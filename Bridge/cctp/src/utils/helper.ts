@@ -10,7 +10,9 @@ export const domainToChainId: { [key: string]: string } = {
   "2": "10", // op
   "3": "42161", // arb
   "6": "8453", // base
-  "7": "137", // polygon
+  "7": "137", // polygon,
+  "5": "solana", // solana
+  "4": "noble", // noble
 };
 
 export const chainIdToDomain: { [key: string]: string } = Object.entries(

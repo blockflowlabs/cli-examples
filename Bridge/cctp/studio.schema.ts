@@ -2,23 +2,32 @@ import { String, Array } from "@blockflow-labs/utils";
 
 export interface burnTransactionsTable {
   id: String;
-  transactionHash: string;
-  sourceDomain: string;
-  destinationDomain: string;
   amount: number;
+  timeStamp: number;
+  isCompleted: Boolean;
+  sourceDomain: string;
   mintRecipient: string;
   messageSender: string;
-  timeStamp: string;
+  transactionHash: string;
+  destinationDomain: string;
+
+  burnToken: string;
+  destinationCaller: string;
+  destinationTokenMessenger: string;
 }
 
 export interface mintTransactionsTable {
   id: String;
-  transactionHash: string;
-  sourceDomain: string;
-  destinationDomain: string;
   amount: number;
+  timeStamp: number;
+  sourceDomain: string;
   mintRecipient: string;
-  timeStamp: string;
+  messageSender: string;
+  transactionHash: string;
+  destinationDomain: string;
+
+  caller: string;
+  sender: string;
 }
 
 export interface attestationTable {

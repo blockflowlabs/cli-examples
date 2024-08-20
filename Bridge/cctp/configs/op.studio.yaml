@@ -1,0 +1,32 @@
+name: cctp-src
+description: Indexing circle etheruem cctp contracts
+startBlock: 105892468
+userId: process.env.userId
+projectId: process.env.projectId
+network: Optimism
+user: prady-cctp
+schema:
+  file: ./studio.schema.ts
+execution: parallel
+Resources:
+  - Name: tokenmessenger
+    Abi: src/abis/tokenmessenger.json
+    Type: contract/event
+    Address: "0x2B4069517957735bE00ceE0fadAE88a26365528f"
+    Triggers:
+      - Event: DepositForBurn(uint64 indexed,address indexed,uint256,address indexed,bytes32,uint32,bytes32,bytes32)
+        Handler: src/handlers/DepositForBurn.DepositForBurnHandler
+  - Name: tokenMinter
+    Abi: src/abis/tokenMinter.json
+    Type: contract/event
+    Address: "0x33E76C5C31cb928dc6FE6487AB3b2C0769B1A1e3"
+    Triggers:
+      - Event: SetBurnLimitPerMessage(address indexed,uint256)
+        Handler: src/handlers/SetBurnLimitPerMessage.SetBurnLimitPerMessageHandler
+  - Name: messageTransmitter
+    Abi: src/abis/messageTransmitter.json
+    Type: contract/event
+    Address: "0x4d41f22c5a0e5c74090899e5a8fb597a8842b3e8"
+    Triggers:
+      - Event: MessageReceived(address indexed,uint32,uint64 indexed,bytes32,bytes)
+        Handler: src/handlers/MessageReceived.MessageReceivedHandler

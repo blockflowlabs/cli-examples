@@ -1,0 +1,23 @@
+name: cctp-dst
+description: Indexing circle etheruem cctp contracts
+startBlock: 25114705
+userId: process.env.userId
+projectId: process.env.projectId
+network: Avalanche
+user: prady-cctp
+schema:
+  file: ./studio.schema.ts
+execution: parallel
+Resources:
+  - Name: counts
+    Type: api/rest
+    Slug: count
+    Handler: src/apis/counts.countHandler
+  # - Name: flows
+  #   Type: api/rest
+  #   Slug: flow
+  #   Handler: src/apis/flows.flowHandler
+  # - Name: users
+  #   Type: api/rest
+  #   Slug: top/users
+  #   Handler: src/apis/user.userHandler

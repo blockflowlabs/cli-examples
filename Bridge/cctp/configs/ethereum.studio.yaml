@@ -1,10 +1,10 @@
-name: cctp
-description: A top-secret research project to the moon
-startBlock: latest
-userId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
-projectId: cctp-explorer-instance
+name: cctp-src
+description: Indexing circle etheruem cctp contracts
+startBlock: 16730025
+userId: process.env.userId
+projectId: process.env.projectId
 network: Ethereum
-user: Jane-doe
+user: prady-cctp
 schema:
   file: ./studio.schema.ts
 execution: parallel
@@ -16,13 +16,6 @@ Resources:
     Triggers:
       - Event: DepositForBurn(uint64 indexed,address indexed,uint256,address indexed,bytes32,uint32,bytes32,bytes32)
         Handler: src/handlers/DepositForBurn.DepositForBurnHandler
-  - Name: messageTransmitter
-    Abi: src/abis/messageTransmitter.json
-    Type: contract/event
-    Address: "0x0a992d191DEeC32aFe36203Ad87D7d289a738F81"
-    Triggers:
-      - Event: MessageReceived(address indexed,uint32,uint64 indexed,bytes32,bytes)
-        Handler: src/handlers/MessageReceived.MessageReceivedHandler
   - Name: tokenMinter
     Abi: src/abis/tokenMinter.json
     Type: contract/event
@@ -30,3 +23,10 @@ Resources:
     Triggers:
       - Event: SetBurnLimitPerMessage(address indexed,uint256)
         Handler: src/handlers/SetBurnLimitPerMessage.SetBurnLimitPerMessageHandler
+  - Name: messageTransmitter
+    Abi: src/abis/messageTransmitter.json
+    Type: contract/event
+    Address: "0x0a992d191DEeC32aFe36203Ad87D7d289a738F81"
+    Triggers:
+      - Event: MessageReceived(address indexed,uint32,uint64 indexed,bytes32,bytes)
+        Handler: src/handlers/MessageReceived.MessageReceivedHandler
