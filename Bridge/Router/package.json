@@ -7,7 +7,7 @@
     "instance-test-linea": "blockflow instance-test --path 'linea.studio.yaml' --range 10",
     "instance-deploy-linea": "blockflow instance-deploy --path 'linea.studio.yaml'",
     "instance-test-ethereum": "blockflow instance-test --path 'ethereum.studio.yaml' --range 3 --startBlock 20524717 --rpc 'https://rpc.ankr.com/eth'",
-    "instance-test-base": "blockflow instance-test --path 'base.studio.yaml' --range 10 --startBlock 15740530",
+    "instance-test-base": "blockflow instance-test --path 'base.studio.yaml' --range 1 --startBlock 16528604  --rpc 'https://base.llamarpc.com'",
     "instance-test-ethereum-swapAndDeposit": "blockflow instance-test --path 'ethereum.studio.yaml' --range 1 --startBlock 19568913",
     "instance-test-ethereum-deposit": "blockflow instance-test --path 'ethereum.studio.yaml' --range 5 --startBlock 20119997",
     "instance-test-ethereum-usdc": "blockflow instance-test --path 'ethereum.studio.yaml' --range 3 --startBlock 20096506",

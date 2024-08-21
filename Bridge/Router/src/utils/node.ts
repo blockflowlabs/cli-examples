@@ -171,14 +171,18 @@ const getTokenDecimals = async (contractAddress: string, chainId: string) => {
 };
 
 export async function fetchTokenInfo(contractAddress: string, chainId: string) {
-  const data = await Promise.all([
-    getTokenSymbol(contractAddress, chainId),
-    getTokenDecimals(contractAddress, chainId),
-    //getTokenName(contractAddress, chainId),
-  ]);
-  console.log("contractAddress", contractAddress);
-  console.log("data", data);
-  return { symbol: data[0], decimals: data[1] };
+  try {
+    const data = await Promise.all([
+      getTokenSymbol(contractAddress, chainId),
+      getTokenDecimals(contractAddress, chainId),
+      //getTokenName(contractAddress, chainId),
+    ]);
+    console.log("contractAddress", contractAddress);
+    console.log("data", data);
+    return { symbol: data[0], decimals: data[1] };
+  } catch (e) {
+    return { symbol: "Unknown", decimals: "0" };
+  }
 }
 
 export async function fetchTokenPriceFromOracle(symbol: string) {
