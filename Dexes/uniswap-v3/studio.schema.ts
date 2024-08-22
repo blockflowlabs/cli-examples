@@ -1,4 +1,4 @@
-import { Boolean, String } from "@blockflow-labs/utils";
+import { String } from "@blockflow-labs/utils";
 
 export interface UniIncentive {
   id: String;

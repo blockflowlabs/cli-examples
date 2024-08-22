@@ -37,7 +37,7 @@ export class UniPosition {
   };
 }
 
-import { Boolean, String } from "@blockflow-labs/utils";
+import { String } from "@blockflow-labs/utils";
 
 export interface IUniIncentive extends Document {
   id: String;
