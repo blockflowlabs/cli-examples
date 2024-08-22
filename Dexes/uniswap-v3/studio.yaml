@@ -1,8 +1,8 @@
 name: uniswapV3Staker
 description: track events for uniswap-v3 staker
 startBlock: latest
-userId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
-projectId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
+userId: process.env.STUDIO_USER_ID
+projectId: process.env.STUDIO_PROJECT_ID
 network: Ethereum
 user: puspendra
 schema:
