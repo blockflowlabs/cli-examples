@@ -11,7 +11,3 @@ export function getIncentiveId(incentiveTuple: any[]) {
 
   return incentiveId;
 }
-
-export function uintToHex(value: number) {
-  return ethers.toBeHex(Number(value));
-}
