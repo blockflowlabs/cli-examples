@@ -5,6 +5,7 @@ import {
   ISecrets,
 } from "@blockflow-labs/utils";
 import { UniPosition } from "../../types/schema";
+import BigNumber from "bignumber.js";
 
 /**
  * @dev Event::IncreaseLiquidity(uint256 tokenId, uint128 liquidity, uint256 amount0, uint256 amount1)
@@ -38,7 +39,9 @@ export const IncreaseLiquidityHandler = async (
       oldOwner: null,
     });
   } else {
-    position.liquidity = liquidity.toString();
+    position.liquidity = new BigNumber(position.liquidity)
+      .minus(liquidity.toString())
+      .toString();
 
     await positionDb.updateOne({ id: tokenId._hex }, position);
   }
