@@ -20,3 +20,11 @@ export interface UniPosition {
   oldOwner: String;
   approved: String;
 }
+
+export interface UniReward {
+  id: String;
+  recipient: String;
+  rewardToken: String;
+  reward: String;
+  rewardRecipientAddress: String;
+}

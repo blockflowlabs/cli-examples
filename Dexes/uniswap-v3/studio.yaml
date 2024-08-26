@@ -42,3 +42,10 @@ Resources:
         Handler: src/handlers/uniswapV3Staker/TokenStaked.TokenStakedHandler
       - Event: TokenUnstaked(uint256 indexed,bytes32 indexed)
         Handler: src/handlers/uniswapV3Staker/TokenUnstaked.TokenUnstakedHandler
+  - Name: uniswapV3Staker
+    Abi: src/abis/uniswapV3Staker.json
+    Type: contract/function
+    Address: "0xe34139463bA50bD61336E0c446Bd8C0867c6fE65"
+    Triggers:
+      - Function: "claimReward(address,address,uint256)"
+        Handler: src/handlers/uniswapV3Staker/ClaimReward.ClaimRewardHandler

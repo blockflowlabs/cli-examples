@@ -37,6 +37,21 @@ export class UniPosition {
   };
 }
 
+export class UniReward {
+  static entity = "UniReward";
+  static schema = {
+    id: { type: "String", index: true },
+    recipient: "String",
+    rewardToken: "String",
+    reward: "String",
+    rewardRecipientAddress: "String",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
+  };
+}
+
 import { String } from "@blockflow-labs/utils";
 
 export interface IUniIncentive extends Document {
@@ -62,6 +77,18 @@ export interface IUniPosition extends Document {
   staked: Boolean;
   oldOwner: String;
   approved: String;
+  blocknumber: String;
+  entityId: String;
+  instanceId: String;
+  chainId: String;
+}
+
+export interface IUniReward extends Document {
+  id: String;
+  recipient: String;
+  rewardToken: String;
+  reward: String;
+  rewardRecipientAddress: String;
   blocknumber: String;
   entityId: String;
   instanceId: String;
