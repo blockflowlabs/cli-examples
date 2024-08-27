@@ -34,8 +34,8 @@ export interface Balance {
   usd_exchange_rate: string;
   block_timestamp: string;
   block_hash: string;
-  is_past_holder: boolean;
-  is_holder: boolean;
+  is_past_holder: Boolean;
+  is_holder: Boolean;
 }
 
 export interface Token {
