@@ -1,8 +1,8 @@
 name: Eigen Explorer
 description: An Explorer for Eigen Layer data
 startBlock: latest
-userId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
-projectId: XXXXXXXX-XXXX-XXXX-XXXXXXXX-XXXXXXXX
+userId: process.env.BLOCKFLOW_USER_ID
+projectId: process.env.BLOCKFLOW_PROJECT_ID
 network: Ethereum
 user: puspendra
 schema:
