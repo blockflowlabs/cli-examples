@@ -41,6 +41,7 @@ export const OperatorMetadataURIUpdatedHandler = async (
     operatorData.metadataURI = metadataURI;
     operatorData.updatedAt = block.block_timestamp;
     operatorData.updatedAtBlock = block.block_number;
-    await operatorDb.updateOne({ id: operator.toLowerCase() }, operatorData);
+
+    await operatorDb.save(operatorData);
   }
 };

@@ -38,7 +38,8 @@ export const OperatorSharesDecreasedHandler = async (
         .toString();
       operatorData.updatedAt = block.block_timestamp;
       operatorData.updatedAtBlock = block.block_number;
-      await operatorDb.updateOne({ id: operator.toLowerCase() }, operatorData);
+
+      await operatorDb.save(operatorData);
     }
   }
 };

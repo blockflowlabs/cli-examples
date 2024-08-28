@@ -29,6 +29,7 @@ export const StakerDelegatedHandler = async (
     stakerData.operator = operator.toLowerCase();
     stakerData.updatedAt = block.block_timestamp;
     stakerData.updatedAtBlock = block.block_number;
-    await stakerDb.updateOne({ id: staker.toLowerCase() }, stakerData);
+
+    await stakerDb.save(stakerData);
   }
 };

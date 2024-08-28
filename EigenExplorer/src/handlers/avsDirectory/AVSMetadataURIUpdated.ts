@@ -28,7 +28,7 @@ export const AVSMetadataURIUpdatedHandler = async (
     avsData.metadataURI = metadataURI;
     avsData.updatedAt = block.block_timestamp;
     avsData.updatedAtBlock = block.block_number;
-    await avsDb.updateOne({ id: avs.toLowerCase() }, avsData);
+    await avsDb.save(avsData);
   } else {
     await avsDb.create({
       id: avs.toLowerCase(),

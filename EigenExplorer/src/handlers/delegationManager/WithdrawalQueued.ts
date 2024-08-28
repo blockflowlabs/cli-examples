@@ -4,8 +4,7 @@ import {
   Instance,
   ISecrets,
 } from "@blockflow-labs/utils";
-import { Withdrawal } from "../../types/schema";
-import { Staker } from "../../types/schema";
+import { Withdrawal, Staker } from "../../types/schema";
 import BigNumber from "bignumber.js";
 
 /**
@@ -51,6 +50,8 @@ export const WithdrawalQueuedHandler = async (
         }
       }
     }
+
+    await stakerDb.save(stakerData);
   }
 
   if (!withdrawalData) {
@@ -80,6 +81,7 @@ export const WithdrawalQueuedHandler = async (
     );
     withdrawalData.updatedAt = block.block_timestamp;
     withdrawalData.updatedAtBlock = block.block_number;
-    await withdrawalDb.updateOne({ id: withdrawalRoot }, withdrawalData);
+
+    await withdrawalDb.save(withdrawalData);
   }
 };

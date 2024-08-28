@@ -55,6 +55,7 @@ export const OperatorAVSRegistrationStatusUpdatedHandler = async (
         operatorData.isAvsActive[avsIndex] = false;
       }
     }
-    await operatorDb.updateOne({ id: operator.toLowerCase() }, operatorData);
+
+    await operatorDb.save(operatorData);
   }
 };

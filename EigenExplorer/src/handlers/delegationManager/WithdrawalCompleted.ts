@@ -29,6 +29,7 @@ export const WithdrawalCompletedHandler = async (
     withdrawalData.isCompleted = true;
     withdrawalData.updatedAt = block.block_timestamp;
     withdrawalData.updatedAtBlock = block.block_number;
-    await withdrawalDb.updateOne({ id: withdrawalRoot }, withdrawalData);
+
+    await withdrawalDb.save(withdrawalData);
   }
 };
