@@ -43,6 +43,6 @@ export const IncreaseLiquidityHandler = async (
       .minus(liquidity.toString())
       .toString();
 
-    await positionDb.updateOne({ id: tokenId._hex }, position);
+    await positionDb.save(position);
   }
 };

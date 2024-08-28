@@ -39,6 +39,6 @@ export const ClaimRewardHandler = async (
       .plus(amountRequested.toString())
       .toString();
 
-    await rewardDb.updateOne({ id: txId }, uniswapReward);
+    await rewardDb.save(uniswapReward);
   }
 };

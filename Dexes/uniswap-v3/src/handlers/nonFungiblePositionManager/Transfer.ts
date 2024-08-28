@@ -30,6 +30,6 @@ export const TransferHandler = async (
     position.owner = to;
     position.approved = null;
 
-    await positionDb.updateOne({ id: tokenId._hex }, position);
+    await positionDb.save(position);
   }
 };

@@ -56,6 +56,6 @@ export const IncentiveCreatedHandler = async (
     incentive.reward = Number(reward);
     incentive.ended = false;
 
-    await incentiveDb.updateOne({ id: incentiveId }, incentive);
+    await incentiveDb.save(incentive);
   }
 };

@@ -28,6 +28,6 @@ export const TokenUnstakedHandler = async (
   if (position) {
     position.staked = false;
 
-    await positionDb.updateOne({ id: tokenId._hex }, position);
+    await positionDb.save(position);
   }
 };

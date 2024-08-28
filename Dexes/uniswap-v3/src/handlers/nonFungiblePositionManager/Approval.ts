@@ -28,6 +28,6 @@ export const ApprovalHandler = async (
   if (position) {
     position.approved = approved;
 
-    await positionDb.updateOne({ id: tokenId._hex }, position);
+    await positionDb.save(position);
   }
 };

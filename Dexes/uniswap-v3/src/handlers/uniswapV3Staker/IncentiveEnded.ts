@@ -28,6 +28,6 @@ export const IncentiveEndedHandler = async (
   if (incentive) {
     incentive.ended = true;
 
-    await incentiveDb.updateOne({ id: incentiveId }, incentive);
+    await incentiveDb.save(incentive);
   }
 };

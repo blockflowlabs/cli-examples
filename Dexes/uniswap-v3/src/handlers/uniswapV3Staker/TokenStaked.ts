@@ -29,6 +29,6 @@ export const TokenStakedHandler = async (
     position.staked = true;
     position.liquidity = liquidity.toString();
 
-    await positionDb.updateOne({ id: tokenId._hex }, position);
+    await positionDb.save(position);
   }
 };

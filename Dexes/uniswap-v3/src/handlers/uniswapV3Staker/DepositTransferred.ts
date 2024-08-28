@@ -28,6 +28,6 @@ export const DepositTransferredHandler = async (
     position.oldOwner = oldOwner;
     position.newOwner = newOwner;
 
-    await positionDb.updateOne({ id: tokenId._hex }, position);
+    await positionDb.save(position);
   }
 };
