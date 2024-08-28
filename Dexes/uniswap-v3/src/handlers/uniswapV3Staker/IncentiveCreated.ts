@@ -44,7 +44,7 @@ export const IncentiveCreatedHandler = async (
       startTime: Number(startTime),
       endTime: Number(endTime),
       refundee: refundee.toLowerCase(),
-      reward: Number(reward),
+      reward: reward.toString(),
       ended: false,
     });
   } else {
@@ -53,7 +53,7 @@ export const IncentiveCreatedHandler = async (
     incentive.startTime = Number(startTime);
     incentive.endTime = Number(endTime);
     incentive.refundee = refundee.toLowerCase();
-    incentive.reward = Number(reward);
+    incentive.reward = reward.toString();
     incentive.ended = false;
 
     await incentiveDb.save(incentive);

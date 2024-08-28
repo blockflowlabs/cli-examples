@@ -11,7 +11,7 @@ export class UniIncentive {
     startTime: "number",
     endTime: "number",
     refundee: "String",
-    reward: "number",
+    reward: "String",
     ended: "Boolean",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
@@ -61,7 +61,7 @@ export interface IUniIncentive extends Document {
   startTime: number;
   endTime: number;
   refundee: String;
-  reward: number;
+  reward: String;
   ended: Boolean;
   blocknumber: String;
   entityId: String;

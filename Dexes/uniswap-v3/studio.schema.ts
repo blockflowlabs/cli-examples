@@ -7,7 +7,7 @@ export interface UniIncentive {
   startTime: number;
   endTime: number;
   refundee: String;
-  reward: number;
+  reward: String;
   ended: Boolean;
 }
 
