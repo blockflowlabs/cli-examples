@@ -1,0 +1,51 @@
+name: uniswapV3Staker
+description: track events for uniswap-v3 staker
+startBlock: latest
+userId: process.env.STUDIO_USER_ID
+projectId: process.env.STUDIO_PROJECT_ID
+network: Ethereum
+user: puspendra
+schema:
+  file: ./studio.schema.ts
+execution: parallel
+Resources:
+  - Name: nonFungiblePositionManager
+    Abi: src/abis/nonFungiblePositionManager.json
+    Type: contract/event
+    Address: "0xC36442b4a4522E871399CD717aBDD847Ab11FE88"
+    Triggers:
+      - Event: Approval(address indexed,address indexed,uint256 indexed)
+        Handler: src/handlers/nonFungiblePositionManager/Approval.ApprovalHandler
+      - Event: DecreaseLiquidity(uint256 indexed,uint128,uint256,uint256)
+        Handler: >-
+          src/handlers/nonFungiblePositionManager/DecreaseLiquidity.DecreaseLiquidityHandler
+      - Event: IncreaseLiquidity(uint256 indexed,uint128,uint256,uint256)
+        Handler: >-
+          src/handlers/nonFungiblePositionManager/IncreaseLiquidity.IncreaseLiquidityHandler
+      - Event: Transfer(address indexed,address indexed,uint256 indexed)
+        Handler: src/handlers/nonFungiblePositionManager/Transfer.TransferHandler
+  - Name: uniswapV3Staker
+    Abi: src/abis/uniswapV3Staker.json
+    Type: contract/event
+    Address: "0xe34139463bA50bD61336E0c446Bd8C0867c6fE65"
+    Triggers:
+      - Event: DepositTransferred(uint256 indexed,address indexed,address indexed)
+        Handler: >-
+          src/handlers/uniswapV3Staker/DepositTransferred.DepositTransferredHandler
+      - Event: >-
+          IncentiveCreated(address indexed,address
+          indexed,uint256,uint256,address,uint256)
+        Handler: src/handlers/uniswapV3Staker/IncentiveCreated.IncentiveCreatedHandler
+      - Event: IncentiveEnded(bytes32 indexed,uint256)
+        Handler: src/handlers/uniswapV3Staker/IncentiveEnded.IncentiveEndedHandler
+      - Event: TokenStaked(uint256 indexed,bytes32 indexed,uint128)
+        Handler: src/handlers/uniswapV3Staker/TokenStaked.TokenStakedHandler
+      - Event: TokenUnstaked(uint256 indexed,bytes32 indexed)
+        Handler: src/handlers/uniswapV3Staker/TokenUnstaked.TokenUnstakedHandler
+  - Name: uniswapV3Staker
+    Abi: src/abis/uniswapV3Staker.json
+    Type: contract/function
+    Address: "0xe34139463bA50bD61336E0c446Bd8C0867c6fE65"
+    Triggers:
+      - Function: "claimReward(address,address,uint256)"
+        Handler: src/handlers/uniswapV3Staker/ClaimReward.ClaimRewardHandler
