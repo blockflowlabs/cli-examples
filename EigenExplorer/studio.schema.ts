@@ -1,11 +1,20 @@
 import { String } from "@blockflow-labs/utils";
 
+export type StrategyShares = {
+  strategy: String;
+  shares: String;
+};
+
+export type AVSRegistrations = {
+  address: String;
+  isActive: Boolean;
+};
+
 export interface Staker {
   id: String;
   address: String;
   operator: String;
-  strategies: [String];
-  shares: [String];
+  shares: [StrategyShares];
   createdAt: Number;
   updatedAt: Number;
   createdAtBlock: Number;
@@ -15,11 +24,9 @@ export interface Staker {
 export interface Operator {
   id: String;
   address: String;
-  avsAddresses: [String];
-  isAvsActive: [Boolean];
+  avsRegistrations: [AVSRegistrations];
   metadataURI: String;
-  strategies: [String];
-  shares: [String];
+  shares: [StrategyShares];
   createdAt: Number;
   updatedAt: Number;
   createdAtBlock: Number;
@@ -44,8 +51,7 @@ export interface Withdrawal {
   stakerAddress: String;
   delegatedTo: String;
   withdrawerAddress: String;
-  strategies: [String];
-  shares: [String];
+  strategyShares: [StrategyShares];
   isCompleted: Boolean;
   createdAt: Number;
   createdAtBlock: Number;

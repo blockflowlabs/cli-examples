@@ -4,7 +4,7 @@ import {
   Instance,
   ISecrets,
 } from "@blockflow-labs/utils";
-import { Operator, AVS } from "../../types/schema";
+import { Operator, AVS, AVSRegistrations } from "../../types/schema";
 
 /**
  * @dev Event::OperatorAVSRegistrationStatusUpdated(address operator, address avs, uint8 status)
@@ -37,25 +37,46 @@ export const OperatorAVSRegistrationStatusUpdatedHandler = async (
   }
 
   if (operatorData) {
-    const avsIndex = operatorData.avsAddresses.findIndex(
-      (address: string) => address === avs.toLowerCase()
+    const avsIndex = operatorData.avsRegistrations.findIndex(
+      ({ address, isActive }: AVSRegistrations) => address === avs.toLowerCase()
     );
     if (status === 1) {
       if (avsIndex === -1) {
-        operatorData.avsAddresses.push(avs.toLowerCase());
-        operatorData.isAvsActive.push(true);
+        operatorData.avsRegistrations.push({
+          address: avs.toLowerCase(),
+          isActive: true,
+        });
       } else {
-        operatorData.isAvsActive[avsIndex] = true;
+        operatorData.avsRegistrations[avsIndex].isActive = true;
       }
     } else if (status === 0) {
       if (avsIndex === -1) {
-        operatorData.avsAddresses.push(avs.toLowerCase());
-        operatorData.isAvsActive.push(false);
+        operatorData.avsRegistrations.push({
+          address: avs.toLowerCase(),
+          isActive: false,
+        });
       } else {
-        operatorData.isAvsActive[avsIndex] = false;
+        operatorData.avsRegistrations[avsIndex].isActive = false;
       }
     }
 
     await operatorDb.save(operatorData);
+  } else {
+    await operatorDb.create({
+      id: operator.toLowerCase(),
+      address: operator.toLowerCase(),
+      avsRegistrations: [
+        {
+          address: avs.toLowerCase(),
+          isActive: status === 1,
+        },
+      ],
+      shares: [],
+      metadataURI: "",
+      createdAt: block.block_timestamp,
+      updatedAt: block.block_timestamp,
+      createdAtBlock: block.block_number,
+      updatedAtBlock: block.block_number,
+    });
   }
 };

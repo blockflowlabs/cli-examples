@@ -32,5 +32,15 @@ export const StakerUndelegatedHandler = async (
     stakerData.updatedAtBlock = block.block_number;
 
     await stakerDb.save(stakerData);
+  } else {
+    await stakerDb.create({
+      id: staker.toLowerCase(),
+      address: staker.toLowerCase(),
+      operator: null,
+      createdAt: block.block_timestamp,
+      updatedAt: block.block_timestamp,
+      createdAtBlock: block.block_number,
+      updatedAtBlock: block.block_number,
+    });
   }
 };

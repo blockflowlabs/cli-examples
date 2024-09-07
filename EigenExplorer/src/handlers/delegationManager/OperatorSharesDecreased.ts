@@ -5,7 +5,7 @@ import {
   ISecrets,
 } from "@blockflow-labs/utils";
 import BigNumber from "bignumber.js";
-import { Operator } from "../../types/schema";
+import { Operator, Staker, StrategyShares } from "../../types/schema";
 
 /**
  * @dev Event::OperatorSharesDecreased(address operator, address staker, address strategy, uint256 shares)
@@ -23,16 +23,19 @@ export const OperatorSharesDecreasedHandler = async (
   const { operator, staker, strategy, shares } = event;
 
   const operatorDb: Instance = bind(Operator);
+  const stakerDb: Instance = bind(Staker);
 
   const operatorData = await operatorDb.findOne({ id: operator.toLowerCase() });
+  const stakerData = await stakerDb.findOne({ id: staker.toLowerCase() });
 
   if (operatorData) {
-    const strategyIndex = operatorData.strategies.findIndex(
-      (s: string) => s === strategy.toLowerCase()
+    const strategyIndex = operatorData.shares.findIndex(
+      ({ strategy: sa, shares }: StrategyShares) =>
+        sa === strategy.toLowerCase()
     );
     if (strategyIndex !== -1) {
-      operatorData.shares[strategyIndex] = new BigNumber(
-        operatorData.shares[strategyIndex]
+      operatorData.shares[strategyIndex].shares = new BigNumber(
+        operatorData.shares[strategyIndex].shares
       )
         .minus(shares)
         .toString();
@@ -40,6 +43,24 @@ export const OperatorSharesDecreasedHandler = async (
       operatorData.updatedAtBlock = block.block_number;
 
       await operatorDb.save(operatorData);
+    }
+  }
+
+  if (stakerData) {
+    const strategyIndex = stakerData.shares.findIndex(
+      ({ strategy: sa, shares }: StrategyShares) =>
+        sa === strategy.toLowerCase()
+    );
+    if (strategyIndex !== -1) {
+      stakerData.shares[strategyIndex].shares = new BigNumber(
+        stakerData.shares[strategyIndex].shares
+      )
+        .minus(shares)
+        .toString();
+      stakerData.updatedAt = block.block_timestamp;
+      stakerData.updatedAtBlock = block.block_number;
+
+      await stakerDb.save(stakerData);
     }
   }
 };

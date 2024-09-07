@@ -27,11 +27,10 @@ export const OperatorMetadataURIUpdatedHandler = async (
 
   if (!operatorData) {
     await operatorDb.create({
+      metadataURI,
       id: operator.toLowerCase(),
       address: operator.toLowerCase(),
-      metadataURI,
-      strategies: [],
-      shares: [],
+      avsRegistrations: [],
       createdAt: block.block_timestamp,
       updatedAt: block.block_timestamp,
       createdAtBlock: block.block_number,

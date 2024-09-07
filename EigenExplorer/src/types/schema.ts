@@ -8,8 +8,7 @@ export class Staker {
     id: { type: "String", index: true },
     address: "String",
     operator: "String",
-    strategies: ["String"],
-    shares: ["String"],
+    shares: [{ strategy: "String", shares: "String" }],
     createdAt: "Number",
     updatedAt: "Number",
     createdAtBlock: "Number",
@@ -26,11 +25,9 @@ export class Operator {
   static schema = {
     id: { type: "String", index: true },
     address: "String",
-    avsAddresses: ["String"],
-    isAvsActive: ["Boolean"],
+    avsRegistrations: [{ address: "String", isActive: "Boolean" }],
     metadataURI: "String",
-    strategies: ["String"],
-    shares: ["String"],
+    shares: [{ strategy: "String", shares: "String" }],
     createdAt: "Number",
     updatedAt: "Number",
     createdAtBlock: "Number",
@@ -69,8 +66,7 @@ export class Withdrawal {
     stakerAddress: "String",
     delegatedTo: "String",
     withdrawerAddress: "String",
-    strategies: ["String"],
-    shares: ["String"],
+    strategyShares: [{ strategy: "String", shares: "String" }],
     isCompleted: "Boolean",
     createdAt: "Number",
     createdAtBlock: "Number",
@@ -103,12 +99,21 @@ export class Deposit {
 
 import { String } from "@blockflow-labs/utils";
 
+export type StrategyShares = {
+  strategy: String;
+  shares: String;
+};
+
+export type AVSRegistrations = {
+  address: String;
+  isActive: Boolean;
+};
+
 export interface IStaker extends Document {
   id: String;
   address: String;
   operator: String;
-  strategies: [String];
-  shares: [String];
+  shares: [StrategyShares];
   createdAt: Number;
   updatedAt: Number;
   createdAtBlock: Number;
@@ -122,11 +127,9 @@ export interface IStaker extends Document {
 export interface IOperator extends Document {
   id: String;
   address: String;
-  avsAddresses: [String];
-  isAvsActive: [Boolean];
+  avsRegistrations: [AVSRegistrations];
   metadataURI: String;
-  strategies: [String];
-  shares: [String];
+  shares: [StrategyShares];
   createdAt: Number;
   updatedAt: Number;
   createdAtBlock: Number;
@@ -159,8 +162,7 @@ export interface IWithdrawal extends Document {
   stakerAddress: String;
   delegatedTo: String;
   withdrawerAddress: String;
-  strategies: [String];
-  shares: [String];
+  strategyShares: [StrategyShares];
   isCompleted: Boolean;
   createdAt: Number;
   createdAtBlock: Number;

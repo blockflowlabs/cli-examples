@@ -31,11 +31,10 @@ export const AVSMetadataURIUpdatedHandler = async (
     await avsDb.save(avsData);
   } else {
     await avsDb.create({
+      metadataURI,
       id: avs.toLowerCase(),
       address: avs.toLowerCase(),
-      metadataURI,
-      strategies: [],
-      shares: [],
+      operators: [],
       createdAt: block.block_timestamp,
       updatedAt: block.block_timestamp,
       createdAtBlock: block.block_number,

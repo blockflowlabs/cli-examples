@@ -4,7 +4,7 @@ import {
   Instance,
   ISecrets,
 } from "@blockflow-labs/utils";
-import { Operator } from "../../types/schema";
+import { Operator, Staker, StrategyShares } from "../../types/schema";
 import BigNumber from "bignumber.js";
 
 /**
@@ -23,26 +23,54 @@ export const OperatorSharesIncreasedHandler = async (
   const { operator, staker, strategy, shares } = event;
 
   const operatorDb: Instance = bind(Operator);
+  const stakerDb: Instance = bind(Staker);
 
   const operatorData = await operatorDb.findOne({ id: operator.toLowerCase() });
+  const stakerData = await stakerDb.findOne({ id: staker.toLowerCase() });
 
   if (operatorData) {
-    const strategyIndex = operatorData.strategies.findIndex(
-      (s: string) => s === strategy.toLowerCase()
+    const strategyIndex = operatorData.shares.findIndex(
+      ({ strategy: sa, shares }: StrategyShares) =>
+        sa === strategy.toLowerCase()
     );
     if (strategyIndex !== -1) {
-      operatorData.shares[strategyIndex] = new BigNumber(
-        operatorData.shares[strategyIndex]
+      operatorData.shares[strategyIndex].shares = new BigNumber(
+        operatorData.shares[strategyIndex].shares
       )
         .plus(shares)
         .toString();
     } else {
-      operatorData.strategies.push(strategy.toLowerCase());
-      operatorData.shares.push(shares.toString());
+      operatorData.shares.push({
+        strategy: strategy.toLowerCase(),
+        shares: shares.toString(),
+      });
     }
     operatorData.updatedAt = block.block_timestamp;
     operatorData.updatedAtBlock = block.block_number;
 
     await operatorDb.save(operatorData);
+  }
+
+  if (stakerData) {
+    const strategyIndex = stakerData.shares.findIndex(
+      ({ strategy: sa, shares }: StrategyShares) =>
+        sa === strategy.toLowerCase()
+    );
+    if (strategyIndex !== -1) {
+      stakerData.shares[strategyIndex].shares = new BigNumber(
+        stakerData.shares[strategyIndex].shares
+      )
+        .plus(shares)
+        .toString();
+    } else {
+      stakerData.shares.push({
+        strategy: strategy.toLowerCase(),
+        shares: shares.toString(),
+      });
+    }
+    stakerData.updatedAt = block.block_timestamp;
+    stakerData.updatedAtBlock = block.block_number;
+
+    await stakerDb.save(stakerData);
   }
 };
