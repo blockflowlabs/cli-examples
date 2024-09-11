@@ -1,10 +1,5 @@
-import {
-  IEventContext,
-  IBind,
-  Instance,
-  ISecrets,
-} from "@blockflow-labs/utils";
-import { Deposit, Staker } from "../../types/schema";
+import { IEventContext, IBind, ISecrets } from "@blockflow-labs/utils";
+import { Deposit, IStaker, Staker } from "../../types/schema";
 import BigNumber from "bignumber.js";
 
 /**
@@ -25,7 +20,9 @@ export const DepositHandler = async (
   const stakerDb = bind(Staker);
   const depositDb = bind(Deposit);
 
-  const stakerData = await stakerDb.findOne({ id: staker.toLowerCase() });
+  const stakerData: IStaker = await stakerDb.findOne({
+    id: staker.toLowerCase(),
+  });
 
   const depositId =
     `${transaction.transaction_hash}_${log.log_index}`.toLowerCase();
@@ -51,28 +48,29 @@ export const DepositHandler = async (
     await stakerDb.create({
       id: staker.toLowerCase(),
       address: staker.toLowerCase(),
-      strategies: [strategy.toLowerCase()],
-      shares: [shares.toString()],
+      shares: [{ shares: shares.toString(), strategy: strategy.toString() }],
       createdAt: block.block_timestamp,
       updatedAt: block.block_timestamp,
       createdAtBlock: block.block_number,
       updatedAtBlock: block.block_number,
     });
   } else {
-    const strategyIndex = stakerData.strategies.findIndex(
-      (s: string) => s === strategy.toLowerCase()
+    const strategyIndex = stakerData.shares.findIndex(
+      (s: any) => s.strategy.toLowerCase() === strategy.toLowerCase()
     );
     if (strategyIndex === -1) {
-      stakerData.strategies.push(strategy.toLowerCase());
-      stakerData.shares.push(shares.toString());
+      stakerData.shares.push({
+        shares: shares.toString(),
+        strategy: strategy.toString(),
+      });
     } else {
-      stakerData.shares[strategyIndex] = new BigNumber(
-        stakerData.shares[strategyIndex]
+      stakerData.shares[strategyIndex].shares = new BigNumber(
+        stakerData.shares[strategyIndex].shares
       )
         .plus(shares.toString())
         .toString();
     }
-    stakerData.updatedAt = block.block_timestamp;
+    stakerData.updatedAt = Number(block.block_timestamp);
     stakerData.updatedAtBlock = block.block_number;
 
     await stakerDb.save(stakerData);

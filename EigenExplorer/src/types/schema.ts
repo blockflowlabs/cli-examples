@@ -6,9 +6,9 @@ export class Staker {
   static entity = "Staker";
   static schema = {
     id: { type: "String", index: true },
-    address: "String",
-    operator: "String",
-    shares: [{ strategy: "String", shares: "String" }],
+    address: "string",
+    operator: "string",
+    shares: [{ strategy: "string", shares: "string" }],
     createdAt: "Number",
     updatedAt: "Number",
     createdAtBlock: "Number",
@@ -24,10 +24,10 @@ export class Operator {
   static entity = "Operator";
   static schema = {
     id: { type: "String", index: true },
-    address: "String",
-    avsRegistrations: [{ address: "String", isActive: "Boolean" }],
-    metadataURI: "String",
-    shares: [{ strategy: "String", shares: "String" }],
+    address: "string",
+    avsRegistrations: [{ address: "string", isActive: "Boolean" }],
+    metadataURI: "string",
+    shares: [{ strategy: "string", shares: "string" }],
     createdAt: "Number",
     updatedAt: "Number",
     createdAtBlock: "Number",
@@ -43,9 +43,9 @@ export class AVS {
   static entity = "AVS";
   static schema = {
     id: { type: "String", index: true },
-    address: "String",
-    metadataURI: "String",
-    operators: ["String"],
+    address: "string",
+    metadataURI: "string",
+    operators: ["string"],
     createdAt: "Number",
     updatedAt: "Number",
     createdAtBlock: "Number",
@@ -61,12 +61,12 @@ export class Withdrawal {
   static entity = "Withdrawal";
   static schema = {
     id: { type: "String", index: true },
-    withdrawalRoot: "String",
+    withdrawalRoot: "string",
     nonce: "Number",
-    stakerAddress: "String",
-    delegatedTo: "String",
-    withdrawerAddress: "String",
-    strategyShares: [{ strategy: "String", shares: "String" }],
+    stakerAddress: "string",
+    delegatedTo: "string",
+    withdrawerAddress: "string",
+    strategyShares: [{ strategy: "string", shares: "string" }],
     isCompleted: "Boolean",
     createdAt: "Number",
     createdAtBlock: "Number",
@@ -83,11 +83,11 @@ export class Deposit {
   static entity = "Deposit";
   static schema = {
     id: { type: "String", index: true },
-    transactionHash: "String",
-    stakerAddress: "String",
-    tokenAddress: "String",
-    strategyAddress: "String",
-    shares: "String",
+    transactionHash: "string",
+    stakerAddress: "string",
+    tokenAddress: "string",
+    strategyAddress: "string",
+    shares: "string",
     createdAt: "Number",
     createdAtBlock: "Number",
     entityId: { type: "String", index: true },
@@ -97,22 +97,20 @@ export class Deposit {
   };
 }
 
-import { String } from "@blockflow-labs/utils";
-
 export type StrategyShares = {
-  strategy: String;
-  shares: String;
+  strategy: string;
+  shares: string;
 };
 
 export type AVSRegistrations = {
-  address: String;
+  address: string;
   isActive: Boolean;
 };
 
 export interface IStaker extends Document {
-  id: String;
-  address: String;
-  operator: String;
+  id: string;
+  address: string;
+  operator: string;
   shares: [StrategyShares];
   createdAt: Number;
   updatedAt: Number;
@@ -125,10 +123,10 @@ export interface IStaker extends Document {
 }
 
 export interface IOperator extends Document {
-  id: String;
-  address: String;
+  id: string;
+  address: string;
   avsRegistrations: [AVSRegistrations];
-  metadataURI: String;
+  metadataURI: string;
   shares: [StrategyShares];
   createdAt: Number;
   updatedAt: Number;
@@ -141,10 +139,10 @@ export interface IOperator extends Document {
 }
 
 export interface IAVS extends Document {
-  id: String;
-  address: String;
-  metadataURI: String;
-  operators: [String];
+  id: string;
+  address: string;
+  metadataURI: string;
+  operators: [string];
   createdAt: Number;
   updatedAt: Number;
   createdAtBlock: Number;
@@ -156,12 +154,12 @@ export interface IAVS extends Document {
 }
 
 export interface IWithdrawal extends Document {
-  id: String;
-  withdrawalRoot: String;
+  id: string;
+  withdrawalRoot: string;
   nonce: Number;
-  stakerAddress: String;
-  delegatedTo: String;
-  withdrawerAddress: String;
+  stakerAddress: string;
+  delegatedTo: string;
+  withdrawerAddress: string;
   strategyShares: [StrategyShares];
   isCompleted: Boolean;
   createdAt: Number;
@@ -175,12 +173,12 @@ export interface IWithdrawal extends Document {
 }
 
 export interface IDeposit extends Document {
-  id: String;
-  transactionHash: String;
-  stakerAddress: String;
-  tokenAddress: String;
-  strategyAddress: String;
-  shares: String;
+  id: string;
+  transactionHash: string;
+  stakerAddress: string;
+  tokenAddress: string;
+  strategyAddress: string;
+  shares: string;
   createdAt: Number;
   createdAtBlock: Number;
   blocknumber: String;

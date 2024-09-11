@@ -1,19 +1,17 @@
-import { String } from "@blockflow-labs/utils";
-
 export type StrategyShares = {
-  strategy: String;
-  shares: String;
+  strategy: string;
+  shares: string;
 };
 
 export type AVSRegistrations = {
-  address: String;
+  address: string;
   isActive: Boolean;
 };
 
 export interface Staker {
-  id: String;
-  address: String;
-  operator: String;
+  id: string;
+  address: string;
+  operator: string;
   shares: [StrategyShares];
   createdAt: Number;
   updatedAt: Number;
@@ -22,10 +20,10 @@ export interface Staker {
 }
 
 export interface Operator {
-  id: String;
-  address: String;
+  id: string;
+  address: string;
   avsRegistrations: [AVSRegistrations];
-  metadataURI: String;
+  metadataURI: string;
   shares: [StrategyShares];
   createdAt: Number;
   updatedAt: Number;
@@ -34,10 +32,10 @@ export interface Operator {
 }
 
 export interface AVS {
-  id: String;
-  address: String;
-  metadataURI: String;
-  operators: [String];
+  id: string;
+  address: string;
+  metadataURI: string;
+  operators: [string];
   createdAt: Number;
   updatedAt: Number;
   createdAtBlock: Number;
@@ -45,12 +43,12 @@ export interface AVS {
 }
 
 export interface Withdrawal {
-  id: String;
-  withdrawalRoot: String;
+  id: string;
+  withdrawalRoot: string;
   nonce: Number;
-  stakerAddress: String;
-  delegatedTo: String;
-  withdrawerAddress: String;
+  stakerAddress: string;
+  delegatedTo: string;
+  withdrawerAddress: string;
   strategyShares: [StrategyShares];
   isCompleted: Boolean;
   createdAt: Number;
@@ -60,12 +58,12 @@ export interface Withdrawal {
 }
 
 export interface Deposit {
-  id: String;
-  transactionHash: String;
-  stakerAddress: String;
-  tokenAddress: String;
-  strategyAddress: String;
-  shares: String;
+  id: string;
+  transactionHash: string;
+  stakerAddress: string;
+  tokenAddress: string;
+  strategyAddress: string;
+  shares: string;
   createdAt: Number;
   createdAtBlock: Number;
 }
