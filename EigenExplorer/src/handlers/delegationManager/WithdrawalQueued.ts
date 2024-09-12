@@ -21,8 +21,6 @@ export const WithdrawalQueuedHandler = async (
   const { event, transaction, block, log } = context;
   const { withdrawalRoot, withdrawal } = event;
 
-  console.log(withdrawalRoot, withdrawal);
-
   const withdrawalDb: Instance = bind(Withdrawal);
 
   const withdrawalData = await withdrawalDb.findOne({ id: withdrawalRoot });
