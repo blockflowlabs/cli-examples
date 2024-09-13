@@ -43,6 +43,8 @@ export const WithdrawalQueuedHandler = async (
       isCompleted: false,
       createdAt: block.block_timestamp,
       createdAtBlock: block.block_number,
+      updatedAt: block.block_timestamp,
+      updatedAtBlock: block.block_number,
     });
   } else {
     // update the existing withdrawal record
@@ -52,7 +54,7 @@ export const WithdrawalQueuedHandler = async (
     withdrawalData.withdrawerAddress = withdrawal.withdrawerAddress;
     withdrawalData.strategyShares = withdrawal.strategies.map(
       (strategy: any, index: number) => ({
-        strategy: strategy,
+        strategy: strategy.toLowerCase(),
         shares: withdrawal.shares[index].toString(),
       })
     );

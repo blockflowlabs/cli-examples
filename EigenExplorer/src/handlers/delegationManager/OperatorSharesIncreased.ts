@@ -29,22 +29,26 @@ export const OperatorSharesIncreasedHandler = async (
   const stakerData = await stakerDb.findOne({ id: staker.toLowerCase() });
 
   if (operatorData) {
-    const strategyIndex = operatorData.shares.findIndex(
-      ({ strategy: sa, shares }: StrategyShares) =>
-        sa === strategy.toLowerCase()
+    let strategyIndex = operatorData.shares.findIndex(
+      ({ strategy: sa }: StrategyShares) => sa === strategy.toLowerCase()
     );
-    if (strategyIndex !== -1) {
-      operatorData.shares[strategyIndex].shares = new BigNumber(
-        operatorData.shares[strategyIndex].shares
-      )
-        .plus(shares)
-        .toString();
-    } else {
+    if (strategyIndex === -1) {
       operatorData.shares.push({
         strategy: strategy.toLowerCase(),
-        shares: shares.toString(),
+        shares: "0",
       });
     }
+
+    strategyIndex = operatorData.shares.findIndex(
+      ({ strategy: sa }: StrategyShares) => sa === strategy.toLowerCase()
+    );
+
+    operatorData.shares[strategyIndex].shares = new BigNumber(
+      operatorData.shares[strategyIndex].shares
+    )
+      .plus(shares.toString())
+      .toString();
+
     operatorData.updatedAt = block.block_timestamp;
     operatorData.updatedAtBlock = block.block_number;
 
@@ -52,22 +56,27 @@ export const OperatorSharesIncreasedHandler = async (
   }
 
   if (stakerData) {
-    const strategyIndex = stakerData.shares.findIndex(
-      ({ strategy: sa, shares }: StrategyShares) =>
-        sa === strategy.toLowerCase()
+    let strategyIndex = stakerData.shares.findIndex(
+      ({ strategy: sa }: StrategyShares) => sa === strategy.toLowerCase()
     );
-    if (strategyIndex !== -1) {
-      stakerData.shares[strategyIndex].shares = new BigNumber(
-        stakerData.shares[strategyIndex].shares
-      )
-        .plus(shares)
-        .toString();
-    } else {
+
+    if (strategyIndex === -1) {
       stakerData.shares.push({
         strategy: strategy.toLowerCase(),
-        shares: shares.toString(),
+        shares: "0",
       });
     }
+
+    strategyIndex = stakerData.shares.findIndex(
+      ({ strategy: sa }: StrategyShares) => sa === strategy.toLowerCase()
+    );
+
+    stakerData.shares[strategyIndex].shares = new BigNumber(
+      stakerData.shares[strategyIndex].shares
+    )
+      .plus(shares.toString())
+      .toString();
+
     stakerData.updatedAt = block.block_timestamp;
     stakerData.updatedAtBlock = block.block_number;
 

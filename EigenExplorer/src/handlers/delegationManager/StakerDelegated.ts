@@ -36,6 +36,7 @@ export const StakerDelegatedHandler = async (
       id: staker.toLowerCase(),
       address: staker.toLowerCase(),
       operator: operator.toLowerCase(),
+      shares: [],
       createdAt: block.block_timestamp,
       updatedAt: block.block_timestamp,
       createdAtBlock: block.block_number,

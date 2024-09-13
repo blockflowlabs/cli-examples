@@ -30,14 +30,14 @@ export const OperatorSharesDecreasedHandler = async (
 
   if (operatorData) {
     const strategyIndex = operatorData.shares.findIndex(
-      ({ strategy: sa, shares }: StrategyShares) =>
-        sa === strategy.toLowerCase()
+      ({ strategy: sa }: StrategyShares) => sa === strategy.toLowerCase()
     );
+
     if (strategyIndex !== -1) {
       operatorData.shares[strategyIndex].shares = new BigNumber(
         operatorData.shares[strategyIndex].shares
       )
-        .minus(shares)
+        .minus(shares.toString())
         .toString();
       operatorData.updatedAt = block.block_timestamp;
       operatorData.updatedAtBlock = block.block_number;
@@ -48,14 +48,14 @@ export const OperatorSharesDecreasedHandler = async (
 
   if (stakerData) {
     const strategyIndex = stakerData.shares.findIndex(
-      ({ strategy: sa, shares }: StrategyShares) =>
-        sa === strategy.toLowerCase()
+      ({ strategy: sa }: StrategyShares) => sa === strategy.toLowerCase()
     );
+
     if (strategyIndex !== -1) {
       stakerData.shares[strategyIndex].shares = new BigNumber(
         stakerData.shares[strategyIndex].shares
       )
-        .minus(shares)
+        .minus(shares.toString())
         .toString();
       stakerData.updatedAt = block.block_timestamp;
       stakerData.updatedAtBlock = block.block_number;

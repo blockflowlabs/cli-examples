@@ -31,6 +31,7 @@ export const OperatorMetadataURIUpdatedHandler = async (
       id: operator.toLowerCase(),
       address: operator.toLowerCase(),
       avsRegistrations: [],
+      shares: [],
       createdAt: block.block_timestamp,
       updatedAt: block.block_timestamp,
       createdAtBlock: block.block_number,

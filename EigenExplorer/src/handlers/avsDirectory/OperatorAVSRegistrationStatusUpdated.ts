@@ -33,7 +33,11 @@ export const OperatorAVSRegistrationStatusUpdatedHandler = async (
     );
     if (status === 1 && operatorIndex === -1) {
       avsData.operators.push(operator.toLowerCase());
+    } else if (status === 0 && operatorIndex !== -1) {
+      avsData.operators.splice(operatorIndex, 1);
     }
+
+    await avsDb.save(avsData);
   }
 
   if (operatorData) {

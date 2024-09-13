@@ -1,6 +1,5 @@
 import { IEventContext, IBind, ISecrets } from "@blockflow-labs/utils";
-import { Deposit, IStaker, Staker } from "../../types/schema";
-import BigNumber from "bignumber.js";
+import { Deposit } from "../../types/schema";
 
 /**
  * @dev Event::Deposit(address staker, address token, address strategy, uint256 shares)
@@ -17,12 +16,7 @@ export const DepositHandler = async (
   const { event, transaction, block, log } = context;
   const { staker, token, strategy, shares } = event;
 
-  const stakerDb = bind(Staker);
   const depositDb = bind(Deposit);
-
-  const stakerData: IStaker = await stakerDb.findOne({
-    id: staker.toLowerCase(),
-  });
 
   const depositId =
     `${transaction.transaction_hash}_${log.log_index}`.toLowerCase();
@@ -42,37 +36,5 @@ export const DepositHandler = async (
       createdAt: block.block_timestamp,
       createdAtBlock: block.block_number,
     });
-  }
-
-  if (!stakerData) {
-    await stakerDb.create({
-      id: staker.toLowerCase(),
-      address: staker.toLowerCase(),
-      shares: [{ shares: shares.toString(), strategy: strategy.toString() }],
-      createdAt: block.block_timestamp,
-      updatedAt: block.block_timestamp,
-      createdAtBlock: block.block_number,
-      updatedAtBlock: block.block_number,
-    });
-  } else {
-    const strategyIndex = stakerData.shares.findIndex(
-      (s: any) => s.strategy.toLowerCase() === strategy.toLowerCase()
-    );
-    if (strategyIndex === -1) {
-      stakerData.shares.push({
-        shares: shares.toString(),
-        strategy: strategy.toString(),
-      });
-    } else {
-      stakerData.shares[strategyIndex].shares = new BigNumber(
-        stakerData.shares[strategyIndex].shares
-      )
-        .plus(shares.toString())
-        .toString();
-    }
-    stakerData.updatedAt = Number(block.block_timestamp);
-    stakerData.updatedAtBlock = block.block_number;
-
-    await stakerDb.save(stakerData);
   }
 };
