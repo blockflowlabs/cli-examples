@@ -1,0 +1,48 @@
+name: Eigen Explorer
+description: An Explorer for Eigen Layer data
+startBlock: 17445563
+userId: process.env.BLOCKFLOW_USER_ID
+projectId: process.env.BLOCKFLOW_PROJECT_ID
+network: Ethereum
+user: prady
+schema:
+  file: ./studio.schema.ts
+execution: parallel
+Resources:
+  - Name: strategyManager
+    Abi: src/abis/strategyManager.json
+    Type: contract/event
+    Address: "0x858646372CC42E1A627fcE94aa7A7033e7CF075A"
+    Triggers:
+      - Event: Deposit(address,address,address,uint256)
+        Handler: src/handlers/strategyManager/Deposit.DepositHandler
+  - Name: delegationManager
+    Abi: src/abis/delegationManager.json
+    Type: contract/event
+    Address: "0x39053D51B77DC0d36036Fc1fCc8Cb819df8Ef37A"
+    Triggers:
+      - Event: OperatorMetadataURIUpdated(address indexed,string)
+        Handler: src/handlers/delegationManager/OperatorMetadataURIUpdated.OperatorMetadataURIUpdatedHandler
+      - Event: OperatorSharesDecreased(address indexed,address,address,uint256)
+        Handler: src/handlers/delegationManager/OperatorSharesDecreased.OperatorSharesDecreasedHandler
+      - Event: OperatorSharesIncreased(address indexed,address,address,uint256)
+        Handler: src/handlers/delegationManager/OperatorSharesIncreased.OperatorSharesIncreasedHandler
+      - Event: StakerDelegated(address indexed,address indexed)
+        Handler: src/handlers/delegationManager/StakerDelegated.StakerDelegatedHandler
+      - Event: StakerForceUndelegated(address indexed,address indexed)
+        Handler: src/handlers/delegationManager/StakerForceUndelegated.StakerForceUndelegatedHandler
+      - Event: StakerUndelegated(address indexed,address indexed)
+        Handler: src/handlers/delegationManager/StakerUndelegated.StakerUndelegatedHandler
+      - Event: WithdrawalCompleted(bytes32)
+        Handler: src/handlers/delegationManager/WithdrawalCompleted.WithdrawalCompletedHandler
+      - Event: WithdrawalQueued(bytes32,tuple(address,address,address,uint256,uint32,address[],uint256[]))
+        Handler: src/handlers/delegationManager/WithdrawalQueued.WithdrawalQueuedHandler
+  - Name: avsDirectory
+    Abi: src/abis/avsDirectory.json
+    Type: contract/event
+    Address: "0x135dda560e946695d6f155dacafc6f1f25c1f5af"
+    Triggers:
+      - Event: AVSMetadataURIUpdated(address indexed,string)
+        Handler: src/handlers/avsDirectory/AVSMetadataURIUpdated.AVSMetadataURIUpdatedHandler
+      - Event: OperatorAVSRegistrationStatusUpdated(address indexed,address indexed,uint8)
+        Handler: src/handlers/avsDirectory/OperatorAVSRegistrationStatusUpdated.OperatorAVSRegistrationStatusUpdatedHandler
