@@ -8,10 +8,12 @@ export type AVSRegistrations = {
   isActive: Boolean;
 };
 
+type stringIndex = { type: string; index: true };
+
 export interface Staker {
   id: string;
   address: string;
-  operator: string;
+  operator: stringIndex;
   shares: [StrategyShares];
   createdAt: Number;
   updatedAt: Number;
@@ -22,7 +24,6 @@ export interface Staker {
 export interface Operator {
   id: string;
   address: string;
-  avsRegistrations: [AVSRegistrations];
   metadataURI: string;
   shares: [StrategyShares];
   createdAt: Number;
@@ -35,10 +36,26 @@ export interface AVS {
   id: string;
   address: string;
   metadataURI: string;
-  operators: [string];
+  activeOperators: [string];
+  inactiveOperators: [string];
+
+  totalOperators: Number;
+
   createdAt: Number;
   updatedAt: Number;
   createdAtBlock: Number;
+  updatedAtBlock: Number;
+}
+
+export interface AvsOperator {
+  id: string;
+  avsAddress: stringIndex;
+  operatorAddress: string;
+  isActive: Boolean;
+
+  createdAt: Number;
+  createdAtBlock: Number;
+  updatedAt: Number;
   updatedAtBlock: Number;
 }
 

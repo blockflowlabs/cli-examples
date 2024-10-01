@@ -7,7 +7,7 @@ export class Staker {
   static schema = {
     id: { type: "String", index: true },
     address: "string",
-    operator: "string",
+    operator: { type: "string", index: true },
     shares: [{ strategy: "string", shares: "string" }],
     createdAt: "Number",
     updatedAt: "Number",
@@ -25,7 +25,6 @@ export class Operator {
   static schema = {
     id: { type: "String", index: true },
     address: "string",
-    avsRegistrations: [{ address: "string", isActive: "Boolean" }],
     metadataURI: "string",
     shares: [{ strategy: "string", shares: "string" }],
     createdAt: "Number",
@@ -45,10 +44,30 @@ export class AVS {
     id: { type: "String", index: true },
     address: "string",
     metadataURI: "string",
-    operators: ["string"],
+    activeOperators: ["string"],
+    inactiveOperators: ["string"],
+    totalOperators: "Number",
     createdAt: "Number",
     updatedAt: "Number",
     createdAtBlock: "Number",
+    updatedAtBlock: "Number",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
+  };
+}
+
+export class AvsOperator {
+  static entity = "AvsOperator";
+  static schema = {
+    id: { type: "String", index: true },
+    avsAddress: { type: "string", index: true },
+    operatorAddress: "string",
+    isActive: "Boolean",
+    createdAt: "Number",
+    createdAtBlock: "Number",
+    updatedAt: "Number",
     updatedAtBlock: "Number",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
@@ -163,10 +182,12 @@ export type AVSRegistrations = {
   isActive: Boolean;
 };
 
+type stringIndex = { type: string; index: true };
+
 export interface IStaker extends Document {
   id: string;
   address: string;
-  operator: string;
+  operator: stringIndex;
   shares: [StrategyShares];
   createdAt: Number;
   updatedAt: Number;
@@ -181,7 +202,6 @@ export interface IStaker extends Document {
 export interface IOperator extends Document {
   id: string;
   address: string;
-  avsRegistrations: [AVSRegistrations];
   metadataURI: string;
   shares: [StrategyShares];
   createdAt: Number;
@@ -198,10 +218,30 @@ export interface IAVS extends Document {
   id: string;
   address: string;
   metadataURI: string;
-  operators: [string];
+  activeOperators: [string];
+  inactiveOperators: [string];
+
+  totalOperators: Number;
+
   createdAt: Number;
   updatedAt: Number;
   createdAtBlock: Number;
+  updatedAtBlock: Number;
+  blocknumber: String;
+  entityId: String;
+  instanceId: String;
+  chainId: String;
+}
+
+export interface IAvsOperator extends Document {
+  id: string;
+  avsAddress: stringIndex;
+  operatorAddress: string;
+  isActive: Boolean;
+
+  createdAt: Number;
+  createdAtBlock: Number;
+  updatedAt: Number;
   updatedAtBlock: Number;
   blocknumber: String;
   entityId: String;
