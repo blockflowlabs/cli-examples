@@ -67,3 +67,40 @@ export interface Deposit {
   createdAt: Number;
   createdAtBlock: Number;
 }
+
+export interface EigenPod {
+  id: string;
+  address: string;
+  owner: string;
+
+  createdAt: Number;
+  createdAtBlock: Number;
+  updatedAt: Number;
+  updatedAtBlock: Number;
+}
+
+export interface PodTransactions {
+  id: string;
+  podAddress: string;
+  podOwner: string;
+  transactionHash: string;
+  transactionIndex: Number;
+
+  createdAt: Number;
+  createdAtBlock: Number;
+  updatedAt: Number;
+  updatedAtBlock: Number;
+}
+
+export interface Strategies {
+  id: string;
+  address: string;
+  symbol: string;
+  sharesToUnderlying: string;
+  totalShares: string;
+
+  createdAt: Number;
+  createdAtBlock: Number;
+  updatedAt: Number;
+  updatedAtBlock: Number;
+}

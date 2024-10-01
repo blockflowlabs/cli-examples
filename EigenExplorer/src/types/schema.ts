@@ -97,6 +97,61 @@ export class Deposit {
   };
 }
 
+export class EigenPod {
+  static entity = "EigenPod";
+  static schema = {
+    id: { type: "String", index: true },
+    address: "string",
+    owner: "string",
+    createdAt: "Number",
+    createdAtBlock: "Number",
+    updatedAt: "Number",
+    updatedAtBlock: "Number",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
+  };
+}
+
+export class PodTransactions {
+  static entity = "PodTransactions";
+  static schema = {
+    id: { type: "String", index: true },
+    podAddress: "string",
+    podOwner: "string",
+    transactionHash: "string",
+    transactionIndex: "Number",
+    createdAt: "Number",
+    createdAtBlock: "Number",
+    updatedAt: "Number",
+    updatedAtBlock: "Number",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
+  };
+}
+
+export class Strategies {
+  static entity = "Strategies";
+  static schema = {
+    id: { type: "String", index: true },
+    address: "string",
+    symbol: "string",
+    sharesToUnderlying: "string",
+    totalShares: "string",
+    createdAt: "Number",
+    createdAtBlock: "Number",
+    updatedAt: "Number",
+    updatedAtBlock: "Number",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
+  };
+}
+
 export type StrategyShares = {
   strategy: string;
   shares: string;
@@ -181,6 +236,55 @@ export interface IDeposit extends Document {
   shares: string;
   createdAt: Number;
   createdAtBlock: Number;
+  blocknumber: String;
+  entityId: String;
+  instanceId: String;
+  chainId: String;
+}
+
+export interface IEigenPod extends Document {
+  id: string;
+  address: string;
+  owner: string;
+
+  createdAt: Number;
+  createdAtBlock: Number;
+  updatedAt: Number;
+  updatedAtBlock: Number;
+  blocknumber: String;
+  entityId: String;
+  instanceId: String;
+  chainId: String;
+}
+
+export interface IPodTransactions extends Document {
+  id: string;
+  podAddress: string;
+  podOwner: string;
+  transactionHash: string;
+  transactionIndex: Number;
+
+  createdAt: Number;
+  createdAtBlock: Number;
+  updatedAt: Number;
+  updatedAtBlock: Number;
+  blocknumber: String;
+  entityId: String;
+  instanceId: String;
+  chainId: String;
+}
+
+export interface IStrategies extends Document {
+  id: string;
+  address: string;
+  symbol: string;
+  sharesToUnderlying: string;
+  totalShares: string;
+
+  createdAt: Number;
+  createdAtBlock: Number;
+  updatedAt: Number;
+  updatedAtBlock: Number;
   blocknumber: String;
   entityId: String;
   instanceId: String;

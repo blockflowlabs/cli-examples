@@ -46,3 +46,13 @@ Resources:
         Handler: src/handlers/avsDirectory/AVSMetadataURIUpdated.AVSMetadataURIUpdatedHandler
       - Event: OperatorAVSRegistrationStatusUpdated(address indexed,address indexed,uint8)
         Handler: src/handlers/avsDirectory/OperatorAVSRegistrationStatusUpdated.OperatorAVSRegistrationStatusUpdatedHandler
+
+  - Name: podManager
+    Abi: src/abis/podManager.json
+    Type: contract/event
+    Address: "0x91E677b07F7AF907ec9a428aafA9fc14a0d3A338"
+    Triggers:
+      - Event: PodDeployed(address indexed, address indexed)
+        Handler: src/handlers/podManager/PodDeployed.PodDeployedHandler
+      - Event: PodSharesUpdated(address indexed, int256)
+        Handler: src/handlers/podManager/PodSharesUpdated.PodSharesUpdatedHandler
