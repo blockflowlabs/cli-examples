@@ -121,6 +121,7 @@ export class PodTransactions {
     podAddress: "string",
     podOwner: "string",
     transactionHash: "string",
+    sharesDelta: "string",
     transactionIndex: "Number",
     createdAt: "Number",
     createdAtBlock: "Number",
@@ -262,6 +263,7 @@ export interface IPodTransactions extends Document {
   podAddress: string;
   podOwner: string;
   transactionHash: string;
+  sharesDelta: string;
   transactionIndex: Number;
 
   createdAt: Number;

@@ -84,6 +84,7 @@ export interface PodTransactions {
   podAddress: string;
   podOwner: string;
   transactionHash: string;
+  sharesDelta: string;
   transactionIndex: Number;
 
   createdAt: Number;
