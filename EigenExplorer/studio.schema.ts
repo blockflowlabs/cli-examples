@@ -24,6 +24,7 @@ export interface Staker {
 export interface Operator {
   id: string;
   address: string;
+  avsRegistrations: [AVSRegistrations];
   metadataURI: string;
   shares: [StrategyShares];
   createdAt: Number;

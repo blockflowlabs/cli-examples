@@ -25,6 +25,7 @@ export class Operator {
   static schema = {
     id: { type: "String", index: true },
     address: "string",
+    avsRegistrations: [{ address: "string", isActive: "Boolean" }],
     metadataURI: "string",
     shares: [{ strategy: "string", shares: "string" }],
     createdAt: "Number",
@@ -202,6 +203,7 @@ export interface IStaker extends Document {
 export interface IOperator extends Document {
   id: string;
   address: string;
+  avsRegistrations: [AVSRegistrations];
   metadataURI: string;
   shares: [StrategyShares];
   createdAt: Number;
