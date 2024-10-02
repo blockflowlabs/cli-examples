@@ -104,6 +104,7 @@ export interface Deposit {
   tokenAddress: string;
   strategyAddress: string;
   shares: string;
+  amount: string;
   createdAt: Number;
   createdAtBlock: Number;
 }
@@ -133,15 +134,35 @@ export interface PodTransactions {
   updatedAtBlock: Number;
 }
 
-export interface Strategies {
+export type StrategyToken = {
+  address: string;
+  name: string;
+  symbol: string;
+  decimals: Number;
+};
+
+export interface Strategy {
   id: string;
   address: string;
   symbol: string;
+  underlyingToken: StrategyToken;
+  isDepositWhitelist: Boolean;
+
   sharesToUnderlying: string;
   totalShares: string;
+  totalAmount: string;
 
   createdAt: Number;
   createdAtBlock: Number;
   updatedAt: Number;
   updatedAtBlock: Number;
+}
+
+export interface Stats {
+  totalRegisteredAvs: Number;
+  totalActiveAvs: Number;
+  totalRegisteredOperators: Number;
+  totalInactiveOperators: Number;
+  totalRegisteredStakers: Number;
+  totalInactiveStakers: Number;
 }

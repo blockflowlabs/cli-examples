@@ -1,7 +1,6 @@
 import { IEventContext, IBind, ISecrets } from "@blockflow-labs/utils";
-import { Deposit, Strategies } from "../../types/schema";
-import { eigenContracts } from "../../data/address";
-import { getSharesToUnderlying } from "../../utils/helpers";
+import { Deposit, Strategy } from "../../types/schema";
+import { SHARES_OFFSET, BALANCE_OFFSET } from "../../data/constants";
 import BigNumber from "bignumber.js";
 
 /**
@@ -17,10 +16,10 @@ export const DepositHandler = async (
   // Implement your event handler logic for Deposit here
 
   const { event, transaction, block, log } = context;
-  const { staker, token, strategy, shares } = event;
+  const { staker, token, strategy, shares, amount } = event;
 
   const depositDb = bind(Deposit);
-  const strategyDb = bind(Strategies);
+  const strategyDb = bind(Strategy);
 
   const depositId =
     `${transaction.transaction_hash}_${log.log_index}`.toLowerCase();
@@ -37,49 +36,38 @@ export const DepositHandler = async (
       tokenAddress: token.toLowerCase(),
       strategyAddress: strategy.toLowerCase(),
       shares: shares.toString(),
+      amount: amount.toString(),
       createdAt: block.block_timestamp,
       createdAtBlock: block.block_number,
     });
-  }
 
-  const rpcEndpoint = secrets["RPC_ENDPOINT"];
-  const sharesToUnderlying =
-    eigenContracts.Strategies.Eigen?.strategyContract.toLowerCase() ===
-    strategy.toLowerCase()
-      ? BigInt(1e18)
-      : await getSharesToUnderlying(strategy, (1e18).toString(), rpcEndpoint);
-
-  const strategyData = await strategyDb.findOne({
-    id: strategy.toLowerCase(),
-  });
-
-  const strategyKeys = Object.keys(eigenContracts.Strategies);
-  const strategies = Object.values(eigenContracts.Strategies);
-  const strategyIndex = strategies.findIndex(
-    (s) => s.strategyContract.toLowerCase() === strategy.toLowerCase()
-  );
-
-  if (strategyData && strategyIndex !== -1) {
-    const newTotalShares = new BigNumber(
-      strategyData.totalShares.toString()
-    ).plus(shares.toString());
-
-    strategyData.sharesToUnderlying = sharesToUnderlying.toString();
-    strategyData.totalShares = newTotalShares.toString();
-    strategyData.updatedAt = block.block_timestamp;
-    strategyData.updatedAtBlock = block.block_number;
-    await strategyDb.save(strategyData);
-  } else if (strategyIndex !== -1) {
-    await strategyDb.create({
+    const strategyData = await strategyDb.findOne({
       id: strategy.toLowerCase(),
-      address: strategy.toLowerCase(),
-      symbol: strategyKeys[strategyIndex],
-      totalShares: shares.toString(),
-      sharesToUnderlying: sharesToUnderlying.toString(),
-      createdAt: block.block_timestamp,
-      createdAtBlock: block.block_number,
-      updatedAt: block.block_timestamp,
-      updatedAtBlock: block.block_number,
     });
+
+    if (strategyData) {
+      const newTotalShares = new BigNumber(
+        strategyData.totalShares.toString()
+      ).plus(shares.toString());
+      const newTotalAmount = new BigNumber(strategyData.totalAmount).plus(
+        amount.toString()
+      );
+      const virtualPriorShares = newTotalShares.plus(SHARES_OFFSET.toString());
+      const virtualPriorBalance = newTotalAmount.plus(
+        BALANCE_OFFSET.toString()
+      );
+
+      const sharesToUnderlying = virtualPriorBalance
+        .multipliedBy("1e18")
+        .dividedBy(virtualPriorShares);
+
+      strategyData.sharesToUnderlying = sharesToUnderlying.toString();
+      strategyData.totalShares = newTotalShares.toString();
+      strategyData.totalAmount = newTotalAmount.toString();
+      strategyData.updatedAt = block.block_timestamp;
+      strategyData.updatedAtBlock = block.block_number;
+
+      await strategyDb.save(strategyData);
+    }
   }
 };

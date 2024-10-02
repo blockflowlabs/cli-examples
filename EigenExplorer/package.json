@@ -8,7 +8,9 @@
   "dependencies": {
     "@blockflow-labs/utils": "latest",
     "axios": "^1.7.7",
-    "js-sha3": "^0.9.3"
+    "ethers": "^5.7.2",
+    "js-sha3": "^0.9.3",
+    "node-abort-controller": "^3.1.1"
   },
   "devDependencies": {
     "bignumber.js": "^9.1.1",

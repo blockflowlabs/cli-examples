@@ -1,22 +1,24 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { keccak256 } from "js-sha3";
+import { AbortController } from "node-abort-controller";
 
-const encodeFunctionCall = (shares: string) => {
-  const functionSignature = "sharesToUnderlyingView(uint256)";
-
+const encodeFunctionCall = (functionSignature: string, params: any[] = []) => {
   const methodId = keccak256(functionSignature).substring(0, 8);
 
-  const encodedShares = BigInt(shares).toString(16).padStart(64, "0");
+  const encodedParams = params
+    .map((param) => BigInt(param).toString(16).padStart(64, "0"))
+    .join("");
 
-  return "0x" + methodId + encodedShares;
+  return "0x" + methodId + encodedParams;
 };
 
-export const getSharesToUnderlying = async (
+export const callContractFunction = async (
   strategyAddress: string,
-  shares: string,
+  functionSignature: string,
+  params: any[] = [],
   rpcEndpoint: string
 ) => {
-  const encodedData = encodeFunctionCall(shares);
+  const encodedData = encodeFunctionCall(functionSignature, params);
 
   const requestData = {
     jsonrpc: "2.0",

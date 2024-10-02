@@ -125,6 +125,7 @@ export class Deposit {
     tokenAddress: "string",
     strategyAddress: "string",
     shares: "string",
+    amount: "string",
     createdAt: "Number",
     createdAtBlock: "Number",
     entityId: { type: "String", index: true },
@@ -171,18 +172,43 @@ export class PodTransactions {
   };
 }
 
-export class Strategies {
-  static entity = "Strategies";
+export class Strategy {
+  static entity = "Strategy";
   static schema = {
     id: { type: "String", index: true },
     address: "string",
     symbol: "string",
+    underlyingToken: {
+      address: "string",
+      name: "string",
+      symbol: "string",
+      decimals: "Number",
+    },
+    isDepositWhitelist: "Boolean",
     sharesToUnderlying: "string",
     totalShares: "string",
+    totalAmount: "string",
     createdAt: "Number",
     createdAtBlock: "Number",
     updatedAt: "Number",
     updatedAtBlock: "Number",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
+  };
+}
+
+export class Stats {
+  static entity = "Stats";
+  static schema = {
+    totalRegisteredAvs: "Number",
+    totalActiveAvs: "Number",
+    totalRegisteredOperators: "Number",
+    totalInactiveOperators: "Number",
+    totalRegisteredStakers: "Number",
+    totalInactiveStakers: "Number",
+    id: { type: "String", index: true },
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
@@ -316,6 +342,7 @@ export interface IDeposit extends Document {
   tokenAddress: string;
   strategyAddress: string;
   shares: string;
+  amount: string;
   createdAt: Number;
   createdAtBlock: Number;
   blocknumber: String;
@@ -357,17 +384,41 @@ export interface IPodTransactions extends Document {
   chainId: String;
 }
 
-export interface IStrategies extends Document {
+export type StrategyToken = {
+  address: string;
+  name: string;
+  symbol: string;
+  decimals: Number;
+};
+
+export interface IStrategy extends Document {
   id: string;
   address: string;
   symbol: string;
+  underlyingToken: StrategyToken;
+  isDepositWhitelist: Boolean;
+
   sharesToUnderlying: string;
   totalShares: string;
+  totalAmount: string;
 
   createdAt: Number;
   createdAtBlock: Number;
   updatedAt: Number;
   updatedAtBlock: Number;
+  blocknumber: String;
+  entityId: String;
+  instanceId: String;
+  chainId: String;
+}
+
+export interface IStats extends Document {
+  totalRegisteredAvs: Number;
+  totalActiveAvs: Number;
+  totalRegisteredOperators: Number;
+  totalInactiveOperators: Number;
+  totalRegisteredStakers: Number;
+  totalInactiveStakers: Number;
   blocknumber: String;
   entityId: String;
   instanceId: String;

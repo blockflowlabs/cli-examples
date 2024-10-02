@@ -4,10 +4,9 @@ import {
   Instance,
   ISecrets,
 } from "@blockflow-labs/utils";
-import { Strategies, Withdrawal } from "../../types/schema";
-import { getSharesToUnderlying } from "../../utils/helpers";
-import { eigenContracts } from "../../data/address";
+import { Strategy, Withdrawal } from "../../types/schema";
 import BigNumber from "bignumber.js";
+import { SHARES_OFFSET } from "../../data/constants";
 /**
  * @dev Event::WithdrawalCompleted(bytes32 withdrawalRoot)
  * @param context trigger object with contains {event: {withdrawalRoot }, transaction, block, log}
@@ -24,7 +23,7 @@ export const WithdrawalCompletedHandler = async (
   const { withdrawalRoot } = event;
 
   const withdrawalDb: Instance = bind(Withdrawal);
-  const strategiesDb: Instance = bind(Strategies);
+  const strategiesDb: Instance = bind(Strategy);
 
   const withdrawalData = await withdrawalDb.findOne({ id: withdrawalRoot });
 
@@ -36,20 +35,8 @@ export const WithdrawalCompletedHandler = async (
 
     await withdrawalDb.save(withdrawalData);
 
-    // update strategy's restaking tvl and underlying to 1e18 ratio
-    const rpcEndpoint = secrets["RPC_ENDPOINT"];
-
     for (const key in withdrawalData.strategyShares) {
       const shares = withdrawalData.strategyShares[key];
-      const underlying =
-        eigenContracts.Strategies.Eigen?.strategyContract.toLowerCase() ===
-        shares.strategy.toLowerCase()
-          ? BigInt(1e18)
-          : await getSharesToUnderlying(
-              shares.strategy,
-              (1e18).toString(),
-              rpcEndpoint
-            );
 
       const strategyData = await strategiesDb.findOne({
         id: shares.strategy.toLowerCase(),
@@ -64,8 +51,27 @@ export const WithdrawalCompletedHandler = async (
           ? totalShares.minus(sharesToMinus).toString()
           : "0";
 
+        const virtualPriorShares = new BigNumber(strategyData.totalShares).plus(
+          SHARES_OFFSET.toString()
+        );
+        const virtualPriorBalance = new BigNumber(
+          strategyData.totalAmount
+        ).plus(SHARES_OFFSET.toString());
+
+        const amountToMinus = virtualPriorBalance
+          .multipliedBy(shares.shares.toString())
+          .dividedBy(virtualPriorShares);
+
+        const newTotalAmount = new BigNumber(
+          strategyData.totalAmount
+        ).isGreaterThan(amountToMinus)
+          ? new BigNumber(strategyData.totalAmount)
+              .minus(amountToMinus)
+              .toString()
+          : "0";
+
         strategyData.totalShares = newTotalShares;
-        strategyData.sharesToUnderlying = underlying.toString();
+        strategyData.totalAmount = newTotalAmount;
         strategyData.updatedAt = block.block_timestamp;
         strategyData.updatedAtBlock = block.block_number;
         await strategiesDb.save(strategyData);
