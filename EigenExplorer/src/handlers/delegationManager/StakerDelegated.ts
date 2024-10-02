@@ -4,7 +4,7 @@ import {
   Instance,
   ISecrets,
 } from "@blockflow-labs/utils";
-import { Staker } from "../../types/schema";
+import { Staker, Operator } from "../../types/schema";
 
 /**
  * @dev Event::StakerDelegated(address staker, address operator)
@@ -22,16 +22,25 @@ export const StakerDelegatedHandler = async (
   const { staker, operator } = event;
 
   const stakerDb: Instance = bind(Staker);
+  const operatorDb: Instance = bind(Operator);
 
   const stakerData = await stakerDb.findOne({ id: staker.toLowerCase() });
+  const operatorData = await operatorDb.findOne({ id: operator.toLowerCase() });
 
   if (stakerData) {
+    if (stakerData.operator !== operator.toLowerCase()) {
+      operatorData.totalStakers += 1;
+      await operatorDb.save(operatorData);
+    }
     stakerData.operator = operator.toLowerCase();
     stakerData.updatedAt = block.block_timestamp;
     stakerData.updatedAtBlock = block.block_number;
 
     await stakerDb.save(stakerData);
   } else {
+    operatorData.totalStakers += 1;
+    await operatorDb.save(operatorData);
+
     await stakerDb.create({
       id: staker.toLowerCase(),
       address: staker.toLowerCase(),
