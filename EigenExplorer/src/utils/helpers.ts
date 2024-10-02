@@ -40,9 +40,58 @@ export const getSharesToUnderlying = async (
 
     const result = response.data.result;
 
-    return BigInt(result);
+    return result;
   } catch (error) {
     console.error("Error making the RPC call:", error);
-    throw error;
   }
 };
+
+export async function fetchWithTimeout(
+  url: string,
+  timeout = 5000
+): Promise<AxiosResponse | undefined> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+  try {
+    const response = await axios(url, { signal: controller.signal });
+    return response;
+  } catch {
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
+export interface EntityMetadata {
+  name: string;
+  description: string;
+  discord: string;
+  logo: string;
+  telegram: string;
+  website: string;
+  x: string;
+}
+
+export function validateMetadata(metadata: string): EntityMetadata | null {
+  try {
+    const data = JSON.parse(metadata);
+
+    if (
+      !(typeof data.name === "string" && typeof data.description === "string")
+    ) {
+      return null;
+    }
+
+    return {
+      name: data.name || "",
+      website: data.website || "",
+      description: data.description || "",
+      logo: data.logo || "",
+      x: data.x || data.twitter || "",
+      discord: data.discord || "",
+      telegram: data.telegram || "",
+    };
+  } catch {}
+
+  return null;
+}

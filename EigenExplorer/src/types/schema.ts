@@ -25,9 +25,18 @@ export class Operator {
   static schema = {
     id: { type: "String", index: true },
     address: "string",
-    avsRegistrations: [{ address: "string", isActive: "Boolean" }],
     metadataURI: "string",
+    metadataName: "string",
+    metadataDescription: "string",
+    metadataDiscord: "string",
+    metadataLogo: "string",
+    metadataTelegram: "string",
+    metadataWebsite: "string",
+    metadataX: "string",
+    isMetadataSynced: "Boolean",
+    avsRegistrations: [{ address: "string", isActive: "Boolean" }],
     shares: [{ strategy: "string", shares: "string" }],
+    totalStakers: "Number",
     createdAt: "Number",
     updatedAt: "Number",
     createdAtBlock: "Number",
@@ -45,6 +54,14 @@ export class AVS {
     id: { type: "String", index: true },
     address: "string",
     metadataURI: "string",
+    metadataName: "string",
+    metadataDescription: "string",
+    metadataDiscord: "string",
+    metadataLogo: "string",
+    metadataTelegram: "string",
+    metadataWebsite: "string",
+    metadataX: "string",
+    isMetadataSynced: "Boolean",
     activeOperators: ["string"],
     inactiveOperators: ["string"],
     totalOperators: "Number",
@@ -203,9 +220,22 @@ export interface IStaker extends Document {
 export interface IOperator extends Document {
   id: string;
   address: string;
-  avsRegistrations: [AVSRegistrations];
+
   metadataURI: string;
+  metadataName: string;
+  metadataDescription: string;
+  metadataDiscord: string;
+  metadataLogo: string;
+  metadataTelegram: string;
+  metadataWebsite: string;
+  metadataX: string;
+  isMetadataSynced: Boolean;
+
+  avsRegistrations: [AVSRegistrations];
   shares: [StrategyShares];
+
+  totalStakers: Number;
+
   createdAt: Number;
   updatedAt: Number;
   createdAtBlock: Number;
@@ -219,10 +249,19 @@ export interface IOperator extends Document {
 export interface IAVS extends Document {
   id: string;
   address: string;
+
   metadataURI: string;
+  metadataName: string;
+  metadataDescription: string;
+  metadataDiscord: string;
+  metadataLogo: string;
+  metadataTelegram: string;
+  metadataWebsite: string;
+  metadataX: string;
+  isMetadataSynced: Boolean;
+
   activeOperators: [string];
   inactiveOperators: [string];
-
   totalOperators: Number;
 
   createdAt: Number;

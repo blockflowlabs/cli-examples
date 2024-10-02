@@ -24,9 +24,22 @@ export interface Staker {
 export interface Operator {
   id: string;
   address: string;
-  avsRegistrations: [AVSRegistrations];
+
   metadataURI: string;
+  metadataName: string;
+  metadataDescription: string;
+  metadataDiscord: string;
+  metadataLogo: string;
+  metadataTelegram: string;
+  metadataWebsite: string;
+  metadataX: string;
+  isMetadataSynced: Boolean;
+
+  avsRegistrations: [AVSRegistrations];
   shares: [StrategyShares];
+
+  totalStakers: Number;
+
   createdAt: Number;
   updatedAt: Number;
   createdAtBlock: Number;
@@ -36,10 +49,19 @@ export interface Operator {
 export interface AVS {
   id: string;
   address: string;
+
   metadataURI: string;
+  metadataName: string;
+  metadataDescription: string;
+  metadataDiscord: string;
+  metadataLogo: string;
+  metadataTelegram: string;
+  metadataWebsite: string;
+  metadataX: string;
+  isMetadataSynced: Boolean;
+
   activeOperators: [string];
   inactiveOperators: [string];
-
   totalOperators: Number;
 
   createdAt: Number;

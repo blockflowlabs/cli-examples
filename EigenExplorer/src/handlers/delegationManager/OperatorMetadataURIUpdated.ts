@@ -5,6 +5,7 @@ import {
   ISecrets,
 } from "@blockflow-labs/utils";
 import { IOperator, Operator } from "../../types/schema";
+import { fetchWithTimeout, validateMetadata } from "../../utils/helpers";
 
 /**
  * @dev Event::OperatorMetadataURIUpdated(address operator, string metadataURI)
@@ -25,10 +26,23 @@ export const OperatorMetadataURIUpdatedHandler = async (
 
   const operatorData = await operatorDb.findOne({ id: operator.toLowerCase() });
 
+  const response = await fetchWithTimeout(metadataURI);
+  const isMetadataFetched = response ? response.status === 200 : false;
+  const data = response ? JSON.stringify(response.data) : "";
+  const operatorMetadata = validateMetadata(data);
+
   if (!operatorData) {
     await operatorDb.create({
       metadataURI,
       id: operator.toLowerCase(),
+      metadataName: operatorMetadata?.name,
+      metadataDescription: operatorMetadata?.description,
+      metadataLogo: operatorMetadata?.logo,
+      metadataWebsite: operatorMetadata?.website,
+      metadataTelegram: operatorMetadata?.telegram,
+      metadataX: operatorMetadata?.x,
+      metadataDiscord: operatorMetadata?.discord,
+      isMetadataSynced: isMetadataFetched,
       address: operator.toLowerCase(),
       avsRegistrations: [],
       shares: [],
@@ -39,6 +53,14 @@ export const OperatorMetadataURIUpdatedHandler = async (
     });
   } else {
     operatorData.metadataURI = metadataURI;
+    operatorData.metadataName = operatorMetadata?.name;
+    operatorData.metadataDescription = operatorMetadata?.description;
+    operatorData.metadataLogo = operatorMetadata?.logo;
+    operatorData.metadataWebsite = operatorMetadata?.website;
+    operatorData.metadataTelegram = operatorMetadata?.telegram;
+    operatorData.metadataX = operatorMetadata?.x;
+    operatorData.metadataDiscord = operatorMetadata?.discord;
+    operatorData.isMetadataSynced = isMetadataFetched;
     operatorData.updatedAt = block.block_timestamp;
     operatorData.updatedAtBlock = block.block_number;
 
