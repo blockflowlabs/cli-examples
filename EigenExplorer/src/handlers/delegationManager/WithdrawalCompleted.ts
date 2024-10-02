@@ -70,6 +70,18 @@ export const WithdrawalCompletedHandler = async (
               .toString()
           : "0";
 
+        const virtualTotalShares = new BigNumber(newTotalShares).plus(
+          SHARES_OFFSET.toString()
+        );
+        const virtualTotalBalance = new BigNumber(newTotalAmount).plus(
+          SHARES_OFFSET.toString()
+        );
+
+        const sharesToUnderlying = virtualTotalBalance
+          .multipliedBy("1e18")
+          .dividedBy(virtualTotalShares);
+
+        strategyData.sharesToUnderlying = sharesToUnderlying.toString();
         strategyData.totalShares = newTotalShares;
         strategyData.totalAmount = newTotalAmount;
         strategyData.updatedAt = block.block_timestamp;
