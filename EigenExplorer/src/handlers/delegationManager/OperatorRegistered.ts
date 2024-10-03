@@ -1,6 +1,7 @@
 import { IEventContext, IBind, Instance, ISecrets } from "@blockflow-labs/utils";
-import { Operator, Stats } from "../../types/schema";
+import { Operator, Stats, OperatorHistory } from "../../types/schema";
 import { updateStats } from "../../utils/helpers";
+import { id } from "ethers/lib/utils";
 
 /**
  * @dev Event::OperatorRegistered(address operator, tuple operatorDetails)
@@ -17,6 +18,7 @@ export const OperatorRegisteredHandler = async (context: IEventContext, bind: IB
 
   const operatorDb: Instance = bind(Operator);
   const statsDb: Instance = bind(Stats);
+  const operatorHistoryDb: Instance = bind(OperatorHistory);
 
   await operatorDb.create({
     id: operator.toLowerCase(),
@@ -34,6 +36,18 @@ export const OperatorRegisteredHandler = async (context: IEventContext, bind: IB
     updatedAt: block.block_timestamp,
     createdAtBlock: block.block_number,
     updatedAtBlock: block.block_number,
+  });
+
+  const operatorHistoryId = `${operator}_${transaction.transaction_hash}`.toLowerCase();
+
+  await operatorHistoryDb.create({
+    id: operatorHistoryId,
+    operatorAddress: operator.toLowerCase(),
+    avsAddress: "",
+    event: "operatorRegistered",
+    transactionHash: transaction.transaction_hash,
+    createdAt: block.block_timestamp,
+    createdAtBlock: block.block_number,
   });
 
   await updateStats(statsDb, "totalRegisteredOperators", 1);

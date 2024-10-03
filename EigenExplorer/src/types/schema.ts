@@ -229,6 +229,23 @@ export class Stats {
   };
 }
 
+export class OperatorHistory {
+  static entity = "OperatorHistory";
+  static schema = {
+    id: { type: "String", index: true },
+    operatorAddress: { type: "string", index: true },
+    avsAddress: "string",
+    event: "string",
+    transactionHash: "string",
+    createdAt: "Number",
+    createdAtBlock: "Number",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
+  };
+}
+
 export type StrategyShares = {
   strategy: string;
   shares: string;
@@ -453,6 +470,20 @@ export interface IStats extends Document {
   totalCompletedWithdrawals: Number;
   totalQueuedWithdrawals: Number;
   totalDeposits: Number;
+  blocknumber: String;
+  entityId: String;
+  instanceId: String;
+  chainId: String;
+}
+
+export interface IOperatorHistory extends Document {
+  id: string;
+  operatorAddress: stringIndex;
+  avsAddress: string;
+  event: string;
+  transactionHash: string;
+  createdAt: Number;
+  createdAtBlock: Number;
   blocknumber: String;
   entityId: String;
   instanceId: String;

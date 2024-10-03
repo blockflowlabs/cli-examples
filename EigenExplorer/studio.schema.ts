@@ -187,3 +187,13 @@ export interface Stats {
   totalQueuedWithdrawals: Number;
   totalDeposits: Number;
 }
+
+export interface OperatorHistory {
+  id: string;
+  operatorAddress: stringIndex;
+  avsAddress: string;
+  event: string;
+  transactionHash: string;
+  createdAt: Number;
+  createdAtBlock: Number;
+}

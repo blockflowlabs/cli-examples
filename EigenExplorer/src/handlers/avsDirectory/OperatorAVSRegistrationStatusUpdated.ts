@@ -1,6 +1,7 @@
 import { IEventContext, IBind, Instance, ISecrets } from "@blockflow-labs/utils";
-import { Operator, AVS, AVSRegistrations, AvsOperator, Stats } from "../../types/schema";
+import { Operator, AVS, AVSRegistrations, AvsOperator, Stats, OperatorHistory } from "../../types/schema";
 import { updateStats } from "../../utils/helpers";
+import { id } from "ethers/lib/utils";
 
 /**
  * @dev Event::OperatorAVSRegistrationStatusUpdated(address operator, address avs, uint8 status)
@@ -27,6 +28,19 @@ export const OperatorAVSRegistrationStatusUpdatedHandler = async (
   const operatorData = await operatorDb.findOne({ id: operator.toLowerCase() });
   const avsData = await avsDb.findOne({ id: avs.toLowerCase() });
   const avsOperatorData = await avsOperatorDb.findOne({ id: avsOperatorId });
+  const operatorHistoryDb: Instance = bind(OperatorHistory);
+
+  const operatorHistoryId = `${operator}_${transaction.transaction_hash}`.toLowerCase();
+
+  await operatorHistoryDb.create({
+    id: operatorHistoryId,
+    operatorAddress: operator.toLowerCase(),
+    avsAddress: avs.toLowerCase(),
+    event: status === 1 ? "joinedAVS" : "leftAVS",
+    transactionHash: transaction.transaction_hash,
+    createdAt: block.block_timestamp,
+    createdAtBlock: block.block_number,
+  });
 
   if (avsOperatorData) {
     avsOperatorData.isActive = status === 1;
