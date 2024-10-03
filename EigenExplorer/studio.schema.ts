@@ -14,6 +14,12 @@ export type AVSRegistrations = {
   isActive: Boolean;
 };
 
+export type OperatorDetails = {
+  earningsReceiver: string;
+  delegationApprover: string;
+  stakerOptOutWindowBlocks: Number;
+};
+
 type stringIndex = { type: string; index: true };
 
 export interface Staker {
@@ -30,6 +36,8 @@ export interface Staker {
 export interface Operator {
   id: string;
   address: string;
+
+  details: OperatorDetails;
 
   metadataURI: string;
   metadataName: string;

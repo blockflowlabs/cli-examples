@@ -25,6 +25,11 @@ export class Operator {
   static schema = {
     id: { type: "String", index: true },
     address: "string",
+    details: {
+      earningsReceiver: "string",
+      delegationApprover: "string",
+      stakerOptOutWindowBlocks: "Number",
+    },
     metadataURI: "string",
     metadataName: "string",
     metadataDescription: "string",
@@ -238,6 +243,12 @@ export type AVSRegistrations = {
   isActive: Boolean;
 };
 
+export type OperatorDetails = {
+  earningsReceiver: string;
+  delegationApprover: string;
+  stakerOptOutWindowBlocks: Number;
+};
+
 type stringIndex = { type: string; index: true };
 
 export interface IStaker extends Document {
@@ -258,6 +269,8 @@ export interface IStaker extends Document {
 export interface IOperator extends Document {
   id: string;
   address: string;
+
+  details: OperatorDetails;
 
   metadataURI: string;
   metadataName: string;

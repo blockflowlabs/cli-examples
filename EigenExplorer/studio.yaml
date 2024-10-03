@@ -38,6 +38,8 @@ Resources:
     Type: contract/event
     Address: "0x39053D51B77DC0d36036Fc1fCc8Cb819df8Ef37A"
     Triggers:
+      - Event: OperatorRegistered(address indexed, OperatorDetails)
+        Handler: src/handlers/delegationManager/OperatorRegistered.OperatorRegisteredHandler
       - Event: OperatorMetadataURIUpdated(address indexed,string)
         Handler: >-
           src/handlers/delegationManager/OperatorMetadataURIUpdated.OperatorMetadataURIUpdatedHandler

@@ -22,7 +22,21 @@ export const OperatorMetadataURIUpdatedHandler = async (context: IEventContext, 
   const data = response ? JSON.stringify(response.data) : "{}";
   const operatorMetadata = validateMetadata(data);
 
-  if (!operatorData) {
+  if (operatorData) {
+    operatorData.metadataURI = metadataURI;
+    operatorData.metadataName = operatorMetadata?.name;
+    operatorData.metadataDescription = operatorMetadata?.description;
+    operatorData.metadataLogo = operatorMetadata?.logo;
+    operatorData.metadataWebsite = operatorMetadata?.website;
+    operatorData.metadataTelegram = operatorMetadata?.telegram;
+    operatorData.metadataX = operatorMetadata?.x;
+    operatorData.metadataDiscord = operatorMetadata?.discord;
+    operatorData.isMetadataSynced = isMetadataFetched;
+    operatorData.updatedAt = block.block_timestamp;
+    operatorData.updatedAtBlock = block.block_number;
+
+    await operatorDb.save(operatorData);
+  } else {
     const statsDb: Instance = bind(Stats);
 
     await operatorDb.create({
@@ -45,19 +59,5 @@ export const OperatorMetadataURIUpdatedHandler = async (context: IEventContext, 
       updatedAtBlock: block.block_number,
     });
     await updateStats(statsDb, "totalRegisteredOperators", 1);
-  } else {
-    operatorData.metadataURI = metadataURI;
-    operatorData.metadataName = operatorMetadata?.name;
-    operatorData.metadataDescription = operatorMetadata?.description;
-    operatorData.metadataLogo = operatorMetadata?.logo;
-    operatorData.metadataWebsite = operatorMetadata?.website;
-    operatorData.metadataTelegram = operatorMetadata?.telegram;
-    operatorData.metadataX = operatorMetadata?.x;
-    operatorData.metadataDiscord = operatorMetadata?.discord;
-    operatorData.isMetadataSynced = isMetadataFetched;
-    operatorData.updatedAt = block.block_timestamp;
-    operatorData.updatedAtBlock = block.block_number;
-
-    await operatorDb.save(operatorData);
   }
 };
