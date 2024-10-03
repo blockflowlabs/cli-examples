@@ -35,8 +35,6 @@ export const WithdrawalCompletedHandler = async (
     withdrawalData.updatedAt = block.block_timestamp;
     withdrawalData.updatedAtBlock = block.block_number;
 
-    await withdrawalDb.save(withdrawalData);
-
     for (const key in withdrawalData.strategyShares) {
       const shares = withdrawalData.strategyShares[key];
 
@@ -62,6 +60,8 @@ export const WithdrawalCompletedHandler = async (
         const amountToMinus = virtualPriorBalance
           .multipliedBy(shares.shares.toString())
           .dividedBy(virtualPriorShares);
+
+        withdrawalData.strategyShares[key].amount = amountToMinus.toString();
 
         const newTotalAmount = new BigNumber(
           strategyData.totalAmount
@@ -90,6 +90,8 @@ export const WithdrawalCompletedHandler = async (
         await strategiesDb.save(strategyData);
       }
     }
+
+    await withdrawalDb.save(withdrawalData);
   }
 
   await updateStats(statsDb, "totalCompletedWithdrawals", 1, "add");

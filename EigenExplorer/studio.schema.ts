@@ -3,6 +3,12 @@ export type StrategyShares = {
   shares: string;
 };
 
+export type WithdrawStrategyShares = {
+  strategy: string;
+  shares: string;
+  amount: string;
+};
+
 export type AVSRegistrations = {
   address: string;
   isActive: Boolean;
@@ -89,7 +95,7 @@ export interface Withdrawal {
   stakerAddress: string;
   delegatedTo: string;
   withdrawerAddress: string;
-  strategyShares: [StrategyShares];
+  strategyShares: [WithdrawStrategyShares];
   isCompleted: Boolean;
   createdAt: Number;
   createdAtBlock: Number;

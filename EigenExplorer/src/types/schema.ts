@@ -103,7 +103,9 @@ export class Withdrawal {
     stakerAddress: "string",
     delegatedTo: "string",
     withdrawerAddress: "string",
-    strategyShares: [{ strategy: "string", shares: "string" }],
+    strategyShares: [
+      { strategy: "string", shares: "string", amount: "string" },
+    ],
     isCompleted: "Boolean",
     createdAt: "Number",
     createdAtBlock: "Number",
@@ -225,6 +227,12 @@ export type StrategyShares = {
   shares: string;
 };
 
+export type WithdrawStrategyShares = {
+  strategy: string;
+  shares: string;
+  amount: string;
+};
+
 export type AVSRegistrations = {
   address: string;
   isActive: Boolean;
@@ -327,7 +335,7 @@ export interface IWithdrawal extends Document {
   stakerAddress: string;
   delegatedTo: string;
   withdrawerAddress: string;
-  strategyShares: [StrategyShares];
+  strategyShares: [WithdrawStrategyShares];
   isCompleted: Boolean;
   createdAt: Number;
   createdAtBlock: Number;
