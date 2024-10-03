@@ -1,9 +1,4 @@
-import {
-  IEventContext,
-  IBind,
-  Instance,
-  ISecrets,
-} from "@blockflow-labs/utils";
+import { IEventContext, IBind, Instance, ISecrets } from "@blockflow-labs/utils";
 import BigNumber from "bignumber.js";
 import { Operator, Staker, StrategyShares, Stats } from "../../types/schema";
 import { updateStats } from "../../utils/helpers";
@@ -13,11 +8,7 @@ import { updateStats } from "../../utils/helpers";
  * @param context trigger object with contains {event: {operator ,staker ,strategy ,shares }, transaction, block, log}
  * @param bind init function for database wrapper methods
  */
-export const OperatorSharesDecreasedHandler = async (
-  context: IEventContext,
-  bind: IBind,
-  secrets: ISecrets
-) => {
+export const OperatorSharesDecreasedHandler = async (context: IEventContext, bind: IBind, secrets: ISecrets) => {
   // Implement your event handler logic for OperatorSharesDecreased here
 
   const { event, transaction, block, log } = context;
@@ -31,13 +22,11 @@ export const OperatorSharesDecreasedHandler = async (
 
   if (operatorData) {
     const strategyIndex = operatorData.shares.findIndex(
-      ({ strategy: sa }: StrategyShares) => sa === strategy.toLowerCase()
+      ({ strategy: sa }: StrategyShares) => sa === strategy.toLowerCase(),
     );
 
     if (strategyIndex !== -1) {
-      operatorData.shares[strategyIndex].shares = new BigNumber(
-        operatorData.shares[strategyIndex].shares
-      )
+      operatorData.shares[strategyIndex].shares = new BigNumber(operatorData.shares[strategyIndex].shares)
         .minus(shares.toString())
         .toString();
       operatorData.updatedAt = block.block_timestamp;
@@ -49,17 +38,14 @@ export const OperatorSharesDecreasedHandler = async (
 
   if (stakerData) {
     const strategyIndex = stakerData.shares.findIndex(
-      ({ strategy: sa }: StrategyShares) => sa === strategy.toLowerCase()
+      ({ strategy: sa }: StrategyShares) => sa === strategy.toLowerCase(),
     );
 
     if (strategyIndex !== -1) {
-      const strategyShares = new BigNumber(
-        stakerData.shares[strategyIndex].shares
-      );
-      stakerData.shares[strategyIndex].shares =
-        strategyShares.isGreaterThanOrEqualTo(shares.toString())
-          ? strategyShares.minus(shares.toString()).toString()
-          : "0";
+      const strategyShares = new BigNumber(stakerData.shares[strategyIndex].shares);
+      stakerData.shares[strategyIndex].shares = strategyShares.isGreaterThanOrEqualTo(shares.toString())
+        ? strategyShares.minus(shares.toString()).toString()
+        : "0";
       stakerData.updatedAt = block.block_timestamp;
       stakerData.updatedAtBlock = block.block_number;
 

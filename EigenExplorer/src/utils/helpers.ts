@@ -3,10 +3,7 @@ import axios, { AxiosResponse } from "axios";
 import { AbortController } from "node-abort-controller";
 import { utils } from "ethers";
 
-export async function fetchWithTimeout(
-  url: string,
-  timeout = 5000
-): Promise<AxiosResponse | undefined> {
+export async function fetchWithTimeout(url: string, timeout = 5000): Promise<AxiosResponse | undefined> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeout);
 
@@ -47,12 +44,7 @@ export function validateMetadata(metadata: string): EntityMetadata | null {
   return null;
 }
 
-export async function updateStats(
-  db: Instance,
-  key: string,
-  value: number,
-  method?: string
-) {
+export async function updateStats(db: Instance, key: string, value: number, method?: string) {
   const statsData = await db.findOne({ id: "eigen_explorer_stats" });
 
   if (statsData) {
@@ -97,10 +89,7 @@ export function getEventPayload(log: any, eventSignature?: string) {
     const abiFragment = createAbiFragment("event", eventSignature as string);
 
     // Decode the log using the dynamically created ABI fragment
-    const decodedLog = decodeRawLog(
-      { topics: log.topics, data: log.log_data },
-      abiFragment
-    );
+    const decodedLog = decodeRawLog({ topics: log.topics, data: log.log_data }, abiFragment);
 
     // Reduce the decoded log arguments into an object
     return decodedLog.args.reduce((acc: any, arg: any, index: any) => {
@@ -118,10 +107,7 @@ export function getEventPayload(log: any, eventSignature?: string) {
   }
 }
 
-function decodeRawLog(
-  rawLog: { topics: string[]; data: string },
-  abi: any
-): any {
+function decodeRawLog(rawLog: { topics: string[]; data: string }, abi: any): any {
   try {
     const iFace = new utils.Interface(abi);
     return iFace.parseLog(rawLog);

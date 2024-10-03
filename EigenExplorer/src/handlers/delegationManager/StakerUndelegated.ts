@@ -1,9 +1,4 @@
-import {
-  IEventContext,
-  IBind,
-  Instance,
-  ISecrets,
-} from "@blockflow-labs/utils";
+import { IEventContext, IBind, Instance, ISecrets } from "@blockflow-labs/utils";
 import { updateStats } from "../../utils/helpers";
 import { Staker, Operator, Stats } from "../../types/schema";
 
@@ -12,11 +7,7 @@ import { Staker, Operator, Stats } from "../../types/schema";
  * @param context trigger object with contains {event: {staker ,operator }, transaction, block, log}
  * @param bind init function for database wrapper methods
  */
-export const StakerUndelegatedHandler = async (
-  context: IEventContext,
-  bind: IBind,
-  secrets: ISecrets
-) => {
+export const StakerUndelegatedHandler = async (context: IEventContext, bind: IBind, secrets: ISecrets) => {
   // Implement your event handler logic for StakerUndelegated here
 
   const { event, transaction, block, log } = context;

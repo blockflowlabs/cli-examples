@@ -1,9 +1,4 @@
-import {
-  IEventContext,
-  IBind,
-  Instance,
-  ISecrets,
-} from "@blockflow-labs/utils";
+import { IEventContext, IBind, Instance, ISecrets } from "@blockflow-labs/utils";
 import { Withdrawal, Stats } from "../../types/schema";
 import { updateStats } from "../../utils/helpers";
 
@@ -12,11 +7,7 @@ import { updateStats } from "../../utils/helpers";
  * @param context trigger object with contains {event: {withdrawalRoot ,withdrawal }, transaction, block, log}
  * @param bind init function for database wrapper methods
  */
-export const WithdrawalQueuedHandler = async (
-  context: IEventContext,
-  bind: IBind,
-  secrets: ISecrets
-) => {
+export const WithdrawalQueuedHandler = async (context: IEventContext, bind: IBind, secrets: ISecrets) => {
   // Implement your event handler logic for WithdrawalQueued here
 
   const { event, transaction, block, log } = context;
@@ -36,12 +27,10 @@ export const WithdrawalQueuedHandler = async (
       stakerAddress: withdrawal.staker,
       delegatedTo: withdrawal.delegatedTo,
       withdrawerAddress: withdrawal.withdrawer,
-      strategyShares: withdrawal.strategies.map(
-        (strategy: any, index: number) => ({
-          strategy: strategy,
-          shares: withdrawal.shares[index].toString(),
-        })
-      ),
+      strategyShares: withdrawal.strategies.map((strategy: any, index: number) => ({
+        strategy: strategy,
+        shares: withdrawal.shares[index].toString(),
+      })),
       isCompleted: false,
       createdAt: block.block_timestamp,
       createdAtBlock: block.block_number,
@@ -54,12 +43,10 @@ export const WithdrawalQueuedHandler = async (
     withdrawalData.stakerAddress = withdrawal.stakerAddress;
     withdrawalData.delegatedTo = withdrawal.delegatedTo;
     withdrawalData.withdrawerAddress = withdrawal.withdrawerAddress;
-    withdrawalData.strategyShares = withdrawal.strategies.map(
-      (strategy: any, index: number) => ({
-        strategy: strategy.toLowerCase(),
-        shares: withdrawal.shares[index].toString(),
-      })
-    );
+    withdrawalData.strategyShares = withdrawal.strategies.map((strategy: any, index: number) => ({
+      strategy: strategy.toLowerCase(),
+      shares: withdrawal.shares[index].toString(),
+    }));
     withdrawalData.updatedAt = block.block_timestamp;
     withdrawalData.updatedAtBlock = block.block_number;
 

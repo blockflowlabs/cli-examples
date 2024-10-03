@@ -1,9 +1,4 @@
-import {
-  IEventContext,
-  IBind,
-  Instance,
-  ISecrets,
-} from "@blockflow-labs/utils";
+import { IEventContext, IBind, Instance, ISecrets } from "@blockflow-labs/utils";
 import { Operator, Staker, StrategyShares, Stats } from "../../types/schema";
 import BigNumber from "bignumber.js";
 import { updateStats } from "../../utils/helpers";
@@ -13,11 +8,7 @@ import { updateStats } from "../../utils/helpers";
  * @param context trigger object with contains {event: {operator ,staker ,strategy ,shares }, transaction, block, log}
  * @param bind init function for database wrapper methods
  */
-export const OperatorSharesIncreasedHandler = async (
-  context: IEventContext,
-  bind: IBind,
-  secrets: ISecrets
-) => {
+export const OperatorSharesIncreasedHandler = async (context: IEventContext, bind: IBind, secrets: ISecrets) => {
   // Implement your event handler logic for OperatorSharesIncreased here
 
   const { event, transaction, block, log } = context;
@@ -31,7 +22,7 @@ export const OperatorSharesIncreasedHandler = async (
 
   if (operatorData) {
     let strategyIndex = operatorData.shares.findIndex(
-      ({ strategy: sa }: StrategyShares) => sa === strategy.toLowerCase()
+      ({ strategy: sa }: StrategyShares) => sa === strategy.toLowerCase(),
     );
     if (strategyIndex === -1) {
       operatorData.shares.push({
@@ -40,13 +31,9 @@ export const OperatorSharesIncreasedHandler = async (
       });
     }
 
-    strategyIndex = operatorData.shares.findIndex(
-      ({ strategy: sa }: StrategyShares) => sa === strategy.toLowerCase()
-    );
+    strategyIndex = operatorData.shares.findIndex(({ strategy: sa }: StrategyShares) => sa === strategy.toLowerCase());
 
-    operatorData.shares[strategyIndex].shares = new BigNumber(
-      operatorData.shares[strategyIndex].shares
-    )
+    operatorData.shares[strategyIndex].shares = new BigNumber(operatorData.shares[strategyIndex].shares)
       .plus(shares.toString())
       .toString();
 
@@ -58,7 +45,7 @@ export const OperatorSharesIncreasedHandler = async (
 
   if (stakerData) {
     let strategyIndex = stakerData.shares.findIndex(
-      ({ strategy: sa }: StrategyShares) => sa === strategy.toLowerCase()
+      ({ strategy: sa }: StrategyShares) => sa === strategy.toLowerCase(),
     );
 
     if (strategyIndex === -1) {
@@ -68,13 +55,9 @@ export const OperatorSharesIncreasedHandler = async (
       });
     }
 
-    strategyIndex = stakerData.shares.findIndex(
-      ({ strategy: sa }: StrategyShares) => sa === strategy.toLowerCase()
-    );
+    strategyIndex = stakerData.shares.findIndex(({ strategy: sa }: StrategyShares) => sa === strategy.toLowerCase());
 
-    stakerData.shares[strategyIndex].shares = new BigNumber(
-      stakerData.shares[strategyIndex].shares
-    )
+    stakerData.shares[strategyIndex].shares = new BigNumber(stakerData.shares[strategyIndex].shares)
       .plus(shares.toString())
       .toString();
 

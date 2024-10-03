@@ -1,9 +1,4 @@
-import {
-  IEventContext,
-  IBind,
-  Instance,
-  ISecrets,
-} from "@blockflow-labs/utils";
+import { IEventContext, IBind, Instance, ISecrets } from "@blockflow-labs/utils";
 import { EigenPod } from "../../types/schema";
 
 /**
@@ -11,11 +6,7 @@ import { EigenPod } from "../../types/schema";
  * @param context trigger object with contains {event: {eigenPod ,podOwner }, transaction, block, log}
  * @param bind init function for database wrapper methods
  */
-export const PodDeployedHandler = async (
-  context: IEventContext,
-  bind: IBind,
-  secrets: ISecrets
-) => {
+export const PodDeployedHandler = async (context: IEventContext, bind: IBind, secrets: ISecrets) => {
   // Implement your event handler logic for PodDeployed here
 
   const { event, transaction, block, log } = context;

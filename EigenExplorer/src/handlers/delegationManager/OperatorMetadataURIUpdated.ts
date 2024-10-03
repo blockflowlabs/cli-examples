@@ -1,26 +1,13 @@
-import {
-  IEventContext,
-  IBind,
-  Instance,
-  ISecrets,
-} from "@blockflow-labs/utils";
+import { IEventContext, IBind, Instance, ISecrets } from "@blockflow-labs/utils";
 import { IOperator, Operator, Stats } from "../../types/schema";
-import {
-  fetchWithTimeout,
-  updateStats,
-  validateMetadata,
-} from "../../utils/helpers";
+import { fetchWithTimeout, updateStats, validateMetadata } from "../../utils/helpers";
 
 /**
  * @dev Event::OperatorMetadataURIUpdated(address operator, string metadataURI)
  * @param context trigger object with contains {event: {operator ,metadataURI }, transaction, block, log}
  * @param bind init function for database wrapper methods
  */
-export const OperatorMetadataURIUpdatedHandler = async (
-  context: IEventContext,
-  bind: IBind,
-  secrets: ISecrets
-) => {
+export const OperatorMetadataURIUpdatedHandler = async (context: IEventContext, bind: IBind, secrets: ISecrets) => {
   // Implement your event handler logic for OperatorMetadataURIUpdated here
 
   const { event, transaction, block, log } = context;

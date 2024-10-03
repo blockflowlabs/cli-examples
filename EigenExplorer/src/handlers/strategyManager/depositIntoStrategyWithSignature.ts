@@ -10,7 +10,7 @@ import { getEventPayload } from "../../utils/helpers";
 export const depositIntoStrategyWithSignatureHandler = async (
   context: IFunctionContext,
   bind: IBind,
-  secrets: ISecrets
+  secrets: ISecrets,
 ) => {
   // Implement your function handler logic for depositIntoStrategyWithSignature here
 
@@ -19,15 +19,12 @@ export const depositIntoStrategyWithSignatureHandler = async (
 
   const logs = transaction.logs;
 
-  const depositTopic0 =
-    "0x7cfff908a4b583f36430b25d75964c458d8ede8a99bd61be750e97ee1b2f3a96";
-  const depositEventLog = logs.filter(
-    (log) => log.topics[0] === depositTopic0
-  )[0];
+  const depositTopic0 = "0x7cfff908a4b583f36430b25d75964c458d8ede8a99bd61be750e97ee1b2f3a96";
+  const depositEventLog = logs.filter((log) => log.topics[0] === depositTopic0)[0];
 
   const decodedDepositEvent = getEventPayload(
     depositEventLog,
-    "Deposit(address staker,address token,address strategy,uint256 shares)"
+    "Deposit(address staker,address token,address strategy,uint256 shares)",
   );
 
   const eventContext = {

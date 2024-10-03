@@ -1,16 +1,5 @@
-import {
-  IEventContext,
-  IBind,
-  Instance,
-  ISecrets,
-} from "@blockflow-labs/utils";
-import {
-  Operator,
-  AVS,
-  AVSRegistrations,
-  AvsOperator,
-  Stats,
-} from "../../types/schema";
+import { IEventContext, IBind, Instance, ISecrets } from "@blockflow-labs/utils";
+import { Operator, AVS, AVSRegistrations, AvsOperator, Stats } from "../../types/schema";
 import { updateStats } from "../../utils/helpers";
 
 /**
@@ -21,7 +10,7 @@ import { updateStats } from "../../utils/helpers";
 export const OperatorAVSRegistrationStatusUpdatedHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets
+  secrets: ISecrets,
 ) => {
   // Implement your event handler logic for OperatorAVSRegistrationStatusUpdated here
 
@@ -55,10 +44,10 @@ export const OperatorAVSRegistrationStatusUpdatedHandler = async (
 
   if (avsData) {
     const activeOperatorIndex = avsData.activeOperators.findIndex(
-      (address: string) => address === operator.toLowerCase()
+      (address: string) => address === operator.toLowerCase(),
     );
     const inactiveOperatorIndex = avsData.inactiveOperators.findIndex(
-      (address: string) => address === operator.toLowerCase()
+      (address: string) => address === operator.toLowerCase(),
     );
 
     const isAvsWasActive = avsData.activeOperators.length > 0;
@@ -78,8 +67,7 @@ export const OperatorAVSRegistrationStatusUpdatedHandler = async (
         avsData.activeOperators.splice(activeOperatorIndex, 1);
       }
     }
-    const totalOperators =
-      avsData.activeOperators.length + avsData.inactiveOperators.length;
+    const totalOperators = avsData.activeOperators.length + avsData.inactiveOperators.length;
     avsData.totalOperators = totalOperators;
 
     const isAvsActive = avsData.activeOperators.length > 0;
@@ -95,12 +83,10 @@ export const OperatorAVSRegistrationStatusUpdatedHandler = async (
 
   if (operatorData) {
     const avsIndex = operatorData.avsRegistrations.findIndex(
-      ({ address, isActive }: AVSRegistrations) => address === avs.toLowerCase()
+      ({ address, isActive }: AVSRegistrations) => address === avs.toLowerCase(),
     );
 
-    const isOperatorWasActive = operatorData.avsRegistrations.some(
-      ({ isActive }: AVSRegistrations) => isActive
-    );
+    const isOperatorWasActive = operatorData.avsRegistrations.some(({ isActive }: AVSRegistrations) => isActive);
     if (status === 1) {
       if (avsIndex === -1) {
         operatorData.avsRegistrations.push({
@@ -121,9 +107,7 @@ export const OperatorAVSRegistrationStatusUpdatedHandler = async (
       }
     }
 
-    const isOperatorActive = operatorData.avsRegistrations.some(
-      ({ isActive }: AVSRegistrations) => isActive
-    );
+    const isOperatorActive = operatorData.avsRegistrations.some(({ isActive }: AVSRegistrations) => isActive);
 
     await operatorDb.save(operatorData);
 

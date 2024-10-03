@@ -1,9 +1,4 @@
-import {
-  IEventContext,
-  IBind,
-  Instance,
-  ISecrets,
-} from "@blockflow-labs/utils";
+import { IEventContext, IBind, Instance, ISecrets } from "@blockflow-labs/utils";
 import { Strategy, Stats } from "../../types/schema";
 import { strategyAbi } from "../../data/abi/strategy";
 import { erc20Abi } from "../../data/abi/erc20";
@@ -18,7 +13,7 @@ import { updateStats } from "../../utils/helpers";
 export const StrategyAddedToDepositWhitelistHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets
+  secrets: ISecrets,
 ) => {
   // Implement your event handler logic for StrategyAddedToDepositWhitelist here
 
@@ -32,11 +27,7 @@ export const StrategyAddedToDepositWhitelistHandler = async (
   const underlyingTokenAddress = await strategyContract.underlyingToken();
 
   // fetch name, symbol and decimals of the underlying token
-  const underlyingTokenContract = new ethers.Contract(
-    underlyingTokenAddress,
-    erc20Abi,
-    provider
-  );
+  const underlyingTokenContract = new ethers.Contract(underlyingTokenAddress, erc20Abi, provider);
 
   const [name, symbol, decimals] = await Promise.all([
     underlyingTokenContract.name(),

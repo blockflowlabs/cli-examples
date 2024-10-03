@@ -1,9 +1,4 @@
-import {
-  IEventContext,
-  IBind,
-  Instance,
-  ISecrets,
-} from "@blockflow-labs/utils";
+import { IEventContext, IBind, Instance, ISecrets } from "@blockflow-labs/utils";
 import { Strategy, Stats } from "../../types/schema";
 import { updateStats } from "../../utils/helpers";
 /**
@@ -14,7 +9,7 @@ import { updateStats } from "../../utils/helpers";
 export const StrategyRemovedFromDepositWhitelistHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets
+  secrets: ISecrets,
 ) => {
   // Implement your event handler logic for StrategyRemovedFromDepositWhitelist here
 
@@ -32,11 +27,6 @@ export const StrategyRemovedFromDepositWhitelistHandler = async (
     strategyData.updatedAtBlock = block.block_number;
 
     await strategyDb.save(strategyData);
-    await updateStats(
-      statsDb,
-      "totalDepositWhitelistStrategies",
-      1,
-      "subtract"
-    );
+    await updateStats(statsDb, "totalDepositWhitelistStrategies", 1, "subtract");
   }
 };

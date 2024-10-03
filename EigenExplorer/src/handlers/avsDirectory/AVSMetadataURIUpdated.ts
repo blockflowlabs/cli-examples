@@ -1,25 +1,12 @@
-import {
-  IEventContext,
-  IBind,
-  Instance,
-  ISecrets,
-} from "@blockflow-labs/utils";
+import { IEventContext, IBind, Instance, ISecrets } from "@blockflow-labs/utils";
 import { AVS, Stats } from "../../types/schema";
-import {
-  fetchWithTimeout,
-  validateMetadata,
-  updateStats,
-} from "../../utils/helpers";
+import { fetchWithTimeout, validateMetadata, updateStats } from "../../utils/helpers";
 /**
  * @dev Event::AVSMetadataURIUpdated(address avs, string metadataURI)
  * @param context trigger object with contains {event: {avs ,metadataURI }, transaction, block, log}
  * @param bind init function for database wrapper methods
  */
-export const AVSMetadataURIUpdatedHandler = async (
-  context: IEventContext,
-  bind: IBind,
-  secrets: ISecrets
-) => {
+export const AVSMetadataURIUpdatedHandler = async (context: IEventContext, bind: IBind, secrets: ISecrets) => {
   // Implement your event handler logic for AVSMetadataURIUpdated here
 
   const { event, transaction, block, log } = context;

@@ -1,9 +1,4 @@
-import {
-  IEventContext,
-  IBind,
-  Instance,
-  ISecrets,
-} from "@blockflow-labs/utils";
+import { IEventContext, IBind, Instance, ISecrets } from "@blockflow-labs/utils";
 import { PodTransactions } from "../../types/schema";
 
 /**
@@ -11,11 +6,7 @@ import { PodTransactions } from "../../types/schema";
  * @param context trigger object with contains {event: {podOwner ,sharesDelta }, transaction, block, log}
  * @param bind init function for database wrapper methods
  */
-export const PodSharesUpdatedHandler = async (
-  context: IEventContext,
-  bind: IBind,
-  secrets: ISecrets
-) => {
+export const PodSharesUpdatedHandler = async (context: IEventContext, bind: IBind, secrets: ISecrets) => {
   // Implement your event handler logic for PodSharesUpdated here
 
   const { event, transaction, block, log } = context;
@@ -43,8 +34,7 @@ export const PodSharesUpdatedHandler = async (
   } else {
     podSharesUpdatedData.sharesDelta = sharesDelta.toString();
     podSharesUpdatedData.transactionIndex = transaction.transaction_index;
-    podSharesUpdatedData.podAddress =
-      transaction.transaction_to_address.toLowerCase();
+    podSharesUpdatedData.podAddress = transaction.transaction_to_address.toLowerCase();
     podSharesUpdatedData.updatedAt = block.block_timestamp;
     podSharesUpdatedData.updatedAtBlock = block.block_number;
     await podSharesUpdatedDb.save(podSharesUpdatedData);
