@@ -44,15 +44,12 @@ function getEventPayload(log: any, eventSignature?: string) {
   try {
     // Create an ABI fragment for the event
     const abiFragment = createAbiFragment("event", eventSignature as string);
-    // console.log(abiFragment);
 
     // Decode the log using the dynamically created ABI fragment
     const decodedLog = decodeRawLog(
       { topics: log.topics, data: log.log_data },
       abiFragment
     );
-
-    // console.log(decodedLog.args);
 
     // Reduce the decoded log arguments into an object
     return decodedLog.args.reduce((acc: any, arg: any, index: any) => {

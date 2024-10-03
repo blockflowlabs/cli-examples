@@ -159,10 +159,12 @@ export interface Strategy {
 }
 
 export interface Stats {
+  id: string;
   totalRegisteredAvs: Number;
   totalActiveAvs: Number;
   totalRegisteredOperators: Number;
-  totalInactiveOperators: Number;
+  totalActiveOperators: Number;
   totalRegisteredStakers: Number;
-  totalInactiveStakers: Number;
+  totalActiveStakers: Number;
+  totalDepositWhitelistStrategies: Number;
 }

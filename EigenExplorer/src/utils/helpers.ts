@@ -1,6 +1,8 @@
+import { IBind, Instance } from "@blockflow-labs/utils";
 import axios, { AxiosResponse } from "axios";
 import { keccak256 } from "js-sha3";
 import { AbortController } from "node-abort-controller";
+import { Stats } from "../types/schema";
 
 const encodeFunctionCall = (functionSignature: string, params: any[] = []) => {
   const methodId = keccak256(functionSignature).substring(0, 8);
@@ -96,4 +98,47 @@ export function validateMetadata(metadata: string): EntityMetadata | null {
   } catch {}
 
   return null;
+}
+
+export async function updateStats(
+  db: Instance,
+  key: string,
+  value: number,
+  method?: string
+) {
+  const statsData = await db.findOne({ id: "eigen_explorer_stats" });
+
+  if (statsData) {
+    switch (method) {
+      case "add":
+        statsData[key] = statsData[key] + value;
+        break;
+      case "subtract":
+        statsData[key] = statsData[key] - value;
+        break;
+      default:
+        statsData[key] = statsData[key] + value;
+        break;
+    }
+    await db.save(statsData);
+  } else {
+    let valueToAdd = 0;
+
+    switch (method) {
+      case "add":
+        valueToAdd = value;
+        break;
+      case "subtract":
+        valueToAdd = 0;
+        break;
+      default:
+        valueToAdd = value;
+        break;
+    }
+
+    await db.create({
+      id: "eigen_explorer_stats",
+      [key]: valueToAdd,
+    });
+  }
 }

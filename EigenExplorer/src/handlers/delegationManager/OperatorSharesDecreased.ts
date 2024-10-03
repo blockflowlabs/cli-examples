@@ -5,7 +5,8 @@ import {
   ISecrets,
 } from "@blockflow-labs/utils";
 import BigNumber from "bignumber.js";
-import { Operator, Staker, StrategyShares } from "../../types/schema";
+import { Operator, Staker, StrategyShares, Stats } from "../../types/schema";
+import { updateStats } from "../../utils/helpers";
 
 /**
  * @dev Event::OperatorSharesDecreased(address operator, address staker, address strategy, uint256 shares)
@@ -52,15 +53,45 @@ export const OperatorSharesDecreasedHandler = async (
     );
 
     if (strategyIndex !== -1) {
-      stakerData.shares[strategyIndex].shares = new BigNumber(
+      const strategyShares = new BigNumber(
         stakerData.shares[strategyIndex].shares
-      )
-        .minus(shares.toString())
-        .toString();
+      );
+      stakerData.shares[strategyIndex].shares =
+        strategyShares.isGreaterThanOrEqualTo(shares.toString())
+          ? strategyShares.minus(shares.toString()).toString()
+          : "0";
       stakerData.updatedAt = block.block_timestamp;
       stakerData.updatedAtBlock = block.block_number;
 
       await stakerDb.save(stakerData);
+    } else {
+      stakerData.shares.push({
+        strategy: strategy.toLowerCase(),
+        shares: "0",
+      });
+
+      await stakerDb.save(stakerData);
     }
+  } else {
+    await stakerDb.create({
+      id: staker.toLowerCase(),
+      address: staker.toLowerCase(),
+      operator: operator.toLowerCase(),
+      shares: [
+        {
+          strategy: strategy.toLowerCase(),
+          shares: "0",
+        },
+      ],
+      createdAt: block.block_timestamp,
+      updatedAt: block.block_timestamp,
+      createdAtBlock: block.block_number,
+      updatedAtBlock: block.block_number,
+    });
+
+    const statsDb: Instance = bind(Stats);
+
+    await updateStats(statsDb, "totalStakers", 1, "add");
+    await updateStats(statsDb, "totalActiveStakers", 1, "add");
   }
 };

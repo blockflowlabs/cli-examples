@@ -4,8 +4,12 @@ import {
   Instance,
   ISecrets,
 } from "@blockflow-labs/utils";
-import { AVS } from "../../types/schema";
-import { fetchWithTimeout, validateMetadata } from "../../utils/helpers";
+import { AVS, Stats } from "../../types/schema";
+import {
+  fetchWithTimeout,
+  validateMetadata,
+  updateStats,
+} from "../../utils/helpers";
 /**
  * @dev Event::AVSMetadataURIUpdated(address avs, string metadataURI)
  * @param context trigger object with contains {event: {avs ,metadataURI }, transaction, block, log}
@@ -66,4 +70,8 @@ export const AVSMetadataURIUpdatedHandler = async (
       updatedAtBlock: block.block_number,
     });
   }
+
+  const statsDb: Instance = bind(Stats);
+
+  await updateStats(statsDb, "totalRegisteredAvs", 1, "add");
 };

@@ -4,11 +4,11 @@ import {
   Instance,
   ISecrets,
 } from "@blockflow-labs/utils";
-import { Strategy } from "../../types/schema";
+import { Strategy, Stats } from "../../types/schema";
 import { strategyAbi } from "../../data/abi/strategy";
 import { erc20Abi } from "../../data/abi/erc20";
-import { callContractFunction } from "../../utils/helpers";
 import { ethers } from "ethers";
+import { updateStats } from "../../utils/helpers";
 
 /**
  * @dev Event::StrategyAddedToDepositWhitelist(address strategy)
@@ -45,6 +45,7 @@ export const StrategyAddedToDepositWhitelistHandler = async (
   ]);
 
   const strategyDb: Instance = bind(Strategy);
+  const statsDb: Instance = bind(Stats);
 
   const strategyData = await strategyDb.findOne({ id: strategy.toLowerCase() });
 
@@ -80,5 +81,7 @@ export const StrategyAddedToDepositWhitelistHandler = async (
       createdAtBlock: block.block_number,
       updatedAtBlock: block.block_number,
     });
+
+    await updateStats(statsDb, "totalDepositWhitelistStrategies", 1, "add");
   }
 };

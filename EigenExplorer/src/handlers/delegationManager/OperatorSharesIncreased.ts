@@ -4,8 +4,9 @@ import {
   Instance,
   ISecrets,
 } from "@blockflow-labs/utils";
-import { Operator, Staker, StrategyShares } from "../../types/schema";
+import { Operator, Staker, StrategyShares, Stats } from "../../types/schema";
 import BigNumber from "bignumber.js";
+import { updateStats } from "../../utils/helpers";
 
 /**
  * @dev Event::OperatorSharesIncreased(address operator, address staker, address strategy, uint256 shares)
@@ -81,5 +82,26 @@ export const OperatorSharesIncreasedHandler = async (
     stakerData.updatedAtBlock = block.block_number;
 
     await stakerDb.save(stakerData);
+  } else {
+    await stakerDb.create({
+      id: staker.toLowerCase(),
+      address: staker.toLowerCase(),
+      operator: operator.toLowerCase(),
+      shares: [
+        {
+          strategy: strategy.toLowerCase(),
+          shares: shares.toString(),
+        },
+      ],
+      createdAt: block.block_timestamp,
+      updatedAt: block.block_timestamp,
+      createdAtBlock: block.block_number,
+      updatedAtBlock: block.block_number,
+    });
+
+    const statsDb: Instance = bind(Stats);
+
+    await updateStats(statsDb, "totalStakers", 1, "add");
+    await updateStats(statsDb, "totalActiveStakers", 1, "add");
   }
 };

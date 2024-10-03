@@ -4,8 +4,12 @@ import {
   Instance,
   ISecrets,
 } from "@blockflow-labs/utils";
-import { IOperator, Operator } from "../../types/schema";
-import { fetchWithTimeout, validateMetadata } from "../../utils/helpers";
+import { IOperator, Operator, Stats } from "../../types/schema";
+import {
+  fetchWithTimeout,
+  updateStats,
+  validateMetadata,
+} from "../../utils/helpers";
 
 /**
  * @dev Event::OperatorMetadataURIUpdated(address operator, string metadataURI)
@@ -32,6 +36,8 @@ export const OperatorMetadataURIUpdatedHandler = async (
   const operatorMetadata = validateMetadata(data);
 
   if (!operatorData) {
+    const statsDb: Instance = bind(Stats);
+
     await operatorDb.create({
       metadataURI,
       id: operator.toLowerCase(),
@@ -51,6 +57,7 @@ export const OperatorMetadataURIUpdatedHandler = async (
       createdAtBlock: block.block_number,
       updatedAtBlock: block.block_number,
     });
+    await updateStats(statsDb, "totalRegisteredOperators", 1);
   } else {
     operatorData.metadataURI = metadataURI;
     operatorData.metadataName = operatorMetadata?.name;

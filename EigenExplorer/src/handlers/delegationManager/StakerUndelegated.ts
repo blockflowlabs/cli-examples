@@ -4,7 +4,8 @@ import {
   Instance,
   ISecrets,
 } from "@blockflow-labs/utils";
-import { Staker, Operator } from "../../types/schema";
+import { updateStats } from "../../utils/helpers";
+import { Staker, Operator, Stats } from "../../types/schema";
 
 /**
  * @dev Event::StakerUndelegated(address staker, address operator)
@@ -23,6 +24,7 @@ export const StakerUndelegatedHandler = async (
 
   const stakerDb: Instance = bind(Staker);
   const operatorDb: Instance = bind(Operator);
+  const statsDb: Instance = bind(Stats);
 
   const stakerData = await stakerDb.findOne({ id: staker.toLowerCase() });
   const operatorData = await operatorDb.findOne({ id: operator.toLowerCase() });
@@ -32,6 +34,9 @@ export const StakerUndelegatedHandler = async (
     if (stakerData.operator === operator.toLowerCase()) {
       operatorData.totalStakers -= 1;
       await operatorDb.save(operatorData);
+    }
+    if (stakerData.operator !== null) {
+      await updateStats(statsDb, "totalActiveStakers", 1, "subtract");
     }
     stakerData.operator = null;
     stakerData.updatedAt = block.block_timestamp;
@@ -49,5 +54,7 @@ export const StakerUndelegatedHandler = async (
       createdAtBlock: block.block_number,
       updatedAtBlock: block.block_number,
     });
+
+    await updateStats(statsDb, "totalStakers", 1);
   }
 };

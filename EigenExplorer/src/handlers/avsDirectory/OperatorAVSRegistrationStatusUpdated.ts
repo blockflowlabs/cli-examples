@@ -9,7 +9,9 @@ import {
   AVS,
   AVSRegistrations,
   AvsOperator,
+  Stats,
 } from "../../types/schema";
+import { updateStats } from "../../utils/helpers";
 
 /**
  * @dev Event::OperatorAVSRegistrationStatusUpdated(address operator, address avs, uint8 status)
@@ -31,6 +33,7 @@ export const OperatorAVSRegistrationStatusUpdatedHandler = async (
   const operatorDb: Instance = bind(Operator);
   const avsDb: Instance = bind(AVS);
   const avsOperatorDb: Instance = bind(AvsOperator);
+  const statsDb: Instance = bind(Stats);
 
   const operatorData = await operatorDb.findOne({ id: operator.toLowerCase() });
   const avsData = await avsDb.findOne({ id: avs.toLowerCase() });
@@ -58,6 +61,8 @@ export const OperatorAVSRegistrationStatusUpdatedHandler = async (
       (address: string) => address === operator.toLowerCase()
     );
 
+    const isAvsWasActive = avsData.activeOperators.length > 0;
+
     if (status === 1) {
       if (activeOperatorIndex === -1) {
         avsData.activeOperators.push(operator.toLowerCase());
@@ -77,12 +82,24 @@ export const OperatorAVSRegistrationStatusUpdatedHandler = async (
       avsData.activeOperators.length + avsData.inactiveOperators.length;
     avsData.totalOperators = totalOperators;
 
+    const isAvsActive = avsData.activeOperators.length > 0;
+
     await avsDb.save(avsData);
+
+    if (isAvsWasActive && !isAvsActive) {
+      await updateStats(statsDb, "totalActiveAvs", 1, "subtract");
+    } else if (!isAvsWasActive && isAvsActive) {
+      await updateStats(statsDb, "totalActiveAvs", 1, "add");
+    }
   }
 
   if (operatorData) {
     const avsIndex = operatorData.avsRegistrations.findIndex(
       ({ address, isActive }: AVSRegistrations) => address === avs.toLowerCase()
+    );
+
+    const isOperatorWasActive = operatorData.avsRegistrations.some(
+      ({ isActive }: AVSRegistrations) => isActive
     );
     if (status === 1) {
       if (avsIndex === -1) {
@@ -104,7 +121,17 @@ export const OperatorAVSRegistrationStatusUpdatedHandler = async (
       }
     }
 
+    const isOperatorActive = operatorData.avsRegistrations.some(
+      ({ isActive }: AVSRegistrations) => isActive
+    );
+
     await operatorDb.save(operatorData);
+
+    if (isOperatorWasActive && !isOperatorActive) {
+      await updateStats(statsDb, "totalActiveOperators", 1, "subtract");
+    } else if (!isOperatorWasActive && isOperatorActive) {
+      await updateStats(statsDb, "totalActiveOperators", 1, "add");
+    }
   } else {
     await operatorDb.create({
       id: operator.toLowerCase(),
@@ -122,5 +149,7 @@ export const OperatorAVSRegistrationStatusUpdatedHandler = async (
       createdAtBlock: block.block_number,
       updatedAtBlock: block.block_number,
     });
+
+    await updateStats(statsDb, "totalRegisteredOperators", 1, "add");
   }
 };

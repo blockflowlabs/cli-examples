@@ -4,8 +4,8 @@ import {
   Instance,
   ISecrets,
 } from "@blockflow-labs/utils";
-import { Strategy } from "../../types/schema";
-
+import { Strategy, Stats } from "../../types/schema";
+import { updateStats } from "../../utils/helpers";
 /**
  * @dev Event::StrategyRemovedFromDepositWhitelist(address strategy)
  * @param context trigger object with contains {event: {strategy }, transaction, block, log}
@@ -22,6 +22,7 @@ export const StrategyRemovedFromDepositWhitelistHandler = async (
   const { strategy } = event;
 
   const strategyDb: Instance = bind(Strategy);
+  const statsDb: Instance = bind(Stats);
 
   const strategyData = await strategyDb.findOne({ id: strategy.toLowerCase() });
 
@@ -31,5 +32,6 @@ export const StrategyRemovedFromDepositWhitelistHandler = async (
     strategyData.updatedAtBlock = block.block_number;
 
     await strategyDb.save(strategyData);
+    await updateStats(statsDb, "totalStrategiesForDeposit", 1, "subtract");
   }
 };
