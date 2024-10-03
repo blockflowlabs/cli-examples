@@ -9,11 +9,7 @@ import BigNumber from "bignumber.js";
  * @param context trigger object with contains {event: {staker ,token ,strategy ,shares }, transaction, block, log}
  * @param bind init function for database wrapper methods
  */
-export const DepositHandler = async (
-  context: IEventContext,
-  bind: IBind,
-  secrets: ISecrets
-) => {
+export const DepositHandler = async (context: IEventContext, bind: IBind, secrets: ISecrets) => {
   // Implement your event handler logic for Deposit here
 
   const { event, transaction, block, log } = context;
@@ -23,8 +19,7 @@ export const DepositHandler = async (
   const strategyDb = bind(Strategy);
   const statsDb = bind(Stats);
 
-  const depositId =
-    `${transaction.transaction_hash}_${log.log_index}`.toLowerCase();
+  const depositId = `${transaction.transaction_hash}_${log.log_index}`.toLowerCase();
 
   const depositData = await depositDb.findOne({
     id: depositId,
@@ -48,21 +43,17 @@ export const DepositHandler = async (
     });
 
     if (strategyData) {
-      const newTotalShares = new BigNumber(
-        strategyData.totalShares.toString()
-      ).plus(shares.toString());
-      const newTotalAmount = new BigNumber(strategyData.totalAmount).plus(
-        amount.toString()
-      );
+      // get new total shares and total amount
+      const newTotalShares = new BigNumber(strategyData.totalShares.toString()).plus(shares.toString());
+      const newTotalAmount = new BigNumber(strategyData.totalAmount).plus(amount.toString());
+
+      // calculate new sharesToUnderlying after deposit
       const virtualPriorShares = newTotalShares.plus(SHARES_OFFSET.toString());
-      const virtualPriorBalance = newTotalAmount.plus(
-        BALANCE_OFFSET.toString()
-      );
+      const virtualPriorBalance = newTotalAmount.plus(BALANCE_OFFSET.toString());
 
-      const sharesToUnderlying = virtualPriorBalance
-        .multipliedBy("1e18")
-        .dividedBy(virtualPriorShares);
+      const sharesToUnderlying = virtualPriorBalance.multipliedBy("1e18").dividedBy(virtualPriorShares);
 
+      // update strategy data
       strategyData.sharesToUnderlying = sharesToUnderlying.toString();
       strategyData.totalShares = newTotalShares.toString();
       strategyData.totalAmount = newTotalAmount.toString();
