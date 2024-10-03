@@ -195,6 +195,8 @@ export class Strategy {
     sharesToUnderlying: "string",
     totalShares: "string",
     totalAmount: "string",
+    totalDeposits: "Number",
+    totalWithdrawals: "Number",
     createdAt: "Number",
     createdAtBlock: "Number",
     updatedAt: "Number",
@@ -426,6 +428,8 @@ export interface IStrategy extends Document {
   sharesToUnderlying: string;
   totalShares: string;
   totalAmount: string;
+  totalDeposits: Number;
+  totalWithdrawals: Number;
 
   createdAt: Number;
   createdAtBlock: Number;

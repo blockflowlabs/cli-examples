@@ -22,11 +22,13 @@ export const StrategyRemovedFromDepositWhitelistHandler = async (
   const strategyData = await strategyDb.findOne({ id: strategy.toLowerCase() });
 
   if (strategyData) {
+    if (strategyData.isDepositWhitelist) {
+      await updateStats(statsDb, "totalDepositWhitelistStrategies", 1, "subtract");
+    }
     strategyData.isDepositWhitelist = false;
     strategyData.updatedAt = block.block_timestamp;
     strategyData.updatedAtBlock = block.block_number;
 
     await strategyDb.save(strategyData);
-    await updateStats(statsDb, "totalDepositWhitelistStrategies", 1, "subtract");
   }
 };

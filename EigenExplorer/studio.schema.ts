@@ -165,6 +165,8 @@ export interface Strategy {
   sharesToUnderlying: string;
   totalShares: string;
   totalAmount: string;
+  totalDeposits: Number;
+  totalWithdrawals: Number;
 
   createdAt: Number;
   createdAtBlock: Number;

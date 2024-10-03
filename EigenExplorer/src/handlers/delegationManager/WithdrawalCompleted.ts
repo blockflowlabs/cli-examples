@@ -65,6 +65,7 @@ export const WithdrawalCompletedHandler = async (context: IEventContext, bind: I
         strategyData.sharesToUnderlying = sharesToUnderlying.toString();
         strategyData.totalShares = newTotalShares;
         strategyData.totalAmount = newTotalAmount;
+        strategyData.totalWithdrawals += 1;
         strategyData.updatedAt = block.block_timestamp;
         strategyData.updatedAtBlock = block.block_number;
         await strategiesDb.save(strategyData);

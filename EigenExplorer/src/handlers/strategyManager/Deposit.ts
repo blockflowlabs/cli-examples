@@ -21,47 +21,42 @@ export const DepositHandler = async (context: IEventContext, bind: IBind, secret
 
   const depositId = `${transaction.transaction_hash}_${log.log_index}`.toLowerCase();
 
-  const depositData = await depositDb.findOne({
+  await depositDb.create({
     id: depositId,
+    transactionHash: transaction.transaction_hash,
+    stakerAddress: staker.toLowerCase(),
+    tokenAddress: token.toLowerCase(),
+    strategyAddress: strategy.toLowerCase(),
+    shares: shares.toString(),
+    amount: amount.toString(),
+    createdAt: block.block_timestamp,
+    createdAtBlock: block.block_number,
   });
 
-  if (!depositData) {
-    await depositDb.create({
-      id: depositId,
-      transactionHash: transaction.transaction_hash,
-      stakerAddress: staker.toLowerCase(),
-      tokenAddress: token.toLowerCase(),
-      strategyAddress: strategy.toLowerCase(),
-      shares: shares.toString(),
-      amount: amount.toString(),
-      createdAt: block.block_timestamp,
-      createdAtBlock: block.block_number,
-    });
+  const strategyData = await strategyDb.findOne({
+    id: strategy.toLowerCase(),
+  });
 
-    const strategyData = await strategyDb.findOne({
-      id: strategy.toLowerCase(),
-    });
+  if (strategyData) {
+    // get new total shares and total amount
+    const newTotalShares = new BigNumber(strategyData.totalShares.toString()).plus(shares.toString());
+    const newTotalAmount = new BigNumber(strategyData.totalAmount).plus(amount.toString());
 
-    if (strategyData) {
-      // get new total shares and total amount
-      const newTotalShares = new BigNumber(strategyData.totalShares.toString()).plus(shares.toString());
-      const newTotalAmount = new BigNumber(strategyData.totalAmount).plus(amount.toString());
+    // calculate new sharesToUnderlying after deposit
+    const virtualPriorShares = newTotalShares.plus(SHARES_OFFSET.toString());
+    const virtualPriorBalance = newTotalAmount.plus(BALANCE_OFFSET.toString());
 
-      // calculate new sharesToUnderlying after deposit
-      const virtualPriorShares = newTotalShares.plus(SHARES_OFFSET.toString());
-      const virtualPriorBalance = newTotalAmount.plus(BALANCE_OFFSET.toString());
+    const sharesToUnderlying = virtualPriorBalance.multipliedBy("1e18").dividedBy(virtualPriorShares);
 
-      const sharesToUnderlying = virtualPriorBalance.multipliedBy("1e18").dividedBy(virtualPriorShares);
+    // update strategy data
+    strategyData.sharesToUnderlying = sharesToUnderlying.toString();
+    strategyData.totalShares = newTotalShares.toString();
+    strategyData.totalAmount = newTotalAmount.toString();
+    strategyData.totalDeposits += 1;
+    strategyData.updatedAt = block.block_timestamp;
+    strategyData.updatedAtBlock = block.block_number;
 
-      // update strategy data
-      strategyData.sharesToUnderlying = sharesToUnderlying.toString();
-      strategyData.totalShares = newTotalShares.toString();
-      strategyData.totalAmount = newTotalAmount.toString();
-      strategyData.updatedAt = block.block_timestamp;
-      strategyData.updatedAtBlock = block.block_number;
-
-      await strategyDb.save(strategyData);
-    }
+    await strategyDb.save(strategyData);
   }
 
   await updateStats(statsDb, "totalDeposits", 1);

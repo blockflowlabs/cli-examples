@@ -41,6 +41,9 @@ export const StrategyAddedToDepositWhitelistHandler = async (
   const strategyData = await strategyDb.findOne({ id: strategy.toLowerCase() });
 
   if (strategyData) {
+    if (!strategyData.isDepositWhitelist) {
+      await updateStats(statsDb, "totalDepositWhitelistStrategies", 1, "add");
+    }
     strategyData.isDepositWhitelist = true;
     strategyData.underlyingToken = {
       address: underlyingTokenAddress,
@@ -67,12 +70,13 @@ export const StrategyAddedToDepositWhitelistHandler = async (
       sharesToUnderlying: (1e18).toString(),
       totalShares: "0",
       totalAmount: "0",
+      totalDeposits: 0,
+      totalWithdrawals: 0,
       createdAt: block.block_timestamp,
       updatedAt: block.block_timestamp,
       createdAtBlock: block.block_number,
       updatedAtBlock: block.block_number,
     });
-
     await updateStats(statsDb, "totalDepositWhitelistStrategies", 1, "add");
   }
 };
