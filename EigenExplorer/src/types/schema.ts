@@ -202,13 +202,17 @@ export class Strategy {
 export class Stats {
   static entity = "Stats";
   static schema = {
+    id: { type: "String", index: true },
     totalRegisteredAvs: "Number",
     totalActiveAvs: "Number",
     totalRegisteredOperators: "Number",
-    totalInactiveOperators: "Number",
+    totalActiveOperators: "Number",
     totalRegisteredStakers: "Number",
-    totalInactiveStakers: "Number",
-    id: { type: "String", index: true },
+    totalActiveStakers: "Number",
+    totalDepositWhitelistStrategies: "Number",
+    totalCompletedWithdrawals: "Number",
+    totalQueuedWithdrawals: "Number",
+    totalDeposits: "Number",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
@@ -413,12 +417,17 @@ export interface IStrategy extends Document {
 }
 
 export interface IStats extends Document {
+  id: string;
   totalRegisteredAvs: Number;
   totalActiveAvs: Number;
   totalRegisteredOperators: Number;
-  totalInactiveOperators: Number;
+  totalActiveOperators: Number;
   totalRegisteredStakers: Number;
-  totalInactiveStakers: Number;
+  totalActiveStakers: Number;
+  totalDepositWhitelistStrategies: Number;
+  totalCompletedWithdrawals: Number;
+  totalQueuedWithdrawals: Number;
+  totalDeposits: Number;
   blocknumber: String;
   entityId: String;
   instanceId: String;

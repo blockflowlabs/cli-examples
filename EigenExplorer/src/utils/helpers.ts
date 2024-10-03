@@ -1,54 +1,7 @@
-import { IBind, Instance } from "@blockflow-labs/utils";
+import { Instance } from "@blockflow-labs/utils";
 import axios, { AxiosResponse } from "axios";
-import { keccak256 } from "js-sha3";
 import { AbortController } from "node-abort-controller";
-import { Stats } from "../types/schema";
-
-const encodeFunctionCall = (functionSignature: string, params: any[] = []) => {
-  const methodId = keccak256(functionSignature).substring(0, 8);
-
-  const encodedParams = params
-    .map((param) => BigInt(param).toString(16).padStart(64, "0"))
-    .join("");
-
-  return "0x" + methodId + encodedParams;
-};
-
-export const callContractFunction = async (
-  strategyAddress: string,
-  functionSignature: string,
-  params: any[] = [],
-  rpcEndpoint: string
-) => {
-  const encodedData = encodeFunctionCall(functionSignature, params);
-
-  const requestData = {
-    jsonrpc: "2.0",
-    method: "eth_call",
-    params: [
-      {
-        to: strategyAddress,
-        data: encodedData,
-      },
-      "latest",
-    ],
-    id: 1,
-  };
-
-  try {
-    const response = await axios.post(rpcEndpoint, requestData, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    const result = response.data.result;
-
-    return result;
-  } catch (error) {
-    console.error("Error making the RPC call:", error);
-  }
-};
+import { utils } from "ethers";
 
 export async function fetchWithTimeout(
   url: string,
@@ -80,12 +33,6 @@ export function validateMetadata(metadata: string): EntityMetadata | null {
   try {
     const data = JSON.parse(metadata);
 
-    if (
-      !(typeof data.name === "string" && typeof data.description === "string")
-    ) {
-      return null;
-    }
-
     return {
       name: data.name || "",
       website: data.website || "",
@@ -109,15 +56,16 @@ export async function updateStats(
   const statsData = await db.findOne({ id: "eigen_explorer_stats" });
 
   if (statsData) {
+    const valueToChange = statsData[key] || 0;
     switch (method) {
       case "add":
-        statsData[key] = statsData[key] + value;
+        statsData[key] = valueToChange + value;
         break;
       case "subtract":
-        statsData[key] = statsData[key] - value;
+        statsData[key] = valueToChange - value;
         break;
       default:
-        statsData[key] = statsData[key] + value;
+        statsData[key] = valueToChange + value;
         break;
     }
     await db.save(statsData);
@@ -141,4 +89,47 @@ export async function updateStats(
       [key]: valueToAdd,
     });
   }
+}
+
+export function getEventPayload(log: any, eventSignature?: string) {
+  try {
+    // Create an ABI fragment for the event
+    const abiFragment = createAbiFragment("event", eventSignature as string);
+
+    // Decode the log using the dynamically created ABI fragment
+    const decodedLog = decodeRawLog(
+      { topics: log.topics, data: log.log_data },
+      abiFragment
+    );
+
+    // Reduce the decoded log arguments into an object
+    return decodedLog.args.reduce((acc: any, arg: any, index: any) => {
+      const { name } = decodedLog.eventFragment.inputs[index];
+
+      return {
+        ...acc,
+        [name]: arg,
+        [`arg${index + 1}`]: arg,
+        [index]: arg,
+      };
+    }, {});
+  } catch (error) {
+    return null;
+  }
+}
+
+function decodeRawLog(
+  rawLog: { topics: string[]; data: string },
+  abi: any
+): any {
+  try {
+    const iFace = new utils.Interface(abi);
+    return iFace.parseLog(rawLog);
+  } catch (error) {
+    throw error;
+  }
+}
+
+function createAbiFragment(key: string, def: string): string {
+  return JSON.stringify([`${key} ${def}`]);
 }

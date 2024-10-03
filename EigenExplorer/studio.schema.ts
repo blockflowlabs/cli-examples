@@ -167,4 +167,7 @@ export interface Stats {
   totalRegisteredStakers: Number;
   totalActiveStakers: Number;
   totalDepositWhitelistStrategies: Number;
+  totalCompletedWithdrawals: Number;
+  totalQueuedWithdrawals: Number;
+  totalDeposits: Number;
 }

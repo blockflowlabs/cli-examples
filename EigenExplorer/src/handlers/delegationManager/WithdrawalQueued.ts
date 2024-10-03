@@ -4,7 +4,8 @@ import {
   Instance,
   ISecrets,
 } from "@blockflow-labs/utils";
-import { Withdrawal } from "../../types/schema";
+import { Withdrawal, Stats } from "../../types/schema";
+import { updateStats } from "../../utils/helpers";
 
 /**
  * @dev Event::WithdrawalQueued(bytes32 withdrawalRoot, tuple withdrawal)
@@ -22,6 +23,7 @@ export const WithdrawalQueuedHandler = async (
   const { withdrawalRoot, withdrawal } = event;
 
   const withdrawalDb: Instance = bind(Withdrawal);
+  const statsDb: Instance = bind(Stats);
 
   const withdrawalData = await withdrawalDb.findOne({ id: withdrawalRoot });
 
@@ -63,4 +65,6 @@ export const WithdrawalQueuedHandler = async (
 
     await withdrawalDb.save(withdrawalData);
   }
+
+  await updateStats(statsDb, "totalQueuedWithdrawals", 1);
 };

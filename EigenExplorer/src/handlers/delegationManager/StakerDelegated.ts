@@ -57,7 +57,7 @@ export const StakerDelegatedHandler = async (
       updatedAtBlock: block.block_number,
     });
 
-    await updateStats(statsDb, "totalStakers", 1);
+    await updateStats(statsDb, "totalRegisteredStakers", 1);
     await updateStats(statsDb, "totalActiveStakers", 1);
   }
 };

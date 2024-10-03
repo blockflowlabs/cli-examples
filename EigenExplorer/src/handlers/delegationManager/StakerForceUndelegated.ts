@@ -54,6 +54,6 @@ export const StakerForceUndelegatedHandler = async (
       updatedAtBlock: block.block_number,
     });
 
-    await updateStats(statsDb, "totalStakers", 1);
+    await updateStats(statsDb, "totalRegisteredStakers", 1);
   }
 };

@@ -4,9 +4,10 @@ import {
   Instance,
   ISecrets,
 } from "@blockflow-labs/utils";
-import { Strategy, Withdrawal } from "../../types/schema";
+import { Strategy, Withdrawal, Stats } from "../../types/schema";
 import BigNumber from "bignumber.js";
 import { SHARES_OFFSET } from "../../data/constants";
+import { updateStats } from "../../utils/helpers";
 /**
  * @dev Event::WithdrawalCompleted(bytes32 withdrawalRoot)
  * @param context trigger object with contains {event: {withdrawalRoot }, transaction, block, log}
@@ -24,6 +25,7 @@ export const WithdrawalCompletedHandler = async (
 
   const withdrawalDb: Instance = bind(Withdrawal);
   const strategiesDb: Instance = bind(Strategy);
+  const statsDb: Instance = bind(Stats);
 
   const withdrawalData = await withdrawalDb.findOne({ id: withdrawalRoot });
 
@@ -43,7 +45,6 @@ export const WithdrawalCompletedHandler = async (
       });
 
       if (strategyData) {
-        console.log(shares.shares.toString());
         const totalShares = new BigNumber(strategyData.totalShares);
         const sharesToMinus = new BigNumber(shares.shares.toString());
 
@@ -90,4 +91,6 @@ export const WithdrawalCompletedHandler = async (
       }
     }
   }
+
+  await updateStats(statsDb, "totalCompletedWithdrawals", 1, "add");
 };

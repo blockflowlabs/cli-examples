@@ -91,7 +91,7 @@ export const OperatorSharesDecreasedHandler = async (
 
     const statsDb: Instance = bind(Stats);
 
-    await updateStats(statsDb, "totalStakers", 1, "add");
+    await updateStats(statsDb, "totalRegisteredStakers", 1, "add");
     await updateStats(statsDb, "totalActiveStakers", 1, "add");
   }
 };

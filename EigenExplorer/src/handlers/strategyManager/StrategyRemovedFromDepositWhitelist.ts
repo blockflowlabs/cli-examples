@@ -32,6 +32,11 @@ export const StrategyRemovedFromDepositWhitelistHandler = async (
     strategyData.updatedAtBlock = block.block_number;
 
     await strategyDb.save(strategyData);
-    await updateStats(statsDb, "totalStrategiesForDeposit", 1, "subtract");
+    await updateStats(
+      statsDb,
+      "totalDepositWhitelistStrategies",
+      1,
+      "subtract"
+    );
   }
 };

@@ -32,7 +32,7 @@ export const OperatorMetadataURIUpdatedHandler = async (
 
   const response = await fetchWithTimeout(metadataURI);
   const isMetadataFetched = response ? response.status === 200 : false;
-  const data = response ? JSON.stringify(response.data) : "";
+  const data = response ? JSON.stringify(response.data) : "{}";
   const operatorMetadata = validateMetadata(data);
 
   if (!operatorData) {
