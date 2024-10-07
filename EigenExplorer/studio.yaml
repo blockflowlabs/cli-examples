@@ -64,6 +64,10 @@ Resources:
           WithdrawalQueued(bytes32,tuple(address,address,address,uint256,uint32,address[],uint256[]))
         Handler: >-
           src/handlers/delegationManager/WithdrawalQueued.WithdrawalQueuedHandler
+      - Event: MinWithdrawalDelayBlocksSet(uint256,uint256)
+        Handler: >-
+          src/handlers/delegationManager/MinWithdrawalDelayBlocksSet.MinWithdrawalDelayBlocksSetHandler
+
   - Name: avsDirectory
     Abi: src/abis/avsDirectory.json
     Type: contract/event

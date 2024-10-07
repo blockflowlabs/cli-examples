@@ -186,6 +186,7 @@ export interface Stats {
   totalCompletedWithdrawals: Number;
   totalQueuedWithdrawals: Number;
   totalDeposits: Number;
+  minWithdrawalDelayBlocks: Number;
 }
 
 export interface OperatorHistory {

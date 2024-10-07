@@ -222,6 +222,7 @@ export class Stats {
     totalCompletedWithdrawals: "Number",
     totalQueuedWithdrawals: "Number",
     totalDeposits: "Number",
+    minWithdrawalDelayBlocks: "Number",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
@@ -470,6 +471,7 @@ export interface IStats extends Document {
   totalCompletedWithdrawals: Number;
   totalQueuedWithdrawals: Number;
   totalDeposits: Number;
+  minWithdrawalDelayBlocks: Number;
   blocknumber: String;
   entityId: String;
   instanceId: String;
