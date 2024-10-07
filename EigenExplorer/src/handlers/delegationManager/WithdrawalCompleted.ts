@@ -1,5 +1,5 @@
 import { IEventContext, IBind, Instance, ISecrets } from "@blockflow-labs/utils";
-import { Strategy, Withdrawal, Stats } from "../../types/schema";
+import { Strategy, Withdrawal, Stats, StrategyShares } from "../../types/schema";
 import BigNumber from "bignumber.js";
 import { SHARES_OFFSET } from "../../data/constants";
 import { updateStats } from "../../utils/helpers";
@@ -26,12 +26,22 @@ export const WithdrawalCompletedHandler = async (context: IEventContext, bind: I
     withdrawalData.updatedAt = block.block_timestamp;
     withdrawalData.updatedAtBlock = block.block_number;
 
+    const strategyIds = withdrawalData.strategyShares.map((strategy: StrategyShares) =>
+      strategy.strategy.toLowerCase(),
+    );
+    console.log(strategyIds);
+    const strategiesData = await strategiesDb.findMany({ id: { $in: strategyIds } });
+    console.log(strategiesData);
+
+    const strategiesMap = strategiesData.reduce((map, strategy) => {
+      map[strategy.id] = strategy;
+      return map;
+    }, {});
+
     for (const key in withdrawalData.strategyShares) {
       const shares = withdrawalData.strategyShares[key];
 
-      const strategyData = await strategiesDb.findOne({
-        id: shares.strategy.toLowerCase(),
-      });
+      const strategyData = strategiesMap[shares.strategy.toLowerCase()];
 
       if (strategyData) {
         // data prior to withdrawal

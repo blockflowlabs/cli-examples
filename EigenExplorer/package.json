@@ -6,7 +6,7 @@
     "compile": "tsc -b"
   },
   "dependencies": {
-    "@blockflow-labs/utils": "latest",
+    "@blockflow-labs/utils": "^1.0.9",
     "axios": "^1.7.7",
     "ethers": "^5.7.2",
     "node-abort-controller": "^3.1.1"
