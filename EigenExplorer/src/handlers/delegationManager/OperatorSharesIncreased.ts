@@ -58,6 +58,7 @@ export const OperatorSharesIncreasedHandler = async (context: IEventContext, bin
         id: operatorRestakeHistoryId,
         operatorAddress: operator.toLowerCase(),
         stakerAddress: staker.toLowerCase(),
+        transactionHash: transaction.transaction_hash,
         shares: [{ strategy: strategy.toLowerCase(), shares: shares.toString() }],
         action: operatorRestakeType,
         createdAt: block.block_timestamp,
