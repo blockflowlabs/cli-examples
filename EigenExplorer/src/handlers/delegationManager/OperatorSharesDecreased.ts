@@ -1,7 +1,8 @@
-import { IEventContext, IBind, Instance, ISecrets } from "@blockflow-labs/utils";
+import { IEventContext, IBind, Instance, ISecrets, ILog } from "@blockflow-labs/utils";
 import BigNumber from "bignumber.js";
-import { Operator, Staker, StrategyShares, Stats } from "../../types/schema";
+import { Operator, Staker, StrategyShares, Stats, OperatorRestakeHistory } from "../../types/schema";
 import { updateStats } from "../../utils/helpers";
+import { eigenContracts, stakerUndelegatedTopic0 } from "../../data/constants";
 
 /**
  * @dev Event::OperatorSharesDecreased(address operator, address staker, address strategy, uint256 shares)
@@ -16,9 +17,41 @@ export const OperatorSharesDecreasedHandler = async (context: IEventContext, bin
 
   const operatorDb: Instance = bind(Operator);
   const stakerDb: Instance = bind(Staker);
+  const operatorRestakeHistoryDb: Instance = bind(OperatorRestakeHistory);
+
+  const isFollowedByUndelegated = transaction.logs.some(
+    (log: ILog) =>
+      log.topics[0] === stakerUndelegatedTopic0 &&
+      log.log_address.toLowerCase() === eigenContracts.delegationManager.toLowerCase(),
+  );
+
+  const operatorRestakeType = isFollowedByUndelegated ? "undelegated" : "withdraw";
+
+  const operatorRestakeHistoryId = `${operator}_${transaction.transaction_hash}_${operatorRestakeType}`.toLowerCase();
 
   const operatorData = await operatorDb.findOne({ id: operator.toLowerCase() });
   const stakerData = await stakerDb.findOne({ id: staker.toLowerCase() });
+  const operatorRestakeHistoryData = await operatorRestakeHistoryDb.findOne({ id: operatorRestakeHistoryId });
+
+  if (!operatorRestakeHistoryData) {
+    await operatorRestakeHistoryDb.create({
+      id: operatorRestakeHistoryId,
+      operatorAddress: operator.toLowerCase(),
+      stakerAddress: staker.toLowerCase(),
+      shares: [{ strategy: strategy.toLowerCase(), shares: shares.toString() }],
+      action: operatorRestakeType,
+      createdAt: block.block_timestamp,
+      updatedAt: block.block_timestamp,
+      createdAtBlock: block.block_number,
+      updatedAtBlock: block.block_number,
+    });
+  } else {
+    operatorRestakeHistoryData.shares.push({ strategy: strategy.toLowerCase(), shares: shares.toString() });
+    operatorRestakeHistoryData.updatedAt = block.block_timestamp;
+    operatorRestakeHistoryData.updatedAtBlock = block.block_number;
+
+    await operatorRestakeHistoryDb.save(operatorRestakeHistoryData);
+  }
 
   if (operatorData) {
     const strategyIndex = operatorData.shares.findIndex(

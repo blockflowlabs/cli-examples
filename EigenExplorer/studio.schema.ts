@@ -198,3 +198,16 @@ export interface OperatorHistory {
   createdAt: Number;
   createdAtBlock: Number;
 }
+
+export interface OperatorRestakeHistory {
+  id: string;
+  operatorAddress: stringIndex;
+  stakerAddress: string;
+  transactionHash: string;
+  action: string;
+  shares: [StrategyShares];
+  createdAt: Number;
+  createdAtBlock: Number;
+  updatedAt: Number;
+  updatedAtBlock: Number;
+}

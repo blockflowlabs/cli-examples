@@ -57,16 +57,12 @@
   {
     "inputs": [],
     "name": "admin",
-    "outputs": [
-      { "internalType": "address", "name": "admin_", "type": "address" }
-    ],
+    "outputs": [{ "internalType": "address", "name": "admin_", "type": "address" }],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "newAdmin", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "newAdmin", "type": "address" }],
     "name": "changeAdmin",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -365,9 +361,7 @@
   {
     "inputs": [],
     "name": "beaconChainETHStrategy",
-    "outputs": [
-      { "internalType": "contract IStrategy", "name": "", "type": "address" }
-    ],
+    "outputs": [{ "internalType": "contract IStrategy", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -394,9 +388,7 @@
   {
     "inputs": [],
     "name": "eigenPodBeacon",
-    "outputs": [
-      { "internalType": "contract IBeacon", "name": "", "type": "address" }
-    ],
+    "outputs": [{ "internalType": "contract IBeacon", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -414,20 +406,14 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "podOwner", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "podOwner", "type": "address" }],
     "name": "getPod",
-    "outputs": [
-      { "internalType": "contract IEigenPod", "name": "", "type": "address" }
-    ],
+    "outputs": [{ "internalType": "contract IEigenPod", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "podOwner", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "podOwner", "type": "address" }],
     "name": "hasPod",
     "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "view",
@@ -469,9 +455,7 @@
   {
     "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "name": "ownerToPod",
-    "outputs": [
-      { "internalType": "contract IEigenPod", "name": "", "type": "address" }
-    ],
+    "outputs": [{ "internalType": "contract IEigenPod", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -572,9 +556,7 @@
   {
     "inputs": [],
     "name": "slasher",
-    "outputs": [
-      { "internalType": "contract ISlasher", "name": "", "type": "address" }
-    ],
+    "outputs": [{ "internalType": "contract ISlasher", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -607,9 +589,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "newOwner", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "newOwner", "type": "address" }],
     "name": "transferOwnership",
     "outputs": [],
     "stateMutability": "nonpayable",

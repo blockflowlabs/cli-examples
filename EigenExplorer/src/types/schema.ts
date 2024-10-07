@@ -247,6 +247,26 @@ export class OperatorHistory {
   };
 }
 
+export class OperatorRestakeHistory {
+  static entity = "OperatorRestakeHistory";
+  static schema = {
+    id: { type: "String", index: true },
+    operatorAddress: { type: "string", index: true },
+    stakerAddress: "string",
+    transactionHash: "string",
+    action: "string",
+    shares: [{ strategy: "string", shares: "string" }],
+    createdAt: "Number",
+    createdAtBlock: "Number",
+    updatedAt: "Number",
+    updatedAtBlock: "Number",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
+  };
+}
+
 export type StrategyShares = {
   strategy: string;
   shares: string;
@@ -486,6 +506,23 @@ export interface IOperatorHistory extends Document {
   transactionHash: string;
   createdAt: Number;
   createdAtBlock: Number;
+  blocknumber: String;
+  entityId: String;
+  instanceId: String;
+  chainId: String;
+}
+
+export interface IOperatorRestakeHistory extends Document {
+  id: string;
+  operatorAddress: stringIndex;
+  stakerAddress: string;
+  transactionHash: string;
+  action: string;
+  shares: [StrategyShares];
+  createdAt: Number;
+  createdAtBlock: Number;
+  updatedAt: Number;
+  updatedAtBlock: Number;
   blocknumber: String;
   entityId: String;
   instanceId: String;

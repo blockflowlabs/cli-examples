@@ -57,16 +57,12 @@
   {
     "inputs": [],
     "name": "admin",
-    "outputs": [
-      { "internalType": "address", "name": "admin_", "type": "address" }
-    ],
+    "outputs": [{ "internalType": "address", "name": "admin_", "type": "address" }],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "newAdmin", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "newAdmin", "type": "address" }],
     "name": "changeAdmin",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -300,9 +296,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "bytes32", "name": "salt", "type": "bytes32" }
-    ],
+    "inputs": [{ "internalType": "bytes32", "name": "salt", "type": "bytes32" }],
     "name": "cancelSalt",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -322,9 +316,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "operator", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "operator", "type": "address" }],
     "name": "deregisterOperatorFromAVS",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -460,9 +452,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "newOwner", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "newOwner", "type": "address" }],
     "name": "transferOwnership",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -482,9 +472,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "string", "name": "metadataURI", "type": "string" }
-    ],
+    "inputs": [{ "internalType": "string", "name": "metadataURI", "type": "string" }],
     "name": "updateAVSMetadataURI",
     "outputs": [],
     "stateMutability": "nonpayable",

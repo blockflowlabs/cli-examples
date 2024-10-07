@@ -1,7 +1,8 @@
 import { IEventContext, IBind, Instance, ISecrets } from "@blockflow-labs/utils";
-import { Operator, Staker, StrategyShares, Stats } from "../../types/schema";
+import { Operator, Staker, StrategyShares, Stats, OperatorRestakeHistory } from "../../types/schema";
 import BigNumber from "bignumber.js";
 import { updateStats } from "../../utils/helpers";
+import { stakerDelegatedTopic0, depositTopic0, eigenContracts } from "../../data/constants";
 
 /**
  * @dev Event::OperatorSharesIncreased(address operator, address staker, address strategy, uint256 shares)
@@ -16,9 +17,66 @@ export const OperatorSharesIncreasedHandler = async (context: IEventContext, bin
 
   const operatorDb: Instance = bind(Operator);
   const stakerDb: Instance = bind(Staker);
+  const operatorRestakeHistoryDb: Instance = bind(OperatorRestakeHistory);
 
+  // console.log(transaction.logs);
+
+  const isFollowedByDelegated = transaction.logs.some(
+    (log: any) =>
+      log.topics[0] === stakerDelegatedTopic0 &&
+      log.log_address.toLowerCase() === eigenContracts.delegationManager.toLowerCase(),
+  );
+
+  const isFollowedByDeposit = transaction.logs.some(
+    (log: any) =>
+      log.topics[0] === depositTopic0 && log.log_address.toLowerCase() === eigenContracts.strategyManager.toLowerCase(),
+  );
+
+  let operatorRestakeType = "undefined";
+
+  switch (true) {
+    case isFollowedByDelegated:
+      operatorRestakeType = "delegated";
+      break;
+    case isFollowedByDeposit:
+      operatorRestakeType = "deposit";
+      break;
+    default:
+      operatorRestakeType = "undefined";
+      break;
+  }
+
+  console.log("OperatorSharesIncreasedHandler: operatorRestakeType", operatorRestakeType);
+
+  const operatorRestakeHistoryId = `${operator}_${transaction.transaction_hash}_${operatorRestakeType}`.toLowerCase();
   const operatorData = await operatorDb.findOne({ id: operator.toLowerCase() });
   const stakerData = await stakerDb.findOne({ id: staker.toLowerCase() });
+  const operatorRestakeHistoryData =
+    operatorRestakeType !== "undefined"
+      ? await operatorRestakeHistoryDb.findOne({ id: operatorRestakeHistoryId })
+      : null;
+
+  if (operatorRestakeType !== "undefined") {
+    if (!operatorRestakeHistoryData) {
+      await operatorRestakeHistoryDb.create({
+        id: operatorRestakeHistoryId,
+        operatorAddress: operator.toLowerCase(),
+        stakerAddress: staker.toLowerCase(),
+        shares: [{ strategy: strategy.toLowerCase(), shares: shares.toString() }],
+        action: operatorRestakeType,
+        createdAt: block.block_timestamp,
+        updatedAt: block.block_timestamp,
+        createdAtBlock: block.block_number,
+        updatedAtBlock: block.block_number,
+      });
+    } else {
+      operatorRestakeHistoryData.shares.push({ strategy: strategy.toLowerCase(), shares: shares.toString() });
+      operatorRestakeHistoryData.updatedAt = block.block_timestamp;
+      operatorRestakeHistoryData.updatedAtBlock = block.block_number;
+
+      await operatorRestakeHistoryDb.save(operatorRestakeHistoryData);
+    }
+  }
 
   if (operatorData) {
     let strategyIndex = operatorData.shares.findIndex(
