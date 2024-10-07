@@ -9,6 +9,7 @@
     "@blockflow-labs/utils": "^1.0.9",
     "axios": "^1.7.7",
     "ethers": "^5.7.2",
+    "ethers-multicall": "^0.2.3",
     "node-abort-controller": "^3.1.1"
   },
   "devDependencies": {

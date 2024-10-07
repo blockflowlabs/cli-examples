@@ -29,9 +29,7 @@ export const WithdrawalCompletedHandler = async (context: IEventContext, bind: I
     const strategyIds = withdrawalData.strategyShares.map((strategy: StrategyShares) =>
       strategy.strategy.toLowerCase(),
     );
-    console.log(strategyIds);
     const strategiesData = await strategiesDb.findMany({ id: { $in: strategyIds } });
-    console.log(strategiesData);
 
     const strategiesMap = strategiesData.reduce((map, strategy) => {
       map[strategy.id] = strategy;
@@ -75,7 +73,7 @@ export const WithdrawalCompletedHandler = async (context: IEventContext, bind: I
         strategyData.sharesToUnderlying = sharesToUnderlying.toString();
         strategyData.totalShares = newTotalShares;
         strategyData.totalAmount = newTotalAmount;
-        strategyData.totalWithdrawals += 1;
+        strategyData.totalWithdrawals = strategyData.totalWithdrawals + 1 || 1;
         strategyData.updatedAt = block.block_timestamp;
         strategyData.updatedAtBlock = block.block_number;
         await strategiesDb.save(strategyData);

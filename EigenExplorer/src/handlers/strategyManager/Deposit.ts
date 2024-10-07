@@ -52,7 +52,7 @@ export const DepositHandler = async (context: IEventContext, bind: IBind, secret
     strategyData.sharesToUnderlying = sharesToUnderlying.toString();
     strategyData.totalShares = newTotalShares.toString();
     strategyData.totalAmount = newTotalAmount.toString();
-    strategyData.totalDeposits += 1;
+    strategyData.totalDeposits = strategyData.totalDeposits + 1 || 1;
     strategyData.updatedAt = block.block_timestamp;
     strategyData.updatedAtBlock = block.block_number;
 

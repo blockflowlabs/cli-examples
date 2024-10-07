@@ -22,7 +22,7 @@ export const StakerDelegatedHandler = async (context: IEventContext, bind: IBind
 
   if (stakerData) {
     if (stakerData.operator !== operator.toLowerCase()) {
-      operatorData.totalStakers += 1;
+      operatorData.totalStakers = operatorData.totalStakers + 1 || 1;
       await operatorDb.save(operatorData);
     }
     if (stakerData.operator === null) {
@@ -34,7 +34,7 @@ export const StakerDelegatedHandler = async (context: IEventContext, bind: IBind
 
     await stakerDb.save(stakerData);
   } else {
-    operatorData.totalStakers += 1;
+    operatorData.totalStakers = operatorData.totalStakers + 1 || 1;
     await operatorDb.save(operatorData);
 
     await stakerDb.create({

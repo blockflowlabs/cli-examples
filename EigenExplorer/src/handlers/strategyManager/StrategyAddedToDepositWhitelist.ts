@@ -3,6 +3,7 @@ import { Strategy, Stats } from "../../types/schema";
 import { strategyAbi } from "../../data/abi/strategy";
 import { erc20Abi } from "../../data/abi/erc20";
 import { ethers } from "ethers";
+import { Contract, Provider } from "ethers-multicall";
 import { updateStats } from "../../utils/helpers";
 
 /**
@@ -22,14 +23,17 @@ export const StrategyAddedToDepositWhitelistHandler = async (
 
   const rpcEndpoint = secrets["RPC_ENDPOINT"];
   const provider = new ethers.providers.JsonRpcProvider(rpcEndpoint);
+  const ethCallProvider = new Provider(provider);
 
-  const strategyContract = new ethers.Contract(strategy, strategyAbi, provider);
-  const underlyingTokenAddress = await strategyContract.underlyingToken();
+  await ethCallProvider.init();
+
+  const strategyContract = new Contract(strategy, strategyAbi);
+  const [underlyingTokenAddress] = await ethCallProvider.all([strategyContract.underlyingToken()]);
 
   // fetch name, symbol and decimals of the underlying token
-  const underlyingTokenContract = new ethers.Contract(underlyingTokenAddress, erc20Abi, provider);
+  const underlyingTokenContract = new Contract(underlyingTokenAddress, erc20Abi);
 
-  const [name, symbol, decimals] = await Promise.all([
+  const [name, symbol, decimals] = await ethCallProvider.all([
     underlyingTokenContract.name(),
     underlyingTokenContract.symbol(),
     underlyingTokenContract.decimals(),
