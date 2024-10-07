@@ -19,8 +19,6 @@ export const OperatorSharesIncreasedHandler = async (context: IEventContext, bin
   const stakerDb: Instance = bind(Staker);
   const operatorRestakeHistoryDb: Instance = bind(OperatorRestakeHistory);
 
-  // console.log(transaction.logs);
-
   const isFollowedByDelegated = transaction.logs.some(
     (log: any) =>
       log.topics[0] === stakerDelegatedTopic0 &&
@@ -45,8 +43,6 @@ export const OperatorSharesIncreasedHandler = async (context: IEventContext, bin
       operatorRestakeType = "undefined";
       break;
   }
-
-  console.log("OperatorSharesIncreasedHandler: operatorRestakeType", operatorRestakeType);
 
   const operatorRestakeHistoryId = `${operator}_${transaction.transaction_hash}_${operatorRestakeType}`.toLowerCase();
   const operatorData = await operatorDb.findOne({ id: operator.toLowerCase() });
