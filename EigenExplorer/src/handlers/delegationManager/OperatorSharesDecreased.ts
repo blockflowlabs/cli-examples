@@ -22,7 +22,7 @@ export const OperatorSharesDecreasedHandler = async (context: IEventContext, bin
   const isFollowedByUndelegated = transaction.logs.some(
     (log: ILog) =>
       log.topics[0] === stakerUndelegatedTopic0 &&
-      log.log_address.toLowerCase() === eigenContracts.delegationManager.toLowerCase(),
+      log.log_address.toLowerCase() === eigenContracts.DelegationManager.toLowerCase(),
   );
 
   const operatorRestakeType = isFollowedByUndelegated ? "undelegated" : "withdraw";
