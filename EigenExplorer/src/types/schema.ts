@@ -73,7 +73,6 @@ export class AVS {
     activeOperators: ["string"],
     inactiveOperators: ["string"],
     totalOperators: "Number",
-    totalStakers: "Number",
     createdAt: "Number",
     updatedAt: "Number",
     createdAtBlock: "Number",
@@ -363,7 +362,6 @@ export interface IAVS extends Document {
   activeOperators: [string];
   inactiveOperators: [string];
   totalOperators: Number;
-  totalStakers: Number;
 
   createdAt: Number;
   updatedAt: Number;

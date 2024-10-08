@@ -1,7 +1,6 @@
 import { IEventContext, IBind, Instance, ISecrets } from "@blockflow-labs/utils";
 import { Operator, AVS, AVSRegistrations, AvsOperator, Stats, OperatorHistory } from "../../types/schema";
 import { updateStats } from "../../utils/helpers";
-import { id } from "ethers/lib/utils";
 
 /**
  * @dev Event::OperatorAVSRegistrationStatusUpdated(address operator, address avs, uint8 status)
@@ -69,7 +68,6 @@ export const OperatorAVSRegistrationStatusUpdatedHandler = async (
     if (status === 1) {
       if (activeOperatorIndex === -1) {
         avsData.activeOperators.push(operator.toLowerCase());
-        avsData.totalStakers = operatorData ? avsData.totalStakers + operatorData.totalStakers : avsData.totalStakers;
       }
       if (inactiveOperatorIndex !== -1) {
         avsData.inactiveOperators.splice(inactiveOperatorIndex, 1);
@@ -80,7 +78,6 @@ export const OperatorAVSRegistrationStatusUpdatedHandler = async (
       }
       if (activeOperatorIndex !== -1) {
         avsData.activeOperators.splice(activeOperatorIndex, 1);
-        avsData.totalStakers = operatorData ? avsData.totalStakers - operatorData.totalStakers : avsData.totalStakers;
       }
     }
     const totalOperators = avsData.activeOperators.length + avsData.inactiveOperators.length;

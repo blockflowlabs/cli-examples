@@ -82,7 +82,6 @@ export interface AVS {
   activeOperators: [string];
   inactiveOperators: [string];
   totalOperators: Number;
-  totalStakers: Number;
 
   createdAt: Number;
   updatedAt: Number;

@@ -51,7 +51,6 @@ export const AVSMetadataURIUpdatedHandler = async (context: IEventContext, bind:
       activeOperators: [],
       inactiveOperators: [],
       totalOperators: 0,
-      totalStakers: 0,
       createdAt: block.block_timestamp,
       updatedAt: block.block_timestamp,
       createdAtBlock: block.block_number,
