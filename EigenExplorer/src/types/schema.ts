@@ -42,6 +42,7 @@ export class Operator {
     avsRegistrations: [{ address: "string", isActive: "Boolean" }],
     shares: [{ strategy: "string", shares: "string" }],
     totalStakers: "Number",
+    totalAvs: "Number",
     createdAt: "Number",
     updatedAt: "Number",
     createdAtBlock: "Number",
@@ -70,6 +71,7 @@ export class AVS {
     activeOperators: ["string"],
     inactiveOperators: ["string"],
     totalOperators: "Number",
+    totalStakers: "Number",
     createdAt: "Number",
     updatedAt: "Number",
     createdAtBlock: "Number",
@@ -108,9 +110,7 @@ export class Withdrawal {
     stakerAddress: "string",
     delegatedTo: "string",
     withdrawerAddress: "string",
-    strategyShares: [
-      { strategy: "string", shares: "string", amount: "string" },
-    ],
+    strategyShares: [{ strategy: "string", shares: "string", amount: "string" }],
     isCompleted: "Boolean",
     createdAt: "Number",
     createdAtBlock: "Number",
@@ -326,6 +326,7 @@ export interface IOperator extends Document {
   shares: [StrategyShares];
 
   totalStakers: Number;
+  totalAvs: Number;
 
   createdAt: Number;
   updatedAt: Number;
@@ -354,6 +355,7 @@ export interface IAVS extends Document {
   activeOperators: [string];
   inactiveOperators: [string];
   totalOperators: Number;
+  totalStakers: Number;
 
   createdAt: Number;
   updatedAt: Number;

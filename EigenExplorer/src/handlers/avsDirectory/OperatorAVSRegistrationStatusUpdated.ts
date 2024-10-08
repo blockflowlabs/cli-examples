@@ -69,6 +69,7 @@ export const OperatorAVSRegistrationStatusUpdatedHandler = async (
     if (status === 1) {
       if (activeOperatorIndex === -1) {
         avsData.activeOperators.push(operator.toLowerCase());
+        avsData.totalStakers = operatorData ? avsData.totalStakers + operatorData.totalStakers : avsData.totalStakers;
       }
       if (inactiveOperatorIndex !== -1) {
         avsData.inactiveOperators.splice(inactiveOperatorIndex, 1);
@@ -79,6 +80,7 @@ export const OperatorAVSRegistrationStatusUpdatedHandler = async (
       }
       if (activeOperatorIndex !== -1) {
         avsData.activeOperators.splice(activeOperatorIndex, 1);
+        avsData.totalStakers = operatorData ? avsData.totalStakers - operatorData.totalStakers : avsData.totalStakers;
       }
     }
     const totalOperators = avsData.activeOperators.length + avsData.inactiveOperators.length;
@@ -107,7 +109,11 @@ export const OperatorAVSRegistrationStatusUpdatedHandler = async (
           address: avs.toLowerCase(),
           isActive: true,
         });
+        operatorData.totalAvs = operatorData.totalAvs + 1 || 1;
       } else {
+        if (operatorData.avsRegistrations[avsIndex].isActive === false) {
+          operatorData.totalAvs = operatorData.totalAvs + 1 || 1;
+        }
         operatorData.avsRegistrations[avsIndex].isActive = true;
       }
     } else if (status === 0) {
@@ -117,6 +123,9 @@ export const OperatorAVSRegistrationStatusUpdatedHandler = async (
           isActive: false,
         });
       } else {
+        if (operatorData.avsRegistrations[avsIndex].isActive === true) {
+          operatorData.totalAvs = operatorData.totalAvs > 0 ? operatorData.totalAvs - 1 || 0 : 0;
+        }
         operatorData.avsRegistrations[avsIndex].isActive = false;
       }
     }
@@ -142,6 +151,7 @@ export const OperatorAVSRegistrationStatusUpdatedHandler = async (
       ],
       shares: [],
       totalStakers: 0,
+      totalAvs: status === 1 ? 1 : 0,
       metadataURI: "",
       metadataName: "",
       metadataDescription: "",
