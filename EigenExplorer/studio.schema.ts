@@ -27,6 +27,10 @@ export interface Staker {
   address: string;
   operator: stringIndex;
   shares: [StrategyShares];
+
+  totalWithdrawals: Number;
+  totalDeposits: Number;
+
   createdAt: Number;
   updatedAt: Number;
   createdAtBlock: Number;

@@ -9,6 +9,8 @@ export class Staker {
     address: "string",
     operator: { type: "string", index: true },
     shares: [{ strategy: "string", shares: "string" }],
+    totalWithdrawals: "Number",
+    totalDeposits: "Number",
     createdAt: "Number",
     updatedAt: "Number",
     createdAtBlock: "Number",
@@ -298,6 +300,10 @@ export interface IStaker extends Document {
   address: string;
   operator: stringIndex;
   shares: [StrategyShares];
+
+  totalWithdrawals: Number;
+  totalDeposits: Number;
+
   createdAt: Number;
   updatedAt: Number;
   createdAtBlock: Number;

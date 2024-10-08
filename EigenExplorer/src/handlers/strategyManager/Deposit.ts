@@ -1,5 +1,5 @@
 import { IEventContext, IBind, ISecrets } from "@blockflow-labs/utils";
-import { Deposit, Strategy, Stats } from "../../types/schema";
+import { Deposit, Strategy, Stats, Staker } from "../../types/schema";
 import { updateStats } from "../../utils/helpers";
 import { SHARES_OFFSET, BALANCE_OFFSET } from "../../data/constants";
 import BigNumber from "bignumber.js";
@@ -18,8 +18,17 @@ export const DepositHandler = async (context: IEventContext, bind: IBind, secret
   const depositDb = bind(Deposit);
   const strategyDb = bind(Strategy);
   const statsDb = bind(Stats);
+  const stakerDb = bind(Staker);
 
   const depositId = `${transaction.transaction_hash}_${log.log_index}`.toLowerCase();
+
+  const stakerData = await stakerDb.findOne({ id: staker.toLowerCase() });
+
+  if (stakerData) {
+    stakerData.totalDeposits = stakerData.totalDeposits + 1 || 1;
+
+    await stakerDb.save(stakerData);
+  }
 
   await depositDb.create({
     id: depositId,

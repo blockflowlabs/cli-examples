@@ -103,6 +103,8 @@ export const OperatorSharesDecreasedHandler = async (context: IEventContext, bin
           shares: "0",
         },
       ],
+      totalWithdrawals: 0,
+      totalDeposits: 0,
       createdAt: block.block_timestamp,
       updatedAt: block.block_timestamp,
       createdAtBlock: block.block_number,
