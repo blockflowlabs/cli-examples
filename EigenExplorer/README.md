@@ -135,3 +135,24 @@ For more detailed information about BlockFlow Studio and its features, please re
 
 > Want to contribute or see interesting example?
 > Great! Star mark this examples [repo](https://github.com/BlockFloww/cli-examples).
+
+## BlockNumbers for Handler Invocations
+
+1. AVSMetadataURIUpdated - 20830123
+2. OperatorAvsRegistrationStatusUpdated - 20895395
+3. MinWithdrawalDelayBlocksSet - 19612172
+4. OperatorMetadataURIUpdated - 20908274
+5. OperatorRegistered - 20908274
+6. OperatorSharesDecreased - 20913066
+7. OperatorSharesIncreased - 20913133
+8. StakerDelegated - 20913108
+9. StakerForceUndelegated - 19721935
+10. StakerUndelegated - 20913061
+11. WithdrawalCompleted - 20913087
+12. WithdrawalQueued - 20862340
+13. PodDeployed - 20912309
+14. PodSharesUpdated - 20912949
+15. depositIntoStrategy - 20912968
+16. depositIntoStrategyWithSignature - No function Call
+17. StrategyAddedToDepositWhilelist - 20867590
+18. StategyRemovedFromDeposit - No Event

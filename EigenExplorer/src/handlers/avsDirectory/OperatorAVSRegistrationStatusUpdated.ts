@@ -1,10 +1,7 @@
-import {
-  IEventContext,
-  IBind,
-  Instance,
-  ISecrets,
-} from "@blockflow-labs/utils";
-import { Operator, AVS, AVSRegistrations } from "../../types/schema";
+import { IEventContext, IBind, Instance, ISecrets } from "@blockflow-labs/utils";
+import { Operator, AVS, AVSRegistrations, AvsOperator, Stats, OperatorHistory } from "../../types/schema";
+import { updateStats } from "../../utils/helpers";
+import { id } from "ethers/lib/utils";
 
 /**
  * @dev Event::OperatorAVSRegistrationStatusUpdated(address operator, address avs, uint8 status)
@@ -14,36 +11,96 @@ import { Operator, AVS, AVSRegistrations } from "../../types/schema";
 export const OperatorAVSRegistrationStatusUpdatedHandler = async (
   context: IEventContext,
   bind: IBind,
-  secrets: ISecrets
+  secrets: ISecrets,
 ) => {
   // Implement your event handler logic for OperatorAVSRegistrationStatusUpdated here
 
   const { event, transaction, block, log } = context;
   const { operator, avs, status } = event;
 
+  const avsOperatorId = `${operator.toLowerCase()}_${avs.toLowerCase()}`;
+
   const operatorDb: Instance = bind(Operator);
   const avsDb: Instance = bind(AVS);
+  const avsOperatorDb: Instance = bind(AvsOperator);
+  const statsDb: Instance = bind(Stats);
 
   const operatorData = await operatorDb.findOne({ id: operator.toLowerCase() });
   const avsData = await avsDb.findOne({ id: avs.toLowerCase() });
+  const avsOperatorData = await avsOperatorDb.findOne({ id: avsOperatorId });
+  const operatorHistoryDb: Instance = bind(OperatorHistory);
+
+  const operatorHistoryId = `${operator}_${transaction.transaction_hash}`.toLowerCase();
+
+  await operatorHistoryDb.create({
+    id: operatorHistoryId,
+    operatorAddress: operator.toLowerCase(),
+    avsAddress: avs.toLowerCase(),
+    event: status === 1 ? "joinedAVS" : "leftAVS",
+    transactionHash: transaction.transaction_hash,
+    createdAt: block.block_timestamp,
+    createdAtBlock: block.block_number,
+  });
+
+  if (avsOperatorData) {
+    avsOperatorData.isActive = status === 1;
+    await avsOperatorDb.save(avsOperatorData);
+  } else {
+    await avsOperatorDb.create({
+      id: avsOperatorId,
+      avsAddress: avs.toLowerCase(),
+      operatorAddress: operator.toLowerCase(),
+      isActive: status === 1,
+      createdAt: block.block_timestamp,
+      createdAtBlock: block.block_number,
+    });
+  }
 
   if (avsData) {
-    const operatorIndex = avsData.operators.findIndex(
-      (address: string) => address === operator.toLowerCase()
+    const activeOperatorIndex = avsData.activeOperators.findIndex(
+      (address: string) => address === operator.toLowerCase(),
     );
-    if (status === 1 && operatorIndex === -1) {
-      avsData.operators.push(operator.toLowerCase());
-    } else if (status === 0 && operatorIndex !== -1) {
-      avsData.operators.splice(operatorIndex, 1);
+    const inactiveOperatorIndex = avsData.inactiveOperators.findIndex(
+      (address: string) => address === operator.toLowerCase(),
+    );
+
+    const isAvsWasActive = avsData.activeOperators.length > 0;
+
+    if (status === 1) {
+      if (activeOperatorIndex === -1) {
+        avsData.activeOperators.push(operator.toLowerCase());
+      }
+      if (inactiveOperatorIndex !== -1) {
+        avsData.inactiveOperators.splice(inactiveOperatorIndex, 1);
+      }
+    } else if (status === 0) {
+      if (inactiveOperatorIndex === -1) {
+        avsData.inactiveOperators.push(operator.toLowerCase());
+      }
+      if (activeOperatorIndex !== -1) {
+        avsData.activeOperators.splice(activeOperatorIndex, 1);
+      }
     }
+    const totalOperators = avsData.activeOperators.length + avsData.inactiveOperators.length;
+    avsData.totalOperators = totalOperators;
+
+    const isAvsActive = avsData.activeOperators.length > 0;
 
     await avsDb.save(avsData);
+
+    if (isAvsWasActive && !isAvsActive) {
+      await updateStats(statsDb, "totalActiveAvs", 1, "subtract");
+    } else if (!isAvsWasActive && isAvsActive) {
+      await updateStats(statsDb, "totalActiveAvs", 1, "add");
+    }
   }
 
   if (operatorData) {
     const avsIndex = operatorData.avsRegistrations.findIndex(
-      ({ address, isActive }: AVSRegistrations) => address === avs.toLowerCase()
+      ({ address, isActive }: AVSRegistrations) => address === avs.toLowerCase(),
     );
+
+    const isOperatorWasActive = operatorData.avsRegistrations.some(({ isActive }: AVSRegistrations) => isActive);
     if (status === 1) {
       if (avsIndex === -1) {
         operatorData.avsRegistrations.push({
@@ -64,7 +121,15 @@ export const OperatorAVSRegistrationStatusUpdatedHandler = async (
       }
     }
 
+    const isOperatorActive = operatorData.avsRegistrations.some(({ isActive }: AVSRegistrations) => isActive);
+
     await operatorDb.save(operatorData);
+
+    if (isOperatorWasActive && !isOperatorActive) {
+      await updateStats(statsDb, "totalActiveOperators", 1, "subtract");
+    } else if (!isOperatorWasActive && isOperatorActive) {
+      await updateStats(statsDb, "totalActiveOperators", 1, "add");
+    }
   } else {
     await operatorDb.create({
       id: operator.toLowerCase(),
@@ -76,11 +141,22 @@ export const OperatorAVSRegistrationStatusUpdatedHandler = async (
         },
       ],
       shares: [],
+      totalStakers: 0,
       metadataURI: "",
+      metadataName: "",
+      metadataDescription: "",
+      metadataLogo: "",
+      metadataWebsite: "",
+      metadataTelegram: "",
+      metadataX: "",
+      metadataDiscord: "",
+      isMetadataSynced: false,
       createdAt: block.block_timestamp,
       updatedAt: block.block_timestamp,
       createdAtBlock: block.block_number,
       updatedAtBlock: block.block_number,
     });
+
+    await updateStats(statsDb, "totalRegisteredOperators", 1, "add");
   }
 };

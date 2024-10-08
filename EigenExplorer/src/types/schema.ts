@@ -7,7 +7,7 @@ export class Staker {
   static schema = {
     id: { type: "String", index: true },
     address: "string",
-    operator: "string",
+    operator: { type: "string", index: true },
     shares: [{ strategy: "string", shares: "string" }],
     createdAt: "Number",
     updatedAt: "Number",
@@ -25,9 +25,23 @@ export class Operator {
   static schema = {
     id: { type: "String", index: true },
     address: "string",
-    avsRegistrations: [{ address: "string", isActive: "Boolean" }],
+    details: {
+      earningsReceiver: "string",
+      delegationApprover: "string",
+      stakerOptOutWindowBlocks: "Number",
+    },
     metadataURI: "string",
+    metadataName: "string",
+    metadataDescription: "string",
+    metadataDiscord: "string",
+    metadataLogo: "string",
+    metadataTelegram: "string",
+    metadataWebsite: "string",
+    metadataX: "string",
+    isMetadataSynced: "Boolean",
+    avsRegistrations: [{ address: "string", isActive: "Boolean" }],
     shares: [{ strategy: "string", shares: "string" }],
+    totalStakers: "Number",
     createdAt: "Number",
     updatedAt: "Number",
     createdAtBlock: "Number",
@@ -45,10 +59,38 @@ export class AVS {
     id: { type: "String", index: true },
     address: "string",
     metadataURI: "string",
-    operators: ["string"],
+    metadataName: "string",
+    metadataDescription: "string",
+    metadataDiscord: "string",
+    metadataLogo: "string",
+    metadataTelegram: "string",
+    metadataWebsite: "string",
+    metadataX: "string",
+    isMetadataSynced: "Boolean",
+    activeOperators: ["string"],
+    inactiveOperators: ["string"],
+    totalOperators: "Number",
     createdAt: "Number",
     updatedAt: "Number",
     createdAtBlock: "Number",
+    updatedAtBlock: "Number",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
+  };
+}
+
+export class AvsOperator {
+  static entity = "AvsOperator";
+  static schema = {
+    id: { type: "String", index: true },
+    avsAddress: { type: "string", index: true },
+    operatorAddress: "string",
+    isActive: "Boolean",
+    createdAt: "Number",
+    createdAtBlock: "Number",
+    updatedAt: "Number",
     updatedAtBlock: "Number",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
@@ -66,7 +108,9 @@ export class Withdrawal {
     stakerAddress: "string",
     delegatedTo: "string",
     withdrawerAddress: "string",
-    strategyShares: [{ strategy: "string", shares: "string" }],
+    strategyShares: [
+      { strategy: "string", shares: "string", amount: "string" },
+    ],
     isCompleted: "Boolean",
     createdAt: "Number",
     createdAtBlock: "Number",
@@ -88,8 +132,134 @@ export class Deposit {
     tokenAddress: "string",
     strategyAddress: "string",
     shares: "string",
+    amount: "string",
     createdAt: "Number",
     createdAtBlock: "Number",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
+  };
+}
+
+export class EigenPod {
+  static entity = "EigenPod";
+  static schema = {
+    id: { type: "String", index: true },
+    address: "string",
+    owner: "string",
+    createdAt: "Number",
+    createdAtBlock: "Number",
+    updatedAt: "Number",
+    updatedAtBlock: "Number",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
+  };
+}
+
+export class PodTransactions {
+  static entity = "PodTransactions";
+  static schema = {
+    id: { type: "String", index: true },
+    podAddress: "string",
+    podOwner: "string",
+    transactionHash: "string",
+    sharesDelta: "string",
+    transactionIndex: "Number",
+    createdAt: "Number",
+    createdAtBlock: "Number",
+    updatedAt: "Number",
+    updatedAtBlock: "Number",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
+  };
+}
+
+export class Strategy {
+  static entity = "Strategy";
+  static schema = {
+    id: { type: "String", index: true },
+    address: "string",
+    symbol: "string",
+    underlyingToken: {
+      address: "string",
+      name: "string",
+      symbol: "string",
+      decimals: "Number",
+    },
+    isDepositWhitelist: "Boolean",
+    sharesToUnderlying: "string",
+    totalShares: "string",
+    totalAmount: "string",
+    totalDeposits: "Number",
+    totalWithdrawals: "Number",
+    createdAt: "Number",
+    createdAtBlock: "Number",
+    updatedAt: "Number",
+    updatedAtBlock: "Number",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
+  };
+}
+
+export class Stats {
+  static entity = "Stats";
+  static schema = {
+    id: { type: "String", index: true },
+    totalRegisteredAvs: "Number",
+    totalActiveAvs: "Number",
+    totalRegisteredOperators: "Number",
+    totalActiveOperators: "Number",
+    totalRegisteredStakers: "Number",
+    totalActiveStakers: "Number",
+    totalDepositWhitelistStrategies: "Number",
+    totalCompletedWithdrawals: "Number",
+    totalQueuedWithdrawals: "Number",
+    totalDeposits: "Number",
+    minWithdrawalDelayBlocks: "Number",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
+  };
+}
+
+export class OperatorHistory {
+  static entity = "OperatorHistory";
+  static schema = {
+    id: { type: "String", index: true },
+    operatorAddress: { type: "string", index: true },
+    avsAddress: "string",
+    event: "string",
+    transactionHash: "string",
+    createdAt: "Number",
+    createdAtBlock: "Number",
+    entityId: { type: "String", index: true },
+    blocknumber: { type: "Number", index: true },
+    chainId: { type: "String", index: true },
+    instanceId: { type: "String", index: true },
+  };
+}
+
+export class OperatorRestakeHistory {
+  static entity = "OperatorRestakeHistory";
+  static schema = {
+    id: { type: "String", index: true },
+    operatorAddress: { type: "string", index: true },
+    stakerAddress: "string",
+    transactionHash: "string",
+    action: "string",
+    shares: [{ strategy: "string", shares: "string" }],
+    createdAt: "Number",
+    createdAtBlock: "Number",
+    updatedAt: "Number",
+    updatedAtBlock: "Number",
     entityId: { type: "String", index: true },
     blocknumber: { type: "Number", index: true },
     chainId: { type: "String", index: true },
@@ -102,15 +272,29 @@ export type StrategyShares = {
   shares: string;
 };
 
+export type WithdrawStrategyShares = {
+  strategy: string;
+  shares: string;
+  amount: string;
+};
+
 export type AVSRegistrations = {
   address: string;
   isActive: Boolean;
 };
 
+export type OperatorDetails = {
+  earningsReceiver: string;
+  delegationApprover: string;
+  stakerOptOutWindowBlocks: Number;
+};
+
+type stringIndex = { type: string; index: true };
+
 export interface IStaker extends Document {
   id: string;
   address: string;
-  operator: string;
+  operator: stringIndex;
   shares: [StrategyShares];
   createdAt: Number;
   updatedAt: Number;
@@ -125,9 +309,24 @@ export interface IStaker extends Document {
 export interface IOperator extends Document {
   id: string;
   address: string;
-  avsRegistrations: [AVSRegistrations];
+
+  details: OperatorDetails;
+
   metadataURI: string;
+  metadataName: string;
+  metadataDescription: string;
+  metadataDiscord: string;
+  metadataLogo: string;
+  metadataTelegram: string;
+  metadataWebsite: string;
+  metadataX: string;
+  isMetadataSynced: Boolean;
+
+  avsRegistrations: [AVSRegistrations];
   shares: [StrategyShares];
+
+  totalStakers: Number;
+
   createdAt: Number;
   updatedAt: Number;
   createdAtBlock: Number;
@@ -141,11 +340,40 @@ export interface IOperator extends Document {
 export interface IAVS extends Document {
   id: string;
   address: string;
+
   metadataURI: string;
-  operators: [string];
+  metadataName: string;
+  metadataDescription: string;
+  metadataDiscord: string;
+  metadataLogo: string;
+  metadataTelegram: string;
+  metadataWebsite: string;
+  metadataX: string;
+  isMetadataSynced: Boolean;
+
+  activeOperators: [string];
+  inactiveOperators: [string];
+  totalOperators: Number;
+
   createdAt: Number;
   updatedAt: Number;
   createdAtBlock: Number;
+  updatedAtBlock: Number;
+  blocknumber: String;
+  entityId: String;
+  instanceId: String;
+  chainId: String;
+}
+
+export interface IAvsOperator extends Document {
+  id: string;
+  avsAddress: stringIndex;
+  operatorAddress: string;
+  isActive: Boolean;
+
+  createdAt: Number;
+  createdAtBlock: Number;
+  updatedAt: Number;
   updatedAtBlock: Number;
   blocknumber: String;
   entityId: String;
@@ -160,7 +388,7 @@ export interface IWithdrawal extends Document {
   stakerAddress: string;
   delegatedTo: string;
   withdrawerAddress: string;
-  strategyShares: [StrategyShares];
+  strategyShares: [WithdrawStrategyShares];
   isCompleted: Boolean;
   createdAt: Number;
   createdAtBlock: Number;
@@ -179,8 +407,122 @@ export interface IDeposit extends Document {
   tokenAddress: string;
   strategyAddress: string;
   shares: string;
+  amount: string;
   createdAt: Number;
   createdAtBlock: Number;
+  blocknumber: String;
+  entityId: String;
+  instanceId: String;
+  chainId: String;
+}
+
+export interface IEigenPod extends Document {
+  id: string;
+  address: string;
+  owner: string;
+
+  createdAt: Number;
+  createdAtBlock: Number;
+  updatedAt: Number;
+  updatedAtBlock: Number;
+  blocknumber: String;
+  entityId: String;
+  instanceId: String;
+  chainId: String;
+}
+
+export interface IPodTransactions extends Document {
+  id: string;
+  podAddress: string;
+  podOwner: string;
+  transactionHash: string;
+  sharesDelta: string;
+  transactionIndex: Number;
+
+  createdAt: Number;
+  createdAtBlock: Number;
+  updatedAt: Number;
+  updatedAtBlock: Number;
+  blocknumber: String;
+  entityId: String;
+  instanceId: String;
+  chainId: String;
+}
+
+export type StrategyToken = {
+  address: string;
+  name: string;
+  symbol: string;
+  decimals: Number;
+};
+
+export interface IStrategy extends Document {
+  id: string;
+  address: string;
+  symbol: string;
+  underlyingToken: StrategyToken;
+  isDepositWhitelist: Boolean;
+
+  sharesToUnderlying: string;
+  totalShares: string;
+  totalAmount: string;
+  totalDeposits: Number;
+  totalWithdrawals: Number;
+
+  createdAt: Number;
+  createdAtBlock: Number;
+  updatedAt: Number;
+  updatedAtBlock: Number;
+  blocknumber: String;
+  entityId: String;
+  instanceId: String;
+  chainId: String;
+}
+
+export interface IStats extends Document {
+  id: string;
+  totalRegisteredAvs: Number;
+  totalActiveAvs: Number;
+  totalRegisteredOperators: Number;
+  totalActiveOperators: Number;
+  totalRegisteredStakers: Number;
+  totalActiveStakers: Number;
+  totalDepositWhitelistStrategies: Number;
+  totalCompletedWithdrawals: Number;
+  totalQueuedWithdrawals: Number;
+  totalDeposits: Number;
+  minWithdrawalDelayBlocks: Number;
+  blocknumber: String;
+  entityId: String;
+  instanceId: String;
+  chainId: String;
+}
+
+export interface IOperatorHistory extends Document {
+  id: string;
+  operatorAddress: stringIndex;
+  avsAddress: string;
+  event: string;
+  transactionHash: string;
+  createdAt: Number;
+  createdAtBlock: Number;
+  blocknumber: String;
+  entityId: String;
+  instanceId: String;
+  chainId: String;
+}
+
+export interface IOperatorRestakeHistory extends Document {
+  id: string;
+  operatorAddress: stringIndex;
+  stakerAddress: string;
+  transactionHash: string;
+  action: string;
+  shares: [StrategyShares];
+  createdAt: Number;
+  createdAtBlock: Number;
+  updatedAt: Number;
+  updatedAtBlock: Number;
   blocknumber: String;
   entityId: String;
   instanceId: String;

@@ -1,21 +1,13 @@
-import {
-  IEventContext,
-  IBind,
-  Instance,
-  ISecrets,
-} from "@blockflow-labs/utils";
-import { IOperator, Operator } from "../../types/schema";
+import { IEventContext, IBind, Instance, ISecrets } from "@blockflow-labs/utils";
+import { IOperator, Operator, Stats } from "../../types/schema";
+import { fetchWithTimeout, updateStats, validateMetadata } from "../../utils/helpers";
 
 /**
  * @dev Event::OperatorMetadataURIUpdated(address operator, string metadataURI)
  * @param context trigger object with contains {event: {operator ,metadataURI }, transaction, block, log}
  * @param bind init function for database wrapper methods
  */
-export const OperatorMetadataURIUpdatedHandler = async (
-  context: IEventContext,
-  bind: IBind,
-  secrets: ISecrets
-) => {
+export const OperatorMetadataURIUpdatedHandler = async (context: IEventContext, bind: IBind, secrets: ISecrets) => {
   // Implement your event handler logic for OperatorMetadataURIUpdated here
 
   const { event, transaction, block, log } = context;
@@ -25,10 +17,39 @@ export const OperatorMetadataURIUpdatedHandler = async (
 
   const operatorData = await operatorDb.findOne({ id: operator.toLowerCase() });
 
-  if (!operatorData) {
+  const response = await fetchWithTimeout(metadataURI);
+  const isMetadataFetched = response ? response.status === 200 : false;
+  const data = response ? JSON.stringify(response.data) : "{}";
+  const operatorMetadata = validateMetadata(data);
+
+  if (operatorData) {
+    operatorData.metadataURI = metadataURI;
+    operatorData.metadataName = operatorMetadata?.name;
+    operatorData.metadataDescription = operatorMetadata?.description;
+    operatorData.metadataLogo = operatorMetadata?.logo;
+    operatorData.metadataWebsite = operatorMetadata?.website;
+    operatorData.metadataTelegram = operatorMetadata?.telegram;
+    operatorData.metadataX = operatorMetadata?.x;
+    operatorData.metadataDiscord = operatorMetadata?.discord;
+    operatorData.isMetadataSynced = isMetadataFetched;
+    operatorData.updatedAt = block.block_timestamp;
+    operatorData.updatedAtBlock = block.block_number;
+
+    await operatorDb.save(operatorData);
+  } else {
+    const statsDb: Instance = bind(Stats);
+
     await operatorDb.create({
       metadataURI,
       id: operator.toLowerCase(),
+      metadataName: operatorMetadata?.name,
+      metadataDescription: operatorMetadata?.description,
+      metadataLogo: operatorMetadata?.logo,
+      metadataWebsite: operatorMetadata?.website,
+      metadataTelegram: operatorMetadata?.telegram,
+      metadataX: operatorMetadata?.x,
+      metadataDiscord: operatorMetadata?.discord,
+      isMetadataSynced: isMetadataFetched,
       address: operator.toLowerCase(),
       avsRegistrations: [],
       shares: [],
@@ -37,11 +58,6 @@ export const OperatorMetadataURIUpdatedHandler = async (
       createdAtBlock: block.block_number,
       updatedAtBlock: block.block_number,
     });
-  } else {
-    operatorData.metadataURI = metadataURI;
-    operatorData.updatedAt = block.block_timestamp;
-    operatorData.updatedAtBlock = block.block_number;
-
-    await operatorDb.save(operatorData);
+    await updateStats(statsDb, "totalRegisteredOperators", 1);
   }
 };
