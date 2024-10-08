@@ -110,7 +110,9 @@ export class Withdrawal {
     stakerAddress: "string",
     delegatedTo: "string",
     withdrawerAddress: "string",
-    strategyShares: [{ strategy: "string", shares: "string", amount: "string" }],
+    strategyShares: [
+      { strategy: "string", shares: "string", amount: "string" },
+    ],
     isCompleted: "Boolean",
     createdAt: "Number",
     createdAtBlock: "Number",
@@ -220,7 +222,7 @@ export class Stats {
     totalActiveStakers: "Number",
     totalDepositWhitelistStrategies: "Number",
     totalCompletedWithdrawals: "Number",
-    totalQueuedWithdrawals: "Number",
+    totalWithdrawals: "Number",
     totalDeposits: "Number",
     minWithdrawalDelayBlocks: "Number",
     entityId: { type: "String", index: true },
@@ -491,7 +493,7 @@ export interface IStats extends Document {
   totalActiveStakers: Number;
   totalDepositWhitelistStrategies: Number;
   totalCompletedWithdrawals: Number;
-  totalQueuedWithdrawals: Number;
+  totalWithdrawals: Number;
   totalDeposits: Number;
   minWithdrawalDelayBlocks: Number;
   blocknumber: String;

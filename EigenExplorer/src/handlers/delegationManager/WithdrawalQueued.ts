@@ -53,5 +53,5 @@ export const WithdrawalQueuedHandler = async (context: IEventContext, bind: IBin
     await withdrawalDb.save(withdrawalData);
   }
 
-  await updateStats(statsDb, "totalQueuedWithdrawals", 1);
+  await updateStats(statsDb, "totalWithdrawals", 1);
 };
