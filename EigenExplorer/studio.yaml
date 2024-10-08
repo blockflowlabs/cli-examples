@@ -40,6 +40,9 @@ Resources:
     Triggers:
       - Event: OperatorRegistered(address indexed, OperatorDetails)
         Handler: src/handlers/delegationManager/OperatorRegistered.OperatorRegisteredHandler
+      - Event: OperatorDetailsModified(address indexed, OperatorDetails)
+        Handler: >-
+          src/handlers/delegationManager/OperatorDetailsModified.OperatorDetailsModifiedHandler
       - Event: OperatorMetadataURIUpdated(address indexed,string)
         Handler: >-
           src/handlers/delegationManager/OperatorMetadataURIUpdated.OperatorMetadataURIUpdatedHandler
