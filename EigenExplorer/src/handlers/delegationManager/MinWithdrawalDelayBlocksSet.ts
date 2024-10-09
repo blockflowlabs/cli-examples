@@ -31,7 +31,7 @@ export const MinWithdrawalDelayBlocksSetHandler = async (context: IEventContext,
       totalActiveStakers: 0,
       totalDepositWhitelistStrategies: 0,
       totalCompletedWithdrawals: 0,
-      totalQueuedWithdrawals: 0,
+      totalWithdrawals: 0,
       totalDeposits: 0,
       minWithdrawalDelayBlocks: Number(newValue),
     });

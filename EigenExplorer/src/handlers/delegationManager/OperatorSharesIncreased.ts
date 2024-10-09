@@ -22,12 +22,12 @@ export const OperatorSharesIncreasedHandler = async (context: IEventContext, bin
   const isFollowedByDelegated = transaction.logs.some(
     (log: any) =>
       log.topics[0] === stakerDelegatedTopic0 &&
-      log.log_address.toLowerCase() === eigenContracts.delegationManager.toLowerCase(),
+      log.log_address.toLowerCase() === eigenContracts.DelegationManager.toLowerCase(),
   );
 
   const isFollowedByDeposit = transaction.logs.some(
     (log: any) =>
-      log.topics[0] === depositTopic0 && log.log_address.toLowerCase() === eigenContracts.strategyManager.toLowerCase(),
+      log.topics[0] === depositTopic0 && log.log_address.toLowerCase() === eigenContracts.StrategyManager.toLowerCase(),
   );
 
   let operatorRestakeType = "undefined";
@@ -131,6 +131,8 @@ export const OperatorSharesIncreasedHandler = async (context: IEventContext, bin
           shares: shares.toString(),
         },
       ],
+      totalWithdrawals: 0,
+      totalDeposits: 0,
       createdAt: block.block_timestamp,
       updatedAt: block.block_timestamp,
       createdAtBlock: block.block_number,
