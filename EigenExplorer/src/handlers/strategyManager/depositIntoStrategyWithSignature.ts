@@ -34,5 +34,5 @@ export const depositIntoStrategyWithSignatureHandler = async (
     log: depositEventLog,
   };
 
-  DepositHandler(eventContext, bind, secrets);
+  await DepositHandler(eventContext, bind, secrets);
 };

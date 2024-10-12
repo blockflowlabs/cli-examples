@@ -29,5 +29,5 @@ export const depositIntoStrategyHandler = async (context: IFunctionContext, bind
     log: depositEventLog,
   };
 
-  DepositHandler(eventContext, bind, secrets);
+  await DepositHandler(eventContext, bind, secrets);
 };

@@ -9,6 +9,8 @@ export class Staker {
     address: "string",
     operator: { type: "string", index: true },
     shares: [{ strategy: "string", shares: "string" }],
+    totalWithdrawals: "Number",
+    totalDeposits: "Number",
     createdAt: "Number",
     updatedAt: "Number",
     createdAtBlock: "Number",
@@ -42,6 +44,7 @@ export class Operator {
     avsRegistrations: [{ address: "string", isActive: "Boolean" }],
     shares: [{ strategy: "string", shares: "string" }],
     totalStakers: "Number",
+    totalAvs: "Number",
     createdAt: "Number",
     updatedAt: "Number",
     createdAtBlock: "Number",
@@ -220,7 +223,7 @@ export class Stats {
     totalActiveStakers: "Number",
     totalDepositWhitelistStrategies: "Number",
     totalCompletedWithdrawals: "Number",
-    totalQueuedWithdrawals: "Number",
+    totalWithdrawals: "Number",
     totalDeposits: "Number",
     minWithdrawalDelayBlocks: "Number",
     entityId: { type: "String", index: true },
@@ -296,6 +299,10 @@ export interface IStaker extends Document {
   address: string;
   operator: stringIndex;
   shares: [StrategyShares];
+
+  totalWithdrawals: Number;
+  totalDeposits: Number;
+
   createdAt: Number;
   updatedAt: Number;
   createdAtBlock: Number;
@@ -326,6 +333,7 @@ export interface IOperator extends Document {
   shares: [StrategyShares];
 
   totalStakers: Number;
+  totalAvs: Number;
 
   createdAt: Number;
   updatedAt: Number;
@@ -489,7 +497,7 @@ export interface IStats extends Document {
   totalActiveStakers: Number;
   totalDepositWhitelistStrategies: Number;
   totalCompletedWithdrawals: Number;
-  totalQueuedWithdrawals: Number;
+  totalWithdrawals: Number;
   totalDeposits: Number;
   minWithdrawalDelayBlocks: Number;
   blocknumber: String;

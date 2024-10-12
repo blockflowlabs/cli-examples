@@ -27,6 +27,10 @@ export interface Staker {
   address: string;
   operator: stringIndex;
   shares: [StrategyShares];
+
+  totalWithdrawals: Number;
+  totalDeposits: Number;
+
   createdAt: Number;
   updatedAt: Number;
   createdAtBlock: Number;
@@ -53,6 +57,7 @@ export interface Operator {
   shares: [StrategyShares];
 
   totalStakers: Number;
+  totalAvs: Number;
 
   createdAt: Number;
   updatedAt: Number;
@@ -184,7 +189,7 @@ export interface Stats {
   totalActiveStakers: Number;
   totalDepositWhitelistStrategies: Number;
   totalCompletedWithdrawals: Number;
-  totalQueuedWithdrawals: Number;
+  totalWithdrawals: Number;
   totalDeposits: Number;
   minWithdrawalDelayBlocks: Number;
 }

@@ -32,6 +32,7 @@ export const OperatorRegisteredHandler = async (context: IEventContext, bind: IB
     isMetadataSynced: false,
     avsRegistrations: [],
     totalStakers: 0,
+    totalAvs: 0,
     createdAt: block.block_timestamp,
     updatedAt: block.block_timestamp,
     createdAtBlock: block.block_number,

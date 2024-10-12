@@ -1,7 +1,6 @@
 import { IEventContext, IBind, Instance, ISecrets } from "@blockflow-labs/utils";
 import { Operator, AVS, AVSRegistrations, AvsOperator, Stats, OperatorHistory } from "../../types/schema";
 import { updateStats } from "../../utils/helpers";
-import { id } from "ethers/lib/utils";
 
 /**
  * @dev Event::OperatorAVSRegistrationStatusUpdated(address operator, address avs, uint8 status)
@@ -107,7 +106,11 @@ export const OperatorAVSRegistrationStatusUpdatedHandler = async (
           address: avs.toLowerCase(),
           isActive: true,
         });
+        operatorData.totalAvs = operatorData.totalAvs + 1 || 1;
       } else {
+        if (operatorData.avsRegistrations[avsIndex].isActive === false) {
+          operatorData.totalAvs = operatorData.totalAvs + 1 || 1;
+        }
         operatorData.avsRegistrations[avsIndex].isActive = true;
       }
     } else if (status === 0) {
@@ -117,6 +120,9 @@ export const OperatorAVSRegistrationStatusUpdatedHandler = async (
           isActive: false,
         });
       } else {
+        if (operatorData.avsRegistrations[avsIndex].isActive === true) {
+          operatorData.totalAvs = operatorData.totalAvs > 0 ? operatorData.totalAvs - 1 || 0 : 0;
+        }
         operatorData.avsRegistrations[avsIndex].isActive = false;
       }
     }
@@ -142,6 +148,7 @@ export const OperatorAVSRegistrationStatusUpdatedHandler = async (
       ],
       shares: [],
       totalStakers: 0,
+      totalAvs: status === 1 ? 1 : 0,
       metadataURI: "",
       metadataName: "",
       metadataDescription: "",
