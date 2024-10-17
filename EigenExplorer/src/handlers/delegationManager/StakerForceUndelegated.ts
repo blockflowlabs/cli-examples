@@ -39,8 +39,6 @@ export const StakerForceUndelegatedHandler = async (context: IEventContext, bind
       address: staker.toLowerCase(),
       operator: null,
       shares: [],
-      totalWithdrawals: 0,
-      totalDeposits: 0,
       createdAt: block.block_timestamp,
       updatedAt: block.block_timestamp,
       createdAtBlock: block.block_number,

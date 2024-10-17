@@ -131,8 +131,6 @@ export const OperatorSharesIncreasedHandler = async (context: IEventContext, bin
           shares: shares.toString(),
         },
       ],
-      totalWithdrawals: 0,
-      totalDeposits: 0,
       createdAt: block.block_timestamp,
       updatedAt: block.block_timestamp,
       createdAtBlock: block.block_number,

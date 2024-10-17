@@ -23,7 +23,7 @@ export const StakerUndelegatedHandler = async (context: IEventContext, bind: IBi
   // update the staker record
   if (stakerData) {
     if (stakerData.operator === operator.toLowerCase()) {
-      operatorData.totalStakers -= 1;
+      operatorData.totalStakers = operatorData.totalStakers > 0 ? operatorData.totalStakers - 1 : 0;
       await operatorDb.save(operatorData);
     }
     if (stakerData.operator !== null) {
@@ -40,8 +40,6 @@ export const StakerUndelegatedHandler = async (context: IEventContext, bind: IBi
       address: staker.toLowerCase(),
       operator: null,
       shares: [],
-      totalWithdrawals: 0,
-      totalDeposits: 0,
       createdAt: block.block_timestamp,
       updatedAt: block.block_timestamp,
       createdAtBlock: block.block_number,

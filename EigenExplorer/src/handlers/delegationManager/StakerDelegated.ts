@@ -42,8 +42,6 @@ export const StakerDelegatedHandler = async (context: IEventContext, bind: IBind
       address: staker.toLowerCase(),
       operator: operator.toLowerCase(),
       shares: [],
-      totalWithdrawals: 0,
-      totalDeposits: 0,
       createdAt: block.block_timestamp,
       updatedAt: block.block_timestamp,
       createdAtBlock: block.block_number,

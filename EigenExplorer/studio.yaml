@@ -14,6 +14,9 @@ Resources:
     Type: contract/event
     Address: "0x858646372CC42E1A627fcE94aa7A7033e7CF075A"
     Triggers:
+      - Event: Deposit(address,address,address,uint256)
+        Handler: >-
+          src/handlers/strategyManager/Deposit.DepositHandler
       - Event: StrategyAddedToDepositWhitelist(address)
         Handler: src/handlers/strategyManager/StrategyAddedToDepositWhitelist.StrategyAddedToDepositWhitelistHandler
       - Event: StrategyRemovedFromDepositWhitelist(address)

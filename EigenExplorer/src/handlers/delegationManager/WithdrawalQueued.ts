@@ -1,5 +1,5 @@
 import { IEventContext, IBind, Instance, ISecrets } from "@blockflow-labs/utils";
-import { Withdrawal, Stats, Staker } from "../../types/schema";
+import { Withdrawal, Stats } from "../../types/schema";
 import { updateStats } from "../../utils/helpers";
 
 /**
@@ -15,15 +15,8 @@ export const WithdrawalQueuedHandler = async (context: IEventContext, bind: IBin
 
   const withdrawalDb: Instance = bind(Withdrawal);
   const statsDb: Instance = bind(Stats);
-  const stakerDb: Instance = bind(Staker);
 
   const withdrawalData = await withdrawalDb.findOne({ id: withdrawalRoot });
-  const stakerData = await stakerDb.findOne({ id: withdrawal.staker });
-
-  if (stakerData) {
-    stakerData.totalWithdrawals = stakerData.totalWithdrawals + 1 || 1;
-    await stakerDb.save(stakerData);
-  }
 
   if (!withdrawalData) {
     // create a new withdrawal record
@@ -31,7 +24,7 @@ export const WithdrawalQueuedHandler = async (context: IEventContext, bind: IBin
       id: withdrawalRoot,
       withdrawalRoot,
       nonce: Number(withdrawal.nonce),
-      stakerAddress: withdrawal.staker,
+      stakerAddress: withdrawal.staker.toLowerCase(),
       delegatedTo: withdrawal.delegatedTo,
       withdrawerAddress: withdrawal.withdrawer,
       strategyShares: withdrawal.strategies.map((strategy: any, index: number) => ({
