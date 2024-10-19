@@ -20,6 +20,8 @@ export const StakerDelegatedHandler = async (context: IEventContext, bind: IBind
   const stakerData = await stakerDb.findOne({ id: staker.toLowerCase() });
   const operatorData = await operatorDb.findOne({ id: operator.toLowerCase() });
 
+  console.log("DELEGATED", operator.toLowerCase());
+
   if (stakerData) {
     if (stakerData.operator !== operator.toLowerCase()) {
       operatorData.totalStakers = operatorData.totalStakers + 1 || 1;

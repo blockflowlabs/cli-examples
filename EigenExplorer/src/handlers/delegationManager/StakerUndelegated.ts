@@ -20,10 +20,12 @@ export const StakerUndelegatedHandler = async (context: IEventContext, bind: IBi
   const stakerData = await stakerDb.findOne({ id: staker.toLowerCase() });
   const operatorData = await operatorDb.findOne({ id: operator.toLowerCase() });
 
+  console.log("UNDELEGATED", operator.toLowerCase());
+
   // update the staker record
   if (stakerData) {
     if (stakerData.operator === operator.toLowerCase()) {
-      operatorData.totalStakers = operatorData.totalStakers > 0 ? operatorData.totalStakers - 1 : 0;
+      operatorData.totalStakers -= 1;
       await operatorDb.save(operatorData);
     }
     if (stakerData.operator !== null) {
@@ -35,6 +37,8 @@ export const StakerUndelegatedHandler = async (context: IEventContext, bind: IBi
 
     await stakerDb.save(stakerData);
   } else {
+    operatorData.totalStakers -= 1;
+    await operatorDb.save(operatorData);
     await stakerDb.create({
       id: staker.toLowerCase(),
       address: staker.toLowerCase(),
