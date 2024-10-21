@@ -37,8 +37,6 @@ export const StakerUndelegatedHandler = async (context: IEventContext, bind: IBi
 
     await stakerDb.save(stakerData);
   } else {
-    operatorData.totalStakers -= 1;
-    await operatorDb.save(operatorData);
     await stakerDb.create({
       id: staker.toLowerCase(),
       address: staker.toLowerCase(),
