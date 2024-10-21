@@ -22,16 +22,6 @@ Resources:
       - Event: StrategyRemovedFromDepositWhitelist(address)
         Handler: src/handlers/strategyManager/StrategyRemovedFromDepositWhitelist.StrategyRemovedFromDepositWhitelistHandler
 
-  - Name: strategyManager
-    Abi: src/abis/strategyManager.json
-    Type: contract/function
-    Address: "0x858646372CC42E1A627fcE94aa7A7033e7CF075A"
-    Triggers:
-      - Function: depositIntoStrategy(address,address,uint256)
-        Handler: src/handlers/strategyManager/depositIntoStrategy.depositIntoStrategyHandler
-      - Function: depositIntoStrategyWithSignature(address,address,uint256,address,uint256,bytes)
-        Handler: src/handlers/strategyManager/depositIntoStrategyWithSignature.depositIntoStrategyWithSignatureHandler
-
   - Name: delegationManager
     Abi: src/abis/delegationManager.json
     Type: contract/event
