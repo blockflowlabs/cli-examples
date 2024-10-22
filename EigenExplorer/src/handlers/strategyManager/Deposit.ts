@@ -1,5 +1,6 @@
 import { IEventContext, IBind, ISecrets } from "@blockflow-labs/utils";
-import { Deposit, Strategy, Stats, Staker } from "../../types/schema";
+import { Deposit, Strategy, Stats, Staker } from "../../types/generated";
+import { Instance } from "@blockflow-labs/sdk";
 import { updateStats } from "../../utils/helpers";
 import { SHARES_OFFSET, BALANCE_OFFSET } from "../../data/constants";
 import BigNumber from "bignumber.js";
@@ -13,43 +14,38 @@ export const DepositHandler = async (context: IEventContext, bind: IBind, secret
   // Implement your event handler logic for Deposit here
 
   const { event, transaction, block, log } = context;
-  const { staker, token, strategy, shares, amount } = event;
+  const { staker, token, strategy, shares } = event;
 
-  const depositDb = bind(Deposit);
-  const strategyDb = bind(Strategy);
-  const statsDb = bind(Stats);
-  const stakerDb = bind(Staker);
+  const client = Instance.PostgresClient(bind);
+
+  const depositDb = client.db(Deposit);
+  const strategyDb = client.db(Strategy);
+  const statsDb = client.db(Stats);
+  const stakerDb = client.db(Staker);
+
+  console.log("deposit");
 
   const depositId = `${transaction.transaction_hash}_${log.log_index}`.toLowerCase();
 
-  const stakerData = await stakerDb.findOne({ id: staker.toLowerCase() });
+  const stakerData = await stakerDb.load({ address: staker.toLowerCase() });
 
   if (stakerData) {
-    stakerData.totalDeposits = stakerData.totalDeposits + 1 || 1;
+    stakerData.totalDeposits = Number(stakerData.totalDeposits) + 1 || 1;
 
     await stakerDb.save(stakerData);
   }
 
-  await depositDb.create({
-    id: depositId,
-    transactionHash: transaction.transaction_hash,
-    stakerAddress: staker.toLowerCase(),
-    tokenAddress: token.toLowerCase(),
-    strategyAddress: strategy.toLowerCase(),
-    shares: shares.toString(),
-    amount: amount.toString(),
-    createdAt: block.block_timestamp,
-    createdAtBlock: block.block_number,
+  const strategyData = await strategyDb.load({
+    address: strategy.toLowerCase(),
   });
 
-  const strategyData = await strategyDb.findOne({
-    id: strategy.toLowerCase(),
-  });
+  let amount = shares.toString();
 
   if (strategyData) {
     // get new total shares and total amount
     const newTotalShares = new BigNumber(strategyData.totalShares.toString()).plus(shares.toString());
     const newTotalAmount = new BigNumber(strategyData.totalAmount).plus(amount.toString());
+    amount = newTotalAmount.toString();
 
     // calculate new sharesToUnderlying after deposit
     const virtualPriorShares = newTotalShares.plus(SHARES_OFFSET.toString());
@@ -61,12 +57,26 @@ export const DepositHandler = async (context: IEventContext, bind: IBind, secret
     strategyData.sharesToUnderlying = sharesToUnderlying.toString();
     strategyData.totalShares = newTotalShares.toString();
     strategyData.totalAmount = newTotalAmount.toString();
-    strategyData.totalDeposits = strategyData.totalDeposits + 1 || 1;
+    strategyData.totalDeposits = Number(strategyData.totalDeposits) + 1 || 1;
     strategyData.updatedAt = block.block_timestamp;
     strategyData.updatedAtBlock = block.block_number;
 
     await strategyDb.save(strategyData);
   }
+
+  await depositDb.save({
+    rowId: depositId,
+    transactionHash: transaction.transaction_hash,
+    stakerAddress: staker.toLowerCase(),
+    tokenAddress: token.toLowerCase(),
+    strategyAddress: strategy.toLowerCase(),
+    shares: shares.toString(),
+    amount: amount,
+    createdAt: block.block_timestamp,
+    createdAtBlock: block.block_number,
+  });
+
+  console.log("strategyData", strategyData);
 
   await updateStats(statsDb, "totalDeposits", 1);
 };

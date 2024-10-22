@@ -1,5 +1,6 @@
-import { IEventContext, IBind, Instance, ISecrets } from "@blockflow-labs/utils";
-import { Strategy, Stats } from "../../types/schema";
+import { IEventContext, IBind, ISecrets } from "@blockflow-labs/utils";
+import { Instance } from "@blockflow-labs/sdk";
+import { Strategy, Stats } from "../../types/generated";
 import { strategyAbi } from "../../data/abi/strategy";
 import { erc20Abi } from "../../data/abi/erc20";
 import { ethers } from "ethers";
@@ -21,7 +22,8 @@ export const StrategyAddedToDepositWhitelistHandler = async (
   const { event, transaction, block, log } = context;
   const { strategy } = event;
 
-  const rpcEndpoint = secrets["RPC_ENDPOINT"];
+  // const rpcEndpoint = secrets["RPC_ENDPOINT"];
+  const rpcEndpoint = "https://convincing-boldest-fog.quiknode.pro/a5945f649aae3fa515a9b1d2f8479dd0bbb9aefe";
   const provider = new ethers.providers.JsonRpcProvider(rpcEndpoint);
   const ethCallProvider = new Provider(provider);
 
@@ -39,10 +41,12 @@ export const StrategyAddedToDepositWhitelistHandler = async (
     underlyingTokenContract.decimals(),
   ]);
 
-  const strategyDb: Instance = bind(Strategy);
-  const statsDb: Instance = bind(Stats);
+  const client = Instance.PostgresClient(bind);
 
-  const strategyData = await strategyDb.findOne({ id: strategy.toLowerCase() });
+  const strategyDb = client.db(Strategy);
+  const statsDb = client.db(Stats);
+
+  const strategyData = await strategyDb.load({ address: strategy.toLowerCase() });
 
   if (strategyData) {
     if (!strategyData.isDepositWhitelist) {
@@ -60,8 +64,7 @@ export const StrategyAddedToDepositWhitelistHandler = async (
 
     await strategyDb.save(strategyData);
   } else {
-    await strategyDb.create({
-      id: strategy.toLowerCase(),
+    await strategyDb.save({
       address: strategy.toLowerCase(),
       symbol: symbol,
       underlyingToken: {

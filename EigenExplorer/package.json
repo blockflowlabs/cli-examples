@@ -6,11 +6,15 @@
     "compile": "tsc -b"
   },
   "dependencies": {
+    "@blockflow-labs/sdk": "^1.0.4-beta.2",
     "@blockflow-labs/utils": "^1.0.9",
     "axios": "^1.7.7",
     "ethers": "^5.7.2",
     "ethers-multicall": "^0.2.3",
-    "node-abort-controller": "^3.1.1"
+    "node-abort-controller": "^3.1.1",
+    "type-graphql": "^2.0.0-rc.2",
+    "typedi": "^0.10.0",
+    "typeorm": "^0.3.20"
   },
   "devDependencies": {
     "bignumber.js": "^9.1.1",

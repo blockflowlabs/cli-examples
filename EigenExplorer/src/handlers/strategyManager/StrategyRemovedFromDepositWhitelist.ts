@@ -1,5 +1,6 @@
-import { IEventContext, IBind, Instance, ISecrets } from "@blockflow-labs/utils";
-import { Strategy, Stats } from "../../types/schema";
+import { IEventContext, IBind, ISecrets } from "@blockflow-labs/utils";
+import { Instance } from "@blockflow-labs/sdk";
+import { Strategy, Stats } from "../../types/generated";
 import { updateStats } from "../../utils/helpers";
 /**
  * @dev Event::StrategyRemovedFromDepositWhitelist(address strategy)
@@ -16,10 +17,12 @@ export const StrategyRemovedFromDepositWhitelistHandler = async (
   const { event, transaction, block, log } = context;
   const { strategy } = event;
 
-  const strategyDb: Instance = bind(Strategy);
-  const statsDb: Instance = bind(Stats);
+  const client = Instance.PostgresClient(bind);
 
-  const strategyData = await strategyDb.findOne({ id: strategy.toLowerCase() });
+  const strategyDb = client.db(Strategy);
+  const statsDb = client.db(Stats);
+
+  const strategyData = await strategyDb.load({ address: strategy.toLowerCase() });
 
   if (strategyData) {
     if (strategyData.isDepositWhitelist) {

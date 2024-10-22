@@ -4,6 +4,8 @@
     "module": "CommonJS",
     "outDir": "./build/bin/",
     "rootDir": "./src",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,

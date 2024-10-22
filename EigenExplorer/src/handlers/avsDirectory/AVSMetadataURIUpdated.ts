@@ -1,5 +1,6 @@
-import { IEventContext, IBind, Instance, ISecrets } from "@blockflow-labs/utils";
-import { AVS, Stats } from "../../types/schema";
+import { IEventContext, IBind, ISecrets } from "@blockflow-labs/utils";
+import { Instance } from "@blockflow-labs/sdk";
+import { AVS, Stats } from "../../types/generated";
 import { fetchWithTimeout, validateMetadata, updateStats } from "../../utils/helpers";
 /**
  * @dev Event::AVSMetadataURIUpdated(address avs, string metadataURI)
@@ -12,9 +13,10 @@ export const AVSMetadataURIUpdatedHandler = async (context: IEventContext, bind:
   const { event, transaction, block, log } = context;
   const { avs, metadataURI } = event;
 
-  const avsDb: Instance = bind(AVS);
+  const client = Instance.PostgresClient(bind);
+  const avsDb = client.db(AVS);
 
-  const avsData = await avsDb.findOne({ id: avs.toLowerCase() });
+  const avsData = await avsDb.load({ address: avs.toLowerCase() });
 
   const response = await fetchWithTimeout(metadataURI);
   const isMetadataFetched = response ? response.status === 200 : false;
@@ -36,9 +38,8 @@ export const AVSMetadataURIUpdatedHandler = async (context: IEventContext, bind:
 
     await avsDb.save(avsData);
   } else {
-    await avsDb.create({
+    await avsDb.save({
       metadataURI,
-      id: avs.toLowerCase(),
       metadataName: avsMetadata?.name,
       metadataDescription: avsMetadata?.description,
       metadataLogo: avsMetadata?.logo,
@@ -58,7 +59,7 @@ export const AVSMetadataURIUpdatedHandler = async (context: IEventContext, bind:
     });
   }
 
-  const statsDb: Instance = bind(Stats);
+  const statsDb = client.db(Stats);
 
   await updateStats(statsDb, "totalRegisteredAvs", 1, "add");
 };

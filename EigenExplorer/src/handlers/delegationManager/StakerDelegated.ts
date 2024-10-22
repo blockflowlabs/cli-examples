@@ -1,5 +1,6 @@
-import { IEventContext, IBind, Instance, ISecrets } from "@blockflow-labs/utils";
-import { Staker, Operator, Stats } from "../../types/schema";
+import { IEventContext, IBind, ISecrets } from "@blockflow-labs/utils";
+import { Instance } from "@blockflow-labs/sdk";
+import { Staker, Operator, Stats } from "../../types/generated";
 import { updateStats } from "../../utils/helpers";
 
 /**
@@ -13,18 +14,20 @@ export const StakerDelegatedHandler = async (context: IEventContext, bind: IBind
   const { event, transaction, block, log } = context;
   const { staker, operator } = event;
 
-  const stakerDb: Instance = bind(Staker);
-  const operatorDb: Instance = bind(Operator);
-  const statsDb: Instance = bind(Stats);
+  const client = Instance.PostgresClient(bind);
 
-  const stakerData = await stakerDb.findOne({ id: staker.toLowerCase() });
-  const operatorData = await operatorDb.findOne({ id: operator.toLowerCase() });
+  const stakerDb = client.db(Staker);
+  const operatorDb = client.db(Operator);
+  const statsDb = client.db(Stats);
+
+  const stakerData = await stakerDb.load({ address: staker.toLowerCase() });
+  const operatorData = await operatorDb.load({ address: operator.toLowerCase() });
 
   if (stakerData) {
-    if (stakerData.operator !== operator.toLowerCase()) {
-      operatorData.totalStakers = operatorData.totalStakers + 1 || 1;
-      await operatorDb.save(operatorData);
-    }
+    // if (stakerData.operator !== operator.toLowerCase()) {
+    //   operatorData.totalStakers = Number(operatorData.totalStakers) + 1 || 1;
+    //   await operatorDb.save(operatorData);
+    // }
     if (stakerData.operator === null) {
       await updateStats(statsDb, "totalActiveStakers", 1);
     }
@@ -34,11 +37,10 @@ export const StakerDelegatedHandler = async (context: IEventContext, bind: IBind
 
     await stakerDb.save(stakerData);
   } else {
-    operatorData.totalStakers = operatorData.totalStakers + 1 || 1;
-    await operatorDb.save(operatorData);
+    // operatorData.totalStakers = Number(operatorData.totalStakers) + 1 || 1;
+    // await operatorDb.save(operatorData);
 
-    await stakerDb.create({
-      id: staker.toLowerCase(),
+    await stakerDb.save({
       address: staker.toLowerCase(),
       operator: operator.toLowerCase(),
       shares: [],

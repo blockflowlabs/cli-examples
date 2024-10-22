@@ -1,5 +1,6 @@
-import { IEventContext, IBind, Instance, ISecrets } from "@blockflow-labs/utils";
-import { Stats } from "../../types/schema";
+import { IEventContext, IBind, ISecrets } from "@blockflow-labs/utils";
+import { Instance } from "@blockflow-labs/sdk";
+import { Stats } from "../../types/generated";
 
 /**
  * @dev Event::MinWithdrawalDelayBlocksSet(uint256 previousValue, uint256 newValue)
@@ -12,17 +13,21 @@ export const MinWithdrawalDelayBlocksSetHandler = async (context: IEventContext,
   const { event, transaction, block, log } = context;
   const { previousValue, newValue } = event;
 
-  const statsDb: Instance = bind(Stats);
+  console.log("min withdrawal delay");
 
-  const statsData = await statsDb.findOne({ id: "eigen_explorer_stats" });
+  const client = Instance.PostgresClient(bind);
+
+  const statsDb = client.db(Stats);
+
+  const statsData = await statsDb.load({ statId: "eigen_explorer_stats" });
 
   if (statsData) {
-    statsData.minWithdrawalDelayBlocks = newValue;
+    statsData.minWithdrawalDelayBlocks = Number(newValue);
 
     await statsDb.save(statsData);
   } else {
-    await statsDb.create({
-      id: "eigen_explorer_stats",
+    await statsDb.save({
+      statId: "eigen_explorer_stats",
       totalRegisteredAvs: 0,
       totalActiveAvs: 0,
       totalRegisteredOperators: 0,

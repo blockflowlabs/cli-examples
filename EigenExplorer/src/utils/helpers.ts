@@ -2,6 +2,7 @@ import { Instance } from "@blockflow-labs/utils";
 import axios, { AxiosResponse } from "axios";
 import { AbortController } from "node-abort-controller";
 import { utils } from "ethers";
+import { InstanceDBOperations } from "@blockflow-labs/sdk/dist/core";
 
 export async function fetchWithTimeout(url: string, timeout = 5000): Promise<AxiosResponse | undefined> {
   const controller = new AbortController();
@@ -44,11 +45,11 @@ export function validateMetadata(metadata: string): EntityMetadata | null {
   return null;
 }
 
-export async function updateStats(db: Instance, key: string, value: number, method?: string) {
-  const statsData = await db.findOne({ id: "eigen_explorer_stats" });
+export async function updateStats(db: InstanceDBOperations, key: string, value: number, method?: string) {
+  const statsData = await db.load({ statId: "eigen_explorer_stats" });
 
   if (statsData) {
-    const valueToChange = statsData[key] || 0;
+    const valueToChange = Number(statsData[key]) || 0;
     switch (method) {
       case "add":
         statsData[key] = valueToChange + value;
@@ -76,8 +77,8 @@ export async function updateStats(db: Instance, key: string, value: number, meth
         break;
     }
 
-    await db.create({
-      id: "eigen_explorer_stats",
+    await db.save({
+      statId: "eigen_explorer_stats",
       [key]: valueToAdd,
     });
   }
