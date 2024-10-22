@@ -22,8 +22,7 @@ export const StrategyAddedToDepositWhitelistHandler = async (
   const { event, transaction, block, log } = context;
   const { strategy } = event;
 
-  // const rpcEndpoint = secrets["RPC_ENDPOINT"];
-  const rpcEndpoint = "https://convincing-boldest-fog.quiknode.pro/a5945f649aae3fa515a9b1d2f8479dd0bbb9aefe";
+  const rpcEndpoint = secrets["RPC_ENDPOINT"];
   const provider = new ethers.providers.JsonRpcProvider(rpcEndpoint);
   const ethCallProvider = new Provider(provider);
 

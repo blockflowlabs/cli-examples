@@ -25,10 +25,10 @@ export const StakerUndelegatedHandler = async (context: IEventContext, bind: IBi
 
   // update the staker record
   if (stakerData) {
-    // if (stakerData.operator === operator.toLowerCase()) {
-    //   operatorData.totalStakers -= 1;
-    //   await operatorDb.save(operatorData);
-    // }
+    if (stakerData.operator === operator.toLowerCase()) {
+      operatorData.totalStakers -= 1;
+      await operatorDb.save(operatorData);
+    }
     if (stakerData.operator !== null) {
       await updateStats(statsDb, "totalActiveStakers", 1, "subtract");
     }

@@ -24,10 +24,10 @@ export const StakerDelegatedHandler = async (context: IEventContext, bind: IBind
   const operatorData = await operatorDb.load({ address: operator.toLowerCase() });
 
   if (stakerData) {
-    // if (stakerData.operator !== operator.toLowerCase()) {
-    //   operatorData.totalStakers = Number(operatorData.totalStakers) + 1 || 1;
-    //   await operatorDb.save(operatorData);
-    // }
+    if (stakerData.operator !== operator.toLowerCase()) {
+      operatorData.totalStakers = Number(operatorData.totalStakers) + 1 || 1;
+      await operatorDb.save(operatorData);
+    }
     if (stakerData.operator === null) {
       await updateStats(statsDb, "totalActiveStakers", 1);
     }
@@ -37,8 +37,8 @@ export const StakerDelegatedHandler = async (context: IEventContext, bind: IBind
 
     await stakerDb.save(stakerData);
   } else {
-    // operatorData.totalStakers = Number(operatorData.totalStakers) + 1 || 1;
-    // await operatorDb.save(operatorData);
+    operatorData.totalStakers = Number(operatorData.totalStakers) + 1 || 1;
+    await operatorDb.save(operatorData);
 
     await stakerDb.save({
       address: staker.toLowerCase(),
