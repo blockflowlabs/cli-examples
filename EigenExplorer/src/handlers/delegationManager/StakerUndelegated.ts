@@ -39,7 +39,6 @@ export const StakerUndelegatedHandler = async (context: IEventContext, bind: IBi
     await stakerDb.save(stakerData);
   } else {
     await stakerDb.save({
-      id: staker.toLowerCase(),
       address: staker.toLowerCase(),
       operator: null,
       shares: [],

@@ -33,7 +33,7 @@ export const WithdrawalCompletedHandler = async (context: IEventContext, bind: I
     const strategiesData = await strategiesDb.loadMany({ address: { $in: strategyIds } });
 
     const strategiesMap = strategiesData.reduce((map: any, strategy: any) => {
-      map[strategy.id] = strategy;
+      map[strategy.address] = strategy;
       return map;
     }, {});
 
