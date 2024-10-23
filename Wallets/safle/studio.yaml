@@ -1,0 +1,35 @@
+Version: 2.0.0
+Type: instance
+Metadata:
+  name: Project Apollo
+  description: A top-secret research project to the moon
+Auth:
+  userId: XXXX-XXXX-XXXX-XXXX
+  projectId: XXXX-XXXX-XXXX-XXXX
+  accessKey: XXXX-XXXX-XXXX-XXXX
+  secretKey: XXXX-XXXX-XXXX-XXXX
+Path:
+  schema: ./studio.schema.ts
+  docker: ./docker-compose.yml
+Environment:
+  testing:
+    startBlock: 63286024
+    network: Polygon
+    execution: parallel
+    rpc: https://polygon.llamarpc.com
+    range: 10
+  deployment:
+    startBlock: latest
+    network: Polygon
+    execution: parallel
+Resources:
+  - name: safleId
+    type: transaction/from
+    handler: src/handlers/child.handler
+  - name: SafleFactory
+    type: contract/function
+    abi: src/abis/factory.json
+    address: "0x95A5594c63EC5B5E5A5Bb000990Ac567d90095dB"
+    triggers:
+      - function: registerSafleId(address,string)
+        handler: src/handlers/SafleFactory/registerSafleId.registerSafleIdHandler
