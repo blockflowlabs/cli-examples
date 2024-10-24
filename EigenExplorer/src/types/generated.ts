@@ -1,5 +1,5 @@
 export const Staker = {
-  "name": "ebcb5419-386c-4ddf-8635-3d4763b88902-Staker",
+  "name": "c62edbfe-e98b-43a6-b826-97936508c7ce-Staker",
   "db": "postgres",
   "type": "managed",
   "properties": {
@@ -29,7 +29,7 @@ export interface IStaker {
 }
 
 export const Operator = {
-  "name": "ebcb5419-386c-4ddf-8635-3d4763b88902-Operator",
+  "name": "c62edbfe-e98b-43a6-b826-97936508c7ce-Operator",
   "db": "postgres",
   "type": "managed",
   "properties": {
@@ -79,7 +79,7 @@ export interface IOperator {
 }
 
 export const AVS = {
-  "name": "ebcb5419-386c-4ddf-8635-3d4763b88902-AVS",
+  "name": "c62edbfe-e98b-43a6-b826-97936508c7ce-AVS",
   "db": "postgres",
   "type": "managed",
   "properties": {
@@ -125,7 +125,7 @@ export interface IAVS {
 }
 
 export const AvsOperator = {
-  "name": "ebcb5419-386c-4ddf-8635-3d4763b88902-AvsOperator",
+  "name": "c62edbfe-e98b-43a6-b826-97936508c7ce-AvsOperator",
   "db": "postgres",
   "type": "managed",
   "properties": {
@@ -153,7 +153,7 @@ export interface IAvsOperator {
 }
 
 export const Withdrawal = {
-  "name": "ebcb5419-386c-4ddf-8635-3d4763b88902-Withdrawal",
+  "name": "c62edbfe-e98b-43a6-b826-97936508c7ce-Withdrawal",
   "db": "postgres",
   "type": "managed",
   "properties": {
@@ -189,7 +189,7 @@ export interface IWithdrawal {
 }
 
 export const Deposit = {
-  "name": "ebcb5419-386c-4ddf-8635-3d4763b88902-Deposit",
+  "name": "c62edbfe-e98b-43a6-b826-97936508c7ce-Deposit",
   "db": "postgres",
   "type": "managed",
   "properties": {
@@ -219,7 +219,7 @@ export interface IDeposit {
 }
 
 export const EigenPod = {
-  "name": "ebcb5419-386c-4ddf-8635-3d4763b88902-EigenPod",
+  "name": "c62edbfe-e98b-43a6-b826-97936508c7ce-EigenPod",
   "db": "postgres",
   "type": "managed",
   "properties": {
@@ -243,7 +243,7 @@ export interface IEigenPod {
 }
 
 export const PodTransactions = {
-  "name": "ebcb5419-386c-4ddf-8635-3d4763b88902-PodTransactions",
+  "name": "c62edbfe-e98b-43a6-b826-97936508c7ce-PodTransactions",
   "db": "postgres",
   "type": "managed",
   "properties": {
@@ -275,7 +275,7 @@ export interface IPodTransactions {
 }
 
 export const Stats = {
-  "name": "ebcb5419-386c-4ddf-8635-3d4763b88902-Stats",
+  "name": "c62edbfe-e98b-43a6-b826-97936508c7ce-Stats",
   "db": "postgres",
   "type": "managed",
   "properties": {
@@ -311,7 +311,7 @@ export interface IStats {
 }
 
 export const Strategy = {
-  "name": "ebcb5419-386c-4ddf-8635-3d4763b88902-Strategy",
+  "name": "c62edbfe-e98b-43a6-b826-97936508c7ce-Strategy",
   "db": "postgres",
   "type": "managed",
   "properties": {
@@ -349,7 +349,7 @@ export interface IStrategy {
 }
 
 export const OperatorHistory = {
-  "name": "ebcb5419-386c-4ddf-8635-3d4763b88902-OperatorHistory",
+  "name": "c62edbfe-e98b-43a6-b826-97936508c7ce-OperatorHistory",
   "db": "postgres",
   "type": "managed",
   "properties": {
@@ -375,7 +375,7 @@ export interface IOperatorHistory {
 }
 
 export const OperatorRestakeHistory = {
-  "name": "ebcb5419-386c-4ddf-8635-3d4763b88902-OperatorRestakeHistory",
+  "name": "c62edbfe-e98b-43a6-b826-97936508c7ce-OperatorRestakeHistory",
   "db": "postgres",
   "type": "managed",
   "properties": {

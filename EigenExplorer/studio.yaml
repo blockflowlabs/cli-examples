@@ -22,6 +22,8 @@ Environment:
     startBlock: 17445563
     network: Ethereum
     execution: parallel
+Secrets:
+  RPC_ENDPOINT: process.env.RPC_ENDPOINT
 Resources:
   - name: strategyManager
     abi: src/abis/strategyManager.json
