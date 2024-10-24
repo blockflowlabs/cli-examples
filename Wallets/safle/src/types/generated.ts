@@ -1,5 +1,5 @@
 export const UserTransaction = {
-  "name": "XXXX-XXXX-XXXX-XXXX-UserTransaction",
+  "name": "fcbebeaa-33da-4d1c-aff6-b49183ed5832-UserTransaction",
   "db": "postgres",
   "type": "managed",
   "properties": {
@@ -17,7 +17,7 @@ export interface IUserTransaction {
 }
 
 export const userStats = {
-  "name": "XXXX-XXXX-XXXX-XXXX-userStats",
+  "name": "fcbebeaa-33da-4d1c-aff6-b49183ed5832-userStats",
   "db": "postgres",
   "type": "managed",
   "properties": {
@@ -35,7 +35,7 @@ export interface IuserStats {
 }
 
 export const Transaction = {
-  "name": "XXXX-XXXX-XXXX-XXXX-Transaction",
+  "name": "fcbebeaa-33da-4d1c-aff6-b49183ed5832-Transaction",
   "db": "postgres",
   "type": "managed",
   "properties": {
@@ -73,7 +73,7 @@ export interface ITransaction {
 }
 
 export const Factory = {
-  "name": "XXXX-XXXX-XXXX-XXXX-Factory",
+  "name": "fcbebeaa-33da-4d1c-aff6-b49183ed5832-Factory",
   "db": "postgres",
   "type": "managed",
   "properties": {
@@ -91,7 +91,7 @@ export interface IFactory {
 }
 
 export const Registration = {
-  "name": "XXXX-XXXX-XXXX-XXXX-Registration",
+  "name": "fcbebeaa-33da-4d1c-aff6-b49183ed5832-Registration",
   "db": "postgres",
   "type": "managed",
   "properties": {

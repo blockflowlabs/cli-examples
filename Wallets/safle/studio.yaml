@@ -4,10 +4,10 @@ Metadata:
   name: Project Apollo
   description: A top-secret research project to the moon
 Auth:
-  userId: XXXX-XXXX-XXXX-XXXX
-  projectId: XXXX-XXXX-XXXX-XXXX
-  accessKey: XXXX-XXXX-XXXX-XXXX
-  secretKey: XXXX-XXXX-XXXX-XXXX
+  userId: process.env.USER_ID
+  projectId: process.env.PROJECT_ID
+  accessKey: process.env.ACCESS_KEY
+  secretKey: process.env.SECRET_KEY
 Path:
   schema: ./studio.schema.ts
   docker: ./docker-compose.yml
@@ -19,7 +19,7 @@ Environment:
     rpc: https://polygon.llamarpc.com
     range: 10
   deployment:
-    startBlock: latest
+    startBlock: 12082336
     network: Polygon
     execution: parallel
 Resources:
