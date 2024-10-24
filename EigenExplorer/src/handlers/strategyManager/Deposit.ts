@@ -23,8 +23,6 @@ export const DepositHandler = async (context: IEventContext, bind: IBind, secret
   const statsDb = client.db(Stats);
   const stakerDb = client.db(Staker);
 
-  console.log("deposit");
-
   const depositId = `${transaction.transaction_hash}_${log.log_index}`.toLowerCase();
 
   const stakerData = await stakerDb.load({ address: staker.toLowerCase() });
@@ -75,8 +73,6 @@ export const DepositHandler = async (context: IEventContext, bind: IBind, secret
     createdAt: block.block_timestamp,
     createdAtBlock: block.block_number,
   });
-
-  console.log("strategyData", strategyData);
 
   await updateStats(statsDb, "totalDeposits", 1);
 };

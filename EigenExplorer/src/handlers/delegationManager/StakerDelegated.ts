@@ -25,6 +25,10 @@ export const StakerDelegatedHandler = async (context: IEventContext, bind: IBind
 
   if (stakerData) {
     if (stakerData.operator !== operator.toLowerCase()) {
+      console.log("DELEGATED:", operator.toLowerCase());
+      if (!operatorData) {
+        console.log("DELEGATED: OPERATOR_NOT_FOUND", operator.toLowerCase());
+      }
       operatorData.totalStakers = Number(operatorData.totalStakers) + 1 || 1;
       await operatorDb.save(operatorData);
     }
@@ -37,6 +41,7 @@ export const StakerDelegatedHandler = async (context: IEventContext, bind: IBind
 
     await stakerDb.save(stakerData);
   } else {
+    console.log("DELEGATED:", operator.toLowerCase());
     operatorData.totalStakers = Number(operatorData.totalStakers) + 1 || 1;
     await operatorDb.save(operatorData);
 

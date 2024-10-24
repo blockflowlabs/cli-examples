@@ -26,6 +26,7 @@ export const StakerUndelegatedHandler = async (context: IEventContext, bind: IBi
   // update the staker record
   if (stakerData) {
     if (stakerData.operator === operator.toLowerCase()) {
+      console.log("UNDELEGATED:", operator.toLowerCase());
       operatorData.totalStakers -= 1;
       await operatorDb.save(operatorData);
     }
