@@ -1,0 +1,42 @@
+Version: 2.0.0
+Type: instance
+Metadata:
+  name: Uniswap
+  description: Uniswap V2 Indexing Example
+Auth:
+  userId: XXXX-XXXX-XXXX-XXXX
+  projectId: XXXX-XXXX-XXXX-XXXX
+  accessKey: XXXX-XXXX-XXXX-XXXX
+  secretKey: XXXX-XXXX-XXXX-XXXX
+Path:
+  schema: ./studio.schema.ts
+  docker: ./docker-compose.yml
+Environment:
+  testing:
+    startBlock: 21036729
+    network: Ethereum
+    execution: parallel
+    rpc: https://eth.llamarpc.com
+    range: 10
+  deployment:
+    startBlock: latest
+    network: Ethereum
+    execution: parallel
+Resources:
+  - name: factory
+    type: contract/event
+    abi: src/abis/factory.json
+    address: "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f"
+    triggers:
+      - event: PairCreated(address indexed,address indexed,address,uint256)
+        handler: src/handlers/PairCreated.PairCreatedHandler
+  - name: pair
+    type: contract/event
+    abi: src/abis/pair.json
+    triggers:
+      - event: Swap(address indexed,uint256,uint256,uint256,uint256,address indexed)
+        handler: src/handlers/Swap.SwapHandler
+  - name: graphql-apis
+    type: api/graphql
+    slug: graphql
+    handler: src/apis/graphql.ts
