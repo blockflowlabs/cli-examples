@@ -1,11 +1,7 @@
 import { IEventContext, IBind, ISecrets } from "@blockflow-labs/utils";
 import { Instance } from "@blockflow-labs/sdk";
 import { Strategy, Stats } from "../../types/generated";
-import { strategyAbi } from "../../data/abi/strategy";
-import { erc20Abi } from "../../data/abi/erc20";
-import { ethers } from "ethers";
-import { Contract, Provider } from "ethers-multicall";
-import { updateStats } from "../../utils/helpers";
+import { updateStats, getStrategyMetadata } from "../../utils/helpers";
 
 /**
  * @dev Event::StrategyAddedToDepositWhitelist(address strategy)
@@ -22,23 +18,7 @@ export const StrategyAddedToDepositWhitelistHandler = async (
   const { event, transaction, block, log } = context;
   const { strategy } = event;
 
-  const rpcEndpoint = secrets["RPC_ENDPOINT"];
-  const provider = new ethers.providers.JsonRpcProvider(rpcEndpoint);
-  const ethCallProvider = new Provider(provider);
-
-  await ethCallProvider.init();
-
-  const strategyContract = new Contract(strategy, strategyAbi);
-  const [underlyingTokenAddress] = await ethCallProvider.all([strategyContract.underlyingToken()]);
-
-  // fetch name, symbol and decimals of the underlying token
-  const underlyingTokenContract = new Contract(underlyingTokenAddress, erc20Abi);
-
-  const [name, symbol, decimals] = await ethCallProvider.all([
-    underlyingTokenContract.name(),
-    underlyingTokenContract.symbol(),
-    underlyingTokenContract.decimals(),
-  ]);
+  const { underlyingTokenAddress, name, symbol, decimals } = (await getStrategyMetadata(strategy, secrets)) || {};
 
   const client = Instance.PostgresClient(bind);
 
@@ -53,10 +33,10 @@ export const StrategyAddedToDepositWhitelistHandler = async (
     }
     strategyData.isDepositWhitelist = true;
     strategyData.underlyingToken = {
-      address: underlyingTokenAddress,
-      name: name,
-      symbol: symbol,
-      decimals: Number(decimals),
+      address: underlyingTokenAddress || "",
+      name: name || "",
+      symbol: symbol || "",
+      decimals: Number(decimals) || 18,
     };
     strategyData.updatedAt = block.block_timestamp;
     strategyData.updatedAtBlock = block.block_number;
@@ -67,10 +47,10 @@ export const StrategyAddedToDepositWhitelistHandler = async (
       address: strategy.toLowerCase(),
       symbol: symbol,
       underlyingToken: {
-        address: underlyingTokenAddress,
-        name: name,
-        symbol: symbol,
-        decimals: Number(decimals),
+        address: underlyingTokenAddress || "",
+        name: name || "",
+        symbol: symbol || "",
+        decimals: Number(decimals) || 18,
       },
       isDepositWhitelist: true,
       sharesToUnderlying: (1e18).toString(),

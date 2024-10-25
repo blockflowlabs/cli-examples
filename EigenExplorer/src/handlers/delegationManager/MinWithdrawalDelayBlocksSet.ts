@@ -13,8 +13,6 @@ export const MinWithdrawalDelayBlocksSetHandler = async (context: IEventContext,
   const { event, transaction, block, log } = context;
   const { previousValue, newValue } = event;
 
-  console.log("min withdrawal delay");
-
   const client = Instance.PostgresClient(bind);
 
   const statsDb = client.db(Stats);

@@ -1,8 +1,12 @@
-import { Instance } from "@blockflow-labs/utils";
+import { Instance, ISecrets } from "@blockflow-labs/utils";
 import axios, { AxiosResponse } from "axios";
 import { AbortController } from "node-abort-controller";
-import { utils } from "ethers";
+import { utils, providers } from "ethers";
+import { Contract, Provider } from "ethers-multicall";
 import { InstanceDBOperations } from "@blockflow-labs/sdk/dist/core";
+
+import { strategyAbi } from "../data/abi/strategy";
+import { erc20Abi } from "../data/abi/erc20";
 
 export async function fetchWithTimeout(url: string, timeout = 5000): Promise<AxiosResponse | undefined> {
   const controller = new AbortController();
@@ -43,6 +47,37 @@ export function validateMetadata(metadata: string): EntityMetadata | null {
   } catch {}
 
   return null;
+}
+
+export async function getStrategyMetadata(strategyAddress: string, secrets: ISecrets) {
+  try {
+    const rpcEndpoint = secrets["RPC_ENDPOINT"];
+    const provider = new providers.JsonRpcProvider(rpcEndpoint);
+    const ethCallProvider = new Provider(provider);
+
+    await ethCallProvider.init();
+
+    const strategyContract = new Contract(strategyAddress, strategyAbi);
+    const [underlyingTokenAddress] = await ethCallProvider.all([strategyContract.underlyingToken()]);
+
+    // fetch name, symbol and decimals of the underlying token
+    const underlyingTokenContract = new Contract(underlyingTokenAddress, erc20Abi);
+
+    const [name, symbol, decimals] = await ethCallProvider.all([
+      underlyingTokenContract.name(),
+      underlyingTokenContract.symbol(),
+      underlyingTokenContract.decimals(),
+    ]);
+
+    return {
+      underlyingTokenAddress,
+      name,
+      symbol,
+      decimals: Number(decimals),
+    };
+  } catch (e) {
+    return null;
+  }
 }
 
 export async function updateStats(db: InstanceDBOperations, key: string, value: number, method?: string) {

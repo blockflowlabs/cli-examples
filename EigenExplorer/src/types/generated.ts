@@ -1,11 +1,16 @@
 export const Staker = {
-  "name": "c62edbfe-e98b-43a6-b826-97936508c7ce-Staker",
+  "name": "DKJF-Staker",
   "db": "postgres",
   "type": "managed",
   "properties": {
     "address": "string?",
     "operator": "string?",
-    "shares": "any?",
+    "shares": [
+      {
+        "strategy": "string?",
+        "shares": "string?"
+      }
+    ],
     "totalWithdrawals": "number?",
     "totalDeposits": "number?",
     "createdAt": "number?",
@@ -17,24 +22,30 @@ export const Staker = {
 };
 
 export interface IStaker {
-  address: string;
-  operator: string;
-  shares: any;
-  totalWithdrawals: number;
-  totalDeposits: number;
-  createdAt: number;
-  updatedAt: number;
-  createdAtBlock: number;
-  updatedAtBlock: number;
+  address?: string;
+  operator?: string;
+  shares: { strategy: string; shares: string }[];
+  totalWithdrawals?: number;
+  totalDeposits?: number;
+  createdAt?: number;
+  updatedAt?: number;
+  createdAtBlock?: number;
+  updatedAtBlock?: number;
 }
 
 export const Operator = {
-  "name": "c62edbfe-e98b-43a6-b826-97936508c7ce-Operator",
+  "name": "DKJF-Operator",
   "db": "postgres",
   "type": "managed",
   "properties": {
     "address": "string?",
-    "details": "any?",
+    "details": [
+      {
+        "earningsReceiver": "string?",
+        "delegationApprover": "string?",
+        "stakerOptOutWindowBlocks": "number?"
+      }
+    ],
     "metadataURI": "string?",
     "metadataName": "string?",
     "metadataDescription": "string?",
@@ -44,8 +55,18 @@ export const Operator = {
     "metadataWebsite": "string?",
     "metadataX": "string?",
     "isMetadataSynced": "boolean?",
-    "avsRegistrations": "any?",
-    "shares": "any?",
+    "avsRegistrations": [
+      {
+        "address": "string?",
+        "isActive": "boolean?"
+      }
+    ],
+    "shares": [
+      {
+        "strategy": "string?",
+        "shares": "string?"
+      }
+    ],
     "totalStakers": "number?",
     "totalAvs": "number?",
     "createdAt": "number?",
@@ -57,29 +78,29 @@ export const Operator = {
 };
 
 export interface IOperator {
-  address: string;
-  details: any;
-  metadataURI: string;
-  metadataName: string;
-  metadataDescription: string;
-  metadataDiscord: string;
-  metadataLogo: string;
-  metadataTelegram: string;
-  metadataWebsite: string;
-  metadataX: string;
-  isMetadataSynced: boolean;
-  avsRegistrations: any;
-  shares: any;
-  totalStakers: number;
-  totalAvs: number;
-  createdAt: number;
-  updatedAt: number;
-  createdAtBlock: number;
-  updatedAtBlock: number;
+  address?: string;
+  details: { earningsReceiver: string; delegationApprover: string; stakerOptOutWindowBlocks: number }[];
+  metadataURI?: string;
+  metadataName?: string;
+  metadataDescription?: string;
+  metadataDiscord?: string;
+  metadataLogo?: string;
+  metadataTelegram?: string;
+  metadataWebsite?: string;
+  metadataX?: string;
+  isMetadataSynced?: boolean;
+  avsRegistrations: { address: string; isActive: boolean }[];
+  shares: { strategy: string; shares: string }[];
+  totalStakers?: number;
+  totalAvs?: number;
+  createdAt?: number;
+  updatedAt?: number;
+  createdAtBlock?: number;
+  updatedAtBlock?: number;
 }
 
 export const AVS = {
-  "name": "c62edbfe-e98b-43a6-b826-97936508c7ce-AVS",
+  "name": "DKJF-AVS",
   "db": "postgres",
   "type": "managed",
   "properties": {
@@ -93,8 +114,12 @@ export const AVS = {
     "metadataWebsite": "string?",
     "metadataX": "string?",
     "isMetadataSynced": "boolean?",
-    "activeOperators": "any?",
-    "inactiveOperators": "any?",
+    "activeOperators": [
+      "string?"
+    ],
+    "inactiveOperators": [
+      "string?"
+    ],
     "totalOperators": "number?",
     "createdAt": "number?",
     "updatedAt": "number?",
@@ -105,27 +130,27 @@ export const AVS = {
 };
 
 export interface IAVS {
-  address: string;
-  metadataURI: string;
-  metadataName: string;
-  metadataDescription: string;
-  metadataDiscord: string;
-  metadataLogo: string;
-  metadataTelegram: string;
-  metadataWebsite: string;
-  metadataX: string;
-  isMetadataSynced: boolean;
-  activeOperators: any;
-  inactiveOperators: any;
-  totalOperators: number;
-  createdAt: number;
-  updatedAt: number;
-  createdAtBlock: number;
-  updatedAtBlock: number;
+  address?: string;
+  metadataURI?: string;
+  metadataName?: string;
+  metadataDescription?: string;
+  metadataDiscord?: string;
+  metadataLogo?: string;
+  metadataTelegram?: string;
+  metadataWebsite?: string;
+  metadataX?: string;
+  isMetadataSynced?: boolean;
+  activeOperators: string[];
+  inactiveOperators: string[];
+  totalOperators?: number;
+  createdAt?: number;
+  updatedAt?: number;
+  createdAtBlock?: number;
+  updatedAtBlock?: number;
 }
 
 export const AvsOperator = {
-  "name": "c62edbfe-e98b-43a6-b826-97936508c7ce-AvsOperator",
+  "name": "DKJF-AvsOperator",
   "db": "postgres",
   "type": "managed",
   "properties": {
@@ -142,18 +167,18 @@ export const AvsOperator = {
 };
 
 export interface IAvsOperator {
-  rowId: string;
-  avsAddress: string;
-  operatorAddress: string;
-  isActive: boolean;
-  createdAt: number;
-  updatedAt: number;
-  createdAtBlock: number;
-  updatedAtBlock: number;
+  rowId?: string;
+  avsAddress?: string;
+  operatorAddress?: string;
+  isActive?: boolean;
+  createdAt?: number;
+  updatedAt?: number;
+  createdAtBlock?: number;
+  updatedAtBlock?: number;
 }
 
 export const Withdrawal = {
-  "name": "c62edbfe-e98b-43a6-b826-97936508c7ce-Withdrawal",
+  "name": "DKJF-Withdrawal",
   "db": "postgres",
   "type": "managed",
   "properties": {
@@ -163,7 +188,12 @@ export const Withdrawal = {
     "stakerAddress": "string?",
     "delegatedTo": "string?",
     "withdrawerAddress": "string?",
-    "strategyShares": "any?",
+    "strategyShares": [
+      {
+        "strategy": "string?",
+        "shares": "string?"
+      }
+    ],
     "isCompleted": "boolean?",
     "createdAt": "number?",
     "updatedAt": "number?",
@@ -174,22 +204,22 @@ export const Withdrawal = {
 };
 
 export interface IWithdrawal {
-  rowId: string;
-  withdrawalRoot: string;
-  nonce: number;
-  stakerAddress: string;
-  delegatedTo: string;
-  withdrawerAddress: string;
-  strategyShares: any;
-  isCompleted: boolean;
-  createdAt: number;
-  updatedAt: number;
-  createdAtBlock: number;
-  updatedAtBlock: number;
+  rowId?: string;
+  withdrawalRoot?: string;
+  nonce?: number;
+  stakerAddress?: string;
+  delegatedTo?: string;
+  withdrawerAddress?: string;
+  strategyShares: { strategy: string; shares: string }[];
+  isCompleted?: boolean;
+  createdAt?: number;
+  updatedAt?: number;
+  createdAtBlock?: number;
+  updatedAtBlock?: number;
 }
 
 export const Deposit = {
-  "name": "c62edbfe-e98b-43a6-b826-97936508c7ce-Deposit",
+  "name": "DKJF-Deposit",
   "db": "postgres",
   "type": "managed",
   "properties": {
@@ -207,19 +237,19 @@ export const Deposit = {
 };
 
 export interface IDeposit {
-  rowId: string;
-  transactionHash: string;
-  stakerAddress: string;
-  tokenAddress: string;
-  strategyAddress: string;
-  shares: string;
-  amount: number;
-  createdAt: number;
-  createdAtBlock: number;
+  rowId?: string;
+  transactionHash?: string;
+  stakerAddress?: string;
+  tokenAddress?: string;
+  strategyAddress?: string;
+  shares?: string;
+  amount?: number;
+  createdAt?: number;
+  createdAtBlock?: number;
 }
 
 export const EigenPod = {
-  "name": "c62edbfe-e98b-43a6-b826-97936508c7ce-EigenPod",
+  "name": "DKJF-EigenPod",
   "db": "postgres",
   "type": "managed",
   "properties": {
@@ -234,16 +264,16 @@ export const EigenPod = {
 };
 
 export interface IEigenPod {
-  address: string;
-  owner: string;
-  createdAt: number;
-  updatedAt: number;
-  createdAtBlock: number;
-  updatedAtBlock: number;
+  address?: string;
+  owner?: string;
+  createdAt?: number;
+  updatedAt?: number;
+  createdAtBlock?: number;
+  updatedAtBlock?: number;
 }
 
 export const PodTransactions = {
-  "name": "c62edbfe-e98b-43a6-b826-97936508c7ce-PodTransactions",
+  "name": "DKJF-PodTransactions",
   "db": "postgres",
   "type": "managed",
   "properties": {
@@ -262,20 +292,20 @@ export const PodTransactions = {
 };
 
 export interface IPodTransactions {
-  rowId: string;
-  podAddress: string;
-  podOwner: string;
-  transactionHash: string;
-  sharesDelta: string;
-  transactionIndex: number;
-  createdAt: number;
-  updatedAt: number;
-  createdAtBlock: number;
-  updatedAtBlock: number;
+  rowId?: string;
+  podAddress?: string;
+  podOwner?: string;
+  transactionHash?: string;
+  sharesDelta?: string;
+  transactionIndex?: number;
+  createdAt?: number;
+  updatedAt?: number;
+  createdAtBlock?: number;
+  updatedAtBlock?: number;
 }
 
 export const Stats = {
-  "name": "c62edbfe-e98b-43a6-b826-97936508c7ce-Stats",
+  "name": "DKJF-Stats",
   "db": "postgres",
   "type": "managed",
   "properties": {
@@ -296,28 +326,35 @@ export const Stats = {
 };
 
 export interface IStats {
-  statId: string;
-  totalRegisteredAvs: number;
-  totalActiveAvs: number;
-  totalRegisteredOperators: number;
-  totalActiveOperators: number;
-  totalRegisteredStakers: number;
-  totalActiveStakers: number;
-  totalDepositWhitelistStrategies: number;
-  totalCompletedWithdrawals: number;
-  totalWithdrawals: number;
-  totalDeposits: number;
-  minWithdrawalDelayBlocks: number;
+  statId?: string;
+  totalRegisteredAvs?: number;
+  totalActiveAvs?: number;
+  totalRegisteredOperators?: number;
+  totalActiveOperators?: number;
+  totalRegisteredStakers?: number;
+  totalActiveStakers?: number;
+  totalDepositWhitelistStrategies?: number;
+  totalCompletedWithdrawals?: number;
+  totalWithdrawals?: number;
+  totalDeposits?: number;
+  minWithdrawalDelayBlocks?: number;
 }
 
 export const Strategy = {
-  "name": "c62edbfe-e98b-43a6-b826-97936508c7ce-Strategy",
+  "name": "DKJF-Strategy",
   "db": "postgres",
   "type": "managed",
   "properties": {
     "address": "string?",
     "symbol": "string?",
-    "underlyingToken": "any?",
+    "underlyingToken": [
+      {
+        "address": "string?",
+        "symbol": "string?",
+        "name": "string?",
+        "decimals": "number?"
+      }
+    ],
     "isDepositWhitelist": "boolean?",
     "sharesToUnderlying": "string?",
     "totalShares": "string?",
@@ -333,23 +370,23 @@ export const Strategy = {
 };
 
 export interface IStrategy {
-  address: string;
-  symbol: string;
-  underlyingToken: any;
-  isDepositWhitelist: boolean;
-  sharesToUnderlying: string;
-  totalShares: string;
-  totalAmount: string;
-  totalDeposits: number;
-  totalWithdrawals: number;
-  createdAt: number;
-  updatedAt: number;
-  createdAtBlock: number;
-  updatedAtBlock: number;
+  address?: string;
+  symbol?: string;
+  underlyingToken: { address: string; symbol: string; name: string; decimals: number }[];
+  isDepositWhitelist?: boolean;
+  sharesToUnderlying?: string;
+  totalShares?: string;
+  totalAmount?: string;
+  totalDeposits?: number;
+  totalWithdrawals?: number;
+  createdAt?: number;
+  updatedAt?: number;
+  createdAtBlock?: number;
+  updatedAtBlock?: number;
 }
 
 export const OperatorHistory = {
-  "name": "c62edbfe-e98b-43a6-b826-97936508c7ce-OperatorHistory",
+  "name": "DKJF-OperatorHistory",
   "db": "postgres",
   "type": "managed",
   "properties": {
@@ -365,17 +402,17 @@ export const OperatorHistory = {
 };
 
 export interface IOperatorHistory {
-  rowId: string;
-  operatorAddress: string;
-  avsAddress: string;
-  event: string;
-  transactionHash: string;
-  createdAt: number;
-  createdAtBlock: number;
+  rowId?: string;
+  operatorAddress?: string;
+  avsAddress?: string;
+  event?: string;
+  transactionHash?: string;
+  createdAt?: number;
+  createdAtBlock?: number;
 }
 
 export const OperatorRestakeHistory = {
-  "name": "c62edbfe-e98b-43a6-b826-97936508c7ce-OperatorRestakeHistory",
+  "name": "DKJF-OperatorRestakeHistory",
   "db": "postgres",
   "type": "managed",
   "properties": {
@@ -384,7 +421,12 @@ export const OperatorRestakeHistory = {
     "stakerAddress": "string?",
     "action": "string?",
     "transactionHash": "string?",
-    "shares": "any?",
+    "shares": [
+      {
+        "strategy": "string?",
+        "shares": "string?"
+      }
+    ],
     "createdAt": "number?",
     "createdAtBlock": "number?",
     "updatedAt": "number?",
@@ -394,15 +436,15 @@ export const OperatorRestakeHistory = {
 };
 
 export interface IOperatorRestakeHistory {
-  rowId: string;
-  operatorAddress: string;
-  stakerAddress: string;
-  action: string;
-  transactionHash: string;
-  shares: any;
-  createdAt: number;
-  createdAtBlock: number;
-  updatedAt: number;
-  updatedAtBlock: number;
+  rowId?: string;
+  operatorAddress?: string;
+  stakerAddress?: string;
+  action?: string;
+  transactionHash?: string;
+  shares: { strategy: string; shares: string }[];
+  createdAt?: number;
+  createdAtBlock?: number;
+  updatedAt?: number;
+  updatedAtBlock?: number;
 }
 

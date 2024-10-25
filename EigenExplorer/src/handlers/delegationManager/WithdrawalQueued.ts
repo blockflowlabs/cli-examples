@@ -34,11 +34,11 @@ export const WithdrawalQueuedHandler = async (context: IEventContext, bind: IBin
       rowId: withdrawalRoot,
       withdrawalRoot,
       nonce: Number(withdrawal.nonce),
-      stakerAddress: withdrawal.staker,
+      stakerAddress: withdrawal.staker.toLowerCase(),
       delegatedTo: withdrawal.delegatedTo,
       withdrawerAddress: withdrawal.withdrawer,
       strategyShares: withdrawal.strategies.map((strategy: any, index: number) => ({
-        strategy: strategy,
+        strategy: strategy.toLowerCase(),
         shares: withdrawal.shares[index].toString(),
       })),
       isCompleted: false,
@@ -50,7 +50,7 @@ export const WithdrawalQueuedHandler = async (context: IEventContext, bind: IBin
   } else {
     // update the existing withdrawal record
     withdrawalData.nonce = Number(withdrawal.nonce);
-    withdrawalData.stakerAddress = withdrawal.stakerAddress;
+    withdrawalData.stakerAddress = withdrawal.staker.toLowerCase();
     withdrawalData.delegatedTo = withdrawal.delegatedTo;
     withdrawalData.withdrawerAddress = withdrawal.withdrawerAddress;
     withdrawalData.strategyShares = withdrawal.strategies.map((strategy: any, index: number) => ({
