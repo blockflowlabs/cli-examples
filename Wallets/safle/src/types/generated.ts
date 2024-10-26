@@ -58,18 +58,18 @@ export const Transaction = {
 
 export interface ITransaction {
   transaction_hash: string;
-  transaction_nonce: string;
-  transaction_index: string;
-  transaction_from_address: string;
-  transaction_to_address: string;
-  transaction_value: string;
-  transaction_gas: string;
-  transaction_gas_price: string;
-  transaction_input: string;
-  transaction_receipt_cumulative_gas_used: string;
-  transaction_receipt_gas_used: string;
-  transaction_receipt_status: string;
-  receipt_effective_gas_price: string;
+  transaction_nonce?: string;
+  transaction_index?: string;
+  transaction_from_address?: string;
+  transaction_to_address?: string;
+  transaction_value?: string;
+  transaction_gas?: string;
+  transaction_gas_price?: string;
+  transaction_input?: string;
+  transaction_receipt_cumulative_gas_used?: string;
+  transaction_receipt_gas_used?: string;
+  transaction_receipt_status?: string;
+  receipt_effective_gas_price?: string;
 }
 
 export const Factory = {
@@ -77,7 +77,9 @@ export const Factory = {
   "db": "postgres",
   "type": "managed",
   "properties": {
-    "childs": "[string]",
+    "childs": [
+      "string"
+    ],
     "factory": "string@",
     "childCount": "number@"
   },
@@ -85,7 +87,7 @@ export const Factory = {
 };
 
 export interface IFactory {
-  childs: [string];
+  childs: string[];
   factory: string;
   childCount: number;
 }

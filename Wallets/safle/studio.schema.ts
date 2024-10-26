@@ -40,7 +40,7 @@ const Factory = {
   type: "managed",
   reorg: true,
   properties: {
-    childs: "[string]",
+    childs: ["string"],
     factory: "string@",
     childCount: "number@",
   },
