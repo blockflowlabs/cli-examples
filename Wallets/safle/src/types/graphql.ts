@@ -3,7 +3,7 @@ import { Entity, PrimaryColumn, Column, BaseEntity } from "typeorm";
 import { ObjectType, Field, ID } from "type-graphql";
 import "reflect-metadata";
 
-@Entity("fcbebeaa-33da-4d1c-aff6-b49183ed5832-UserTransaction")
+@Entity("3126b1dc-db9c-4d45-93be-d3cce8898fc9-UserTransaction")
 @ObjectType()
 export class GUserTransaction extends BaseEntity {
   @PrimaryColumn()
@@ -39,7 +39,7 @@ export class GUserTransaction extends BaseEntity {
   _refId!: string;
 }
 
-@Entity("fcbebeaa-33da-4d1c-aff6-b49183ed5832-userStats")
+@Entity("3126b1dc-db9c-4d45-93be-d3cce8898fc9-userStats")
 @ObjectType()
 export class GuserStats extends BaseEntity {
   @PrimaryColumn()
@@ -75,7 +75,7 @@ export class GuserStats extends BaseEntity {
   _refId!: string;
 }
 
-@Entity("fcbebeaa-33da-4d1c-aff6-b49183ed5832-Transaction")
+@Entity("3126b1dc-db9c-4d45-93be-d3cce8898fc9-Transaction")
 @ObjectType()
 export class GTransaction extends BaseEntity {
   @PrimaryColumn()
@@ -141,7 +141,7 @@ export class GTransaction extends BaseEntity {
   _refId!: string;
 }
 
-@Entity("fcbebeaa-33da-4d1c-aff6-b49183ed5832-Factory")
+@Entity("3126b1dc-db9c-4d45-93be-d3cce8898fc9-Factory")
 @ObjectType()
 export class GFactory extends BaseEntity {
   @PrimaryColumn()
@@ -177,7 +177,7 @@ export class GFactory extends BaseEntity {
   _refId!: string;
 }
 
-@Entity("fcbebeaa-33da-4d1c-aff6-b49183ed5832-Registration")
+@Entity("3126b1dc-db9c-4d45-93be-d3cce8898fc9-Registration")
 @ObjectType()
 export class GRegistration extends BaseEntity {
   @PrimaryColumn()

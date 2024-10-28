@@ -19,7 +19,7 @@ Environment:
     rpc: https://polygon.llamarpc.com
     range: 10
   deployment:
-    startBlock: 12082336
+    startBlock: 62341576 # 12082336 deployment blocknumber
     network: Polygon
     execution: parallel
 Resources:
