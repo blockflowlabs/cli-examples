@@ -21,11 +21,13 @@ export const OperatorDetailsModifiedHandler = async (context: IEventContext, bin
   const operatorData = await operatorDb.load({ address: operator.toLowerCase() });
 
   if (operatorData) {
-    operatorData.details = {
-      earningsReceiver,
-      delegationApprover,
-      stakerOptOutWindowBlocks: Number(stakerOptOutWindowBlocks),
-    };
+    operatorData.details = [
+      {
+        earningsReceiver,
+        delegationApprover,
+        stakerOptOutWindowBlocks: Number(stakerOptOutWindowBlocks),
+      },
+    ];
     operatorData.updatedAt = block.block_timestamp;
     operatorData.updatedAtBlock = block.block_number;
 

@@ -2,6 +2,7 @@ import { IEventContext, IBind, ISecrets } from "@blockflow-labs/utils";
 import { Instance } from "@blockflow-labs/sdk";
 import { Strategy, Withdrawal, Stats } from "../../types/generated";
 import BigNumber from "bignumber.js";
+import { In } from "typeorm";
 import { SHARES_OFFSET } from "../../data/constants";
 import { updateStats } from "../../utils/helpers";
 /**
@@ -30,7 +31,8 @@ export const WithdrawalCompletedHandler = async (context: IEventContext, bind: I
     withdrawalData.updatedAtBlock = block.block_number;
 
     const strategyIds = withdrawalData.strategyShares.map((strategy: any) => strategy.strategy.toLowerCase());
-    const strategiesData = await strategiesDb.loadMany({ address: { $in: strategyIds } });
+    console.log(strategyIds);
+    const strategiesData = await strategiesDb.loadMany({ address: In(strategyIds) });
 
     const strategiesMap = strategiesData.reduce((map: any, strategy: any) => {
       map[strategy.address] = strategy;

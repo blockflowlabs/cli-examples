@@ -46,12 +46,14 @@ export const StrategyAddedToDepositWhitelistHandler = async (
     await strategyDb.save({
       address: strategy.toLowerCase(),
       symbol: symbol,
-      underlyingToken: {
-        address: underlyingTokenAddress || "",
-        name: name || "",
-        symbol: symbol || "",
-        decimals: Number(decimals) || 18,
-      },
+      underlyingToken: [
+        {
+          address: underlyingTokenAddress || "",
+          name: name || "",
+          symbol: symbol || "",
+          decimals: Number(decimals) || 18,
+        },
+      ],
       isDepositWhitelist: true,
       sharesToUnderlying: (1e18).toString(),
       totalShares: "0",

@@ -13,7 +13,7 @@ Path:
   docker: ./docker-compose.yml
 Environment:
   testing:
-    startBlock: 21022757
+    startBlock: 20913087
     network: Ethereum
     execution: parallel
     rpc: process.env.RPC_ENDPOINT

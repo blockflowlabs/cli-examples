@@ -24,11 +24,13 @@ export const OperatorRegisteredHandler = async (context: IEventContext, bind: IB
 
   await operatorDb.save({
     address: operator.toLowerCase(),
-    details: {
-      earningsReceiver,
-      delegationApprover,
-      stakerOptOutWindowBlocks: Number(stakerOptOutWindowBlocks),
-    },
+    details: [
+      {
+        earningsReceiver,
+        delegationApprover,
+        stakerOptOutWindowBlocks: Number(stakerOptOutWindowBlocks),
+      },
+    ],
     metadataURI: "",
     isMetadataSynced: false,
     avsRegistrations: [],
