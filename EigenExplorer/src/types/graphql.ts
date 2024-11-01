@@ -11,7 +11,7 @@ class StakerSharesItem {
   shares?: string;
 }
 
-@Entity("DKJF-Staker")
+@Entity("63b0c62f-a9d2-44cb-be49-ea4f0156db25-Staker")
 @ObjectType()
 export class GStaker extends BaseEntity {
   @PrimaryColumn()
@@ -91,7 +91,7 @@ class OperatorSharesItem {
   shares?: string;
 }
 
-@Entity("DKJF-Operator")
+@Entity("63b0c62f-a9d2-44cb-be49-ea4f0156db25-Operator")
 @ObjectType()
 export class GOperator extends BaseEntity {
   @PrimaryColumn()
@@ -175,7 +175,7 @@ export class GOperator extends BaseEntity {
   _refId!: string;
 }
 
-@Entity("DKJF-AVS")
+@Entity("63b0c62f-a9d2-44cb-be49-ea4f0156db25-AVS")
 @ObjectType()
 export class GAVS extends BaseEntity {
   @PrimaryColumn()
@@ -253,7 +253,7 @@ export class GAVS extends BaseEntity {
   _refId!: string;
 }
 
-@Entity("DKJF-AvsOperator")
+@Entity("63b0c62f-a9d2-44cb-be49-ea4f0156db25-AvsOperator")
 @ObjectType()
 export class GAvsOperator extends BaseEntity {
   @PrimaryColumn()
@@ -312,7 +312,7 @@ class WithdrawalStrategySharesItem {
   shares?: string;
 }
 
-@Entity("DKJF-Withdrawal")
+@Entity("63b0c62f-a9d2-44cb-be49-ea4f0156db25-Withdrawal")
 @ObjectType()
 export class GWithdrawal extends BaseEntity {
   @PrimaryColumn()
@@ -375,7 +375,7 @@ export class GWithdrawal extends BaseEntity {
   _refId!: string;
 }
 
-@Entity("DKJF-Deposit")
+@Entity("63b0c62f-a9d2-44cb-be49-ea4f0156db25-Deposit")
 @ObjectType()
 export class GDeposit extends BaseEntity {
   @PrimaryColumn()
@@ -429,7 +429,7 @@ export class GDeposit extends BaseEntity {
   _refId!: string;
 }
 
-@Entity("DKJF-EigenPod")
+@Entity("63b0c62f-a9d2-44cb-be49-ea4f0156db25-EigenPod")
 @ObjectType()
 export class GEigenPod extends BaseEntity {
   @PrimaryColumn()
@@ -474,7 +474,7 @@ export class GEigenPod extends BaseEntity {
   _refId!: string;
 }
 
-@Entity("DKJF-PodTransactions")
+@Entity("63b0c62f-a9d2-44cb-be49-ea4f0156db25-PodTransactions")
 @ObjectType()
 export class GPodTransactions extends BaseEntity {
   @PrimaryColumn()
@@ -531,7 +531,7 @@ export class GPodTransactions extends BaseEntity {
   _refId!: string;
 }
 
-@Entity("DKJF-Stats")
+@Entity("63b0c62f-a9d2-44cb-be49-ea4f0156db25-Stats")
 @ObjectType()
 export class GStats extends BaseEntity {
   @PrimaryColumn()
@@ -606,7 +606,7 @@ class StrategyUnderlyingTokenItem {
   decimals?: number;
 }
 
-@Entity("DKJF-Strategy")
+@Entity("63b0c62f-a9d2-44cb-be49-ea4f0156db25-Strategy")
 @ObjectType()
 export class GStrategy extends BaseEntity {
   @PrimaryColumn()
@@ -672,7 +672,7 @@ export class GStrategy extends BaseEntity {
   _refId!: string;
 }
 
-@Entity("DKJF-OperatorHistory")
+@Entity("63b0c62f-a9d2-44cb-be49-ea4f0156db25-OperatorHistory")
 @ObjectType()
 export class GOperatorHistory extends BaseEntity {
   @PrimaryColumn()
@@ -728,7 +728,7 @@ class OperatorRestakeHistorySharesItem {
   shares?: string;
 }
 
-@Entity("DKJF-OperatorRestakeHistory")
+@Entity("63b0c62f-a9d2-44cb-be49-ea4f0156db25-OperatorRestakeHistory")
 @ObjectType()
 export class GOperatorRestakeHistory extends BaseEntity {
   @PrimaryColumn()

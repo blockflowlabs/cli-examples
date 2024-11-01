@@ -1,5 +1,5 @@
 export const Staker = {
-  "name": "DKJF-Staker",
+  "name": "63b0c62f-a9d2-44cb-be49-ea4f0156db25-Staker",
   "db": "postgres",
   "type": "managed",
   "properties": {
@@ -34,7 +34,7 @@ export interface IStaker {
 }
 
 export const Operator = {
-  "name": "DKJF-Operator",
+  "name": "63b0c62f-a9d2-44cb-be49-ea4f0156db25-Operator",
   "db": "postgres",
   "type": "managed",
   "properties": {
@@ -100,7 +100,7 @@ export interface IOperator {
 }
 
 export const AVS = {
-  "name": "DKJF-AVS",
+  "name": "63b0c62f-a9d2-44cb-be49-ea4f0156db25-AVS",
   "db": "postgres",
   "type": "managed",
   "properties": {
@@ -150,7 +150,7 @@ export interface IAVS {
 }
 
 export const AvsOperator = {
-  "name": "DKJF-AvsOperator",
+  "name": "63b0c62f-a9d2-44cb-be49-ea4f0156db25-AvsOperator",
   "db": "postgres",
   "type": "managed",
   "properties": {
@@ -178,7 +178,7 @@ export interface IAvsOperator {
 }
 
 export const Withdrawal = {
-  "name": "DKJF-Withdrawal",
+  "name": "63b0c62f-a9d2-44cb-be49-ea4f0156db25-Withdrawal",
   "db": "postgres",
   "type": "managed",
   "properties": {
@@ -219,7 +219,7 @@ export interface IWithdrawal {
 }
 
 export const Deposit = {
-  "name": "DKJF-Deposit",
+  "name": "63b0c62f-a9d2-44cb-be49-ea4f0156db25-Deposit",
   "db": "postgres",
   "type": "managed",
   "properties": {
@@ -249,7 +249,7 @@ export interface IDeposit {
 }
 
 export const EigenPod = {
-  "name": "DKJF-EigenPod",
+  "name": "63b0c62f-a9d2-44cb-be49-ea4f0156db25-EigenPod",
   "db": "postgres",
   "type": "managed",
   "properties": {
@@ -273,7 +273,7 @@ export interface IEigenPod {
 }
 
 export const PodTransactions = {
-  "name": "DKJF-PodTransactions",
+  "name": "63b0c62f-a9d2-44cb-be49-ea4f0156db25-PodTransactions",
   "db": "postgres",
   "type": "managed",
   "properties": {
@@ -305,7 +305,7 @@ export interface IPodTransactions {
 }
 
 export const Stats = {
-  "name": "DKJF-Stats",
+  "name": "63b0c62f-a9d2-44cb-be49-ea4f0156db25-Stats",
   "db": "postgres",
   "type": "managed",
   "properties": {
@@ -341,7 +341,7 @@ export interface IStats {
 }
 
 export const Strategy = {
-  "name": "DKJF-Strategy",
+  "name": "63b0c62f-a9d2-44cb-be49-ea4f0156db25-Strategy",
   "db": "postgres",
   "type": "managed",
   "properties": {
@@ -386,7 +386,7 @@ export interface IStrategy {
 }
 
 export const OperatorHistory = {
-  "name": "DKJF-OperatorHistory",
+  "name": "63b0c62f-a9d2-44cb-be49-ea4f0156db25-OperatorHistory",
   "db": "postgres",
   "type": "managed",
   "properties": {
@@ -412,7 +412,7 @@ export interface IOperatorHistory {
 }
 
 export const OperatorRestakeHistory = {
-  "name": "DKJF-OperatorRestakeHistory",
+  "name": "63b0c62f-a9d2-44cb-be49-ea4f0156db25-OperatorRestakeHistory",
   "db": "postgres",
   "type": "managed",
   "properties": {

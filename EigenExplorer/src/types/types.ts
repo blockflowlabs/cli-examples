@@ -1,4 +1,3 @@
-
 import { Entity, PrimaryColumn, Column, BaseEntity } from "typeorm";
 import { ObjectType, Field, ID } from "type-graphql";
 import "reflect-metadata";
@@ -6,7 +5,6 @@ import "reflect-metadata";
 @Entity()
 @ObjectType()
 export class GStaker extends BaseEntity {
-
   @Column()
   @Field({ nullable: true })
   address?: string;
@@ -64,11 +62,9 @@ export class GStaker extends BaseEntity {
   _refId!: string;
 }
 
-
 @Entity()
 @ObjectType()
 export class GOperator extends BaseEntity {
-
   @Column()
   @Field({ nullable: true })
   address?: string;
@@ -166,11 +162,9 @@ export class GOperator extends BaseEntity {
   _refId!: string;
 }
 
-
 @Entity()
 @ObjectType()
 export class GAVS extends BaseEntity {
-
   @Column()
   @Field({ nullable: true })
   address?: string;
@@ -260,11 +254,9 @@ export class GAVS extends BaseEntity {
   _refId!: string;
 }
 
-
 @Entity()
 @ObjectType()
 export class GAvsOperator extends BaseEntity {
-
   @Column()
   @Field({ nullable: true })
   rowId?: string;
@@ -318,11 +310,9 @@ export class GAvsOperator extends BaseEntity {
   _refId!: string;
 }
 
-
 @Entity()
 @ObjectType()
 export class GWithdrawal extends BaseEntity {
-
   @Column()
   @Field({ nullable: true })
   rowId?: string;
@@ -392,11 +382,9 @@ export class GWithdrawal extends BaseEntity {
   _refId!: string;
 }
 
-
 @Entity()
 @ObjectType()
 export class GDeposit extends BaseEntity {
-
   @Column()
   @Field({ nullable: true })
   rowId?: string;
@@ -454,11 +442,9 @@ export class GDeposit extends BaseEntity {
   _refId!: string;
 }
 
-
 @Entity()
 @ObjectType()
 export class GEigenPod extends BaseEntity {
-
   @Column()
   @Field({ nullable: true })
   address?: string;
@@ -504,11 +490,9 @@ export class GEigenPod extends BaseEntity {
   _refId!: string;
 }
 
-
 @Entity()
 @ObjectType()
 export class GPodTransactions extends BaseEntity {
-
   @Column()
   @Field({ nullable: true })
   rowId?: string;
@@ -570,11 +554,9 @@ export class GPodTransactions extends BaseEntity {
   _refId!: string;
 }
 
-
 @Entity()
 @ObjectType()
 export class GStats extends BaseEntity {
-
   @Column()
   @Field({ nullable: true })
   statId?: string;
@@ -644,11 +626,9 @@ export class GStats extends BaseEntity {
   _refId!: string;
 }
 
-
 @Entity()
 @ObjectType()
 export class GStrategy extends BaseEntity {
-
   @Column()
   @Field({ nullable: true })
   address?: string;
@@ -722,11 +702,9 @@ export class GStrategy extends BaseEntity {
   _refId!: string;
 }
 
-
 @Entity()
 @ObjectType()
 export class GOperatorHistory extends BaseEntity {
-
   @Column()
   @Field({ nullable: true })
   rowId?: string;
@@ -776,11 +754,9 @@ export class GOperatorHistory extends BaseEntity {
   _refId!: string;
 }
 
-
 @Entity()
 @ObjectType()
 export class GOperatorRestakeHistory extends BaseEntity {
-
   @Column()
   @Field({ nullable: true })
   rowId?: string;
@@ -841,4 +817,3 @@ export class GOperatorRestakeHistory extends BaseEntity {
   @Field()
   _refId!: string;
 }
-
