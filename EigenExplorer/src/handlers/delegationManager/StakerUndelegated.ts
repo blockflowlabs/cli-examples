@@ -1,7 +1,7 @@
 import { IEventContext, IBind, ISecrets } from "@blockflow-labs/utils";
 import { Instance } from "@blockflow-labs/sdk";
 import { updateStats } from "../../utils/helpers";
-import { Staker, Operator, Stats } from "../../types/generated";
+import { Staker, Operator, Stats, IStaker, IOperator } from "../../types/generated";
 
 /**
  * @dev Event::StakerUndelegated(address staker, address operator)
@@ -20,28 +20,25 @@ export const StakerUndelegatedHandler = async (context: IEventContext, bind: IBi
   const operatorDb = client.db(Operator);
   const statsDb = client.db(Stats);
 
-  const stakerData = await stakerDb.load({ address: staker.toLowerCase() });
-  const operatorData = await operatorDb.load({ address: operator.toLowerCase() });
+  const stakerData: IStaker = await stakerDb.load({ address: staker.toLowerCase() });
+  const operatorData: IOperator = await operatorDb.load({ address: operator.toLowerCase() });
 
   // update the staker record
   if (stakerData) {
-    if (stakerData.operator === operator.toLowerCase()) {
-      console.log("UNDELEGATED:", operator.toLowerCase());
-      operatorData.totalStakers -= 1;
-      await operatorDb.save(operatorData);
-    }
-    if (stakerData.operator !== null) {
-      await updateStats(statsDb, "totalActiveStakers", 1, "subtract");
-    }
-    stakerData.operator = null;
-    stakerData.updatedAt = block.block_timestamp;
+    if (stakerData.operator?.toLowerCase() === operator.toLowerCase())
+      operatorData.totalStakers = Number(operatorData.totalStakers) - 1;
+
+    if (stakerData.operator !== "") await updateStats(statsDb, "totalActiveStakers", 1, "subtract");
+
+    stakerData.operator = "";
+    stakerData.updatedAt = parseInt(block.block_timestamp);
     stakerData.updatedAtBlock = block.block_number;
 
     await stakerDb.save(stakerData);
   } else {
     await stakerDb.save({
       address: staker.toLowerCase(),
-      operator: null,
+      operator: "",
       shares: [],
       totalWithdrawals: 0,
       totalDeposits: 0,
@@ -53,4 +50,6 @@ export const StakerUndelegatedHandler = async (context: IEventContext, bind: IBi
 
     await updateStats(statsDb, "totalRegisteredStakers", 1);
   }
+
+  await operatorDb.save(operatorData);
 };

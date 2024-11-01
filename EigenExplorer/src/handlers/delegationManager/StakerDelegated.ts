@@ -1,6 +1,6 @@
 import { IEventContext, IBind, ISecrets } from "@blockflow-labs/utils";
 import { Instance } from "@blockflow-labs/sdk";
-import { Staker, Operator, Stats } from "../../types/generated";
+import { Staker, Operator, Stats, IOperator, IStaker } from "../../types/generated";
 import { updateStats } from "../../utils/helpers";
 
 /**
@@ -20,44 +20,41 @@ export const StakerDelegatedHandler = async (context: IEventContext, bind: IBind
   const operatorDb = client.db(Operator);
   const statsDb = client.db(Stats);
 
-  const stakerData = await stakerDb.load({ address: staker.toLowerCase() });
-  const operatorData = await operatorDb.load({ address: operator.toLowerCase() });
+  let stakerData: IStaker = await stakerDb.load({ address: staker.toLowerCase() });
+  const operatorData: IOperator = await operatorDb.load({ address: operator.toLowerCase() });
 
   if (stakerData) {
-    if (stakerData.operator !== operator.toLowerCase()) {
-      console.log("DELEGATED:", operator.toLowerCase());
-      if (!operatorData) {
-        console.log("DELEGATED: OPERATOR_NOT_FOUND", operator.toLowerCase());
-      }
-      operatorData.totalStakers = Number(operatorData.totalStakers) + 1 || 1;
-      await operatorDb.save(operatorData);
-    }
-    if (stakerData.operator === null) {
-      await updateStats(statsDb, "totalActiveStakers", 1);
-    }
+    // if the staker operator doesn't match then increase operator stakers count
+    if (stakerData.operator?.toLowerCase() !== operator.toLowerCase())
+      operatorData.totalStakers = Number(operatorData.totalStakers) + 1;
+
+    if (stakerData.operator === "") await updateStats(statsDb, "totalActiveStakers", 1);
+
+    // update the operator addres to new operator
     stakerData.operator = operator.toLowerCase();
-    stakerData.updatedAt = block.block_timestamp;
+
+    // last interaction details
+    stakerData.updatedAt = parseInt(block.block_timestamp);
     stakerData.updatedAtBlock = block.block_number;
-
-    await stakerDb.save(stakerData);
   } else {
-    console.log("DELEGATED:", operator.toLowerCase());
-    operatorData.totalStakers = Number(operatorData.totalStakers) + 1 || 1;
-    await operatorDb.save(operatorData);
+    operatorData.totalStakers = Number(operatorData.totalStakers) + 1;
 
-    await stakerDb.save({
+    stakerData = {
       address: staker.toLowerCase(),
       operator: operator.toLowerCase(),
       shares: [],
       totalWithdrawals: 0,
       totalDeposits: 0,
-      createdAt: block.block_timestamp,
-      updatedAt: block.block_timestamp,
+      createdAt: parseInt(block.block_timestamp),
+      updatedAt: parseInt(block.block_timestamp),
       createdAtBlock: block.block_number,
       updatedAtBlock: block.block_number,
-    });
+    };
 
     await updateStats(statsDb, "totalRegisteredStakers", 1);
     await updateStats(statsDb, "totalActiveStakers", 1);
   }
+
+  await stakerDb.save(stakerData);
+  await operatorDb.save(operatorData);
 };

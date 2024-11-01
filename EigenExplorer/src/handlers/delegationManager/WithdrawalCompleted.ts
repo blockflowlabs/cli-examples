@@ -5,6 +5,7 @@ import BigNumber from "bignumber.js";
 import { In } from "typeorm";
 import { SHARES_OFFSET } from "../../data/constants";
 import { updateStats } from "../../utils/helpers";
+
 /**
  * @dev Event::WithdrawalCompleted(bytes32 withdrawalRoot)
  * @param context trigger object with contains {event: {withdrawalRoot }, transaction, block, log}

@@ -4,7 +4,6 @@ import { Operator, Staker, Stats, OperatorRestakeHistory } from "../../types/gen
 import BigNumber from "bignumber.js";
 import { updateStats } from "../../utils/helpers";
 import { stakerDelegatedTopic0, depositTopic0, eigenContracts } from "../../data/constants";
-import { IsAny } from "typeorm";
 
 /**
  * @dev Event::OperatorSharesIncreased(address operator, address staker, address strategy, uint256 shares)
@@ -81,12 +80,11 @@ export const OperatorSharesIncreasedHandler = async (context: IEventContext, bin
 
   if (operatorData) {
     let strategyIndex = operatorData.shares.findIndex(({ strategy: sa }: any) => sa === strategy.toLowerCase());
-    if (strategyIndex === -1) {
+    if (strategyIndex === -1)
       operatorData.shares.push({
         strategy: strategy.toLowerCase(),
         shares: "0",
       });
-    }
 
     strategyIndex = operatorData.shares.findIndex(({ strategy: sa }: any) => sa === strategy.toLowerCase());
 

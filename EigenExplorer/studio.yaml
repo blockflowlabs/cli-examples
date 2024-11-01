@@ -48,10 +48,10 @@ Resources:
         handler: src/handlers/delegationManager/OperatorDetailsModified.OperatorDetailsModifiedHandler
       - event: OperatorMetadataURIUpdated(address indexed,string)
         handler: src/handlers/delegationManager/OperatorMetadataURIUpdated.OperatorMetadataURIUpdatedHandler
-      - event: OperatorSharesDecreased(address indexed,address,address,uint256)
-        handler: src/handlers/delegationManager/OperatorSharesDecreased.OperatorSharesDecreasedHandler
       - event: OperatorSharesIncreased(address indexed,address,address,uint256)
         handler: src/handlers/delegationManager/OperatorSharesIncreased.OperatorSharesIncreasedHandler
+      - event: OperatorSharesDecreased(address indexed,address,address,uint256)
+        handler: src/handlers/delegationManager/OperatorSharesDecreased.OperatorSharesDecreasedHandler
       - event: StakerDelegated(address indexed,address indexed)
         handler: src/handlers/delegationManager/StakerDelegated.StakerDelegatedHandler
       - event: StakerUndelegated(address indexed,address indexed)

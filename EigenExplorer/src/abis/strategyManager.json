@@ -1,14 +1,5 @@
 [
   {
-    "inputs": [
-      { "internalType": "address", "name": "_logic", "type": "address" },
-      { "internalType": "address", "name": "admin_", "type": "address" },
-      { "internalType": "bytes", "name": "_data", "type": "bytes" }
-    ],
-    "stateMutability": "payable",
-    "type": "constructor"
-  },
-  {
     "anonymous": false,
     "inputs": [
       {
@@ -109,27 +100,6 @@
     "type": "function"
   },
   { "stateMutability": "payable", "type": "receive" },
-  {
-    "inputs": [
-      {
-        "internalType": "contract IDelegationManager",
-        "name": "_delegation",
-        "type": "address"
-      },
-      {
-        "internalType": "contract IEigenPodManager",
-        "name": "_eigenPodManager",
-        "type": "address"
-      },
-      {
-        "internalType": "contract ISlasher",
-        "name": "_slasher",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
   {
     "anonymous": false,
     "inputs": [
