@@ -23,11 +23,9 @@ export const StakerDelegatedHandler = async (context: IEventContext, bind: IBind
   let stakerData: IStaker = await stakerDb.load({ address: staker.toLowerCase() });
   const operatorData: IOperator = await operatorDb.load({ address: operator.toLowerCase() });
 
-  if (stakerData) {
-    // if the staker operator doesn't match then increase operator stakers count
-    if (stakerData.operator?.toLowerCase() !== operator.toLowerCase())
-      operatorData.totalStakers = Number(operatorData.totalStakers) + 1;
+  operatorData.totalStakers = Number(operatorData.totalStakers) + 1;
 
+  if (stakerData) {
     if (stakerData.operator === "") await updateStats(statsDb, "totalActiveStakers", 1);
 
     // update the operator addres to new operator
@@ -37,8 +35,6 @@ export const StakerDelegatedHandler = async (context: IEventContext, bind: IBind
     stakerData.updatedAt = parseInt(block.block_timestamp);
     stakerData.updatedAtBlock = block.block_number;
   } else {
-    operatorData.totalStakers = Number(operatorData.totalStakers) + 1;
-
     stakerData = {
       address: staker.toLowerCase(),
       operator: operator.toLowerCase(),
