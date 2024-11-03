@@ -1,5 +1,6 @@
-import { IEventContext, IBind, Instance, ISecrets } from "@blockflow-labs/utils";
-import { Operator } from "../../types/schema";
+import { IEventContext, IBind, ISecrets } from "@blockflow-labs/utils";
+import { Instance } from "@blockflow-labs/sdk";
+import { Operator } from "../../types/generated";
 
 /**
  * @dev Event::OperatorDetailsModified(address operator, tuple newOperatorDetails)
@@ -14,16 +15,19 @@ export const OperatorDetailsModifiedHandler = async (context: IEventContext, bin
 
   const { earningsReceiver, delegationApprover, stakerOptOutWindowBlocks } = newOperatorDetails;
 
-  const operatorDb: Instance = bind(Operator);
+  const client = Instance.PostgresClient(bind);
+  const operatorDb = client.db(Operator);
 
-  const operatorData = await operatorDb.findOne({ id: operator.toLowerCase() });
+  const operatorData = await operatorDb.load({ address: operator.toLowerCase() });
 
   if (operatorData) {
-    operatorData.details = {
-      earningsReceiver,
-      delegationApprover,
-      stakerOptOutWindowBlocks: Number(stakerOptOutWindowBlocks),
-    };
+    operatorData.details = [
+      {
+        earningsReceiver,
+        delegationApprover,
+        stakerOptOutWindowBlocks: Number(stakerOptOutWindowBlocks),
+      },
+    ];
     operatorData.updatedAt = block.block_timestamp;
     operatorData.updatedAtBlock = block.block_number;
 

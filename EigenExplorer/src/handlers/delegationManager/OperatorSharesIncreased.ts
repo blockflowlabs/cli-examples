@@ -1,5 +1,6 @@
-import { IEventContext, IBind, Instance, ISecrets } from "@blockflow-labs/utils";
-import { Operator, Staker, StrategyShares, Stats, OperatorRestakeHistory } from "../../types/schema";
+import { IEventContext, IBind, ISecrets } from "@blockflow-labs/utils";
+import { Instance } from "@blockflow-labs/sdk";
+import { Operator, Staker, Stats, OperatorRestakeHistory } from "../../types/generated";
 import BigNumber from "bignumber.js";
 import { updateStats } from "../../utils/helpers";
 import { stakerDelegatedTopic0, depositTopic0, eigenContracts } from "../../data/constants";
@@ -15,9 +16,11 @@ export const OperatorSharesIncreasedHandler = async (context: IEventContext, bin
   const { event, transaction, block, log } = context;
   const { operator, staker, strategy, shares } = event;
 
-  const operatorDb: Instance = bind(Operator);
-  const stakerDb: Instance = bind(Staker);
-  const operatorRestakeHistoryDb: Instance = bind(OperatorRestakeHistory);
+  const client = Instance.PostgresClient(bind);
+
+  const operatorDb = client.db(Operator);
+  const stakerDb = client.db(Staker);
+  const operatorRestakeHistoryDb = client.db(OperatorRestakeHistory);
 
   const isFollowedByDelegated = transaction.logs.some(
     (log: any) =>
@@ -45,17 +48,17 @@ export const OperatorSharesIncreasedHandler = async (context: IEventContext, bin
   }
 
   const operatorRestakeHistoryId = `${operator}_${transaction.transaction_hash}_${operatorRestakeType}`.toLowerCase();
-  const operatorData = await operatorDb.findOne({ id: operator.toLowerCase() });
-  const stakerData = await stakerDb.findOne({ id: staker.toLowerCase() });
+  const operatorData = await operatorDb.load({ address: operator.toLowerCase() });
+  const stakerData = await stakerDb.load({ address: staker.toLowerCase() });
   const operatorRestakeHistoryData =
     operatorRestakeType !== "undefined"
-      ? await operatorRestakeHistoryDb.findOne({ id: operatorRestakeHistoryId })
+      ? await operatorRestakeHistoryDb.load({ rowId: operatorRestakeHistoryId })
       : null;
 
   if (operatorRestakeType !== "undefined") {
     if (!operatorRestakeHistoryData) {
-      await operatorRestakeHistoryDb.create({
-        id: operatorRestakeHistoryId,
+      await operatorRestakeHistoryDb.save({
+        rowId: operatorRestakeHistoryId,
         operatorAddress: operator.toLowerCase(),
         stakerAddress: staker.toLowerCase(),
         transactionHash: transaction.transaction_hash,
@@ -76,17 +79,14 @@ export const OperatorSharesIncreasedHandler = async (context: IEventContext, bin
   }
 
   if (operatorData) {
-    let strategyIndex = operatorData.shares.findIndex(
-      ({ strategy: sa }: StrategyShares) => sa === strategy.toLowerCase(),
-    );
-    if (strategyIndex === -1) {
+    let strategyIndex = operatorData.shares.findIndex(({ strategy: sa }: any) => sa === strategy.toLowerCase());
+    if (strategyIndex === -1)
       operatorData.shares.push({
         strategy: strategy.toLowerCase(),
         shares: "0",
       });
-    }
 
-    strategyIndex = operatorData.shares.findIndex(({ strategy: sa }: StrategyShares) => sa === strategy.toLowerCase());
+    strategyIndex = operatorData.shares.findIndex(({ strategy: sa }: any) => sa === strategy.toLowerCase());
 
     operatorData.shares[strategyIndex].shares = new BigNumber(operatorData.shares[strategyIndex].shares)
       .plus(shares.toString())
@@ -99,9 +99,7 @@ export const OperatorSharesIncreasedHandler = async (context: IEventContext, bin
   }
 
   if (stakerData) {
-    let strategyIndex = stakerData.shares.findIndex(
-      ({ strategy: sa }: StrategyShares) => sa === strategy.toLowerCase(),
-    );
+    let strategyIndex = stakerData.shares.findIndex(({ strategy: sa }: any) => sa === strategy.toLowerCase());
 
     if (strategyIndex === -1) {
       stakerData.shares.push({
@@ -110,7 +108,7 @@ export const OperatorSharesIncreasedHandler = async (context: IEventContext, bin
       });
     }
 
-    strategyIndex = stakerData.shares.findIndex(({ strategy: sa }: StrategyShares) => sa === strategy.toLowerCase());
+    strategyIndex = stakerData.shares.findIndex(({ strategy: sa }: any) => sa === strategy.toLowerCase());
 
     stakerData.shares[strategyIndex].shares = new BigNumber(stakerData.shares[strategyIndex].shares)
       .plus(shares.toString())
@@ -121,8 +119,7 @@ export const OperatorSharesIncreasedHandler = async (context: IEventContext, bin
 
     await stakerDb.save(stakerData);
   } else {
-    await stakerDb.create({
-      id: staker.toLowerCase(),
+    await stakerDb.save({
       address: staker.toLowerCase(),
       operator: operator.toLowerCase(),
       shares: [
@@ -139,7 +136,7 @@ export const OperatorSharesIncreasedHandler = async (context: IEventContext, bin
       updatedAtBlock: block.block_number,
     });
 
-    const statsDb: Instance = bind(Stats);
+    const statsDb = client.db(Stats);
 
     await updateStats(statsDb, "totalRegisteredStakers", 1, "add");
     await updateStats(statsDb, "totalActiveStakers", 1, "add");

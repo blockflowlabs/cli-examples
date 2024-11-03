@@ -1,6 +1,7 @@
-import { IEventContext, IBind, Instance, ISecrets, ILog } from "@blockflow-labs/utils";
+import { IEventContext, IBind, ISecrets, ILog } from "@blockflow-labs/utils";
+import { Instance } from "@blockflow-labs/sdk";
 import BigNumber from "bignumber.js";
-import { Operator, Staker, StrategyShares, Stats, OperatorRestakeHistory } from "../../types/schema";
+import { Operator, Staker, Stats, OperatorRestakeHistory } from "../../types/generated";
 import { updateStats } from "../../utils/helpers";
 import { eigenContracts, stakerUndelegatedTopic0 } from "../../data/constants";
 
@@ -15,9 +16,11 @@ export const OperatorSharesDecreasedHandler = async (context: IEventContext, bin
   const { event, transaction, block, log } = context;
   const { operator, staker, strategy, shares } = event;
 
-  const operatorDb: Instance = bind(Operator);
-  const stakerDb: Instance = bind(Staker);
-  const operatorRestakeHistoryDb: Instance = bind(OperatorRestakeHistory);
+  const client = Instance.PostgresClient(bind);
+
+  const operatorDb = client.db(Operator);
+  const stakerDb = client.db(Staker);
+  const operatorRestakeHistoryDb = client.db(OperatorRestakeHistory);
 
   const isFollowedByUndelegated = transaction.logs.some(
     (log: ILog) =>
@@ -29,13 +32,13 @@ export const OperatorSharesDecreasedHandler = async (context: IEventContext, bin
 
   const operatorRestakeHistoryId = `${operator}_${transaction.transaction_hash}_${operatorRestakeType}`.toLowerCase();
 
-  const operatorData = await operatorDb.findOne({ id: operator.toLowerCase() });
-  const stakerData = await stakerDb.findOne({ id: staker.toLowerCase() });
-  const operatorRestakeHistoryData = await operatorRestakeHistoryDb.findOne({ id: operatorRestakeHistoryId });
+  const operatorData = await operatorDb.load({ address: operator.toLowerCase() });
+  const stakerData = await stakerDb.load({ address: staker.toLowerCase() });
+  const operatorRestakeHistoryData = await operatorRestakeHistoryDb.load({ rowId: operatorRestakeHistoryId });
 
   if (!operatorRestakeHistoryData) {
-    await operatorRestakeHistoryDb.create({
-      id: operatorRestakeHistoryId,
+    await operatorRestakeHistoryDb.save({
+      rowId: operatorRestakeHistoryId,
       operatorAddress: operator.toLowerCase(),
       stakerAddress: staker.toLowerCase(),
       transactionHash: transaction.transaction_hash,
@@ -55,9 +58,7 @@ export const OperatorSharesDecreasedHandler = async (context: IEventContext, bin
   }
 
   if (operatorData) {
-    const strategyIndex = operatorData.shares.findIndex(
-      ({ strategy: sa }: StrategyShares) => sa === strategy.toLowerCase(),
-    );
+    const strategyIndex = operatorData.shares.findIndex(({ strategy: sa }: any) => sa === strategy.toLowerCase());
 
     if (strategyIndex !== -1) {
       operatorData.shares[strategyIndex].shares = new BigNumber(operatorData.shares[strategyIndex].shares)
@@ -71,9 +72,7 @@ export const OperatorSharesDecreasedHandler = async (context: IEventContext, bin
   }
 
   if (stakerData) {
-    const strategyIndex = stakerData.shares.findIndex(
-      ({ strategy: sa }: StrategyShares) => sa === strategy.toLowerCase(),
-    );
+    const strategyIndex = stakerData.shares.findIndex(({ strategy: sa }: any) => sa === strategy.toLowerCase());
 
     if (strategyIndex !== -1) {
       const strategyShares = new BigNumber(stakerData.shares[strategyIndex].shares);
@@ -93,8 +92,7 @@ export const OperatorSharesDecreasedHandler = async (context: IEventContext, bin
       await stakerDb.save(stakerData);
     }
   } else {
-    await stakerDb.create({
-      id: staker.toLowerCase(),
+    await stakerDb.save({
       address: staker.toLowerCase(),
       operator: operator.toLowerCase(),
       shares: [
@@ -111,7 +109,7 @@ export const OperatorSharesDecreasedHandler = async (context: IEventContext, bin
       updatedAtBlock: block.block_number,
     });
 
-    const statsDb: Instance = bind(Stats);
+    const statsDb = client.db(Stats);
 
     await updateStats(statsDb, "totalRegisteredStakers", 1, "add");
     await updateStats(statsDb, "totalActiveStakers", 1, "add");

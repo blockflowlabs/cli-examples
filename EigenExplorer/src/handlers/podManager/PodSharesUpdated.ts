@@ -1,5 +1,6 @@
-import { IEventContext, IBind, Instance, ISecrets } from "@blockflow-labs/utils";
-import { PodTransactions } from "../../types/schema";
+import { IEventContext, IBind, ISecrets } from "@blockflow-labs/utils";
+import { Instance } from "@blockflow-labs/sdk";
+import { PodTransactions } from "../../types/generated";
 
 /**
  * @dev Event::PodSharesUpdated(address podOwner, int256 sharesDelta)
@@ -14,15 +15,16 @@ export const PodSharesUpdatedHandler = async (context: IEventContext, bind: IBin
 
   const id = `${podOwner}_${transaction.transaction_hash}`;
 
-  const podSharesUpdatedDb: Instance = bind(PodTransactions);
+  const client = Instance.PostgresClient(bind);
+  const podSharesUpdatedDb = client.db(PodTransactions);
 
-  const podSharesUpdatedData = await podSharesUpdatedDb.findOne({
-    id: id,
+  const podSharesUpdatedData = await podSharesUpdatedDb.load({
+    rowId: id,
   });
 
   if (!podSharesUpdatedData) {
-    await podSharesUpdatedDb.create({
-      id: id,
+    await podSharesUpdatedDb.save({
+      rowId: id,
       podAddress: transaction.transaction_to_address.toLowerCase(),
       podOwner: podOwner.toLowerCase(),
       sharesDelta: sharesDelta.toString(),

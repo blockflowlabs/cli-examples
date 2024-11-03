@@ -1,5 +1,6 @@
-import { IEventContext, IBind, Instance, ISecrets } from "@blockflow-labs/utils";
-import { IOperator, Operator, Stats } from "../../types/schema";
+import { IEventContext, IBind, ISecrets } from "@blockflow-labs/utils";
+import { Instance } from "@blockflow-labs/sdk";
+import { Operator, Stats } from "../../types/generated";
 import { fetchWithTimeout, updateStats, validateMetadata } from "../../utils/helpers";
 
 /**
@@ -13,9 +14,10 @@ export const OperatorMetadataURIUpdatedHandler = async (context: IEventContext, 
   const { event, transaction, block, log } = context;
   const { operator, metadataURI } = event;
 
-  const operatorDb: Instance = bind(Operator);
+  const client = Instance.PostgresClient(bind);
+  const operatorDb = client.db(Operator);
 
-  const operatorData = await operatorDb.findOne({ id: operator.toLowerCase() });
+  const operatorData = await operatorDb.load({ address: operator.toLowerCase() });
 
   const response = await fetchWithTimeout(metadataURI);
   const isMetadataFetched = response ? response.status === 200 : false;
@@ -37,11 +39,10 @@ export const OperatorMetadataURIUpdatedHandler = async (context: IEventContext, 
 
     await operatorDb.save(operatorData);
   } else {
-    const statsDb: Instance = bind(Stats);
+    const statsDb = client.db(Stats);
 
-    await operatorDb.create({
+    await operatorDb.save({
       metadataURI,
-      id: operator.toLowerCase(),
       metadataName: operatorMetadata?.name,
       metadataDescription: operatorMetadata?.description,
       metadataLogo: operatorMetadata?.logo,
@@ -53,6 +54,7 @@ export const OperatorMetadataURIUpdatedHandler = async (context: IEventContext, 
       address: operator.toLowerCase(),
       avsRegistrations: [],
       shares: [],
+      details: [],
       totalStakers: 0,
       totalAvs: 0,
       createdAt: block.block_timestamp,

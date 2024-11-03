@@ -1,8 +1,11 @@
-import { IEventContext, IBind, Instance, ISecrets } from "@blockflow-labs/utils";
-import { Strategy, Withdrawal, Stats, StrategyShares } from "../../types/schema";
+import { IEventContext, IBind, ISecrets } from "@blockflow-labs/utils";
+import { Instance } from "@blockflow-labs/sdk";
+import { Strategy, Withdrawal, Stats } from "../../types/generated";
 import BigNumber from "bignumber.js";
+import { In } from "typeorm";
 import { SHARES_OFFSET } from "../../data/constants";
 import { updateStats } from "../../utils/helpers";
+
 /**
  * @dev Event::WithdrawalCompleted(bytes32 withdrawalRoot)
  * @param context trigger object with contains {event: {withdrawalRoot }, transaction, block, log}
@@ -14,11 +17,13 @@ export const WithdrawalCompletedHandler = async (context: IEventContext, bind: I
   const { event, transaction, block, log } = context;
   const { withdrawalRoot } = event;
 
-  const withdrawalDb: Instance = bind(Withdrawal);
-  const strategiesDb: Instance = bind(Strategy);
-  const statsDb: Instance = bind(Stats);
+  const client = Instance.PostgresClient(bind);
 
-  const withdrawalData = await withdrawalDb.findOne({ id: withdrawalRoot });
+  const withdrawalDb = client.db(Withdrawal);
+  const strategiesDb = client.db(Strategy);
+  const statsDb = client.db(Stats);
+
+  const withdrawalData = await withdrawalDb.load({ rowId: withdrawalRoot });
 
   // update the withdrawal record
   if (withdrawalData) {
@@ -26,13 +31,12 @@ export const WithdrawalCompletedHandler = async (context: IEventContext, bind: I
     withdrawalData.updatedAt = block.block_timestamp;
     withdrawalData.updatedAtBlock = block.block_number;
 
-    const strategyIds = withdrawalData.strategyShares.map((strategy: StrategyShares) =>
-      strategy.strategy.toLowerCase(),
-    );
-    const strategiesData = await strategiesDb.findMany({ id: { $in: strategyIds } });
+    const strategyIds = withdrawalData.strategyShares.map((strategy: any) => strategy.strategy.toLowerCase());
+    console.log(strategyIds);
+    const strategiesData = await strategiesDb.loadMany({ address: In(strategyIds) });
 
-    const strategiesMap = strategiesData.reduce((map, strategy) => {
-      map[strategy.id] = strategy;
+    const strategiesMap = strategiesData.reduce((map: any, strategy: any) => {
+      map[strategy.address] = strategy;
       return map;
     }, {});
 
@@ -73,7 +77,7 @@ export const WithdrawalCompletedHandler = async (context: IEventContext, bind: I
         strategyData.sharesToUnderlying = sharesToUnderlying.toString();
         strategyData.totalShares = newTotalShares;
         strategyData.totalAmount = newTotalAmount;
-        strategyData.totalWithdrawals = strategyData.totalWithdrawals + 1 || 1;
+        strategyData.totalWithdrawals = Number(strategyData.totalWithdrawals) + 1 || 1;
         strategyData.updatedAt = block.block_timestamp;
         strategyData.updatedAtBlock = block.block_number;
         await strategiesDb.save(strategyData);

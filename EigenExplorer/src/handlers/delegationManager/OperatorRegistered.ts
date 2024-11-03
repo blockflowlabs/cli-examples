@@ -1,7 +1,7 @@
-import { IEventContext, IBind, Instance, ISecrets } from "@blockflow-labs/utils";
-import { Operator, Stats, OperatorHistory } from "../../types/schema";
+import { IEventContext, IBind, ISecrets } from "@blockflow-labs/utils";
+import { Instance } from "@blockflow-labs/sdk";
+import { Operator, Stats, OperatorHistory } from "../../types/generated";
 import { updateStats } from "../../utils/helpers";
-import { id } from "ethers/lib/utils";
 
 /**
  * @dev Event::OperatorRegistered(address operator, tuple operatorDetails)
@@ -16,18 +16,21 @@ export const OperatorRegisteredHandler = async (context: IEventContext, bind: IB
 
   const { earningsReceiver, delegationApprover, stakerOptOutWindowBlocks } = operatorDetails;
 
-  const operatorDb: Instance = bind(Operator);
-  const statsDb: Instance = bind(Stats);
-  const operatorHistoryDb: Instance = bind(OperatorHistory);
+  const client = Instance.PostgresClient(bind);
 
-  await operatorDb.create({
-    id: operator.toLowerCase(),
+  const operatorDb = client.db(Operator);
+  const statsDb = client.db(Stats);
+  const operatorHistoryDb = client.db(OperatorHistory);
+
+  await operatorDb.save({
     address: operator.toLowerCase(),
-    details: {
-      earningsReceiver,
-      delegationApprover,
-      stakerOptOutWindowBlocks: Number(stakerOptOutWindowBlocks),
-    },
+    details: [
+      {
+        earningsReceiver,
+        delegationApprover,
+        stakerOptOutWindowBlocks: Number(stakerOptOutWindowBlocks),
+      },
+    ],
     metadataURI: "",
     isMetadataSynced: false,
     avsRegistrations: [],
@@ -41,8 +44,8 @@ export const OperatorRegisteredHandler = async (context: IEventContext, bind: IB
 
   const operatorHistoryId = `${operator}_${transaction.transaction_hash}`.toLowerCase();
 
-  await operatorHistoryDb.create({
-    id: operatorHistoryId,
+  await operatorHistoryDb.save({
+    rowId: operatorHistoryId,
     operatorAddress: operator.toLowerCase(),
     avsAddress: "",
     event: "operatorRegistered",

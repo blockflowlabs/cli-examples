@@ -1,78 +1,84 @@
-name: Eigen Explorer
-description: An Explorer for Eigen Layer data
-startBlock: 17445563
-userId: process.env.BLOCKFLOW_USER_ID
-projectId: process.env.BLOCKFLOW_PROJECT_ID
-network: Ethereum
-user: prady
-schema:
-  file: ./studio.schema.ts
-execution: parallel
+Version: 2.0.0
+Type: instance
+Metadata:
+  name: Rescan
+  description: An data collector for Eigen Layer data
+Auth:
+  userId: process.env.BLOCKFLOW_USER_ID
+  projectId: process.env.BLOCKFLOW_PROJECT_ID
+  accessKey: process.env.BLOCKFLOW_ACCESS_KEY
+  secretKey: process.env.BLOCKFLOW_SECRET_KEY
+Path:
+  schema: ./sql.schema.ts
+  docker: ./docker-compose.yml
+Environment:
+  testing:
+    startBlock: 20913087
+    network: Ethereum
+    execution: parallel
+    rpc: process.env.RPC_ENDPOINT
+    range: 1
+  deployment:
+    startBlock: 17445563
+    network: Ethereum
+    execution: parallel
+Secrets:
+  RPC_ENDPOINT: process.env.RPC_ENDPOINT
 Resources:
-  - Name: strategyManager
-    Abi: src/abis/strategyManager.json
-    Type: contract/event
-    Address: "0x858646372CC42E1A627fcE94aa7A7033e7CF075A"
-    Triggers:
-      - Event: StrategyAddedToDepositWhitelist(address)
-        Handler: src/handlers/strategyManager/StrategyAddedToDepositWhitelist.StrategyAddedToDepositWhitelistHandler
-      - Event: StrategyRemovedFromDepositWhitelist(address)
-        Handler: src/handlers/strategyManager/StrategyRemovedFromDepositWhitelist.StrategyRemovedFromDepositWhitelistHandler
+  - name: strategyManager
+    abi: src/abis/strategyManager.json
+    type: contract/event
+    address: "0x858646372CC42E1A627fcE94aa7A7033e7CF075A"
+    triggers:
+      - event: Deposit(address,address,address,uint256)
+        handler: src/handlers/strategyManager/Deposit.DepositHandler
+      - event: StrategyAddedToDepositWhitelist(address)
+        handler: src/handlers/strategyManager/StrategyAddedToDepositWhitelist.StrategyAddedToDepositWhitelistHandler
+      - event: StrategyRemovedFromDepositWhitelist(address)
+        handler: src/handlers/strategyManager/StrategyRemovedFromDepositWhitelist.StrategyRemovedFromDepositWhitelistHandler
 
-  - Name: strategyManager
-    Abi: src/abis/strategyManager.json
-    Type: contract/function
-    Address: "0x858646372CC42E1A627fcE94aa7A7033e7CF075A"
-    Triggers:
-      - Function: depositIntoStrategy(address,address,uint256)
-        Handler: src/handlers/strategyManager/depositIntoStrategy.depositIntoStrategyHandler
-      - Function: depositIntoStrategyWithSignature(address,address,uint256,address,uint256,bytes)
-        Handler: src/handlers/strategyManager/depositIntoStrategyWithSignature.depositIntoStrategyWithSignatureHandler
+  - name: delegationManager
+    abi: src/abis/delegationManager.json
+    type: contract/event
+    address: "0x39053D51B77DC0d36036Fc1fCc8Cb819df8Ef37A"
+    triggers:
+      - event: OperatorRegistered(address indexed, OperatorDetails)
+        handler: src/handlers/delegationManager/OperatorRegistered.OperatorRegisteredHandler
+      - event: OperatorDetailsModified(address indexed, OperatorDetails)
+        handler: src/handlers/delegationManager/OperatorDetailsModified.OperatorDetailsModifiedHandler
+      - event: OperatorMetadataURIUpdated(address indexed,string)
+        handler: src/handlers/delegationManager/OperatorMetadataURIUpdated.OperatorMetadataURIUpdatedHandler
+      - event: OperatorSharesIncreased(address indexed,address,address,uint256)
+        handler: src/handlers/delegationManager/OperatorSharesIncreased.OperatorSharesIncreasedHandler
+      - event: OperatorSharesDecreased(address indexed,address,address,uint256)
+        handler: src/handlers/delegationManager/OperatorSharesDecreased.OperatorSharesDecreasedHandler
+      - event: StakerDelegated(address indexed,address indexed)
+        handler: src/handlers/delegationManager/StakerDelegated.StakerDelegatedHandler
+      - event: StakerUndelegated(address indexed,address indexed)
+        handler: src/handlers/delegationManager/StakerUndelegated.StakerUndelegatedHandler
+      - event: WithdrawalCompleted(bytes32)
+        handler: src/handlers/delegationManager/WithdrawalCompleted.WithdrawalCompletedHandler
+      - event: WithdrawalQueued(bytes32,tuple(address,address,address,uint256,uint32,address[],uint256[]))
+        handler: src/handlers/delegationManager/WithdrawalQueued.WithdrawalQueuedHandler
+      - event: MinWithdrawalDelayBlocksSet(uint256,uint256)
+        handler: src/handlers/delegationManager/MinWithdrawalDelayBlocksSet.MinWithdrawalDelayBlocksSetHandler
 
-  - Name: delegationManager
-    Abi: src/abis/delegationManager.json
-    Type: contract/event
-    Address: "0x39053D51B77DC0d36036Fc1fCc8Cb819df8Ef37A"
-    Triggers:
-      - Event: OperatorRegistered(address indexed, OperatorDetails)
-        Handler: src/handlers/delegationManager/OperatorRegistered.OperatorRegisteredHandler
-      - Event: OperatorDetailsModified(address indexed, OperatorDetails)
-        Handler: src/handlers/delegationManager/OperatorDetailsModified.OperatorDetailsModifiedHandler
-      - Event: OperatorMetadataURIUpdated(address indexed,string)
-        Handler: src/handlers/delegationManager/OperatorMetadataURIUpdated.OperatorMetadataURIUpdatedHandler
-      - Event: OperatorSharesDecreased(address indexed,address,address,uint256)
-        Handler: src/handlers/delegationManager/OperatorSharesDecreased.OperatorSharesDecreasedHandler
-      - Event: OperatorSharesIncreased(address indexed,address,address,uint256)
-        Handler: src/handlers/delegationManager/OperatorSharesIncreased.OperatorSharesIncreasedHandler
-      - Event: StakerDelegated(address indexed,address indexed)
-        Handler: src/handlers/delegationManager/StakerDelegated.StakerDelegatedHandler
-      - Event: StakerForceUndelegated(address indexed,address indexed)
-        Handler: src/handlers/delegationManager/StakerForceUndelegated.StakerForceUndelegatedHandler
-      - Event: StakerUndelegated(address indexed,address indexed)
-        Handler: src/handlers/delegationManager/StakerUndelegated.StakerUndelegatedHandler
-      - Event: WithdrawalCompleted(bytes32)
-        Handler: src/handlers/delegationManager/WithdrawalCompleted.WithdrawalCompletedHandler
-      - Event: WithdrawalQueued(bytes32,tuple(address,address,address,uint256,uint32,address[],uint256[]))
-        Handler: src/handlers/delegationManager/WithdrawalQueued.WithdrawalQueuedHandler
-      - Event: MinWithdrawalDelayBlocksSet(uint256,uint256)
-        Handler: src/handlers/delegationManager/MinWithdrawalDelayBlocksSet.MinWithdrawalDelayBlocksSetHandler
+  - name: avsDirectory
+    abi: src/abis/avsDirectory.json
+    type: contract/event
+    address: "0x135dda560e946695d6f155dacafc6f1f25c1f5af"
+    triggers:
+      - event: AVSMetadataURIUpdated(address indexed,string)
+        handler: src/handlers/avsDirectory/AVSMetadataURIUpdated.AVSMetadataURIUpdatedHandler
+      - event: OperatorAVSRegistrationStatusUpdated(address indexed,address indexed,uint8)
+        handler: src/handlers/avsDirectory/OperatorAVSRegistrationStatusUpdated.OperatorAVSRegistrationStatusUpdatedHandler
 
-  - Name: avsDirectory
-    Abi: src/abis/avsDirectory.json
-    Type: contract/event
-    Address: "0x135dda560e946695d6f155dacafc6f1f25c1f5af"
-    Triggers:
-      - Event: AVSMetadataURIUpdated(address indexed,string)
-        Handler: src/handlers/avsDirectory/AVSMetadataURIUpdated.AVSMetadataURIUpdatedHandler
-      - Event: OperatorAVSRegistrationStatusUpdated(address indexed,address indexed,uint8)
-        Handler: src/handlers/avsDirectory/OperatorAVSRegistrationStatusUpdated.OperatorAVSRegistrationStatusUpdatedHandler
-
-  - Name: podManager
-    Abi: src/abis/podManager.json
-    Type: contract/event
-    Address: "0x91E677b07F7AF907ec9a428aafA9fc14a0d3A338"
-    Triggers:
-      - Event: PodDeployed(address indexed, address indexed)
-        Handler: src/handlers/podManager/PodDeployed.PodDeployedHandler
-      - Event: PodSharesUpdated(address indexed, int256)
-        Handler: src/handlers/podManager/PodSharesUpdated.PodSharesUpdatedHandler
+  - name: podManager
+    abi: src/abis/podManager.json
+    type: contract/event
+    address: "0x91E677b07F7AF907ec9a428aafA9fc14a0d3A338"
+    triggers:
+      - event: PodDeployed(address indexed, address indexed)
+        handler: src/handlers/podManager/PodDeployed.PodDeployedHandler
+      - event: PodSharesUpdated(address indexed, int256)
+        handler: src/handlers/podManager/PodSharesUpdated.PodSharesUpdatedHandler

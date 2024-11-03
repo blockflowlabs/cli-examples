@@ -1,5 +1,6 @@
-import { IEventContext, IBind, Instance, ISecrets } from "@blockflow-labs/utils";
-import { EigenPod } from "../../types/schema";
+import { IEventContext, IBind, ISecrets } from "@blockflow-labs/utils";
+import { Instance } from "@blockflow-labs/sdk";
+import { EigenPod } from "../../types/generated";
 
 /**
  * @dev Event::PodDeployed(address eigenPod, address podOwner)
@@ -12,15 +13,16 @@ export const PodDeployedHandler = async (context: IEventContext, bind: IBind, se
   const { event, transaction, block, log } = context;
   const { eigenPod, podOwner } = event;
 
-  const podDb: Instance = bind(EigenPod);
+  const client = Instance.PostgresClient(bind);
 
-  const podData = await podDb.findOne({
-    id: eigenPod.toLowerCase(),
+  const podDb = client.db(EigenPod);
+
+  const podData = await podDb.load({
+    address: eigenPod.toLowerCase(),
   });
 
   if (!podData) {
-    await podDb.create({
-      id: eigenPod.toLowerCase(),
+    await podDb.save({
       address: eigenPod.toLowerCase(),
       owner: podOwner.toLowerCase(),
       createdAt: block.block_timestamp,

@@ -3,3 +3,4 @@ out
 .env
 **/.env
 **/build
+**/src/types

@@ -1,5 +1,6 @@
-import { IEventContext, IBind, Instance, ISecrets } from "@blockflow-labs/utils";
-import { Staker, Operator, Stats } from "../../types/schema";
+import { IEventContext, IBind, ISecrets } from "@blockflow-labs/utils";
+import { Instance } from "@blockflow-labs/sdk";
+import { Staker, Operator, Stats, IOperator, IStaker } from "../../types/generated";
 import { updateStats } from "../../utils/helpers";
 
 /**
@@ -13,44 +14,43 @@ export const StakerDelegatedHandler = async (context: IEventContext, bind: IBind
   const { event, transaction, block, log } = context;
   const { staker, operator } = event;
 
-  const stakerDb: Instance = bind(Staker);
-  const operatorDb: Instance = bind(Operator);
-  const statsDb: Instance = bind(Stats);
+  const client = Instance.PostgresClient(bind);
 
-  const stakerData = await stakerDb.findOne({ id: staker.toLowerCase() });
-  const operatorData = await operatorDb.findOne({ id: operator.toLowerCase() });
+  const stakerDb = client.db(Staker);
+  const operatorDb = client.db(Operator);
+  const statsDb = client.db(Stats);
+
+  let stakerData: IStaker = await stakerDb.load({ address: staker.toLowerCase() });
+  const operatorData: IOperator = await operatorDb.load({ address: operator.toLowerCase() });
+
+  operatorData.totalStakers = Number(operatorData.totalStakers) + 1;
 
   if (stakerData) {
-    if (stakerData.operator !== operator.toLowerCase()) {
-      operatorData.totalStakers = operatorData.totalStakers + 1 || 1;
-      await operatorDb.save(operatorData);
-    }
-    if (stakerData.operator === null) {
-      await updateStats(statsDb, "totalActiveStakers", 1);
-    }
+    if (stakerData.operator === "") await updateStats(statsDb, "totalActiveStakers", 1);
+
+    // update the operator addres to new operator
     stakerData.operator = operator.toLowerCase();
-    stakerData.updatedAt = block.block_timestamp;
+
+    // last interaction details
+    stakerData.updatedAt = parseInt(block.block_timestamp);
     stakerData.updatedAtBlock = block.block_number;
-
-    await stakerDb.save(stakerData);
   } else {
-    operatorData.totalStakers = operatorData.totalStakers + 1 || 1;
-    await operatorDb.save(operatorData);
-
-    await stakerDb.create({
-      id: staker.toLowerCase(),
+    stakerData = {
       address: staker.toLowerCase(),
       operator: operator.toLowerCase(),
       shares: [],
       totalWithdrawals: 0,
       totalDeposits: 0,
-      createdAt: block.block_timestamp,
-      updatedAt: block.block_timestamp,
+      createdAt: parseInt(block.block_timestamp),
+      updatedAt: parseInt(block.block_timestamp),
       createdAtBlock: block.block_number,
       updatedAtBlock: block.block_number,
-    });
+    };
 
     await updateStats(statsDb, "totalRegisteredStakers", 1);
     await updateStats(statsDb, "totalActiveStakers", 1);
   }
+
+  await stakerDb.save(stakerData);
+  await operatorDb.save(operatorData);
 };

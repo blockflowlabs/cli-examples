@@ -1,5 +1,6 @@
-import { IEventContext, IBind, Instance, ISecrets } from "@blockflow-labs/utils";
-import { Withdrawal, Stats, Staker } from "../../types/schema";
+import { IEventContext, IBind, ISecrets } from "@blockflow-labs/utils";
+import { Instance } from "@blockflow-labs/sdk";
+import { Withdrawal, Stats, Staker } from "../../types/generated";
 import { updateStats } from "../../utils/helpers";
 
 /**
@@ -13,29 +14,31 @@ export const WithdrawalQueuedHandler = async (context: IEventContext, bind: IBin
   const { event, transaction, block, log } = context;
   const { withdrawalRoot, withdrawal } = event;
 
-  const withdrawalDb: Instance = bind(Withdrawal);
-  const statsDb: Instance = bind(Stats);
-  const stakerDb: Instance = bind(Staker);
+  const client = Instance.PostgresClient(bind);
 
-  const withdrawalData = await withdrawalDb.findOne({ id: withdrawalRoot });
-  const stakerData = await stakerDb.findOne({ id: withdrawal.staker });
+  const withdrawalDb = client.db(Withdrawal);
+  const statsDb = client.db(Stats);
+  const stakerDb = client.db(Staker);
+
+  const withdrawalData = await withdrawalDb.load({ rowId: withdrawalRoot });
+  const stakerData = await stakerDb.load({ address: withdrawal.staker });
 
   if (stakerData) {
-    stakerData.totalWithdrawals = stakerData.totalWithdrawals + 1 || 1;
+    stakerData.totalWithdrawals = Number(stakerData.totalWithdrawals) + 1 || 1;
     await stakerDb.save(stakerData);
   }
 
   if (!withdrawalData) {
     // create a new withdrawal record
-    await withdrawalDb.create({
-      id: withdrawalRoot,
+    await withdrawalDb.save({
+      rowId: withdrawalRoot,
       withdrawalRoot,
       nonce: Number(withdrawal.nonce),
-      stakerAddress: withdrawal.staker,
+      stakerAddress: withdrawal.staker.toLowerCase(),
       delegatedTo: withdrawal.delegatedTo,
       withdrawerAddress: withdrawal.withdrawer,
       strategyShares: withdrawal.strategies.map((strategy: any, index: number) => ({
-        strategy: strategy,
+        strategy: strategy.toLowerCase(),
         shares: withdrawal.shares[index].toString(),
       })),
       isCompleted: false,
@@ -47,7 +50,7 @@ export const WithdrawalQueuedHandler = async (context: IEventContext, bind: IBin
   } else {
     // update the existing withdrawal record
     withdrawalData.nonce = Number(withdrawal.nonce);
-    withdrawalData.stakerAddress = withdrawal.stakerAddress;
+    withdrawalData.stakerAddress = withdrawal.staker.toLowerCase();
     withdrawalData.delegatedTo = withdrawal.delegatedTo;
     withdrawalData.withdrawerAddress = withdrawal.withdrawerAddress;
     withdrawalData.strategyShares = withdrawal.strategies.map((strategy: any, index: number) => ({
