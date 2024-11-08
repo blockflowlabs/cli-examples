@@ -1,0 +1,36 @@
+Version: 2.0.0
+Type: api
+Metadata:
+  name: ERC20
+  description: A top-secret research project to the moon
+Auth:
+  userId: process.env.USER_ID
+  projectId: process.env.PROJECT_ID
+  accessKey: process.env.ACCESS_KEY
+  secretKey: process.env.SECRET_KEY
+Path:
+  schema: ./studio.schema.ts
+  docker: ./docker-compose.yml
+Environment:
+  testing:
+    startBlock: latest
+    network: Ethereum
+    execution: parallel
+    rpc: https://eth.llamarpc.com
+    range: 10
+  deployment:
+    startBlock: latest
+    network: Ethereum
+    execution: parallel
+Resources:
+  - name: ERC20
+    type: contract/event
+    abi: src/abis/erc20.json
+    address: "0xdAC17F958D2ee523a2206206994597C13D831ec7"
+    triggers:
+      - event: Transfer(address indexed,address indexed,uint256)
+        handler: src/handlers/Transfer.TransferHandler
+  - name: default-graphql
+    type: api/graphql
+    slug: default-graphql
+    handler: src/apis/graphql.ts
